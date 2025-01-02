@@ -13,7 +13,7 @@ interface DateFilterProps {
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-foreground text-xs font-medium">Pickup or Delivered by</label>
+      <label className="text-white text-xs font-medium drop-shadow-sm">Pickup or Delivered by</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
