@@ -5,7 +5,6 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Testimonials } from "@/components/Testimonials";
 import { TrustSection } from "@/components/TrustSection";
-import { SetupPlaceholderFloristsButton } from "@/components/SetupPlaceholderFloristsButton";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,7 +45,6 @@ export default function Index() {
       />
       <TrustSection navigate={navigate} />
       <Testimonials />
-      {process.env.NODE_ENV === 'development' && <SetupPlaceholderFloristsButton />}
     </div>
   );
 }
