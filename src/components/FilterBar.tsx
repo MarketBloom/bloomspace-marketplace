@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, MapPin, Search } from "lucide-react";
+import { CalendarIcon, Clock, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -15,6 +15,7 @@ export const FilterBar = () => {
   const [budget, setBudget] = useState<number[]>([0]);
   const [isAnyPrice, setIsAnyPrice] = useState(true);
   const [date, setDate] = useState<Date>();
+  const [time, setTime] = useState<string>("12:00");
 
   const handleSearch = () => {
     navigate('/search');
@@ -38,6 +39,11 @@ export const FilterBar = () => {
     }
   };
 
+  const timeSlots = Array.from({ length: 24 }, (_, i) => {
+    const hour = i.toString().padStart(2, '0');
+    return [`${hour}:00`, `${hour}:30`];
+  }).flat();
+
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/20">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -54,7 +60,7 @@ export const FilterBar = () => {
         </div>
         
         <div className="space-y-2.5">
-          <label className="text-sm font-medium text-white/90">Date & Time</label>
+          <label className="text-sm font-medium text-white/90">Date</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -75,6 +81,45 @@ export const FilterBar = () => {
                 onSelect={setDate}
                 initialFocus
               />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="space-y-2.5">
+          <label className="text-sm font-medium text-white/90">Time</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal h-10 bg-white/20 border-white/20 text-white hover:bg-white/30",
+                  !time && "text-white/60"
+                )}
+              >
+                <Clock className="mr-2 h-4 w-4" />
+                {time || "Select time"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-0" align="start">
+              <div className="h-64 overflow-auto p-1">
+                {timeSlots.map((slot) => (
+                  <Button
+                    key={slot}
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start font-normal",
+                      time === slot ? "bg-primary/20 text-primary" : "text-foreground"
+                    )}
+                    onClick={() => {
+                      setTime(slot);
+                      const popoverTrigger = document.activeElement as HTMLElement;
+                      popoverTrigger?.blur();
+                    }}
+                  >
+                    {slot}
+                  </Button>
+                ))}
+              </div>
             </PopoverContent>
           </Popover>
         </div>
@@ -106,22 +151,6 @@ export const FilterBar = () => {
               disabled={isAnyPrice}
             />
           </div>
-        </div>
-        
-        <div className="space-y-2.5">
-          <label className="text-sm font-medium text-white/90">Occasion</label>
-          <Select>
-            <SelectTrigger className="h-10 bg-white/20 border-white/20 text-white hover:bg-white/30">
-              <SelectValue placeholder="Select occasion" className="text-white/60" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="birthday">Birthday</SelectItem>
-              <SelectItem value="anniversary">Anniversary</SelectItem>
-              <SelectItem value="sympathy">Sympathy</SelectItem>
-              <SelectItem value="congratulations">Congratulations</SelectItem>
-              <SelectItem value="all">All Occasions</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
