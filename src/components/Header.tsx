@@ -6,6 +6,14 @@ export const Header = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
+  const handleDashboardClick = () => {
+    if (user?.user_metadata?.role === 'florist') {
+      navigate("/florist-dashboard");
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -25,7 +33,7 @@ export const Header = () => {
         <div className="flex items-center space-x-4">
           {user ? (
             <>
-              <Button variant="ghost" onClick={() => navigate("/dashboard")}>
+              <Button variant="ghost" onClick={handleDashboardClick}>
                 Dashboard
               </Button>
               <Button variant="ghost" onClick={() => signOut()}>

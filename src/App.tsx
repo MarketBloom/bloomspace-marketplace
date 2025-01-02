@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Search from "./pages/Search";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import CustomerDashboard from "./pages/CustomerDashboard";
+import FloristDashboard from "./pages/FloristDashboard";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<CustomerDashboard />} />
+          <Route path="/florist-dashboard" element={<FloristDashboard />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
