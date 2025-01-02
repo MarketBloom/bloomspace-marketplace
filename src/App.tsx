@@ -4,11 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Loader2 } from "lucide-react";
 
-// Lazy load pages
+// Lazy load pages with error boundaries
 const Index = lazy(() => import("./pages/Index"));
 const Search = lazy(() => import("./pages/Search"));
 const Login = lazy(() => import("./pages/Login"));
@@ -26,6 +26,7 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 15,   // Keep unused data for 15 minutes
       refetchOnWindowFocus: false,
       retry: 1, // Only retry failed requests once
+      networkMode: 'offlineFirst', // Optimize for offline-first experience
     },
   },
 });
@@ -34,6 +35,21 @@ const queryClient = new QueryClient({
 const LoadingFallback = () => (
   <div className="h-screen w-screen flex items-center justify-center">
     <Loader2 className="h-6 w-6 animate-spin" />
+  </div>
+);
+
+// Error boundary fallback
+const ErrorFallback = () => (
+  <div className="h-screen w-screen flex items-center justify-center">
+    <div className="text-center">
+      <h2 className="text-lg font-medium mb-2">Something went wrong</h2>
+      <button 
+        onClick={() => window.location.reload()} 
+        className="text-sm text-blue-500 hover:text-blue-600"
+      >
+        Try again
+      </button>
+    </div>
   </div>
 );
 
