@@ -1,5 +1,10 @@
-import { supabase } from "@/integrations/supabase/client";
+import { createClient } from '@supabase/supabase-js';
 import { toast } from "sonner";
+
+const SUPABASE_URL = "https://senfrikghcfchjjlosxx.supabase.co";
+const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlbmZyaWtnaGNmY2hqamxvc3h4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNTc5MDMyNiwiZXhwIjoyMDUxMzY2MzI2fQ.vHR8J6gq6qQvwQn4rUNMhHwmQOFzHBhETgQkGXLRbtY";
+
+const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const PLACEHOLDER_FLORISTS = [
   {
@@ -39,15 +44,14 @@ export const setupPlaceholderFlorists = async () => {
     for (const florist of PLACEHOLDER_FLORISTS) {
       console.log(`Creating florist account for ${florist.storeName}...`);
       
-      // Create the user account
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // Create the user account using admin client
+      const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
         email: florist.email,
         password: florist.password,
-        options: {
-          data: {
-            full_name: florist.storeName,
-            role: "florist"
-          }
+        email_confirm: true,
+        user_metadata: {
+          full_name: florist.storeName,
+          role: "florist"
         }
       });
 
@@ -62,7 +66,7 @@ export const setupPlaceholderFlorists = async () => {
         console.log(`Setting up florist profile for ${florist.storeName}...`);
         
         // Call our database function to set up the florist profile
-        const { error: fnError } = await supabase.functions.invoke(
+        const { error: fnError } = await adminClient.functions.invoke(
           'update_profile_to_florist',
           {
             body: {
@@ -81,7 +85,7 @@ export const setupPlaceholderFlorists = async () => {
         console.log(`Adding products for ${florist.storeName}...`);
         
         // Add products for this florist
-        const { error: productsError } = await supabase.functions.invoke(
+        const { error: productsError } = await adminClient.functions.invoke(
           'add_florist_products',
           {
             body: {
