@@ -60,11 +60,11 @@ export const FilterBar = () => {
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full pl-10 justify-start text-left font-normal bg-white/20 border-0 hover:bg-white/30 text-white",
+                  "w-full relative justify-start text-left font-normal bg-white/20 border-0 hover:bg-white/30 text-white",
                   !date && "text-gray-300"
                 )}
               >
-                <CalendarIcon className="absolute left-3 h-4 w-4 text-gray-400" />
+                <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
                 {date ? format(date, "PPP") : "Pick a date"}
               </Button>
             </PopoverTrigger>

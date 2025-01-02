@@ -5,11 +5,11 @@ export const Hero = () => {
     <section className="relative h-[85vh] flex items-center justify-center">
       <div className="absolute inset-0">
         <img 
-          src="/lovable-uploads/8bd17128-9588-4b2f-a29f-988f648688a7.png"
+          src="/lovable-uploads/d3c25b89-58e0-45d3-95af-7baa35c7d9fc.png"
           alt="Fresh flowers from local florists"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
