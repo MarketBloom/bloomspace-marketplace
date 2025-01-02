@@ -11,8 +11,7 @@ import { OccasionFilter } from "./filters/OccasionFilter";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState<number[]>([0]);
-  const [isAnyPrice, setIsAnyPrice] = useState(true);
+  const [budget, setBudget] = useState<number[]>([500]);
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("12:00");
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
@@ -39,8 +38,8 @@ export const FilterBar = () => {
       <BudgetFilter 
         budget={budget}
         setBudget={setBudget}
-        isAnyPrice={isAnyPrice}
-        setIsAnyPrice={setIsAnyPrice}
+        isAnyPrice={false}
+        setIsAnyPrice={() => {}}
       />
       
       <CategoryFilter 
