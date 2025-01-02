@@ -2,9 +2,9 @@
 
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { usePlacesAutocomplete } from "@/hooks/use-places-autocomplete";
+import { PlacesPredictions } from "./places-predictions";
 
 interface PlacesAutocompleteProps {
   onPlaceSelect: (place: google.maps.places.PlaceResult) => void;
@@ -19,67 +19,15 @@ export function PlacesAutocomplete({
   placeholder = "Enter suburb or postcode",
   defaultValue = "",
 }: PlacesAutocompleteProps) {
-  const [predictions, setPredictions] = useState<google.maps.places.AutocompletePrediction[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(defaultValue);
-  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
-  const placesService = useRef<google.maps.places.PlacesService | null>(null);
-  const dummyElement = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.google) {
-      autocompleteService.current = new google.maps.places.AutocompleteService();
-      if (dummyElement.current) {
-        placesService.current = new google.maps.places.PlacesService(dummyElement.current);
-      }
-    }
-  }, []);
-
-  const handleInput = (value: string) => {
-    setInputValue(value);
-    if (!value) {
-      setPredictions([]);
-      setIsOpen(false);
-      return;
-    }
-
-    if (autocompleteService.current) {
-      autocompleteService.current.getPlacePredictions(
-        {
-          input: value,
-          types: ['(cities)', 'sublocality', 'postal_code'],
-          componentRestrictions: { country: 'au' }
-        },
-        (predictions, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-            setPredictions(predictions);
-            setIsOpen(true);
-          } else {
-            setPredictions([]);
-            setIsOpen(false);
-          }
-        }
-      );
-    }
-  };
-
-  const handleSelect = (placeId: string) => {
-    if (placesService.current) {
-      placesService.current.getDetails(
-        {
-          placeId: placeId,
-          fields: ['address_components', 'formatted_address', 'geometry', 'name']
-        },
-        (place, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-            setInputValue(place.formatted_address || place.name || '');
-            setIsOpen(false);
-            onPlaceSelect(place);
-          }
-        }
-      );
-    }
-  };
+  const {
+    predictions,
+    isOpen,
+    inputValue,
+    dummyElement,
+    handleInput,
+    handleSelect,
+    setIsOpen
+  } = usePlacesAutocomplete({ onPlaceSelect, defaultValue });
 
   return (
     <div className="relative">
@@ -100,19 +48,10 @@ export function PlacesAutocomplete({
       </div>
 
       {isOpen && predictions.length > 0 && (
-        <Command className="absolute top-full left-0 right-0 mt-1 z-50 bg-white rounded-md border shadow-md">
-          <CommandGroup>
-            {predictions.map((prediction) => (
-              <CommandItem
-                key={prediction.place_id}
-                onSelect={() => handleSelect(prediction.place_id)}
-                className="text-xs py-2 px-2 cursor-pointer hover:bg-gray-100"
-              >
-                {prediction.description}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+        <PlacesPredictions 
+          predictions={predictions}
+          onSelect={handleSelect}
+        />
       )}
     </div>
   );
