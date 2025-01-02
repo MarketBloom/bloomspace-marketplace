@@ -34,7 +34,11 @@ type AddFloristProductsParams = {
 
 export const setupPlaceholderFlorists = async () => {
   try {
+    console.log('Starting placeholder florists setup...');
+    
     for (const florist of PLACEHOLDER_FLORISTS) {
+      console.log(`Creating florist account for ${florist.storeName}...`);
+      
       // Create the user account
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: florist.email,
@@ -47,9 +51,16 @@ export const setupPlaceholderFlorists = async () => {
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error('Auth error:', authError);
+        throw authError;
+      }
+
+      console.log('Auth data:', authData);
 
       if (authData.user) {
+        console.log(`Setting up florist profile for ${florist.storeName}...`);
+        
         // Call our database function to set up the florist profile
         const { error: fnError } = await supabase.functions.invoke(
           'update_profile_to_florist',
@@ -62,8 +73,13 @@ export const setupPlaceholderFlorists = async () => {
           }
         );
 
-        if (fnError) throw fnError;
+        if (fnError) {
+          console.error('Profile setup error:', fnError);
+          throw fnError;
+        }
 
+        console.log(`Adding products for ${florist.storeName}...`);
+        
         // Add products for this florist
         const { error: productsError } = await supabase.functions.invoke(
           'add_florist_products',
@@ -74,12 +90,17 @@ export const setupPlaceholderFlorists = async () => {
           }
         );
 
-        if (productsError) throw productsError;
+        if (productsError) {
+          console.error('Products setup error:', productsError);
+          throw productsError;
+        }
 
+        console.log(`Successfully created florist: ${florist.storeName}`);
         toast.success(`Created placeholder florist: ${florist.storeName}`);
       }
     }
 
+    console.log('All placeholder florists created successfully!');
     toast.success("All placeholder florists have been created successfully!");
   } catch (error) {
     console.error("Error setting up placeholder florists:", error);
