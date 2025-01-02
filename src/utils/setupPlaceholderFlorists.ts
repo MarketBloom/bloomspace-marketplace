@@ -51,23 +51,23 @@ export const setupPlaceholderFlorists = async () => {
 
       if (authData.user) {
         // Call our database function to set up the florist profile
-        const { error: fnError } = await supabase.rpc<void, UpdateProfileToFloristParams>(
+        const { error: fnError } = await supabase.rpc(
           'update_profile_to_florist',
           {
             profile_id: authData.user.id,
             store_name: florist.storeName,
             phone_number: florist.phone
-          }
+          } satisfies UpdateProfileToFloristParams
         );
 
         if (fnError) throw fnError;
 
         // Add products for this florist
-        const { error: productsError } = await supabase.rpc<void, AddFloristProductsParams>(
+        const { error: productsError } = await supabase.rpc(
           'add_florist_products',
           {
             florist_id: authData.user.id
-          }
+          } satisfies AddFloristProductsParams
         );
 
         if (productsError) throw productsError;
