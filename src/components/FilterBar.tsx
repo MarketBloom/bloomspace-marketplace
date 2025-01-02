@@ -2,14 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Calendar, MapPin, Search } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
   const [budget, setBudget] = useState<number[]>([0]);
   const [isAnyPrice, setIsAnyPrice] = useState(true);
+  const [date, setDate] = useState<Date>();
 
   const handleSearch = () => {
     navigate('/search');
@@ -34,8 +39,8 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-white">Location</label>
           <div className="relative">
@@ -50,14 +55,28 @@ export const FilterBar = () => {
         
         <div className="space-y-2">
           <label className="text-sm font-medium text-white">Date & Time</label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input 
-              type="text" 
-              placeholder="Same day or schedule" 
-              className="w-full pl-10 bg-white/20 border-0 placeholder:text-gray-300 text-white focus:bg-white/30"
-            />
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full pl-10 justify-start text-left font-normal bg-white/20 border-0 hover:bg-white/30 text-white",
+                  !date && "text-gray-300"
+                )}
+              >
+                <CalendarIcon className="absolute left-3 h-4 w-4 text-gray-400" />
+                {date ? format(date, "PPP") : "Pick a date"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         
         <div className="space-y-2">
@@ -74,7 +93,7 @@ export const FilterBar = () => {
               Any Price
             </button>
           </div>
-          <div className="relative bg-white/20 rounded-md h-[42px] flex items-center px-3">
+          <div className="relative bg-white/20 rounded-md h-10 flex items-center px-3">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
