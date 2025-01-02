@@ -26,9 +26,7 @@ export const Hero = () => {
             </p>
           </div>
           
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-4">
-            <FilterBar />
-          </div>
+          <FilterBar />
         </div>
       </div>
     </section>
