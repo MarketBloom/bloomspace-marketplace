@@ -17,14 +17,26 @@ export function usePlacesAutocomplete({
   const dummyElement = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
+  // Initialize services - this effect should always run
   useEffect(() => {
-    if (typeof window !== "undefined" && window.google && !autocompleteService.current) {
-      autocompleteService.current = new google.maps.places.AutocompleteService();
-      if (dummyElement.current) {
+    if (typeof window !== "undefined" && window.google) {
+      if (!autocompleteService.current) {
+        autocompleteService.current = new google.maps.places.AutocompleteService();
+      }
+      if (dummyElement.current && !placesService.current) {
         placesService.current = new google.maps.places.PlacesService(dummyElement.current);
       }
     }
-  }, []);
+  }, []); // Empty dependency array ensures this only runs once
+
+  // Cleanup effect - this should also always run
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []); // Empty dependency array ensures consistent cleanup
 
   const handleInput = (value: string) => {
     setInputValue(value);
@@ -35,12 +47,10 @@ export function usePlacesAutocomplete({
       return;
     }
 
-    // Clear existing timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    // Debounce the API call
     timeoutRef.current = setTimeout(() => {
       if (autocompleteService.current) {
         autocompleteService.current.getPlacePredictions(
@@ -60,7 +70,7 @@ export function usePlacesAutocomplete({
           }
         );
       }
-    }, 300); // 300ms debounce
+    }, 300);
   };
 
   const handleSelect = (placeId: string) => {
@@ -80,15 +90,6 @@ export function usePlacesAutocomplete({
       );
     }
   };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   return {
     predictions,
