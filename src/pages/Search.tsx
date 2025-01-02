@@ -8,7 +8,6 @@ import { Loader2, SlidersHorizontal, Store, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
-import { setupPlaceholderFlorists } from "@/utils/setupPlaceholderFlorists";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Search = () => {
@@ -16,7 +15,7 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const isMobile = useIsMobile();
 
-  const { data: products, isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
+  const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -36,7 +35,7 @@ const Search = () => {
     },
   });
 
-  const { data: florists, isLoading: isLoadingFlorists, refetch: refetchFlorists } = useQuery({
+  const { data: florists, isLoading: isLoadingFlorists } = useQuery({
     queryKey: ['florists'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -57,14 +56,6 @@ const Search = () => {
     </div>
   );
 
-  const handleSetupFlorists = async () => {
-    await setupPlaceholderFlorists();
-    await Promise.all([
-      refetchProducts(),
-      refetchFlorists()
-    ]);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -79,16 +70,6 @@ const Search = () => {
               <p className="text-lg text-muted-foreground text-center mb-4 font-light animate-fade-in-up">
                 Browse our collection of fresh, locally-sourced arrangements
               </p>
-              {(!florists || florists.length === 0) && (
-                <div className="text-center">
-                  <Button 
-                    onClick={handleSetupFlorists}
-                    className="mx-auto"
-                  >
-                    Setup Placeholder Florists
-                  </Button>
-                </div>
-              )}
             </div>
           </div>
         </div>
