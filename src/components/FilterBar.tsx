@@ -40,27 +40,27 @@ export const FilterBar = () => {
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/20">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="space-y-2.5">
           <label className="text-sm font-medium text-white/90">Location</label>
           <div className="relative h-10">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 h-10 bg-white/20 border-white/20 text-white placeholder:text-white/60"
+              className="w-full pl-10 h-10 bg-white/20 border-white/20 text-white placeholder:text-white/60 focus:ring-primary/20"
             />
           </div>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <label className="text-sm font-medium text-white/90">Date & Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal h-10 bg-white/20 border-white/20 text-white",
+                  "w-full justify-start text-left font-normal h-10 bg-white/20 border-white/20 text-white hover:bg-white/30",
                   !date && "text-white/60"
                 )}
               >
@@ -79,7 +79,7 @@ export const FilterBar = () => {
           </Popover>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium text-white/90">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
@@ -108,10 +108,10 @@ export const FilterBar = () => {
           </div>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <label className="text-sm font-medium text-white/90">Occasion</label>
           <Select>
-            <SelectTrigger className="h-10 bg-white/20 border-white/20 text-white">
+            <SelectTrigger className="h-10 bg-white/20 border-white/20 text-white hover:bg-white/30">
               <SelectValue placeholder="Select occasion" className="text-white/60" />
             </SelectTrigger>
             <SelectContent>
