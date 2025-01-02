@@ -21,20 +21,20 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm">
       <div className="container mx-auto px-4">
         <div className="h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-12">
+          <div className="flex items-center space-x-16">
             <a href="/" className="flex items-center">
               <img src="/lovable-uploads/d3c25b89-58e0-45d3-95af-7baa35c7d9fc.png" alt="Market Bloom" className="h-8" />
             </a>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="/search" className="text-primary hover:text-primary/80 transition-colors text-sm tracking-wide">
+            <nav className="hidden md:flex items-center space-x-12">
+              <a href="/search" className="text-primary hover:text-primary/80 transition-colors text-sm tracking-widest font-light">
                 Browse
               </a>
-              <a href="/about" className="text-primary hover:text-primary/80 transition-colors text-sm tracking-wide">
+              <a href="/about" className="text-primary hover:text-primary/80 transition-colors text-sm tracking-widest font-light">
                 About
               </a>
             </nav>
           </div>
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-8">
             <Button 
               variant="ghost" 
               size="icon"
@@ -43,7 +43,7 @@ export const Header = () => {
             >
               <ShoppingCart className="h-5 w-5" />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
@@ -53,14 +53,14 @@ export const Header = () => {
                 <Button 
                   variant="ghost" 
                   onClick={handleDashboardClick}
-                  className="text-sm tracking-wide"
+                  className="text-sm tracking-widest font-light"
                 >
                   Dashboard
                 </Button>
                 <Button 
                   variant="ghost" 
                   onClick={() => signOut()}
-                  className="text-sm tracking-wide"
+                  className="text-sm tracking-widest font-light"
                 >
                   Sign Out
                 </Button>
@@ -70,13 +70,13 @@ export const Header = () => {
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate("/login")}
-                  className="text-sm tracking-wide"
+                  className="text-sm tracking-widest font-light"
                 >
                   Login
                 </Button>
                 <Button 
                   onClick={() => navigate("/signup")} 
-                  className="bg-primary hover:bg-primary/90 text-sm tracking-wide"
+                  className="bg-black hover:bg-black/90 text-sm tracking-widest font-light"
                 >
                   Sign Up
                 </Button>

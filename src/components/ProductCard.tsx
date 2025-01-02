@@ -40,33 +40,31 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      className="group border-0 shadow-none cursor-pointer transition-all duration-500"
       onClick={() => navigate(`/product/${id}`)}
     >
       <CardHeader className="p-0">
-        <div className="aspect-square overflow-hidden">
+        <div className="aspect-[4/5] overflow-hidden">
           <img
             src={images?.[0] || "/placeholder.svg"}
             alt={title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
       </CardHeader>
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-2">{title}</h3>
-        <p className="text-gray-600 mb-2">${price.toFixed(2)}</p>
+      <CardContent className="px-0 pt-6">
+        <h3 className="font-light text-xl mb-2 tracking-wide">{title}</h3>
+        <p className="text-gray-900 mb-2 font-light">${price.toFixed(2)}</p>
         {floristName && (
-          <p className="text-sm text-gray-500">By {floristName}</p>
-        )}
-        {description && (
-          <p className="text-sm text-gray-500 mt-2 line-clamp-2">{description}</p>
+          <p className="text-sm text-gray-500 font-extralight">By {floristName}</p>
         )}
       </CardContent>
-      <CardFooter className="p-4 pt-0 flex gap-2">
+      <CardFooter className="px-0 pt-0">
         <Button 
           variant="outline"
           size="icon"
           onClick={handleAddToCart}
+          className="rounded-none hover:bg-black hover:text-white transition-colors duration-300"
         >
           <ShoppingCart className="h-4 w-4" />
         </Button>
