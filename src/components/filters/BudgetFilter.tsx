@@ -25,7 +25,7 @@ export const BudgetFilter = ({
           className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
             isAnyPrice 
               ? 'bg-primary text-white' 
-              : 'bg-white/20 text-white hover:bg-white/30'
+              : 'bg-white/20 text-foreground hover:bg-white/30'
           }`}
         >
           Any Price
