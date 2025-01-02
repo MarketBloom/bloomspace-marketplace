@@ -10,8 +10,8 @@ export const HomeFilterBar = () => {
   const navigate = useNavigate();
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("12:00");
-  const [budget, setBudget] = useState<number[]>([50]);
-  const [isAnyPrice, setIsAnyPrice] = useState(true);
+  const [budget, setBudget] = useState<number[]>([500]);
+  const [isAnyPrice, setIsAnyPrice] = useState(false);
 
   const handleSearch = () => {
     navigate('/search');
