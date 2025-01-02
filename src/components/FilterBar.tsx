@@ -39,28 +39,28 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="text-sm font-medium text-gray-500">Location</label>
-          <div className="relative">
+          <div className="relative h-10">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 bg-white/80 backdrop-blur-sm border-gray-200"
+              className="w-full pl-10 h-10 bg-white/80 backdrop-blur-sm border-gray-200"
             />
           </div>
         </div>
         
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="text-sm font-medium text-gray-500">Date & Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal bg-white/80 backdrop-blur-sm border-gray-200",
+                  "w-full justify-start text-left font-normal h-10 bg-white/80 backdrop-blur-sm border-gray-200",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -79,7 +79,7 @@ export const FilterBar = () => {
           </Popover>
         </div>
         
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium text-gray-500">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
@@ -93,7 +93,7 @@ export const FilterBar = () => {
               Any Price
             </button>
           </div>
-          <div className="px-3 py-2 rounded-md border border-gray-200 bg-white/80 backdrop-blur-sm h-[42px] flex items-center">
+          <div className="h-10 px-3 rounded-md border border-gray-200 bg-white/80 backdrop-blur-sm flex items-center">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
@@ -108,10 +108,10 @@ export const FilterBar = () => {
           </div>
         </div>
         
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="text-sm font-medium text-gray-500">Occasion</label>
           <Select>
-            <SelectTrigger className="bg-white/80 backdrop-blur-sm border-gray-200">
+            <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-gray-200">
               <SelectValue placeholder="Select occasion" />
             </SelectTrigger>
             <SelectContent>
@@ -126,7 +126,7 @@ export const FilterBar = () => {
       </div>
 
       <Button 
-        className="w-full bg-primary hover:bg-primary/90"
+        className="w-full bg-primary hover:bg-primary/90 mt-4"
         onClick={handleSearch}
       >
         <Search className="w-4 h-4 mr-2" />
