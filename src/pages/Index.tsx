@@ -81,6 +81,7 @@ const Index = () => {
                     description={product.description}
                     images={product.images}
                     floristName={product.florist_profiles?.store_name}
+                    floristId={product.florist_id}
                   />
                 ))}
               </div>
