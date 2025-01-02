@@ -50,14 +50,14 @@ const Search = () => {
   const FilterPanel = () => (
     <div className="w-full space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Filters</h3>
+        <h3 className="text-lg font-semibold mb-4 font-mono">Filters</h3>
         <FilterBar />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background font-mono">
       <Header />
       
       <main>
