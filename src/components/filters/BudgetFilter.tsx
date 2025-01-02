@@ -17,7 +17,7 @@ export const BudgetFilter = ({
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <label className="text-white text-xs font-medium drop-shadow-sm">
+        <label className="text-foreground text-xs font-medium">
           Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}
         </label>
         <button 
@@ -25,7 +25,7 @@ export const BudgetFilter = ({
           className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
             isAnyPrice 
               ? 'bg-primary text-white' 
-              : 'bg-white/20 text-white hover:bg-white/30'
+              : 'bg-white/20 text-foreground hover:bg-white/30'
           }`}
         >
           Any Price
