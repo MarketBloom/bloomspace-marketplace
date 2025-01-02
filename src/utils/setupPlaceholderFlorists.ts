@@ -47,6 +47,10 @@ export const setupPlaceholderFlorists = async () => {
             profile_id: authData.user.id,
             store_name: florist.storeName,
             phone_number: florist.phone
+          } as {
+            profile_id: string;
+            store_name: string;
+            phone_number: string;
           }
         );
 
@@ -57,6 +61,8 @@ export const setupPlaceholderFlorists = async () => {
           'add_florist_products',
           {
             florist_id: authData.user.id
+          } as {
+            florist_id: string;
           }
         );
 
