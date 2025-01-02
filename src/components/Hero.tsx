@@ -1,4 +1,4 @@
-import { FilterBar } from "@/components/FilterBar";
+import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
@@ -26,7 +26,7 @@ export const Hero = () => {
             </p>
           </div>
           
-          <FilterBar />
+          <HomeFilterBar />
         </div>
       </div>
     </section>
