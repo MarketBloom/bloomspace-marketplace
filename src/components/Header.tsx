@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b">
@@ -21,12 +23,25 @@ export const Header = () => {
           </nav>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => navigate("/login")}>
-            Login
-          </Button>
-          <Button onClick={() => navigate("/signup")} className="bg-primary hover:bg-primary/90">
-            Sign Up
-          </Button>
+          {user ? (
+            <>
+              <Button variant="ghost" onClick={() => navigate("/dashboard")}>
+                Dashboard
+              </Button>
+              <Button variant="ghost" onClick={() => signOut()}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/signup")} className="bg-primary hover:bg-primary/90">
+                Sign Up
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

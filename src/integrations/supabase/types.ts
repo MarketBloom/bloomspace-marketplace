@@ -9,7 +9,296 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      florist_profiles: {
+        Row: {
+          about_text: string | null
+          address: string
+          commission_rate: number | null
+          created_at: string
+          delivery_cutoff: string | null
+          id: string
+          is_premium: boolean | null
+          operating_hours: Json | null
+          premium_since: string | null
+          store_name: string
+          updated_at: string
+          verified: boolean | null
+        }
+        Insert: {
+          about_text?: string | null
+          address: string
+          commission_rate?: number | null
+          created_at?: string
+          delivery_cutoff?: string | null
+          id: string
+          is_premium?: boolean | null
+          operating_hours?: Json | null
+          premium_since?: string | null
+          store_name: string
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Update: {
+          about_text?: string | null
+          address?: string
+          commission_rate?: number | null
+          created_at?: string
+          delivery_cutoff?: string | null
+          id?: string
+          is_premium?: boolean | null
+          operating_hours?: Json | null
+          premium_since?: string | null
+          store_name?: string
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "florist_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          price_at_time: number
+          product_id: string | null
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price_at_time: number
+          product_id?: string | null
+          quantity: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price_at_time?: number
+          product_id?: string | null
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          customer_id: string | null
+          delivery_address: string | null
+          delivery_time: string | null
+          florist_id: string | null
+          id: string
+          is_delivery: boolean | null
+          status: string | null
+          stripe_payment_id: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          commission_amount: number
+          created_at?: string
+          customer_id?: string | null
+          delivery_address?: string | null
+          delivery_time?: string | null
+          florist_id?: string | null
+          id?: string
+          is_delivery?: boolean | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          customer_id?: string | null
+          delivery_address?: string | null
+          delivery_time?: string | null
+          florist_id?: string | null
+          id?: string
+          is_delivery?: boolean | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_florist_id_fkey"
+            columns: ["florist_id"]
+            isOneToOne: false
+            referencedRelation: "florist_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          florist_id: string | null
+          id: string
+          images: string[] | null
+          in_stock: boolean | null
+          is_hidden: boolean | null
+          occasion: string[] | null
+          price: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          florist_id?: string | null
+          id?: string
+          images?: string[] | null
+          in_stock?: boolean | null
+          is_hidden?: boolean | null
+          occasion?: string[] | null
+          price: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          florist_id?: string | null
+          id?: string
+          images?: string[] | null
+          in_stock?: boolean | null
+          is_hidden?: boolean | null
+          occasion?: string[] | null
+          price?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_florist_id_fkey"
+            columns: ["florist_id"]
+            isOneToOne: false
+            referencedRelation: "florist_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          customer_id: string | null
+          florist_id: string | null
+          id: string
+          order_id: string | null
+          rating: number | null
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          customer_id?: string | null
+          florist_id?: string | null
+          id?: string
+          order_id?: string | null
+          rating?: number | null
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          customer_id?: string | null
+          florist_id?: string | null
+          id?: string
+          order_id?: string | null
+          rating?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_florist_id_fkey"
+            columns: ["florist_id"]
+            isOneToOne: false
+            referencedRelation: "florist_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
