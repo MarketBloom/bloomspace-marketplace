@@ -14,7 +14,7 @@ export const Hero = () => {
               filter: 'contrast(1.1) brightness(0.9)'
             }}
             loading="eager"
-            priority="high"
+            fetchpriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
           <div 
