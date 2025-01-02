@@ -31,18 +31,18 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 tracking-tight">Shop by Category</h2>
-        <p className="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto font-light">
-          Find fresh, local arrangements for every occasion, at any price point
+        <h2 className="text-3xl font-medium text-center mb-3 tracking-tight">Shop by Category</h2>
+        <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
+          Find fresh, local arrangements for every occasion
         </p>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden rounded-xl cursor-pointer shadow-md transition-shadow hover:shadow-lg"
+              className="group relative overflow-hidden cursor-pointer"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
-              <div className="aspect-[3/4]">
+              <div className="aspect-[3/4] rounded-lg overflow-hidden">
                 <img 
                   src={category.image} 
                   alt={category.name}
@@ -51,9 +51,9 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <div className="mb-2">{category.icon}</div>
-                <h3 className="text-xl font-semibold mb-1 tracking-tight text-white">{category.name}</h3>
-                <p className="text-sm text-gray-200 font-light">{category.description}</p>
+                <div className="mb-2 text-white">{category.icon}</div>
+                <h3 className="text-xl font-medium mb-1 text-white tracking-tight">{category.name}</h3>
+                <p className="text-sm text-gray-200">{category.description}</p>
               </div>
             </div>
           ))}
