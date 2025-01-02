@@ -1,20 +1,20 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { CartProvider } from "@/contexts/CartContext";
-import { Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Search from "./pages/Search";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import CustomerDashboard from "./pages/CustomerDashboard";
-import FloristDashboard from "./pages/FloristDashboard";
-import ProductDetail from "./pages/ProductDetail";
-import Cart from "./pages/Cart";
+import { Toaster } from "@/components/ui/toaster"
+import { Toaster as Sonner } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { BrowserRouter } from "react-router-dom"
+import { CartProvider } from "@/contexts/CartContext"
+import { Routes, Route } from "react-router-dom"
+import Index from "./pages/Index"
+import Search from "./pages/Search"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
+import CustomerDashboard from "./pages/CustomerDashboard"
+import FloristDashboard from "./pages/FloristDashboard"
+import ProductDetail from "./pages/ProductDetail"
+import Cart from "./pages/Cart"
 
-console.log('App.tsx initializing...')
+console.log('App.tsx initializing...', new Date().toISOString())
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,10 +23,11 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000,
     },
   },
-});
+})
 
 const App = () => {
-  console.log('App component rendering...')
+  console.log('App component rendering...', new Date().toISOString())
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -48,7 +49,7 @@ const App = () => {
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  );
-};
+  )
+}
 
-export default App;
+export default App
