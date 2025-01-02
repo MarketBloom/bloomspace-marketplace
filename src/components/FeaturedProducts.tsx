@@ -3,6 +3,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { memo } from "react";
 
 interface FeaturedProductsProps {
   products: any[];
@@ -10,8 +11,8 @@ interface FeaturedProductsProps {
   navigate: (path: string) => void;
 }
 
-export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
-  // Implement stale-while-revalidate caching strategy
+export const FeaturedProducts = memo(({ products, isLoading, navigate }: FeaturedProductsProps) => {
+  // Implement stale-while-revalidate caching strategy with optimized query
   const { data: cachedProducts, isLoading: isCacheLoading } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
@@ -19,7 +20,10 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
       const { data, error } = await supabase
         .from('products')
         .select(`
-          *,
+          id,
+          title,
+          price,
+          images,
           florist_profiles (
             store_name
           )
@@ -34,7 +38,8 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
     },
     staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
     gcTime: 1000 * 60 * 15,   // Keep unused data for 15 minutes
-    refetchOnWindowFocus: false // Prevent unnecessary refetches
+    refetchOnWindowFocus: false, // Prevent unnecessary refetches
+    retry: 1 // Only retry failed requests once
   });
 
   const displayProducts = cachedProducts || products;
@@ -91,4 +96,6 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
       </div>
     </section>
   );
-};
+});
+
+FeaturedProducts.displayName = 'FeaturedProducts';

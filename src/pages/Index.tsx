@@ -17,7 +17,10 @@ export default function Index() {
       const { data, error } = await supabase
         .from('products')
         .select(`
-          *,
+          id,
+          title,
+          price,
+          images,
           florist_profiles (
             store_name
           )
