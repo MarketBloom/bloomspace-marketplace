@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationFilter } from "./filters/LocationFilter";
-import { DateFilter } from "./filters/DateFilter";
-import { TimeFilter } from "./filters/TimeFilter";
-import { BudgetFilter } from "./filters/BudgetFilter";
+import { LocationFilter } from "./home-filters/LocationFilter";
+import { DateFilter } from "./home-filters/DateFilter";
+import { TimeFilter } from "./home-filters/TimeFilter";
+import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { FilterBarLayout } from "./filters/FilterBarLayout";
 
 export const HomeFilterBar = () => {
