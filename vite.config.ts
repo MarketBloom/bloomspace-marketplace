@@ -7,7 +7,11 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    https: true, // Enable HTTPS
+    https: {
+      // Basic HTTPS configuration
+      cert: undefined,
+      key: undefined,
+    },
     headers: {
       'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
       'X-Content-Type-Options': 'nosniff',
