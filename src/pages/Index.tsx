@@ -62,42 +62,49 @@ const Index = () => {
       <Header />
       
       <main>
-        {/* Hero Section */}
-        <section className="relative h-[80vh] flex items-center justify-center">
+        {/* Hero Section with updated messaging and design */}
+        <section className="relative h-[85vh] flex items-center justify-center">
           <div className="absolute inset-0">
             <img 
               src="/lovable-uploads/2e9cbcc7-b4e1-4fdb-bb65-b58f0afd8976.png" 
-              alt="Beautiful flower arrangement"
+              alt="Fresh flowers from local florists"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-black/30" />
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-8">
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
-                Bloomspace
+              <h1 className="text-5xl md:text-7xl font-bold mb-4 text-white">
+                Market Bloom
               </h1>
-              <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">
-                Discover unique floral arrangements from local artisan florists
+              <p className="text-xl md:text-2xl text-gray-100 mb-4">
+                Same-Day or Any-Day Flowers, Delivered or Picked Up
+              </p>
+              <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
+                Support local florists and get the perfect arrangement for any occasion, 
+                delivered or picked up on your schedule.
               </p>
               
-              <div className="max-w-4xl mx-auto backdrop-blur-md bg-white/90 rounded-lg p-6">
+              <div className="max-w-4xl mx-auto backdrop-blur-md bg-white/10 rounded-xl p-6 shadow-lg">
                 <FilterBar />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Categories Section */}
+        {/* Categories Section with updated imagery */}
         <section className="py-24 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-16">Shop by Category</h2>
+            <h2 className="text-4xl font-bold text-center mb-4">Shop by Category</h2>
+            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+              Find fresh, local arrangements for every occasion, at any price point
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {categories.map((category) => (
                 <div
                   key={category.name}
-                  className="group relative overflow-hidden rounded-2xl cursor-pointer"
+                  className="group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg"
                   onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
                 >
                   <div className="aspect-[4/5]">
@@ -119,13 +126,13 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Featured Section */}
+        {/* Featured Section with local focus */}
         <section className="py-24">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-end mb-12">
               <div>
                 <h2 className="text-4xl font-bold mb-4">Featured Arrangements</h2>
-                <p className="text-gray-600 text-lg">Handpicked selections from our local florists</p>
+                <p className="text-gray-600 text-lg">Fresh picks from local artisan florists</p>
               </div>
               <Button 
                 variant="outline"
@@ -159,7 +166,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Trust Section */}
+        {/* Trust Section highlighting local focus */}
         <section className="py-24 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
@@ -167,15 +174,16 @@ const Index = () => {
                 <div>
                   <img 
                     src="/lovable-uploads/c7fd657a-4ba4-4d9b-bb36-f03266f5cdc0.png"
-                    alt="Flower delivery"
+                    alt="Local florist creating an arrangement"
                     className="rounded-2xl shadow-xl"
                   />
                 </div>
                 <div className="space-y-6">
-                  <h2 className="text-4xl font-bold">Local Artisan Florists</h2>
+                  <h2 className="text-4xl font-bold">Support Local Artisan Florists</h2>
                   <p className="text-gray-600 text-lg leading-relaxed">
-                    Every arrangement is crafted with care by our network of passionate local florists. 
-                    Support small businesses while receiving beautiful, fresh flowers delivered right to your door.
+                    Every arrangement is crafted with care by passionate local florists in your area. 
+                    Get fresh, beautiful flowers delivered right to your door or pick up from the shop, 
+                    all while supporting small businesses in your community.
                   </p>
                   <Button 
                     size="lg"
