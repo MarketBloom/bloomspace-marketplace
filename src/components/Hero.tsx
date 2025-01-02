@@ -2,7 +2,7 @@ import { FilterBar } from "@/components/FilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative h-[70vh] flex items-center justify-center">
+    <section className="relative h-[70vh] flex items-center justify-center mt-16">
       <div className="absolute inset-0 flex justify-center px-4">
         <div className="relative h-full w-full max-w-[1400px] rounded-2xl overflow-hidden">
           <img 
