@@ -9,7 +9,7 @@ export const Hero = () => {
             src="/lovable-uploads/c25247c9-5d25-478b-8575-a9939a35fd68.png"
             alt="Beautiful flower arrangement with pink roses and mixed flowers in kraft paper"
             className="h-full w-full object-cover"
-            style={{ objectPosition: '50% 0%' }} // Changed to 0% to crop from top
+            style={{ objectPosition: '50% 50%' }} // Changed to 50% to center vertically
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/20" />
         </div>
