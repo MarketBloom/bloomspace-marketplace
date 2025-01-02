@@ -8,9 +8,9 @@ export const Hero = () => {
           <img 
             src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
             alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
-            className="h-full w-full object-cover opacity-90 md:scale-110"
+            className="h-full w-full object-cover opacity-90"
             style={{ 
-              objectPosition: 'center 35%',
+              objectPosition: 'center top',
               filter: 'contrast(1.1) brightness(0.9)'
             }}
           />
