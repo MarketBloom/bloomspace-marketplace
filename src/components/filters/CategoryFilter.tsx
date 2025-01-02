@@ -23,8 +23,8 @@ export const CategoryFilter = ({
 }: CategoryFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-medium text-black">Categories</label>
-      <div className="space-y-2 bg-white border rounded-md p-2.5">
+      <label className="text-white/90 text-xs">Categories</label>
+      <div className="space-y-2 bg-white/90 border border-white/20 rounded-md p-2">
         {categories.map((category) => (
           <div key={category} className="flex items-center space-x-2">
             <Checkbox 
@@ -37,6 +37,7 @@ export const CategoryFilter = ({
                   setSelectedCategories(selectedCategories.filter(c => c !== category));
                 }
               }}
+              className="h-3.5 w-3.5"
             />
             <Label htmlFor={`category-${category}`} className="text-xs">{category}</Label>
           </div>

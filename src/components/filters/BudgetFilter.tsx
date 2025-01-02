@@ -17,12 +17,12 @@ export const BudgetFilter = ({
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <label className="text-white/90 text-sm">
+        <label className="text-white/90 text-xs">
           Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}
         </label>
         <button 
           onClick={() => setIsAnyPrice(!isAnyPrice)}
-          className={`text-xs px-3 py-1 rounded-full transition-colors ${
+          className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
             isAnyPrice 
               ? 'bg-primary text-white' 
               : 'bg-white/20 text-white hover:bg-white/30'
@@ -31,7 +31,7 @@ export const BudgetFilter = ({
           Any Price
         </button>
       </div>
-      <div className="px-2 py-2 rounded-md bg-white/90 border-0 h-9 flex items-center">
+      <div className="px-2 py-2 rounded-md bg-white/90 border border-white/20 h-9 flex items-center">
         <Slider
           value={budget}
           onValueChange={(value) => {
