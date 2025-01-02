@@ -8,15 +8,29 @@ import { useNavigate } from "react-router-dom";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState([0]);
+  const [budget, setBudget] = useState<number[]>([0]);
+  const [isAnyPrice, setIsAnyPrice] = useState(true);
 
   const handleSearch = () => {
     navigate('/search');
   };
 
   const formatBudgetDisplay = (value: number) => {
+    if (isAnyPrice) return "Any";
     if (value >= 500) return "$500+";
     return `$${value}`;
+  };
+
+  const handleBudgetChange = (newValue: number[]) => {
+    setIsAnyPrice(false);
+    setBudget(newValue);
+  };
+
+  const toggleAnyPrice = () => {
+    setIsAnyPrice(!isAnyPrice);
+    if (!isAnyPrice) {
+      setBudget([0]);
+    }
   };
 
   return (
@@ -47,14 +61,27 @@ export const FilterBar = () => {
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Budget ({formatBudgetDisplay(budget[0])})</label>
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium text-white">Budget ({formatBudgetDisplay(budget[0])})</label>
+            <button 
+              onClick={toggleAnyPrice}
+              className={`text-xs px-2 py-1 rounded transition-colors ${
+                isAnyPrice 
+                  ? 'bg-white/30 text-white' 
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              Any Price
+            </button>
+          </div>
           <div className="px-3 py-2 bg-white/20 rounded-md">
             <Slider
               value={budget}
-              onValueChange={setBudget}
+              onValueChange={handleBudgetChange}
               max={500}
               step={10}
-              className="my-4"
+              className={`my-4 ${isAnyPrice ? 'opacity-50' : ''}`}
+              disabled={isAnyPrice}
             />
           </div>
         </div>
