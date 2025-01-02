@@ -10,17 +10,17 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-16">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-12">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight">Featured Arrangements</h2>
-            <p className="text-xl text-gray-600 mt-2 font-extralight">Fresh picks from local artisan florists</p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured Arrangements</h2>
+            <p className="text-lg text-gray-600 mt-1">Fresh picks from local artisan florists</p>
           </div>
           <Button 
             variant="outline"
             onClick={() => navigate('/search')}
-            className="hidden md:flex text-lg font-light tracking-wide px-8"
+            className="hidden md:flex"
           >
             View All
           </Button>
@@ -32,7 +32,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products?.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -49,7 +49,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
             <Button 
               variant="outline"
               onClick={() => navigate('/search')}
-              className="w-full mt-8 md:hidden text-lg font-light tracking-wide"
+              className="w-full mt-6 md:hidden"
             >
               View All
             </Button>

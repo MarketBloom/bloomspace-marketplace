@@ -29,31 +29,31 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-24">
+    <section className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-light text-center mb-3 tracking-tight">Shop by Category</h2>
-        <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto font-extralight">
-          Find fresh, local arrangements for every occasion
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 tracking-tight">Shop by Category</h2>
+        <p className="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto font-light">
+          Find fresh, local arrangements for every occasion, at any price point
         </p>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer"
+              className="group relative overflow-hidden rounded-xl cursor-pointer shadow-md transition-shadow hover:shadow-lg"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
-              <div className="aspect-[4/5]">
+              <div className="aspect-[3/4]">
                 <img 
                   src={category.image} 
                   alt={category.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="mb-3 text-white/90">{category.icon}</div>
-                <h3 className="text-2xl font-light mb-2 tracking-wide text-white">{category.name}</h3>
-                <p className="text-base text-white/80 font-extralight">{category.description}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="mb-2">{category.icon}</div>
+                <h3 className="text-xl font-semibold mb-1 tracking-tight text-white">{category.name}</h3>
+                <p className="text-sm text-gray-200 font-light">{category.description}</p>
               </div>
             </div>
           ))}
