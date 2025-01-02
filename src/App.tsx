@@ -14,8 +14,6 @@ import FloristDashboard from "./pages/FloristDashboard"
 import ProductDetail from "./pages/ProductDetail"
 import Cart from "./pages/Cart"
 
-console.log('App.tsx initializing...', new Date().toISOString())
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,8 +24,6 @@ const queryClient = new QueryClient({
 })
 
 const App = () => {
-  console.log('App component rendering...', new Date().toISOString())
-  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
