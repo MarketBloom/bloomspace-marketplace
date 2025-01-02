@@ -31,7 +31,7 @@ export const BudgetFilter = ({
           Any Price
         </button>
       </div>
-      <div className="px-2 py-2 rounded-md bg-white/90 border-0 h-9">
+      <div className="px-2 py-2 rounded-md bg-white/90 border-0 h-9 flex items-center">
         <Slider
           value={budget}
           onValueChange={(value) => {
