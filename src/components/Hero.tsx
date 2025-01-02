@@ -2,15 +2,15 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-[80vh] md:h-[65vh] flex items-start md:items-center justify-center md:mt-14">
+    <section className="relative min-h-[80vh] md:h-[75vh] flex items-start md:items-center justify-center md:mt-14">
       <div className="absolute inset-0 flex justify-center">
         <div className="relative h-full w-full max-w-[1400px] overflow-hidden">
           <img 
             src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
             alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
-            className="h-full w-full object-cover opacity-85"
+            className="h-full w-full object-cover opacity-85 md:scale-105"
             style={{ 
-              objectPosition: '50% 50%',
+              objectPosition: '50% 45%',
               filter: 'contrast(1.1) brightness(0.85)'
             }}
           />
