@@ -19,7 +19,7 @@ export default function Index() {
         .from('products')
         .select(`
           *,
-          florist_profiles (
+          florist_profiles!left (
             store_name
           )
         `)
