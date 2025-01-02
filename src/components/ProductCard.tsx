@@ -61,11 +61,11 @@ export const ProductCard = ({
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className={`absolute inset-0 bg-black/10 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-          <div className="absolute top-4 right-4 space-y-2">
+          <div className="absolute top-3 right-3 space-y-1.5">
             <Button
               variant="secondary"
               size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
               onClick={(e) => {
                 e.stopPropagation();
                 toast({
@@ -74,13 +74,13 @@ export const ProductCard = ({
                 });
               }}
             >
-              <Heart className="h-4 w-4" />
+              <Heart className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-4">
-        <div className="space-y-2">
+      <CardContent className="p-3">
+        <div className="space-y-1.5">
           <h3 className="text-sm font-medium tracking-tight leading-none">{title}</h3>
           <p className="text-sm text-gray-600">${price.toFixed(2)}</p>
           {floristName && (
@@ -91,11 +91,11 @@ export const ProductCard = ({
           )}
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-3 pt-0">
         <Button 
           variant="outline"
           size="sm"
-          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs"
+          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs h-8"
           onClick={handleAddToCart}
         >
           <ShoppingCart className="h-3.5 w-3.5 mr-2" />

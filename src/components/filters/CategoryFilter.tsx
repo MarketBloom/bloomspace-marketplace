@@ -24,7 +24,7 @@ export const CategoryFilter = ({
   return (
     <div className="space-y-1.5">
       <label className="text-sm font-medium text-black">Categories</label>
-      <div className="space-y-2 bg-white border rounded-md p-3">
+      <div className="space-y-2 bg-white border rounded-md p-2.5">
         {categories.map((category) => (
           <div key={category} className="flex items-center space-x-2">
             <Checkbox 
