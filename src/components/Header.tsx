@@ -18,65 +18,50 @@ export const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-12">
+        <div className="flex items-center space-x-8">
           <a href="/" className="flex items-center space-x-2">
-            <img src="/lovable-uploads/d3c25b89-58e0-45d3-95af-7baa35c7d9fc.png" alt="Market Bloom" className="h-6" />
+            <img src="/lovable-uploads/d3c25b89-58e0-45d3-95af-7baa35c7d9fc.png" alt="Market Bloom" className="h-8" />
           </a>
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="/search" className="text-gray-800 hover:text-black text-sm font-light tracking-wide transition-colors">
+          <nav className="hidden md:flex items-center space-x-6">
+            <a href="/search" className="text-gray-600 hover:text-primary transition-colors">
               Browse
             </a>
-            <a href="/about" className="text-gray-800 hover:text-black text-sm font-light tracking-wide transition-colors">
+            <a href="/about" className="text-gray-600 hover:text-primary transition-colors">
               About
             </a>
           </nav>
         </div>
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
             size="icon"
-            className="relative hover:bg-transparent"
+            className="relative"
             onClick={() => navigate("/cart")}
           >
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-5 w-5" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {itemCount}
               </span>
             )}
           </Button>
           {user ? (
             <>
-              <Button 
-                variant="ghost" 
-                onClick={handleDashboardClick}
-                className="text-sm font-light tracking-wide hover:bg-transparent hover:text-black transition-colors"
-              >
+              <Button variant="ghost" onClick={handleDashboardClick}>
                 Dashboard
               </Button>
-              <Button 
-                variant="ghost" 
-                onClick={() => signOut()}
-                className="text-sm font-light tracking-wide hover:bg-transparent hover:text-black transition-colors"
-              >
+              <Button variant="ghost" onClick={() => signOut()}>
                 Sign Out
               </Button>
             </>
           ) : (
             <>
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate("/login")}
-                className="text-sm font-light tracking-wide hover:bg-transparent hover:text-black transition-colors"
-              >
+              <Button variant="ghost" onClick={() => navigate("/login")}>
                 Login
               </Button>
-              <Button 
-                onClick={() => navigate("/signup")} 
-                className="bg-black hover:bg-black/90 text-white text-sm font-light tracking-wide rounded-none transition-colors"
-              >
+              <Button onClick={() => navigate("/signup")} className="bg-primary hover:bg-primary/90">
                 Sign Up
               </Button>
             </>
