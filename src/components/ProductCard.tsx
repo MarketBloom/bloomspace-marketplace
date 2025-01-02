@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
@@ -54,7 +54,7 @@ export const ProductCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="p-0">
-        <div className="aspect-[4/5] overflow-hidden relative">
+        <div className="aspect-square overflow-hidden relative">
           <img
             src={images?.[0] || "/placeholder.svg"}
             alt={title}
@@ -65,7 +65,7 @@ export const ProductCard = ({
             <Button
               variant="secondary"
               size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
               onClick={(e) => {
                 e.stopPropagation();
                 toast({
@@ -80,11 +80,14 @@ export const ProductCard = ({
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <div className="space-y-1">
+        <div className="space-y-2">
           <h3 className="font-medium text-base tracking-tight leading-none">{title}</h3>
           <p className="text-sm text-gray-600">${price.toFixed(2)}</p>
           {floristName && (
-            <p className="text-xs text-gray-500 mt-1">By {floristName}</p>
+            <div className="flex items-start space-x-1.5 text-xs text-gray-500">
+              <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+              <span className="line-clamp-2">{floristName}</span>
+            </div>
           )}
         </div>
       </CardContent>

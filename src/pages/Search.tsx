@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { setupPlaceholderFlorists } from "@/utils/setupPlaceholderFlorists";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Search = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
+  const isMobile = useIsMobile();
 
   const { data: products, isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
     queryKey: ['products'],
@@ -71,10 +73,10 @@ const Search = () => {
         <div className="relative bg-white border-b">
           <div className="container mx-auto px-4 pt-28 pb-12">
             <div className="max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight animate-fade-in">
                 Find Your Perfect Flowers
               </h1>
-              <p className="text-lg text-muted-foreground text-center mb-4 font-light">
+              <p className="text-lg text-muted-foreground text-center mb-4 font-light animate-fade-in-up">
                 Browse our collection of fresh, locally-sourced arrangements
               </p>
               {(!florists || florists.length === 0) && (
@@ -92,7 +94,7 @@ const Search = () => {
         </div>
 
         <div className="container mx-auto px-4 py-12">
-          <div className="lg:grid lg:grid-cols-[280px_1fr] gap-8">
+          <div className="lg:grid lg:grid-cols-[220px_1fr] gap-6">
             {/* Desktop Sidebar */}
             <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-12">
               <FilterPanel />
@@ -107,7 +109,7 @@ const Search = () => {
                     Filters
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[300px]">
+                <SheetContent side="left" className="w-[280px]">
                   <FilterPanel />
                 </SheetContent>
               </Sheet>
@@ -120,7 +122,7 @@ const Search = () => {
                 <Button
                   variant={viewMode === 'products' ? 'default' : 'outline'}
                   onClick={() => setViewMode('products')}
-                  className="flex-1 sm:flex-none"
+                  className="flex-1 sm:flex-none animate-fade-in"
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Products
@@ -128,7 +130,7 @@ const Search = () => {
                 <Button
                   variant={viewMode === 'florists' ? 'default' : 'outline'}
                   onClick={() => setViewMode('florists')}
-                  className="flex-1 sm:flex-none"
+                  className="flex-1 sm:flex-none animate-fade-in"
                 >
                   <Store className="h-4 w-4 mr-2" />
                   Florists
@@ -142,22 +144,23 @@ const Search = () => {
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   </div>
                 ) : products && products.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                     {products.map((product) => (
-                      <ProductCard
-                        key={product.id}
-                        id={product.id}
-                        title={product.title}
-                        price={product.price}
-                        description={product.description}
-                        images={product.images}
-                        floristName={product.florist_profiles?.store_name}
-                        floristId={product.florist_id}
-                      />
+                      <div key={product.id} className="animate-fade-in-up">
+                        <ProductCard
+                          id={product.id}
+                          title={product.title}
+                          price={product.price}
+                          description={product.description}
+                          images={product.images}
+                          floristName={product.florist_profiles?.store_name}
+                          floristId={product.florist_id}
+                        />
+                      </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
+                  <div className="text-center py-12 animate-fade-in">
                     <h2 className="text-2xl font-semibold mb-2">No products found</h2>
                     <p className="text-muted-foreground">
                       Try adjusting your search criteria
@@ -173,19 +176,20 @@ const Search = () => {
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   </div>
                 ) : florists && florists.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                     {florists.map((florist) => (
-                      <FloristCard
-                        key={florist.id}
-                        id={florist.id}
-                        storeName={florist.store_name}
-                        address={florist.address}
-                        aboutText={florist.about_text}
-                      />
+                      <div key={florist.id} className="animate-fade-in-up">
+                        <FloristCard
+                          id={florist.id}
+                          storeName={florist.store_name}
+                          address={florist.address}
+                          aboutText={florist.about_text}
+                        />
+                      </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
+                  <div className="text-center py-12 animate-fade-in">
                     <h2 className="text-2xl font-semibold mb-2">No florists found</h2>
                     <p className="text-muted-foreground">
                       Try adjusting your search criteria
