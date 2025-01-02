@@ -15,7 +15,7 @@ export const BudgetFilter = ({
   return (
     <div className="space-y-1.5">
       <label className="text-foreground text-xs font-medium">
-        Budget ${budget[0]}${budget[0] >= 500 ? '+' : ''}
+        Budget ${budget[0]}{budget[0] >= 500 ? '+' : ''}
       </label>
       <div className="px-2 py-2 rounded-md bg-white/90 border border-white/20 h-9 flex items-center">
         <Slider
