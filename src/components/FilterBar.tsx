@@ -40,31 +40,31 @@ export const FilterBar = () => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Location</label>
+          <label className="text-sm font-medium text-gray-700">Location</label>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 bg-white/20 border-0 placeholder:text-gray-300 text-white focus:bg-white/30"
+              className="w-full pl-10 border-gray-200"
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Date & Time</label>
+          <label className="text-sm font-medium text-gray-700">Date & Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full relative justify-start text-left font-normal bg-white/20 border-0 hover:bg-white/30 text-white",
-                  !date && "text-gray-300"
+                  "w-full justify-start text-left font-normal border-gray-200",
+                  !date && "text-gray-500"
                 )}
               >
-                <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
+                <CalendarIcon className="mr-2 h-4 w-4" />
                 {date ? format(date, "PPP") : "Pick a date"}
               </Button>
             </PopoverTrigger>
@@ -81,19 +81,19 @@ export const FilterBar = () => {
         
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-white">Budget ({formatBudgetDisplay(budget[0])})</label>
+            <label className="text-sm font-medium text-gray-700">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
               onClick={toggleAnyPrice}
               className={`text-xs px-2 py-0.5 rounded transition-colors ${
                 isAnyPrice 
-                  ? 'bg-white/30 text-white' 
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-gray-200 text-gray-800' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               Any Price
             </button>
           </div>
-          <div className="relative bg-white/20 rounded-md h-10 flex items-center px-3">
+          <div className="px-3 py-2 border rounded-md border-gray-200">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
@@ -106,9 +106,9 @@ export const FilterBar = () => {
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Occasion</label>
+          <label className="text-sm font-medium text-gray-700">Occasion</label>
           <Select>
-            <SelectTrigger className="bg-white/20 border-0 text-white focus:bg-white/30">
+            <SelectTrigger className="border-gray-200">
               <SelectValue placeholder="Select occasion" />
             </SelectTrigger>
             <SelectContent>
@@ -123,11 +123,11 @@ export const FilterBar = () => {
       </div>
 
       <Button 
-        className="w-full md:w-auto px-8 py-2 bg-primary hover:bg-primary/90"
+        className="w-full bg-primary hover:bg-primary/90"
         onClick={handleSearch}
       >
         <Search className="w-4 h-4 mr-2" />
-        Find Flowers
+        Search
       </Button>
     </div>
   );
