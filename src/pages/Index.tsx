@@ -18,17 +18,20 @@ export default function Index() {
         .from('products')
         .select(`
           *,
-          florist_profiles!left (
+          florist_profiles (
             store_name
           )
         `)
         .eq('in_stock', true)
         .eq('is_hidden', false)
-        .limit(6);
+        .limit(8)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data;
     },
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    gcTime: 1000 * 60 * 15    // Keep unused data for 15 minutes
   });
 
   return (
