@@ -10,15 +10,21 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+const ITEMS_PER_PAGE = 12;
+
 const Search = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
+  const [page, setPage] = useState(1);
   const isMobile = useIsMobile();
 
-  const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products'],
+  const { data: productsData, isLoading: isLoadingProducts } = useQuery({
+    queryKey: ['products', page],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const start = (page - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE - 1;
+
+      const { data, error, count } = await supabase
         .from('products')
         .select(`
           *,
@@ -26,26 +32,35 @@ const Search = () => {
             store_name,
             address
           )
-        `)
+        `, { count: 'exact' })
         .eq('in_stock', true)
-        .eq('is_hidden', false);
+        .eq('is_hidden', false)
+        .range(start, end);
 
       if (error) throw error;
-      return data;
+      return { items: data, total: count };
     },
   });
 
-  const { data: florists, isLoading: isLoadingFlorists } = useQuery({
-    queryKey: ['florists'],
+  const { data: floristsData, isLoading: isLoadingFlorists } = useQuery({
+    queryKey: ['florists', page],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const start = (page - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE - 1;
+
+      const { data, error, count } = await supabase
         .from('florist_profiles')
-        .select('*');
+        .select('*', { count: 'exact' })
+        .range(start, end);
 
       if (error) throw error;
-      return data;
+      return { items: data, total: count };
     },
   });
+
+  const totalPages = viewMode === 'products' 
+    ? Math.ceil((productsData?.total || 0) / ITEMS_PER_PAGE)
+    : Math.ceil((floristsData?.total || 0) / ITEMS_PER_PAGE);
 
   const FilterPanel = () => (
     <div className="w-full space-y-6">
@@ -102,7 +117,10 @@ const Search = () => {
               <div className="flex gap-2 mb-6">
                 <Button
                   variant={viewMode === 'products' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('products')}
+                  onClick={() => {
+                    setViewMode('products');
+                    setPage(1);
+                  }}
                   className="flex-1 sm:flex-none animate-fade-in text-sm"
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
@@ -110,7 +128,10 @@ const Search = () => {
                 </Button>
                 <Button
                   variant={viewMode === 'florists' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('florists')}
+                  onClick={() => {
+                    setViewMode('florists');
+                    setPage(1);
+                  }}
                   className="flex-1 sm:flex-none animate-fade-in text-sm"
                 >
                   <Store className="h-4 w-4 mr-2" />
@@ -124,22 +145,45 @@ const Search = () => {
                   <div className="flex justify-center items-center h-[200px]">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   </div>
-                ) : products && products.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                    {products.map((product) => (
-                      <div key={product.id} className="animate-fade-in-up">
-                        <ProductCard
-                          id={product.id}
-                          title={product.title}
-                          price={product.price}
-                          description={product.description}
-                          images={product.images}
-                          floristName={product.florist_profiles?.store_name}
-                          floristId={product.florist_id}
-                        />
+                ) : productsData?.items && productsData.items.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                      {productsData.items.map((product) => (
+                        <div key={product.id} className="animate-fade-in-up">
+                          <ProductCard
+                            id={product.id}
+                            title={product.title}
+                            price={product.price}
+                            description={product.description}
+                            images={product.images}
+                            floristName={product.florist_profiles?.store_name}
+                            floristId={product.florist_id}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {totalPages > 1 && (
+                      <div className="mt-8 flex justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setPage(p => Math.max(1, p - 1))}
+                          disabled={page === 1}
+                        >
+                          Previous
+                        </Button>
+                        <span className="flex items-center px-4">
+                          Page {page} of {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                          disabled={page === totalPages}
+                        >
+                          Next
+                        </Button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-12 animate-fade-in">
                     <h2 className="text-xl font-semibold mb-2">No products found</h2>
@@ -156,19 +200,42 @@ const Search = () => {
                   <div className="flex justify-center items-center h-[200px]">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   </div>
-                ) : florists && florists.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                    {florists.map((florist) => (
-                      <div key={florist.id} className="animate-fade-in-up">
-                        <FloristCard
-                          id={florist.id}
-                          storeName={florist.store_name}
-                          address={florist.address}
-                          aboutText={florist.about_text}
-                        />
+                ) : floristsData?.items && floristsData.items.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                      {floristsData.items.map((florist) => (
+                        <div key={florist.id} className="animate-fade-in-up">
+                          <FloristCard
+                            id={florist.id}
+                            storeName={florist.store_name}
+                            address={florist.address}
+                            aboutText={florist.about_text}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {totalPages > 1 && (
+                      <div className="mt-8 flex justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setPage(p => Math.max(1, p - 1))}
+                          disabled={page === 1}
+                        >
+                          Previous
+                        </Button>
+                        <span className="flex items-center px-4">
+                          Page {page} of {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                          disabled={page === totalPages}
+                        >
+                          Next
+                        </Button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-12 animate-fade-in">
                     <h2 className="text-xl font-semibold mb-2">No florists found</h2>
