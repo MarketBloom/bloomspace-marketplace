@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Home } from "lucide-react";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const Header = () => {
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <a href="/" className="flex items-center space-x-2">
-            <img src="/lovable-uploads/d3c25b89-58e0-45d3-95af-7baa35c7d9fc.png" alt="Market Bloom" className="h-6" />
+            <Home className="h-5 w-5 text-primary" />
           </a>
           <nav className="hidden md:flex items-center space-x-4">
             <a href="/search" className="text-xs text-gray-600 hover:text-primary transition-colors font-mono">
