@@ -8,7 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Loader2 } from "lucide-react";
 
-// Lazy load pages with error boundaries
+// Lazy load pages
 const Index = lazy(() => import("./pages/Index"));
 const Search = lazy(() => import("./pages/Search"));
 const Login = lazy(() => import("./pages/Login"));
@@ -18,20 +18,20 @@ const FloristDashboard = lazy(() => import("./pages/FloristDashboard"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const Cart = lazy(() => import("./pages/Cart"));
 
-// Configure React Query with performance optimizations
+// Configure React Query with basic settings
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // Data considered fresh for 5 minutes
-      gcTime: 1000 * 60 * 15,   // Keep unused data for 15 minutes
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 15,
       refetchOnWindowFocus: false,
-      retry: 1, // Only retry failed requests once
-      networkMode: 'online', // Changed to 'online' for better initial load
+      retry: 1,
+      networkMode: 'online',
     },
   },
 });
 
-// Loading fallback component
+// Simple loading fallback
 const LoadingFallback = () => (
   <div className="h-screen w-screen flex items-center justify-center bg-white">
     <Loader2 className="h-8 w-8 animate-spin text-primary" />
