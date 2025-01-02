@@ -8,10 +8,15 @@ import { useNavigate } from "react-router-dom";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState([50]);
+  const [budget, setBudget] = useState([0]);
 
   const handleSearch = () => {
     navigate('/search');
+  };
+
+  const formatBudgetDisplay = (value: number) => {
+    if (value >= 500) return "$500+";
+    return `$${value}`;
   };
 
   return (
@@ -51,7 +56,7 @@ export const FilterBar = () => {
               step={10}
               className="my-4"
             />
-            <div className="text-white text-sm">Up to ${budget[0]}</div>
+            <div className="text-white text-sm">{formatBudgetDisplay(budget[0])}</div>
           </div>
         </div>
         
