@@ -47,7 +47,7 @@ export const FilterBar = () => {
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Budget</label>
+          <label className="text-sm font-medium text-white">Budget ({formatBudgetDisplay(budget[0])})</label>
           <div className="px-3 py-2 bg-white/20 rounded-md">
             <Slider
               value={budget}
@@ -56,7 +56,6 @@ export const FilterBar = () => {
               step={10}
               className="my-4"
             />
-            <div className="text-white text-sm">{formatBudgetDisplay(budget[0])}</div>
           </div>
         </div>
         
