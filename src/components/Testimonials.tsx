@@ -26,33 +26,33 @@ export const Testimonials = () => {
   ];
 
   return (
-    <section className="py-24">
+    <section className="py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">What Our Customers Say</h2>
-          <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 tracking-tight">What Our Customers Say</h2>
+          <p className="text-lg text-gray-600 font-light max-w-2xl mx-auto">
             Real reviews from happy customers who found their perfect florists through our platform
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center space-x-1 mb-4">
+            <div key={index} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center space-x-1 mb-3">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                  <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-6 font-light leading-relaxed">"{testimonial.text}"</p>
-              <div className="flex items-center space-x-4">
+              <p className="text-gray-600 mb-4 font-light leading-relaxed text-sm">"{testimonial.text}"</p>
+              <div className="flex items-center space-x-3">
                 <img 
                   src={testimonial.image} 
                   alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className="font-semibold">{testimonial.name}</h4>
-                  <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                  <h4 className="font-semibold text-sm">{testimonial.name}</h4>
+                  <p className="text-gray-500 text-xs">{testimonial.role}</p>
                 </div>
               </div>
             </div>
