@@ -65,7 +65,7 @@ export const FilterBar = () => {
             <label className="text-sm font-medium text-white">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
               onClick={toggleAnyPrice}
-              className={`text-xs px-2 py-1 rounded transition-colors ${
+              className={`text-xs px-2 py-0.5 rounded transition-colors ${
                 isAnyPrice 
                   ? 'bg-white/30 text-white' 
                   : 'bg-white/10 text-white/70 hover:bg-white/20'
@@ -74,13 +74,13 @@ export const FilterBar = () => {
               Any Price
             </button>
           </div>
-          <div className="px-3 py-2 bg-white/20 rounded-md">
+          <div className="relative bg-white/20 rounded-md h-[42px] flex items-center px-3">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
               max={500}
               step={10}
-              className={`my-4 ${isAnyPrice ? 'opacity-50' : ''}`}
+              className={isAnyPrice ? 'opacity-50' : ''}
               disabled={isAnyPrice}
             />
           </div>
