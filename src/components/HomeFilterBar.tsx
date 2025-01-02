@@ -23,15 +23,15 @@ export const HomeFilterBar = () => {
   }).flat();
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 max-w-4xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Location Filter */}
-        <div className="relative">
+        <div className="relative flex-1">
           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           <Input 
             type="text" 
-            placeholder="Enter city or postcode" 
-            className="w-full pl-10"
+            placeholder="Enter location" 
+            className="w-full pl-10 bg-white/80"
           />
         </div>
         
@@ -41,7 +41,7 @@ export const HomeFilterBar = () => {
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal",
+                "flex-1 justify-start text-left font-normal bg-white/80",
                 !date && "text-muted-foreground"
               )}
             >
@@ -65,7 +65,7 @@ export const HomeFilterBar = () => {
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal",
+                "flex-1 justify-start text-left font-normal bg-white/80",
                 !time && "text-muted-foreground"
               )}
             >
@@ -95,15 +95,13 @@ export const HomeFilterBar = () => {
             </div>
           </PopoverContent>
         </Popover>
-      </div>
 
-      <div className="mt-4">
         <Button 
-          className="w-full"
+          className="flex-1 md:w-auto"
           onClick={handleSearch}
         >
           <Search className="w-4 h-4 mr-2" />
-          Search Flowers
+          Search
         </Button>
       </div>
     </div>
