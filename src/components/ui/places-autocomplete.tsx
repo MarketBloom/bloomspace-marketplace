@@ -16,7 +16,7 @@ interface PlacesAutocompleteProps {
 export function PlacesAutocomplete({
   onPlaceSelect,
   className,
-  placeholder = "Enter city or postcode",
+  placeholder = "Enter suburb or postcode",
   defaultValue = "",
 }: PlacesAutocompleteProps) {
   const [predictions, setPredictions] = useState<google.maps.places.AutocompletePrediction[]>([]);
@@ -47,8 +47,8 @@ export function PlacesAutocomplete({
       autocompleteService.current.getPlacePredictions(
         {
           input: value,
-          types: ['(cities)'],
-          componentRestrictions: { country: 'gb' }
+          types: ['(cities)', 'sublocality', 'postal_code'],
+          componentRestrictions: { country: 'au' }
         },
         (predictions, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
