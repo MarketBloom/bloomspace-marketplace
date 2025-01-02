@@ -22,20 +22,20 @@ const Search = () => {
 
       const { data, error, count } = await supabase
         .from('products')
-        .select(`
-          *,
-          florist_profiles (
-            store_name,
-            address
-          )
-        `, { count: 'exact' })
+        .select('*, florist_profiles!inner(store_name, address)', { count: 'exact' })
         .eq('in_stock', true)
         .eq('is_hidden', false)
         .range(start, end);
 
-      if (error) throw error;
-      return { items: data, total: count };
+      if (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+      }
+      
+      return { items: data || [], total: count || 0 };
     },
+    staleTime: 1000 * 60, // Cache for 1 minute
+    keepPreviousData: true
   });
 
   const { data: floristsData, isLoading: isLoadingFlorists } = useQuery({
@@ -49,9 +49,15 @@ const Search = () => {
         .select('*', { count: 'exact' })
         .range(start, end);
 
-      if (error) throw error;
-      return { items: data, total: count };
+      if (error) {
+        console.error('Error fetching florists:', error);
+        throw error;
+      }
+
+      return { items: data || [], total: count || 0 };
     },
+    staleTime: 1000 * 60, // Cache for 1 minute
+    keepPreviousData: true
   });
 
   const totalPages = viewMode === 'products' 
@@ -69,7 +75,6 @@ const Search = () => {
       <main>
         <div className="container mx-auto px-4 py-12">
           <div className="lg:grid lg:grid-cols-[220px_1fr] gap-6">
-            {/* Desktop Sidebar */}
             <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-12">
               <div className="w-full space-y-6">
                 <div>
@@ -79,10 +84,8 @@ const Search = () => {
               </div>
             </aside>
 
-            {/* Mobile Filter Button */}
             <MobileFilterButton />
 
-            {/* Main Content */}
             <div>
               <ViewToggle 
                 viewMode={viewMode} 
