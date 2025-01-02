@@ -6,11 +6,11 @@ export const Hero = () => {
       <div className="absolute inset-0 flex justify-center">
         <div className="relative h-full w-full max-w-[1400px] overflow-hidden">
           <img 
-            src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
-            alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
+            src="/lovable-uploads/18a5a7fb-48ad-4141-a936-090f6e45b2e9.png"
+            alt="Soft pink roses in a dreamy, ethereal composition"
             className="h-full w-full object-cover opacity-90 md:scale-110"
             style={{ 
-              objectPosition: 'center 35%',
+              objectPosition: 'center center',
               filter: 'contrast(1.1) brightness(0.9)'
             }}
           />
