@@ -35,7 +35,7 @@ const Search = () => {
       return { items: data || [], total: count || 0 };
     },
     staleTime: 1000 * 60, // Cache for 1 minute
-    keepPreviousData: true
+    placeholderData: (previousData) => previousData
   });
 
   const { data: floristsData, isLoading: isLoadingFlorists } = useQuery({
@@ -57,7 +57,7 @@ const Search = () => {
       return { items: data || [], total: count || 0 };
     },
     staleTime: 1000 * 60, // Cache for 1 minute
-    keepPreviousData: true
+    placeholderData: (previousData) => previousData
   });
 
   const totalPages = viewMode === 'products' 
