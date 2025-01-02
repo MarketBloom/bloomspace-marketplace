@@ -39,29 +39,29 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg">
+    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/20">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-500">Location</label>
+          <label className="text-sm font-medium text-white/90">Location</label>
           <div className="relative h-10">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 h-10 bg-white/80 backdrop-blur-sm border-gray-200"
+              className="w-full pl-10 h-10 bg-white/20 border-white/20 text-white placeholder:text-white/60"
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-500">Date & Time</label>
+          <label className="text-sm font-medium text-white/90">Date & Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal h-10 bg-white/80 backdrop-blur-sm border-gray-200",
-                  !date && "text-muted-foreground"
+                  "w-full justify-start text-left font-normal h-10 bg-white/20 border-white/20 text-white",
+                  !date && "text-white/60"
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -81,19 +81,19 @@ export const FilterBar = () => {
         
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-500">Budget ({formatBudgetDisplay(budget[0])})</label>
+            <label className="text-sm font-medium text-white/90">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
               onClick={toggleAnyPrice}
               className={`text-xs px-2 py-0.5 rounded transition-colors ${
                 isAnyPrice 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary/20 text-primary' 
+                  : 'bg-white/20 text-white/60 hover:bg-white/30'
               }`}
             >
               Any Price
             </button>
           </div>
-          <div className="h-10 px-3 rounded-md border border-gray-200 bg-white/80 backdrop-blur-sm flex items-center">
+          <div className="h-10 px-3 rounded-md border border-white/20 bg-white/20 flex items-center">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
@@ -109,10 +109,10 @@ export const FilterBar = () => {
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-500">Occasion</label>
+          <label className="text-sm font-medium text-white/90">Occasion</label>
           <Select>
-            <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-gray-200">
-              <SelectValue placeholder="Select occasion" />
+            <SelectTrigger className="h-10 bg-white/20 border-white/20 text-white">
+              <SelectValue placeholder="Select occasion" className="text-white/60" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="birthday">Birthday</SelectItem>
@@ -126,7 +126,7 @@ export const FilterBar = () => {
       </div>
 
       <Button 
-        className="w-full bg-primary hover:bg-primary/90 mt-4"
+        className="w-full bg-primary hover:bg-primary/90 mt-6 text-white"
         onClick={handleSearch}
       >
         <Search className="w-4 h-4 mr-2" />
