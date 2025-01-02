@@ -26,22 +26,28 @@ const Search = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-24">
+      <main className="pt-16 pb-16">
         <div className="container mx-auto px-4">
-          <div className="mb-8">
+          <div className="max-w-3xl mx-auto mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">
+              Find Your Perfect Flowers
+            </h1>
+            <p className="text-lg text-muted-foreground text-center mb-8 font-light">
+              Browse our collection of fresh, locally-sourced arrangements
+            </p>
             <FilterBar />
           </div>
           
           {isLoading ? (
-            <div className="flex justify-center items-center min-h-[400px]">
-              <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="flex justify-center items-center h-[200px]">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
-          ) : (
+          ) : products && products.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products?.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   id={product.id}
@@ -53,6 +59,13 @@ const Search = () => {
                   floristId={product.florist_id}
                 />
               ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-semibold mb-2">No products found</h2>
+              <p className="text-muted-foreground">
+                Try adjusting your search criteria
+              </p>
             </div>
           )}
         </div>
