@@ -12,9 +12,9 @@ export const FilterBarLayout = ({ children, onSearch }: FilterBarLayoutProps) =>
       <div className="grid grid-cols-1 gap-4 md:col-span-3 md:grid-cols-4">
         {children}
       </div>
-      <div className="mt-4 md:mt-0 md:flex md:items-end">
+      <div className="mt-4 md:mt-0">
         <Button 
-          className="w-full bg-primary hover:bg-primary/90 text-sm font-medium h-[42px]"
+          className="w-full bg-primary text-sm h-[42px]"
           onClick={onSearch}
         >
           Search Flowers
