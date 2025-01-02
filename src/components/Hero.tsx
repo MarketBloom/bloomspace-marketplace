@@ -6,12 +6,23 @@ export const Hero = () => {
       <div className="absolute inset-0 flex justify-center px-4">
         <div className="relative h-full w-full max-w-[1400px] rounded-2xl overflow-hidden">
           <img 
-            src="/lovable-uploads/c25247c9-5d25-478b-8575-a9939a35fd68.png"
-            alt="Beautiful flower arrangement with pink roses and mixed flowers in kraft paper"
-            className="h-full w-full object-cover"
-            style={{ objectPosition: '50% 50%' }}
+            src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
+            alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
+            className="h-full w-full object-cover opacity-90"
+            style={{ 
+              objectPosition: '50% 50%',
+              filter: 'contrast(1.1) brightness(0.9)'
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/10" />
+          
+          {/* Grain effect overlay */}
+          <div 
+            className="absolute inset-0 mix-blend-overlay opacity-40"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
       </div>
       
