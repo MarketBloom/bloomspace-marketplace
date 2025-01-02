@@ -7,13 +7,11 @@ interface BudgetFilterProps {
 
 export const BudgetFilter = ({ budget, setBudget }: BudgetFilterProps) => {
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <label className="text-white text-xs font-medium drop-shadow-sm">
-          Budget {budget[0] === 500 ? "$500+" : `$${budget[0]}`}
-        </label>
-      </div>
-      <div className="px-3 py-3 rounded-lg bg-white/90 border border-white/20">
+    <div className="space-y-1.5">
+      <label className="text-white text-xs font-medium drop-shadow-sm">
+        Budget {budget[0] === 500 ? "$500+" : `$${budget[0]}`}
+      </label>
+      <div className="px-3 bg-white/90 border border-white/20 rounded-md h-[42px] flex items-center">
         <Slider
           value={budget}
           onValueChange={setBudget}

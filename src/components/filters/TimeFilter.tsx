@@ -22,7 +22,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-9 text-xs",
+              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-[42px] text-xs",
               !time && "text-muted-foreground"
             )}
           >

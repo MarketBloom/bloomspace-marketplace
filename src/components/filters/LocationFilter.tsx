@@ -10,7 +10,7 @@ export const LocationFilter = () => {
         <Input 
           type="text" 
           placeholder="Enter city or postcode" 
-          className="w-full pl-8 py-2 h-9 bg-white/90 border border-white/20 text-xs"
+          className="w-full pl-8 h-[42px] bg-white/90 border-white/20 text-xs"
         />
       </div>
     </div>
