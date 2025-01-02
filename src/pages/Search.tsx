@@ -8,12 +8,13 @@ import { Loader2, SlidersHorizontal, Store, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { setupPlaceholderFlorists } from "@/utils/setupPlaceholderFlorists";
 
 const Search = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
 
-  const { data: products, isLoading: isLoadingProducts } = useQuery({
+  const { data: products, isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -33,7 +34,7 @@ const Search = () => {
     },
   });
 
-  const { data: florists, isLoading: isLoadingFlorists } = useQuery({
+  const { data: florists, isLoading: isLoadingFlorists, refetch: refetchFlorists } = useQuery({
     queryKey: ['florists'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -54,6 +55,14 @@ const Search = () => {
     </div>
   );
 
+  const handleSetupFlorists = async () => {
+    await setupPlaceholderFlorists();
+    await Promise.all([
+      refetchProducts(),
+      refetchFlorists()
+    ]);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -65,9 +74,19 @@ const Search = () => {
               <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">
                 Find Your Perfect Flowers
               </h1>
-              <p className="text-lg text-muted-foreground text-center mb-8 font-light">
+              <p className="text-lg text-muted-foreground text-center mb-4 font-light">
                 Browse our collection of fresh, locally-sourced arrangements
               </p>
+              {(!florists || florists.length === 0) && (
+                <div className="text-center">
+                  <Button 
+                    onClick={handleSetupFlorists}
+                    className="mx-auto"
+                  >
+                    Setup Placeholder Florists
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
