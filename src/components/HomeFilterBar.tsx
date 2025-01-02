@@ -26,30 +26,30 @@ export const HomeFilterBar = () => {
   }).flat();
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div className="bg-black/10 backdrop-blur-md rounded-3xl p-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-end">
         {/* Location Filter */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Location</label>
+        <div className="space-y-2.5">
+          <label className="text-white/90 font-medium">Location</label>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 bg-white/90"
+              className="w-full pl-10 bg-white/90 border-0"
             />
           </div>
         </div>
         
         {/* Date Filter */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Pickup or Delivered by</label>
+        <div className="space-y-2.5">
+          <label className="text-white/90 font-medium">Pickup or Delivered by</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal bg-white/90",
+                  "w-full justify-start text-left font-normal bg-white/90 border-0",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -69,14 +69,14 @@ export const HomeFilterBar = () => {
         </div>
 
         {/* Time Filter */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Time</label>
+        <div className="space-y-2.5">
+          <label className="text-white/90 font-medium">Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal bg-white/90",
+                  "w-full justify-start text-left font-normal bg-white/90 border-0",
                   !time && "text-muted-foreground"
                 )}
               >
@@ -109,21 +109,21 @@ export const HomeFilterBar = () => {
         </div>
 
         {/* Budget Filter */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700">Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}</label>
+            <label className="text-white/90 font-medium">Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}</label>
             <button 
               onClick={() => setIsAnyPrice(!isAnyPrice)}
-              className={`text-xs px-3 py-1 rounded-full transition-colors ${
+              className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
                 isAnyPrice 
                   ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-white/20 text-white hover:bg-white/30'
               }`}
             >
               Any Price
             </button>
           </div>
-          <div className="px-3 py-4 rounded-md bg-white/90 border">
+          <div className="px-3 py-4 rounded-md bg-white/90 border-0">
             <Slider
               value={budget}
               onValueChange={(value) => {
@@ -141,7 +141,7 @@ export const HomeFilterBar = () => {
 
       <div className="mt-6">
         <Button 
-          className="w-full bg-primary hover:bg-primary/90"
+          className="w-full bg-primary hover:bg-primary/90 text-lg font-medium py-6"
           onClick={handleSearch}
         >
           Search Flowers
