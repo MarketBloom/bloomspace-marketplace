@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => ({
     headers: {
       'X-Frame-Options': 'SAMEORIGIN',
       'Access-Control-Allow-Origin': '*',
+      'Content-Security-Policy': "frame-ancestors 'self' https://*.lovable.app http://localhost:* http://127.0.0.1:*"
     }
   },
   plugins: [
@@ -22,4 +23,5 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: '/',
 }));
