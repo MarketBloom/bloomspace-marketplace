@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationFilter } from "./home-filters/LocationFilter";
 import { DateFilter } from "./home-filters/DateFilter";
 import { TimeFilter } from "./home-filters/TimeFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { FilterBarLayout } from "./filters/FilterBarLayout";
+import { Input } from "./ui/input";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
@@ -12,14 +12,25 @@ export const HomeFilterBar = () => {
   const [time, setTime] = useState<string>("12:00");
   const [budget, setBudget] = useState<number[]>([500]);
   const [isAnyPrice, setIsAnyPrice] = useState(false);
+  const [location, setLocation] = useState("");
 
   const handleSearch = () => {
-    navigate('/search');
+    const params = new URLSearchParams();
+    if (location) params.append("location", location);
+    navigate(`/search?${params.toString()}`);
   };
 
   return (
     <FilterBarLayout onSearch={handleSearch}>
-      <LocationFilter />
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Enter your location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="w-full text-xs h-8 font-mono"
+        />
+      </div>
       <DateFilter date={date} setDate={setDate} />
       <TimeFilter time={time} setTime={setTime} />
       <BudgetFilter 
