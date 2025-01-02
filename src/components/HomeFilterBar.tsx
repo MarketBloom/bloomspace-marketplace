@@ -26,30 +26,30 @@ export const HomeFilterBar = () => {
   }).flat();
 
   return (
-    <div className="bg-black/10 backdrop-blur-md rounded-3xl p-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-end">
+    <div className="bg-black/10 backdrop-blur-md rounded-2xl p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         {/* Location Filter */}
-        <div className="space-y-2.5">
-          <label className="text-white/90 font-medium">Location</label>
+        <div className="space-y-1.5">
+          <label className="text-white/90 text-sm">Location</label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+            <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10 bg-white/90 border-0"
+              className="w-full pl-8 py-2 h-9 bg-white/90 border-0 text-sm"
             />
           </div>
         </div>
         
         {/* Date Filter */}
-        <div className="space-y-2.5">
-          <label className="text-white/90 font-medium">Pickup or Delivered by</label>
+        <div className="space-y-1.5">
+          <label className="text-white/90 text-sm">Pickup or Delivered by</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal bg-white/90 border-0",
+                  "w-full justify-start text-left font-normal bg-white/90 border-0 h-9 text-sm",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -69,14 +69,14 @@ export const HomeFilterBar = () => {
         </div>
 
         {/* Time Filter */}
-        <div className="space-y-2.5">
-          <label className="text-white/90 font-medium">Time</label>
+        <div className="space-y-1.5">
+          <label className="text-white/90 text-sm">Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal bg-white/90 border-0",
+                  "w-full justify-start text-left font-normal bg-white/90 border-0 h-9 text-sm",
                   !time && "text-muted-foreground"
                 )}
               >
@@ -109,12 +109,12 @@ export const HomeFilterBar = () => {
         </div>
 
         {/* Budget Filter */}
-        <div className="space-y-2.5">
+        <div className="space-y-1.5">
           <div className="flex justify-between items-center">
-            <label className="text-white/90 font-medium">Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}</label>
+            <label className="text-white/90 text-sm">Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}</label>
             <button 
               onClick={() => setIsAnyPrice(!isAnyPrice)}
-              className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
+              className={`text-xs px-3 py-1 rounded-full transition-colors ${
                 isAnyPrice 
                   ? 'bg-primary text-white' 
                   : 'bg-white/20 text-white hover:bg-white/30'
@@ -123,7 +123,7 @@ export const HomeFilterBar = () => {
               Any Price
             </button>
           </div>
-          <div className="px-3 py-4 rounded-md bg-white/90 border-0">
+          <div className="px-2 py-2 rounded-md bg-white/90 border-0 h-9">
             <Slider
               value={budget}
               onValueChange={(value) => {
@@ -139,9 +139,9 @@ export const HomeFilterBar = () => {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <Button 
-          className="w-full bg-primary hover:bg-primary/90 text-lg font-medium py-6"
+          className="w-full bg-primary hover:bg-primary/90 text-base font-medium h-10"
           onClick={handleSearch}
         >
           Search Flowers
