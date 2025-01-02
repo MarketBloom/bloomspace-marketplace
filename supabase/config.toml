@@ -1,1 +1,7 @@
 project_id = "senfrikghcfchjjlosxx"
+
+[functions.update_profile_to_florist]
+verify_jwt = false
+
+[functions.add_florist_products]
+verify_jwt = false
