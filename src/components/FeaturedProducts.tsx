@@ -10,17 +10,17 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-3xl font-medium tracking-tight">Featured Arrangements</h2>
-            <p className="text-gray-600 mt-1">Fresh picks from local artisan florists</p>
+            <h2 className="text-xl font-medium tracking-tight font-mono">Featured Arrangements</h2>
+            <p className="text-sm text-gray-600 mt-0.5 font-mono">Fresh picks from local artisan florists</p>
           </div>
           <Button 
             variant="outline"
             onClick={() => navigate('/search')}
-            className="hidden md:flex"
+            className="hidden md:flex text-xs font-mono"
           >
             View All
           </Button>
@@ -28,11 +28,11 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
         
         {isLoading ? (
           <div className="flex justify-center items-center h-[200px]">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-6 w-6 animate-spin" />
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {products?.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -46,11 +46,11 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                 />
               ))}
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-6 text-center">
               <Button 
                 variant="outline"
                 onClick={() => navigate('/search')}
-                className="md:hidden"
+                className="md:hidden text-xs font-mono"
               >
                 View All
               </Button>
