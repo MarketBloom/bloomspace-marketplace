@@ -22,6 +22,16 @@ const PLACEHOLDER_FLORISTS = [
   }
 ];
 
+type UpdateProfileToFloristParams = {
+  profile_id: string;
+  store_name: string;
+  phone_number: string;
+};
+
+type AddFloristProductsParams = {
+  florist_id: string;
+};
+
 export const setupPlaceholderFlorists = async () => {
   try {
     for (const florist of PLACEHOLDER_FLORISTS) {
@@ -41,28 +51,22 @@ export const setupPlaceholderFlorists = async () => {
 
       if (authData.user) {
         // Call our database function to set up the florist profile
-        const { error: fnError } = await supabase.rpc(
+        const { error: fnError } = await supabase.rpc<void, UpdateProfileToFloristParams>(
           'update_profile_to_florist',
           {
             profile_id: authData.user.id,
             store_name: florist.storeName,
             phone_number: florist.phone
-          } as {
-            profile_id: string;
-            store_name: string;
-            phone_number: string;
           }
         );
 
         if (fnError) throw fnError;
 
         // Add products for this florist
-        const { error: productsError } = await supabase.rpc(
+        const { error: productsError } = await supabase.rpc<void, AddFloristProductsParams>(
           'add_florist_products',
           {
             florist_id: authData.user.id
-          } as {
-            florist_id: string;
           }
         );
 
