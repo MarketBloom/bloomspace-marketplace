@@ -40,27 +40,27 @@ export const FilterBar = () => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-        <div className="space-y-1">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="space-y-1.5">
           <label className="text-sm font-medium text-gray-500">Location</label>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input 
               type="text" 
               placeholder="Enter city or postcode" 
-              className="w-full pl-10"
+              className="w-full pl-10 bg-white/80 backdrop-blur-sm border-gray-200"
             />
           </div>
         </div>
         
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <label className="text-sm font-medium text-gray-500">Date & Time</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal",
+                  "w-full justify-start text-left font-normal bg-white/80 backdrop-blur-sm border-gray-200",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -79,7 +79,7 @@ export const FilterBar = () => {
           </Popover>
         </div>
         
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium text-gray-500">Budget ({formatBudgetDisplay(budget[0])})</label>
             <button 
@@ -93,22 +93,25 @@ export const FilterBar = () => {
               Any Price
             </button>
           </div>
-          <div className="px-3 py-2 rounded-md border">
+          <div className="px-3 py-2 rounded-md border border-gray-200 bg-white/80 backdrop-blur-sm h-[42px] flex items-center">
             <Slider
               value={budget}
               onValueChange={handleBudgetChange}
               max={500}
               step={10}
-              className={isAnyPrice ? 'opacity-50' : ''}
+              className={cn(
+                "w-full",
+                isAnyPrice ? 'opacity-50' : ''
+              )}
               disabled={isAnyPrice}
             />
           </div>
         </div>
         
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <label className="text-sm font-medium text-gray-500">Occasion</label>
           <Select>
-            <SelectTrigger>
+            <SelectTrigger className="bg-white/80 backdrop-blur-sm border-gray-200">
               <SelectValue placeholder="Select occasion" />
             </SelectTrigger>
             <SelectContent>

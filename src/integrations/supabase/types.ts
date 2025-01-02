@@ -16,6 +16,9 @@ export type Database = {
           commission_rate: number | null
           created_at: string
           delivery_cutoff: string | null
+          delivery_end_time: string | null
+          delivery_slot_duration: unknown | null
+          delivery_start_time: string | null
           id: string
           is_premium: boolean | null
           operating_hours: Json | null
@@ -30,6 +33,9 @@ export type Database = {
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
+          delivery_end_time?: string | null
+          delivery_slot_duration?: unknown | null
+          delivery_start_time?: string | null
           id: string
           is_premium?: boolean | null
           operating_hours?: Json | null
@@ -44,6 +50,9 @@ export type Database = {
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
+          delivery_end_time?: string | null
+          delivery_slot_duration?: unknown | null
+          delivery_start_time?: string | null
           id?: string
           is_premium?: boolean | null
           operating_hours?: Json | null
