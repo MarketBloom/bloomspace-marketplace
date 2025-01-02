@@ -6,10 +6,10 @@ export const Hero = () => {
       <div className="absolute inset-0 flex justify-center px-4">
         <div className="relative h-full w-full max-w-[1400px] rounded-2xl overflow-hidden">
           <img 
-            src="/lovable-uploads/a8663262-3249-43fd-8f45-6254895886ad.png"
-            alt="Fresh flowers arrangement"
+            src="/lovable-uploads/3a13efed-e228-490b-b760-f9ff83ae9659.png"
+            alt="Person carrying a beautiful flower arrangement"
             className="h-full w-full object-cover"
-            style={{ objectPosition: '50% 60%' }}
+            style={{ objectPosition: '50% 50%' }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/20" />
         </div>
