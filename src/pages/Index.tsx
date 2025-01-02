@@ -1,17 +1,12 @@
 import { Header } from "@/components/Header";
-import { FilterBar } from "@/components/FilterBar";
-import { Button } from "@/components/ui/button";
-import { ProductCard } from "@/components/ProductCard";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Loader2, Flower2, Gift, Heart, Star } from "lucide-react";
-
-// Importing components to help with refactoring
 import { Hero } from "@/components/Hero";
 import { Categories } from "@/components/Categories";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { TrustSection } from "@/components/TrustSection";
+import { Testimonials } from "@/components/Testimonials";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -48,6 +43,7 @@ const Index = () => {
           navigate={navigate} 
         />
         <TrustSection navigate={navigate} />
+        <Testimonials />
       </main>
     </div>
   );
