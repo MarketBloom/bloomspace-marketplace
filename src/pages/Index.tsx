@@ -1,8 +1,35 @@
 import { Header } from "@/components/Header";
 import { FilterBar } from "@/components/FilterBar";
 import { Button } from "@/components/ui/button";
+import { ProductCard } from "@/components/ProductCard";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
+  const { data: featuredProducts, isLoading } = useQuery({
+    queryKey: ['featured-products'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          florist_profiles (
+            store_name
+          )
+        `)
+        .eq('in_stock', true)
+        .eq('is_hidden', false)
+        .limit(3);
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <Header />
@@ -25,7 +52,10 @@ const Index = () => {
                 <FilterBar />
               </div>
               
-              <Button className="mt-8 bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg">
+              <Button 
+                className="mt-8 bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg"
+                onClick={() => navigate('/search')}
+              >
                 Find Flowers
               </Button>
             </div>
@@ -36,17 +66,25 @@ const Index = () => {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Featured Arrangements</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="aspect-w-4 aspect-h-3 bg-gray-100" />
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-2">Beautiful Bouquet</h3>
-                    <p className="text-gray-600">From $79.99</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="flex justify-center items-center min-h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {featuredProducts?.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    title={product.title}
+                    price={product.price}
+                    description={product.description}
+                    images={product.images}
+                    floristName={product.florist_profiles?.store_name}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
