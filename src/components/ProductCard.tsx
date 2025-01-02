@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -11,18 +11,30 @@ interface ProductCardProps {
   description?: string;
   images?: string[];
   floristName?: string;
+  floristId: string;
 }
 
-export const ProductCard = ({ id, title, price, description, images, floristName }: ProductCardProps) => {
+export const ProductCard = ({ 
+  id, 
+  title, 
+  price, 
+  description, 
+  images, 
+  floristName,
+  floristId 
+}: ProductCardProps) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { addItem } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // TODO: Implement cart functionality
-    toast({
-      title: "Added to cart",
-      description: "This product has been added to your cart.",
+    addItem({
+      id,
+      title,
+      price,
+      image: images?.[0],
+      floristId,
+      floristName
     });
   };
 
