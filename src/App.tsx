@@ -14,6 +14,8 @@ import FloristDashboard from "./pages/FloristDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 
+console.log('App.tsx is executing - Debug timestamp:', new Date().toISOString())
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -23,27 +25,30 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<CustomerDashboard />} />
-            <Route path="/florist-dashboard" element={<FloristDashboard />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-          <Toaster />
-          <Sonner />
-        </CartProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App component rendering')
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <CartProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<CustomerDashboard />} />
+              <Route path="/florist-dashboard" element={<FloristDashboard />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/cart" element={<Cart />} />
+            </Routes>
+            <Toaster />
+            <Sonner />
+          </CartProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
