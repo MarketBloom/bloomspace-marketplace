@@ -8,6 +8,38 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Slider } from "@/components/ui/slider";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
+const occasions = [
+  "Birthday",
+  "Anniversary",
+  "Wedding",
+  "Sympathy",
+  "Get Well",
+  "Thank You",
+  "New Baby",
+  "Congratulations",
+  "Just Because"
+];
+
+const categories = [
+  "Bouquets",
+  "Arrangements",
+  "Roses",
+  "Lilies",
+  "Sunflowers",
+  "Mixed Flowers",
+  "Plants",
+  "Seasonal"
+];
 
 export const FilterBar = () => {
   const navigate = useNavigate();
@@ -15,6 +47,8 @@ export const FilterBar = () => {
   const [isAnyPrice, setIsAnyPrice] = useState(true);
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("12:00");
+  const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleSearch = () => {
     navigate('/search');
@@ -44,117 +78,165 @@ export const FilterBar = () => {
   }).flat();
 
   return (
-    <div className="bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/40 rounded-xl p-6 shadow-lg border border-white/20">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="space-y-2.5">
-          <label className="text-sm font-medium text-black">Location</label>
-          <div className="relative h-10">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-            <Input 
-              type="text" 
-              placeholder="Enter city or postcode" 
-              className="w-full pl-10 h-10 bg-white/80"
-            />
-          </div>
+    <div className="space-y-6">
+      {/* Location Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-black">Location</label>
+        <div className="relative">
+          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input 
+            type="text" 
+            placeholder="Enter city or postcode" 
+            className="w-full pl-10 bg-white"
+          />
         </div>
-        
-        <div className="space-y-2.5">
-          <label className="text-sm font-medium text-black">Pickup or Delivered by</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal h-10 bg-white/80",
-                  !date && "text-gray-500"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : "Pick a date"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2.5">
-          <label className="text-sm font-medium text-black">Time</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal h-10 bg-white/80",
-                  !time && "text-gray-500"
-                )}
-              >
-                <Clock className="mr-2 h-4 w-4" />
-                {time || "Select time"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 p-0" align="start">
-              <div className="h-64 overflow-auto p-1">
-                {timeSlots.map((slot) => (
-                  <Button
-                    key={slot}
-                    variant="ghost"
-                    className={cn(
-                      "w-full justify-start font-normal",
-                      time === slot ? "bg-primary/20 text-primary" : ""
-                    )}
-                    onClick={() => {
-                      setTime(slot);
-                      const popoverTrigger = document.activeElement as HTMLElement;
-                      popoverTrigger?.blur();
-                    }}
-                  >
-                    {slot}
-                  </Button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-        
-        <div className="space-y-2.5">
-          <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-black">Budget ({formatBudgetDisplay(budget[0])})</label>
-            <button 
-              onClick={toggleAnyPrice}
-              className={`text-xs px-2 py-0.5 rounded transition-colors ${
-                isAnyPrice 
-                  ? 'bg-primary/20 text-primary' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Any Price
-            </button>
-          </div>
-          <div className="h-10 px-3 rounded-md border bg-white/80 flex items-center">
-            <Slider
-              value={budget}
-              onValueChange={handleBudgetChange}
-              max={500}
-              step={10}
+      </div>
+      
+      {/* Date Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-black">Pickup or Delivered by</label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
               className={cn(
-                "w-full",
-                isAnyPrice ? 'opacity-50' : ''
+                "w-full justify-start text-left font-normal bg-white",
+                !date && "text-gray-500"
               )}
-              disabled={isAnyPrice}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : "Pick a date"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
             />
-          </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Time Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-black">Time</label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal bg-white",
+                !time && "text-gray-500"
+              )}
+            >
+              <Clock className="mr-2 h-4 w-4" />
+              {time || "Select time"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-0" align="start">
+            <div className="h-64 overflow-auto p-1">
+              {timeSlots.map((slot) => (
+                <Button
+                  key={slot}
+                  variant="ghost"
+                  className={cn(
+                    "w-full justify-start font-normal",
+                    time === slot ? "bg-primary/20 text-primary" : ""
+                  )}
+                  onClick={() => {
+                    setTime(slot);
+                    const popoverTrigger = document.activeElement as HTMLElement;
+                    popoverTrigger?.blur();
+                  }}
+                >
+                  {slot}
+                </Button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+      
+      {/* Budget Filter */}
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <label className="text-sm font-medium text-black">Budget ({formatBudgetDisplay(budget[0])})</label>
+          <button 
+            onClick={toggleAnyPrice}
+            className={`text-xs px-2 py-0.5 rounded transition-colors ${
+              isAnyPrice 
+                ? 'bg-primary/20 text-primary' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Any Price
+          </button>
+        </div>
+        <div className="px-3 py-4 rounded-md border bg-white">
+          <Slider
+            value={budget}
+            onValueChange={handleBudgetChange}
+            max={500}
+            step={10}
+            className={cn(
+              "w-full",
+              isAnyPrice ? 'opacity-50' : ''
+            )}
+            disabled={isAnyPrice}
+          />
+        </div>
+      </div>
+
+      {/* Category Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-black">Categories</label>
+        <div className="space-y-2 bg-white border rounded-md p-3">
+          {categories.map((category) => (
+            <div key={category} className="flex items-center space-x-2">
+              <Checkbox 
+                id={`category-${category}`}
+                checked={selectedCategories.includes(category)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setSelectedCategories([...selectedCategories, category]);
+                  } else {
+                    setSelectedCategories(selectedCategories.filter(c => c !== category));
+                  }
+                }}
+              />
+              <Label htmlFor={`category-${category}`}>{category}</Label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Occasion Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-black">Occasions</label>
+        <div className="space-y-2 bg-white border rounded-md p-3">
+          {occasions.map((occasion) => (
+            <div key={occasion} className="flex items-center space-x-2">
+              <Checkbox 
+                id={`occasion-${occasion}`}
+                checked={selectedOccasions.includes(occasion)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setSelectedOccasions([...selectedOccasions, occasion]);
+                  } else {
+                    setSelectedOccasions(selectedOccasions.filter(o => o !== occasion));
+                  }
+                }}
+              />
+              <Label htmlFor={`occasion-${occasion}`}>{occasion}</Label>
+            </div>
+          ))}
         </div>
       </div>
 
       <Button 
-        className="w-full mt-6"
+        className="w-full"
         onClick={handleSearch}
       >
         <Search className="w-4 h-4 mr-2" />
