@@ -36,7 +36,7 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
           Find fresh, local arrangements for every occasion
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <div
               key={category.name}
               className="group relative overflow-hidden cursor-pointer rounded-lg"
@@ -47,6 +47,10 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
                   src={category.image} 
                   alt={category.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                  width="400"
+                  height="533"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               </div>

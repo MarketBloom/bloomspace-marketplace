@@ -30,7 +30,17 @@ export const ProductCard = ({
       onClick={() => navigate(`/product/${id}`)}
     >
       <CardHeader className="p-0">
-        <ProductImage src={images?.[0]} alt={title} />
+        <div className="aspect-square overflow-hidden">
+          <img
+            src={images?.[0] || "/placeholder.svg"}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            width="400"
+            height="400"
+          />
+        </div>
       </CardHeader>
       <CardContent className="p-3 space-y-1">
         <ProductInfo 
