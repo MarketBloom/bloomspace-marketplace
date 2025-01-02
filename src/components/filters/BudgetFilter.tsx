@@ -10,28 +10,38 @@ interface BudgetFilterProps {
 
 export const BudgetFilter = ({ 
   budget, 
-  setBudget
+  setBudget, 
+  isAnyPrice, 
+  setIsAnyPrice 
 }: BudgetFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-foreground text-xs font-medium">
-        Budget ${budget[0]}{budget[0] >= 500 ? '+' : ''}
-      </label>
+      <div className="flex justify-between items-center">
+        <label className="text-foreground text-xs font-medium">
+          Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}
+        </label>
+        <button 
+          onClick={() => setIsAnyPrice(!isAnyPrice)}
+          className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
+            isAnyPrice 
+              ? 'bg-primary text-white' 
+              : 'bg-white/20 text-foreground hover:bg-white/30'
+          }`}
+        >
+          Any Price
+        </button>
+      </div>
       <div className="px-2 py-2 rounded-md bg-white/90 border border-white/20 h-9 flex items-center">
         <Slider
-          defaultValue={[500]}
           value={budget}
-          onValueChange={setBudget}
-          min={0}
+          onValueChange={(value) => {
+            setBudget(value);
+            setIsAnyPrice(false);
+          }}
           max={500}
           step={10}
-          className={cn(
-            "w-full",
-            "[&_.slider-thumb]:h-6 [&_.slider-thumb]:w-6 [&_.slider-thumb]:bg-[url('/sunflower.svg')] [&_.slider-thumb]:bg-contain [&_.slider-thumb]:bg-no-repeat [&_.slider-thumb]:bg-center",
-            "[&_.slider-track]:bg-gradient-to-r [&_.slider-track]:from-green-300 [&_.slider-track]:to-green-500",
-            "[&_.slider-track]:relative [&_.slider-track]:before:content-['🌿'] [&_.slider-track]:before:absolute [&_.slider-track]:before:top-[-8px] [&_.slider-track]:before:left-1/4 [&_.slider-track]:before:transform [&_.slider-track]:before:rotate-45",
-            "[&_.slider-track]:after:content-['🌿'] [&_.slider-track]:after:absolute [&_.slider-track]:after:bottom-[-8px] [&_.slider-track]:after:right-1/4 [&_.slider-track]:after:transform [&_.slider-track]:after:rotate-[-45deg]"
-          )}
+          className={cn("w-full", isAnyPrice && "opacity-50")}
+          disabled={isAnyPrice}
         />
       </div>
     </div>

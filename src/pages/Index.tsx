@@ -17,24 +17,18 @@ export default function Index() {
       const { data, error } = await supabase
         .from('products')
         .select(`
-          id,
-          title,
-          price,
-          images,
-          florist_profiles (
+          *,
+          florist_profiles!left (
             store_name
           )
         `)
         .eq('in_stock', true)
         .eq('is_hidden', false)
-        .limit(8)
-        .order('created_at', { ascending: false });
+        .limit(6);
 
       if (error) throw error;
       return data;
     },
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-    gcTime: 1000 * 60 * 15    // Keep unused data for 15 minutes
   });
 
   return (

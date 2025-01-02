@@ -21,13 +21,9 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <Button 
-            variant="ghost" 
-            className="p-0 hover:bg-transparent" 
-            onClick={() => navigate("/")}
-          >
+          <a href="/" className="flex items-center space-x-2">
             <Home className="h-5 w-5 text-primary" />
-          </Button>
+          </a>
           <nav className="hidden md:flex items-center space-x-4">
             <a href="/search" className="text-xs text-gray-600 hover:text-primary transition-colors font-mono">
               Browse

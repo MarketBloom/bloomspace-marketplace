@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
 import { Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { memo } from "react";
 
 interface FeaturedProductsProps {
   products: any[];
@@ -11,40 +8,7 @@ interface FeaturedProductsProps {
   navigate: (path: string) => void;
 }
 
-export const FeaturedProducts = memo(({ products, isLoading, navigate }: FeaturedProductsProps) => {
-  // Implement stale-while-revalidate caching strategy with optimized query
-  const { data: cachedProducts, isLoading: isCacheLoading } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: async () => {
-      console.log('Fetching featured products');
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          id,
-          title,
-          price,
-          images,
-          florist_profiles (
-            store_name
-          )
-        `)
-        .eq('in_stock', true)
-        .eq('is_hidden', false)
-        .limit(8)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-    gcTime: 1000 * 60 * 15,   // Keep unused data for 15 minutes
-    refetchOnWindowFocus: false, // Prevent unnecessary refetches
-    retry: 1 // Only retry failed requests once
-  });
-
-  const displayProducts = cachedProducts || products;
-  const showLoading = isLoading || isCacheLoading;
-
+export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -62,14 +26,14 @@ export const FeaturedProducts = memo(({ products, isLoading, navigate }: Feature
           </Button>
         </div>
         
-        {showLoading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-[200px]">
             <Loader2 className="h-6 w-6 animate-spin" />
           </div>
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {displayProducts?.map((product) => (
+              {products?.map((product) => (
                 <ProductCard
                   key={product.id}
                   id={product.id}
@@ -96,6 +60,4 @@ export const FeaturedProducts = memo(({ products, isLoading, navigate }: Feature
       </div>
     </section>
   );
-});
-
-FeaturedProducts.displayName = 'FeaturedProducts';
+};
