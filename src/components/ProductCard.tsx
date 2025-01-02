@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart, MapPin } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
@@ -48,54 +48,50 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer bg-white"
+      className="group relative overflow-hidden transition-all duration-300 cursor-pointer bg-white hover:shadow-lg border-0"
       onClick={() => navigate(`/product/${id}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="p-0">
-        <div className="aspect-square overflow-hidden relative">
+        <div className="aspect-square overflow-hidden">
           <img
             src={images?.[0] || "/placeholder.svg"}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className={`absolute inset-0 bg-black/10 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-          <div className="absolute top-3 right-3 space-y-1.5">
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
-              onClick={(e) => {
-                e.stopPropagation();
-                toast({
-                  title: "Added to wishlist",
-                  description: "Item has been added to your wishlist",
-                });
-              }}
-            >
-              <Heart className="h-3.5 w-3.5" />
-            </Button>
-          </div>
         </div>
       </CardHeader>
-      <CardContent className="p-3">
-        <div className="space-y-1.5">
-          <h3 className="text-sm font-medium tracking-tight leading-none">{title}</h3>
-          <p className="text-sm text-gray-600">${price.toFixed(2)}</p>
-          {floristName && (
-            <div className="flex items-start space-x-1.5 text-xs text-gray-500">
-              <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-              <span className="line-clamp-2">{floristName}</span>
-            </div>
-          )}
+      <CardContent className="p-3 space-y-1">
+        <div className="flex justify-between items-start">
+          <h3 className="text-xs font-medium tracking-tight leading-none font-mono">{title}</h3>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 -mr-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              toast({
+                title: "Added to wishlist",
+                description: "Item has been added to your wishlist",
+              });
+            }}
+          >
+            <Heart className="h-3.5 w-3.5" />
+          </Button>
         </div>
+        <p className="text-xs text-muted-foreground font-mono">${price.toFixed(2)}</p>
+        {floristName && (
+          <p className="text-[10px] text-muted-foreground font-mono truncate">
+            {floristName}
+          </p>
+        )}
       </CardContent>
       <CardFooter className="p-3 pt-0">
         <Button 
           variant="outline"
           size="sm"
-          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs h-8"
+          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs h-8 font-mono"
           onClick={handleAddToCart}
         >
           <ShoppingCart className="h-3.5 w-3.5 mr-2" />
