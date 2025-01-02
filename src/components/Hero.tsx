@@ -8,7 +8,7 @@ export const Hero = () => {
           <img 
             src="/lovable-uploads/18a5a7fb-48ad-4141-a936-090f6e45b2e9.png"
             alt="Soft pink roses in a dreamy, ethereal composition"
-            className="h-full w-full object-cover opacity-90 md:scale-110"
+            className="h-full w-full object-cover opacity-90"
             style={{ 
               objectPosition: 'center center',
               filter: 'contrast(1.1) brightness(0.9)'
