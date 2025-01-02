@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Clock, DollarSign } from "lucide-react";
+import { CalendarIcon, Clock, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -14,6 +14,7 @@ export const HomeFilterBar = () => {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("12:00");
   const [budget, setBudget] = useState<number[]>([50]);
+  const [isAnyPrice, setIsAnyPrice] = useState(true);
 
   const handleSearch = () => {
     navigate('/search');
@@ -25,23 +26,24 @@ export const HomeFilterBar = () => {
   }).flat();
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Location Filter */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">Location</label>
           <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input 
               type="text" 
-              placeholder="Enter location" 
-              className="w-full bg-white/90"
+              placeholder="Enter city or postcode" 
+              className="w-full pl-10 bg-white/90"
             />
           </div>
         </div>
         
         {/* Date Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Delivered by</label>
+          <label className="text-sm font-medium text-gray-700">Pickup or Delivered by</label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -79,7 +81,7 @@ export const HomeFilterBar = () => {
                 )}
               >
                 <Clock className="mr-2 h-4 w-4" />
-                {time || "Select time"}
+                {time || "12:00"}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
@@ -108,14 +110,30 @@ export const HomeFilterBar = () => {
 
         {/* Budget Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Budget (${budget[0]})</label>
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium text-gray-700">Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}</label>
+            <button 
+              onClick={() => setIsAnyPrice(!isAnyPrice)}
+              className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                isAnyPrice 
+                  ? 'bg-primary text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Any Price
+            </button>
+          </div>
           <div className="px-3 py-4 rounded-md bg-white/90 border">
             <Slider
               value={budget}
-              onValueChange={setBudget}
+              onValueChange={(value) => {
+                setBudget(value);
+                setIsAnyPrice(false);
+              }}
               max={500}
               step={10}
-              className="w-full"
+              className={cn("w-full", isAnyPrice && "opacity-50")}
+              disabled={isAnyPrice}
             />
           </div>
         </div>
@@ -123,7 +141,7 @@ export const HomeFilterBar = () => {
 
       <div className="mt-6">
         <Button 
-          className="w-full md:w-auto"
+          className="w-full bg-primary hover:bg-primary/90"
           onClick={handleSearch}
         >
           Search Flowers
