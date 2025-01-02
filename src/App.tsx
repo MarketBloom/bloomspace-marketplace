@@ -14,15 +14,20 @@ import FloristDashboard from "./pages/FloristDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
         <CartProvider>
-          <Toaster />
-          <Sonner />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<Search />} />
@@ -33,6 +38,8 @@ const App = () => (
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
           </Routes>
+          <Toaster />
+          <Sonner />
         </CartProvider>
       </BrowserRouter>
     </TooltipProvider>
