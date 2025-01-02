@@ -23,7 +23,7 @@ export const CategoryFilter = ({
 }: CategoryFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-white/90 text-xs">Categories</label>
+      <label className="text-foreground text-xs font-medium">Categories</label>
       <div className="space-y-2 bg-white/90 border border-white/20 rounded-md p-2">
         {categories.map((category) => (
           <div key={category} className="flex items-center space-x-2">

@@ -23,7 +23,7 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border border-black/10 rounded-lg p-4">
       <LocationFilter />
       
       <DateFilter 

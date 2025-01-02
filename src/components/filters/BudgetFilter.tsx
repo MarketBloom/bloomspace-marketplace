@@ -17,7 +17,7 @@ export const BudgetFilter = ({
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <label className="text-white/90 text-xs">
+        <label className="text-foreground text-xs font-medium">
           Budget {isAnyPrice ? '(Any)' : `($${budget[0]})`}
         </label>
         <button 

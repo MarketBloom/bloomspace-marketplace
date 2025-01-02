@@ -16,7 +16,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   return (
     <div className="space-y-1.5">
-      <label className="text-white/90 text-xs">Time</label>
+      <label className="text-foreground text-xs font-medium">Time</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
