@@ -16,14 +16,14 @@ export const BudgetFilter = ({
 }: BudgetFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <div className="flex justify-between items-center">
-        <label className="text-white text-xs font-medium drop-shadow-sm">
+      <div className="flex justify-between items-center gap-2">
+        <label className="text-white text-xs font-medium drop-shadow-sm flex-1">
           Budget {isAnyPrice ? '(Any)' : `($${budget[0]}${budget[0] >= 500 ? '+' : ''})`}
         </label>
         <button 
           onClick={() => setIsAnyPrice(!isAnyPrice)}
           className={cn(
-            "text-xs px-2.5 py-1 rounded-full transition-colors",
+            "text-xs px-2.5 py-1 rounded-full transition-colors whitespace-nowrap",
             isAnyPrice 
               ? "bg-white/20 text-white hover:bg-white/30"
               : "bg-primary text-white"
