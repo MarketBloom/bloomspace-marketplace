@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import FloristDashboard from "./pages/FloristDashboard";
 import ProductDetail from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/dashboard" element={<CustomerDashboard />} />
             <Route path="/florist-dashboard" element={<FloristDashboard />} />
             <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </CartProvider>
       </BrowserRouter>
