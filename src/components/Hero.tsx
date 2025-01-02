@@ -8,13 +8,13 @@ export const Hero = () => {
           <img 
             src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
             alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
-            className="h-full w-full object-cover opacity-90"
+            className="h-full w-full object-cover opacity-85"
             style={{ 
               objectPosition: '50% 50%',
-              filter: 'contrast(1.1) brightness(0.9)'
+              filter: 'contrast(1.1) brightness(0.85)'
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/20" />
           
           {/* Grain effect overlay */}
           <div 
@@ -29,10 +29,10 @@ export const Hero = () => {
       <div className="container mx-auto relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight drop-shadow-md">
               Find local florists in your area
             </h1>
-            <p className="text-lg md:text-xl text-white/90 font-light">
+            <p className="text-lg md:text-xl text-white/90 font-light drop-shadow">
               Support local florists and get fresh flowers delivered
             </p>
           </div>
