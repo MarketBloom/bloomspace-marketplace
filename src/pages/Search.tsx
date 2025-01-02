@@ -29,18 +29,22 @@ const Search = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-16 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">
-              Find Your Perfect Flowers
-            </h1>
-            <p className="text-lg text-muted-foreground text-center mb-8 font-light">
-              Browse our collection of fresh, locally-sourced arrangements
-            </p>
-            <FilterBar />
+      <main>
+        <div className="relative bg-white border-b">
+          <div className="container mx-auto px-4 pt-28 pb-12">
+            <div className="max-w-3xl mx-auto">
+              <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">
+                Find Your Perfect Flowers
+              </h1>
+              <p className="text-lg text-muted-foreground text-center mb-8 font-light">
+                Browse our collection of fresh, locally-sourced arrangements
+              </p>
+              <FilterBar />
+            </div>
           </div>
-          
+        </div>
+
+        <div className="container mx-auto px-4 py-12">
           {isLoading ? (
             <div className="flex justify-center items-center h-[200px]">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
