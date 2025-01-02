@@ -7,35 +7,26 @@
     <title>Market Bloom - Fresh Local Flowers</title>
     <meta name="description" content="Find and support local florists in your area. Fresh flowers delivered or available for pickup." />
     
-    <!-- Preload critical assets -->
-    <link 
-      rel="preload" 
-      href="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png" 
-      as="image"
-      fetchpriority="high"
-    />
-    
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Font optimization -->
-    <link 
-      rel="preload"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link 
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    <!-- Critical CSS inline -->
+    <style>
+      #root {
+        height: 100vh;
+        width: 100vw;
+      }
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        background: #fff;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <!-- Required Lovable script -->
+    <div id="root">
+      <div class="loading-spinner">Loading Market Bloom...</div>
+    </div>
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
