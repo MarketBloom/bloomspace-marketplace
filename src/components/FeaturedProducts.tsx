@@ -10,11 +10,11 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-24">
+    <section className="py-12">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-8">
           <div>
-            <h2 className="text-4xl font-bold mb-4">Featured Arrangements</h2>
+            <h2 className="text-4xl font-bold mb-2">Featured Arrangements</h2>
             <p className="text-gray-600 text-lg">Fresh picks from local artisan florists</p>
           </div>
           <Button 
