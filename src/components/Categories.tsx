@@ -29,10 +29,10 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-4">Shop by Category</h2>
-        <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">Shop by Category</h2>
+        <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto font-light">
           Find fresh, local arrangements for every occasion, at any price point
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -52,8 +52,8 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <div className="mb-3">{category.icon}</div>
-                <h3 className="text-2xl font-semibold mb-2">{category.name}</h3>
-                <p className="text-gray-200">{category.description}</p>
+                <h3 className="text-2xl font-semibold mb-2 tracking-tight">{category.name}</h3>
+                <p className="text-gray-200 font-light">{category.description}</p>
               </div>
             </div>
           ))}
