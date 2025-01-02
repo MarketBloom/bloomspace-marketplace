@@ -28,9 +28,7 @@ export const Hero = () => {
         <div className="max-w-md mx-auto">
           <div className="text-center mb-6 md:mb-5">
             <h1 className="text-3xl md:text-3xl font-medium mb-3 text-white tracking-tight drop-shadow-md font-mono">
-              Find local florists in
-              <br />
-              your area
+              Find local florists in your area
             </h1>
             <p className="text-base md:text-base text-white/90 font-light drop-shadow font-mono">
               Support local florists and get fresh flowers delivered
