@@ -50,7 +50,7 @@ const Search = () => {
   const FilterPanel = () => (
     <div className="w-full space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4 font-mono">Filters</h3>
+        <h3 className="text-base font-semibold mb-4 font-mono">Filters</h3>
         <FilterBar />
       </div>
     </div>
@@ -64,10 +64,10 @@ const Search = () => {
         <div className="relative bg-white border-b">
           <div className="container mx-auto px-4 pt-28 pb-12">
             <div className="max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight animate-fade-in">
+              <h1 className="text-3xl md:text-4xl font-bold text-center mb-3 tracking-tight animate-fade-in">
                 Find Your Perfect Flowers
               </h1>
-              <p className="text-lg text-muted-foreground text-center mb-4 font-light animate-fade-in-up">
+              <p className="text-sm text-muted-foreground text-center mb-4 animate-fade-in-up">
                 Browse our collection of fresh, locally-sourced arrangements
               </p>
             </div>
@@ -85,7 +85,7 @@ const Search = () => {
             <div className="lg:hidden mb-6">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full text-sm">
                     <SlidersHorizontal className="h-4 w-4 mr-2" />
                     Filters
                   </Button>
@@ -103,7 +103,7 @@ const Search = () => {
                 <Button
                   variant={viewMode === 'products' ? 'default' : 'outline'}
                   onClick={() => setViewMode('products')}
-                  className="flex-1 sm:flex-none animate-fade-in"
+                  className="flex-1 sm:flex-none animate-fade-in text-sm"
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Products
@@ -111,7 +111,7 @@ const Search = () => {
                 <Button
                   variant={viewMode === 'florists' ? 'default' : 'outline'}
                   onClick={() => setViewMode('florists')}
-                  className="flex-1 sm:flex-none animate-fade-in"
+                  className="flex-1 sm:flex-none animate-fade-in text-sm"
                 >
                   <Store className="h-4 w-4 mr-2" />
                   Florists
@@ -142,8 +142,8 @@ const Search = () => {
                   </div>
                 ) : (
                   <div className="text-center py-12 animate-fade-in">
-                    <h2 className="text-2xl font-semibold mb-2">No products found</h2>
-                    <p className="text-muted-foreground">
+                    <h2 className="text-xl font-semibold mb-2">No products found</h2>
+                    <p className="text-sm text-muted-foreground">
                       Try adjusting your search criteria
                     </p>
                   </div>
@@ -171,8 +171,8 @@ const Search = () => {
                   </div>
                 ) : (
                   <div className="text-center py-12 animate-fade-in">
-                    <h2 className="text-2xl font-semibold mb-2">No florists found</h2>
-                    <p className="text-muted-foreground">
+                    <h2 className="text-xl font-semibold mb-2">No florists found</h2>
+                    <p className="text-sm text-muted-foreground">
                       Try adjusting your search criteria
                     </p>
                   </div>

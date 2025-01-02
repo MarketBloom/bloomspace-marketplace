@@ -21,20 +21,20 @@ export const FloristCard = ({
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <CardHeader className="p-4 pb-2">
-        <h3 className="font-semibold text-lg">{storeName}</h3>
-        <div className="flex items-center text-sm text-gray-500 mt-1">
-          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+        <h3 className="text-sm font-semibold">{storeName}</h3>
+        <div className="flex items-center text-xs text-gray-500 mt-1">
+          <MapPin className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
           <span>{address}</span>
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-2">
         {aboutText && (
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
+          <p className="text-xs text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
         )}
         <Button 
           variant="outline" 
           onClick={() => navigate(`/florist/${id}`)}
-          className="w-full"
+          className="w-full text-xs"
         >
           View Products
         </Button>

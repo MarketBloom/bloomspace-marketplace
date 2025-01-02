@@ -81,7 +81,7 @@ export const ProductCard = ({
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-2">
-          <h3 className="font-medium text-base tracking-tight leading-none">{title}</h3>
+          <h3 className="text-sm font-medium tracking-tight leading-none">{title}</h3>
           <p className="text-sm text-gray-600">${price.toFixed(2)}</p>
           {floristName && (
             <div className="flex items-start space-x-1.5 text-xs text-gray-500">
@@ -95,10 +95,10 @@ export const ProductCard = ({
         <Button 
           variant="outline"
           size="sm"
-          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs"
           onClick={handleAddToCart}
         >
-          <ShoppingCart className="h-4 w-4 mr-2" />
+          <ShoppingCart className="h-3.5 w-3.5 mr-2" />
           Add to Cart
         </Button>
       </CardFooter>
