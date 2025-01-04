@@ -22,19 +22,20 @@ serve(async (req) => {
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 // Changed to 200 to handle error in the response body instead
+          status: 200
         }
       )
     }
 
     console.log('Starting crawl for URL:', url)
 
-    // Make direct fetch request to Firecrawl API
+    // Make direct fetch request to Firecrawl API with proper headers
     const response = await fetch('https://api.firecrawl.com/crawl', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKey}`,
+        'Origin': 'https://api.firecrawl.com'
       },
       body: JSON.stringify({
         url,
@@ -64,9 +65,12 @@ serve(async (req) => {
         }
       }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json',
+        },
         status: 200
-      },
+      }
     )
   } catch (error) {
     console.error('Error:', error)
@@ -79,8 +83,8 @@ serve(async (req) => {
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 // Changed to 200 to handle error in the response body
-      },
+        status: 200
+      }
     )
   }
 })
