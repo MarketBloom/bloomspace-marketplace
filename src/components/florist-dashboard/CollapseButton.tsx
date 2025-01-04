@@ -1,12 +1,12 @@
 interface CollapseButtonProps {
   collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
+  onToggle: () => void;
 }
 
-export const CollapseButton = ({ collapsed, setCollapsed }: CollapseButtonProps) => {
+export const CollapseButton = ({ collapsed, onToggle }: CollapseButtonProps) => {
   return (
     <button
-      onClick={() => setCollapsed(!collapsed)}
+      onClick={onToggle}
       className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
     >
       <svg

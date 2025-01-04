@@ -41,7 +41,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           />
           <CollapseButton 
             collapsed={collapsed} 
-            setCollapsed={setCollapsed} 
+            onToggle={() => setCollapsed(!collapsed)} 
           />
         </div>
       </div>
