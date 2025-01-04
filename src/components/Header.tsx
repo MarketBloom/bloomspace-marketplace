@@ -4,11 +4,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
 import { ShoppingCart, Home } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
+  const [isHome, setIsHome] = useState(true);
 
   const handleSignOut = async () => {
     try {
@@ -30,7 +32,17 @@ export const Header = () => {
     if (user?.user_metadata?.role === 'florist') {
       navigate("/florist-dashboard");
     } else {
-      navigate("/dashboard");
+      navigate("/customer-dashboard");
+    }
+  };
+
+  const toggleHomeAndDashboard = () => {
+    if (isHome) {
+      handleDashboardClick();
+      setIsHome(false);
+    } else {
+      navigate("/");
+      setIsHome(true);
     }
   };
 
@@ -38,9 +50,14 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <a href="/" className="flex items-center space-x-2">
-            <Home className="h-5 w-5 text-primary" />
-          </a>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={toggleHomeAndDashboard}
+            className="h-8 w-8"
+          >
+            <Home className={`h-4 w-4 transition-transform duration-200 ${!isHome ? 'rotate-180' : ''}`} />
+          </Button>
           <nav className="hidden md:flex items-center space-x-4">
             <a href="/search" className="text-xs text-gray-600 hover:text-primary transition-colors font-mono">
               Browse
