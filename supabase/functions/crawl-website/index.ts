@@ -1,13 +1,14 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { corsHeaders } from '../_shared/cors.ts'
 
-interface FirecrawlResponse {
-  success: boolean;
-  data?: any;
-  error?: string;
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json'
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -22,52 +23,63 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
-    console.log('API Key prefix:', apiKey.substring(0, 5))
+    console.log('Using API key starting with:', apiKey.substring(0, 5))
 
-    // First, try a simple fetch to validate the URL
+    // Basic URL validation
     try {
-      const urlValidation = await fetch(url)
-      if (!urlValidation.ok) {
-        throw new Error('Invalid or inaccessible URL')
+      const urlObj = new URL(url)
+      if (!urlObj.protocol.startsWith('http')) {
+        throw new Error('Invalid URL protocol')
+      }
+    } catch {
+      throw new Error('Invalid URL format')
+    }
+
+    // First try to fetch the URL to validate it's accessible
+    try {
+      const testResponse = await fetch(url)
+      if (!testResponse.ok) {
+        throw new Error(`URL returned status ${testResponse.status}`)
       }
     } catch (error) {
       console.error('URL validation error:', error)
-      throw new Error('Invalid or inaccessible URL')
+      throw new Error('Website is not accessible')
     }
 
-    // Make request to Firecrawl API
-    const firecrawlResponse = await fetch('https://api.firecrawl.com/v1/crawl', {
+    // Make the crawl request
+    const crawlResponse = await fetch('https://api.firecrawl.com/v1/crawl', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         url,
-        limit: 10, // Reduced limit for faster response
+        limit: 5, // Reduced limit for testing
         scrapeOptions: {
           formats: ['markdown', 'html'],
           selectors: {
             title: 'h1, title',
             description: 'meta[name="description"], p',
-            products: '.product, [data-product]',
-            contact: '.contact, [data-contact]'
+            products: '.product, [data-product], .woocommerce-loop-product',
+            prices: '.price, [data-price]',
+            images: 'img, [data-image]'
           }
         }
       })
     })
 
-    console.log('Firecrawl response status:', firecrawlResponse.status)
+    console.log('Firecrawl response status:', crawlResponse.status)
     
-    if (!firecrawlResponse.ok) {
-      const errorText = await firecrawlResponse.text()
-      console.error('Firecrawl API error:', errorText)
-      throw new Error(`Firecrawl API error: ${firecrawlResponse.status} ${errorText}`)
+    if (!crawlResponse.ok) {
+      const errorText = await crawlResponse.text()
+      console.error('Firecrawl API error response:', errorText)
+      throw new Error(`Firecrawl API error: ${crawlResponse.status} - ${errorText}`)
     }
 
-    const responseData = await firecrawlResponse.json()
-    console.log('Firecrawl API response:', JSON.stringify(responseData, null, 2))
+    const data = await crawlResponse.json()
+    console.log('Firecrawl API success response:', JSON.stringify(data, null, 2))
 
     return new Response(
       JSON.stringify({
@@ -77,15 +89,13 @@ serve(async (req) => {
           data: {
             url,
             crawledAt: new Date().toISOString(),
-            content: responseData
+            content: data
           }
         }
       }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200
-      }
+      { headers: corsHeaders }
     )
+
   } catch (error) {
     console.error('Error in crawl-website function:', error)
     return new Response(
@@ -102,10 +112,7 @@ serve(async (req) => {
           }
         }
       }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 // Keep 200 to handle errors in the client
-      }
+      { headers: corsHeaders }
     )
   }
 })

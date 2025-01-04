@@ -29,8 +29,8 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
 
   const validateUrl = (url: string): boolean => {
     try {
-      new URL(url);
-      return true;
+      const urlObj = new URL(url);
+      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
     } catch {
       return false;
     }
@@ -42,7 +42,7 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
     if (!validateUrl(url)) {
       toast({
         title: "Invalid URL",
-        description: "Please enter a valid website URL",
+        description: "Please enter a valid website URL starting with http:// or https://",
         variant: "destructive",
         duration: 3000,
       });
