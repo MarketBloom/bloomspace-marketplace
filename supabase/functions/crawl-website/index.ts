@@ -1,12 +1,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import FirecrawlApp from 'https://esm.sh/@mendable/firecrawl-js'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { corsHeaders } from '../_shared/cors.ts'
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -19,8 +16,8 @@ serve(async (req) => {
       throw new Error('Firecrawl API key not configured')
     }
 
-    const firecrawl = new FirecrawlApp({ apiKey })
     console.log('Starting crawl for URL:', url)
+    const firecrawl = new FirecrawlApp({ apiKey })
 
     const crawlResponse = await firecrawl.crawlUrl(url, {
       limit: 100,
@@ -28,6 +25,8 @@ serve(async (req) => {
         formats: ['markdown', 'html'],
       }
     })
+
+    console.log('Crawl response:', crawlResponse)
 
     if (!crawlResponse.success) {
       throw new Error(crawlResponse.error || 'Failed to crawl website')
