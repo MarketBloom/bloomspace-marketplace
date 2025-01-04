@@ -90,7 +90,7 @@ export const Header = () => {
             <Button 
               variant="default"
               onClick={() => navigate("/login")}
-              className="h-8 px-3 text-sm bg-[#A8A646] hover:bg-[#A8A646]/90 text-white"
+              className="h-8 px-3 text-sm"
             >
               Sign In
             </Button>
