@@ -57,7 +57,6 @@ export const useAuth = () => {
 
       console.log("User created successfully:", authData.user.id);
 
-      // If role is florist, create initial florist profile
       if (role === "florist") {
         console.log("Creating florist profile...");
         const { error: profileError } = await supabase
@@ -80,7 +79,6 @@ export const useAuth = () => {
 
       toast.success("Account created successfully!");
       
-      // Handle navigation based on role
       if (role === "florist") {
         navigate("/become-florist");
       } else {
@@ -104,7 +102,7 @@ export const useAuth = () => {
 
       if (error) {
         toast.error(error.message);
-        throw error;
+        return { data: null, error };
       }
 
       toast.success("Welcome back!");
@@ -125,17 +123,26 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        toast.error(error.message);
-        throw error;
-      }
+      // First, clear the local state
       setUser(null);
       setSession(null);
+
+      // Then sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error("Error signing out:", error);
+        toast.error(error.message);
+        return { error };
+      }
+
+      // Only navigate and show success message if sign out was successful
+      toast.success("Signed out successfully");
       navigate("/");
       return { error: null };
     } catch (error: any) {
-      toast.error(error.message);
+      console.error("Unexpected error during sign out:", error);
+      toast.error(error.message || "An unexpected error occurred");
       return { error };
     }
   };
