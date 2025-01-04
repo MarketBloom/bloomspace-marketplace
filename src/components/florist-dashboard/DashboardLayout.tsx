@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Store,
@@ -19,12 +19,25 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isHome, setIsHome] = useState(location.pathname === "/");
+
+  const handleHomeClick = () => {
+    if (isHome) {
+      navigate("/florist-dashboard");
+    } else {
+      navigate("/");
+    }
+    setIsHome(!isHome);
+  };
 
   const menuItems = [
     {
       icon: Home,
       label: "Homepage",
       path: "/",
+      onClick: handleHomeClick,
+      className: `transition-transform duration-200 ${!isHome ? 'rotate-180' : ''}`
     },
     {
       icon: LayoutDashboard,
@@ -76,9 +89,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                       "w-full justify-start gap-3 hover:bg-gray-100",
                       collapsed && "justify-center px-2"
                     )}
-                    onClick={() => navigate(item.path)}
+                    onClick={item.onClick || (() => navigate(item.path))}
                   >
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className={cn("h-5 w-5", item.className)} />
                     <span
                       className={cn(
                         "transition-opacity",
