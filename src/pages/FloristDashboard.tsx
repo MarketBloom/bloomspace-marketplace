@@ -1,18 +1,14 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Header } from "@/components/Header";
+import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
 import { SetupProgress } from "@/components/florist-dashboard/SetupProgress";
 import { StoreVisibility } from "@/components/florist-dashboard/StoreVisibility";
 import { DashboardStats } from "@/components/florist-dashboard/DashboardStats";
 import { RecentOrders } from "@/components/florist-dashboard/RecentOrders";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Settings } from "lucide-react";
 
 const FloristDashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const { data: floristProfile } = useQuery({
     queryKey: ["floristProfile", user?.id],
@@ -29,47 +25,42 @@ const FloristDashboard = () => {
     enabled: !!user,
   });
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="container mx-auto px-4 pt-24">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Store Dashboard</h1>
-            <p className="text-muted-foreground">
-              Welcome back, {floristProfile?.store_name || "New Florist"}
-            </p>
+    <DashboardLayout>
+      <div className="p-8">
+        <div className="max-w-[1600px] mx-auto space-y-8">
+          {/* Header Section */}
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-semibold mb-1">
+                  Welcome back, {floristProfile?.store_name || "New Florist"}
+                </h1>
+                <p className="text-muted-foreground">
+                  Here's what's happening with your store today
+                </p>
+              </div>
+              
+              <SetupProgress progress={floristProfile?.setup_progress || 0} />
+              
+              <StoreVisibility
+                storeId={user?.id}
+                initialStatus={floristProfile?.store_status as "private" | "published"}
+                onStatusChange={() => {}}
+              />
+            </div>
           </div>
-          <Button 
-            onClick={() => navigate("/store-management")}
-            className="flex items-center gap-2"
-          >
-            <Settings className="w-4 h-4" />
-            Manage Store
-          </Button>
-        </div>
 
-        <div className="space-y-8">
-          <SetupProgress progress={floristProfile?.setup_progress || 0} />
-
-          <StoreVisibility
-            storeId={user?.id}
-            initialStatus={floristProfile?.store_status as "private" | "published"}
-            onStatusChange={() => {}}
-          />
-
+          {/* Stats Section */}
           <DashboardStats floristId={user?.id} />
 
-          <div className="grid grid-cols-1 gap-8">
-            <RecentOrders floristId={user?.id} />
-          </div>
+          {/* Recent Orders Section */}
+          <RecentOrders floristId={user?.id} />
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

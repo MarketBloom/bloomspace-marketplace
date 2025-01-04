@@ -1,11 +1,11 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Header } from "@/components/Header";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
 import { ImageUploadForm } from "@/components/become-florist/ImageUploadForm";
 import { ProductManagement } from "@/components/florist-dashboard/ProductManagement";
 import { StoreSettingsForm } from "@/components/store-management/StoreSettingsForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const StoreManagement = () => {
@@ -60,9 +60,8 @@ const StoreManagement = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="container mx-auto px-4 pt-24 pb-12">
+    <DashboardLayout>
+      <div className="p-8">
         <div className="max-w-[1600px] mx-auto">
           <h1 className="text-3xl font-bold mb-2">Store Management</h1>
           <p className="text-muted-foreground mb-8">
@@ -142,8 +141,8 @@ const StoreManagement = () => {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 
