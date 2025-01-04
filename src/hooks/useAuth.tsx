@@ -30,9 +30,6 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
-      console.log("Starting signup process...");
-      
-      // First, create the auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -46,20 +43,19 @@ export const useAuth = () => {
 
       if (authError) {
         console.error("Auth error during signup:", authError);
+        toast.error(authError.message);
         return { data: null, error: authError };
       }
 
       if (!authData.user) {
         const error = new Error("No user data returned after signup");
         console.error(error);
+        toast.error("Failed to create account");
         return { data: null, error };
       }
 
-      console.log("Auth user created successfully:", authData.user.id);
-
       // If role is florist, create initial florist profile
       if (role === "florist") {
-        console.log("Creating florist profile...");
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
@@ -72,13 +68,12 @@ export const useAuth = () => {
 
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
-          // Continue anyway as the user account is created
-          toast.error("Account created but there was an error setting up your florist profile.");
-        } else {
-          console.log("Florist profile created successfully");
+          toast.error("Account created but there was an error setting up your florist profile");
         }
       }
 
+      toast.success("Account created successfully!");
+      
       // Handle navigation based on role
       if (role === "florist") {
         navigate("/become-florist");
@@ -89,6 +84,7 @@ export const useAuth = () => {
       return { data: authData, error: null };
     } catch (error: any) {
       console.error("Unexpected error during signup:", error);
+      toast.error(error.message || "An unexpected error occurred");
       return { data: null, error };
     }
   };
