@@ -26,14 +26,14 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#F8F9FC",
-        foreground: "#403E43",
+        background: "#F2FCE2",
+        foreground: "#2D2D2D",
         primary: {
-          DEFAULT: "#4A6CF7",
+          DEFAULT: "#A8A646",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#8A898C",
+          DEFAULT: "#BD5931",
           foreground: "#FFFFFF",
         },
         destructive: {
@@ -41,20 +41,20 @@ export default {
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#F1F5F9",
-          foreground: "#8A898C",
+          DEFAULT: "#E5DFD9",
+          foreground: "#6B6B6B",
         },
         accent: {
-          DEFAULT: "#4A6CF7",
+          DEFAULT: "#BD5931",
           foreground: "#FFFFFF",
         },
         popover: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#403E43",
+          DEFAULT: "#F2FCE2",
+          foreground: "#2D2D2D",
         },
         card: {
           DEFAULT: "#FFFFFF",
-          foreground: "#403E43",
+          foreground: "#2D2D2D",
         },
       },
       borderRadius: {
