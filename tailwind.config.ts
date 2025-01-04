@@ -19,7 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        mono: ["JetBrains Mono", "Menlo", "Monaco", "Courier New", "monospace"],
+        sans: ["M PLUS Rounded 1c", "sans-serif"],
+        mono: ["M PLUS Rounded 1c", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
