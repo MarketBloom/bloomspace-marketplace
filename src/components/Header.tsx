@@ -31,6 +31,9 @@ export const Header = () => {
             <a href="/about" className="text-xs text-gray-600 hover:text-primary transition-colors font-mono">
               About
             </a>
+            <a href="/become-florist" className="text-xs text-gray-600 hover:text-primary transition-colors font-mono">
+              Become a Florist
+            </a>
           </nav>
         </div>
         <div className="flex items-center space-x-3">

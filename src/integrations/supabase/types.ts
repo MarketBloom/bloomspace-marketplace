@@ -13,16 +13,22 @@ export type Database = {
         Row: {
           about_text: string | null
           address: string
+          banner_url: string | null
           commission_rate: number | null
           created_at: string
           delivery_cutoff: string | null
           delivery_end_time: string | null
+          delivery_fee: number | null
+          delivery_radius: number | null
           delivery_slot_duration: unknown | null
           delivery_start_time: string | null
           id: string
           is_premium: boolean | null
+          logo_url: string | null
+          minimum_order_amount: number | null
           operating_hours: Json | null
           premium_since: string | null
+          social_links: Json | null
           store_name: string
           updated_at: string
           verified: boolean | null
@@ -30,16 +36,22 @@ export type Database = {
         Insert: {
           about_text?: string | null
           address: string
+          banner_url?: string | null
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
           delivery_end_time?: string | null
+          delivery_fee?: number | null
+          delivery_radius?: number | null
           delivery_slot_duration?: unknown | null
           delivery_start_time?: string | null
           id: string
           is_premium?: boolean | null
+          logo_url?: string | null
+          minimum_order_amount?: number | null
           operating_hours?: Json | null
           premium_since?: string | null
+          social_links?: Json | null
           store_name: string
           updated_at?: string
           verified?: boolean | null
@@ -47,16 +59,22 @@ export type Database = {
         Update: {
           about_text?: string | null
           address?: string
+          banner_url?: string | null
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
           delivery_end_time?: string | null
+          delivery_fee?: number | null
+          delivery_radius?: number | null
           delivery_slot_duration?: unknown | null
           delivery_start_time?: string | null
           id?: string
           is_premium?: boolean | null
+          logo_url?: string | null
+          minimum_order_amount?: number | null
           operating_hours?: Json | null
           premium_since?: string | null
+          social_links?: Json | null
           store_name?: string
           updated_at?: string
           verified?: boolean | null
