@@ -28,31 +28,30 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="min-h-screen bg-gray-50">
       <div
         className={cn(
-          "fixed left-0 top-0 z-20 h-full bg-white shadow-sm transition-all duration-300",
+          "fixed left-0 top-0 z-20 h-full bg-white shadow-lg transition-all duration-300",
           collapsed ? "w-20" : "w-64"
         )}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex h-full flex-col">
           <DashboardLogo collapsed={collapsed} />
-          <DashboardNavigation
-            collapsed={collapsed}
+          <DashboardNavigation 
+            collapsed={collapsed} 
             handleHomeClick={handleHomeClick}
             isHome={isHome}
           />
-          <CollapseButton
-            collapsed={collapsed}
-            onToggle={() => setCollapsed(!collapsed)}
+          <CollapseButton 
+            collapsed={collapsed} 
+            setCollapsed={setCollapsed} 
           />
         </div>
       </div>
-
       <div
         className={cn(
           "transition-all duration-300 bg-gray-50",
           collapsed ? "ml-20" : "ml-64"
         )}
       >
-        {children}
+        <div className="container mx-auto p-6">{children}</div>
       </div>
     </div>
   );
