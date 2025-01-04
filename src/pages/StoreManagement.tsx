@@ -2,7 +2,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageUploadForm } from "@/components/become-florist/ImageUploadForm";
 import { ProductManagement } from "@/components/florist-dashboard/ProductManagement";
 import { StoreSettingsForm } from "@/components/store-management/StoreSettingsForm";
@@ -64,31 +63,35 @@ const StoreManagement = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="container mx-auto px-4 pt-24 pb-12">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <h1 className="text-3xl font-bold mb-2">Store Management</h1>
           <p className="text-muted-foreground mb-8">
             Customize and manage your store's appearance, products, and settings
           </p>
 
-          <Tabs defaultValue="branding" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto gap-4">
-              <TabsTrigger value="branding" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Branding & Images
-              </TabsTrigger>
-              <TabsTrigger value="products" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Products
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Store Settings
-              </TabsTrigger>
-            </TabsList>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Store Settings Panel - Left Side */}
+            <div className="lg:col-span-4 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Store Settings</CardTitle>
+                  <CardDescription>
+                    Configure your store's basic information and delivery settings
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <StoreSettingsForm
+                    initialData={floristProfile}
+                    onUpdate={refetch}
+                  />
+                </CardContent>
+              </Card>
 
-            <TabsContent value="branding" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Store Branding</CardTitle>
                   <CardDescription>
-                    Upload your store's logo and banner image to customize your store's appearance
+                    Upload your store's logo and banner image
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -117,9 +120,10 @@ const StoreManagement = () => {
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
+            </div>
 
-            <TabsContent value="products">
+            {/* Product Management Panel - Right Side */}
+            <div className="lg:col-span-8">
               <Card>
                 <CardHeader>
                   <CardTitle>Product Management</CardTitle>
@@ -135,25 +139,8 @@ const StoreManagement = () => {
                   />
                 </CardContent>
               </Card>
-            </TabsContent>
-
-            <TabsContent value="settings">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Store Settings</CardTitle>
-                  <CardDescription>
-                    Configure your store's basic information and delivery settings
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <StoreSettingsForm
-                    initialData={floristProfile}
-                    onUpdate={refetch}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
       </main>
     </div>
