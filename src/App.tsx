@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import CustomerSignup from "@/pages/CustomerSignup";
@@ -24,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Navigate to="/customer-signup" replace />} />
             <Route path="/customer-signup" element={<CustomerSignup />} />
             <Route path="/florist-signup" element={<FloristSignup />} />
             <Route path="/search" element={<Search />} />

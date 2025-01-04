@@ -72,7 +72,6 @@ export const useAuth = () => {
 
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
-          // Don't return here, just show a warning
           toast.error("Account created but there was an error setting up your florist profile");
         } else {
           console.log("Florist profile created successfully");
@@ -108,25 +107,36 @@ export const useAuth = () => {
         throw error;
       }
 
+      toast.success("Welcome back!");
+      
       const role = data.user?.user_metadata?.role;
       if (role === "florist") {
         navigate("/florist-dashboard");
       } else {
         navigate("/dashboard");
       }
+
+      return { data, error: null };
     } catch (error: any) {
       toast.error(error.message);
-      throw error;
+      return { data: null, error };
     }
   };
 
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        toast.error(error.message);
+        throw error;
+      }
+      setUser(null);
+      setSession(null);
       navigate("/");
+      return { error: null };
     } catch (error: any) {
       toast.error(error.message);
+      return { error };
     }
   };
 

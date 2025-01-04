@@ -3,13 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
 import { ShoppingCart, Home } from "lucide-react";
+import { toast } from "sonner";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success("Signed out successfully");
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("Failed to sign out");
+    }
+  };
+
   const handleDashboardClick = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    
     if (user?.user_metadata?.role === 'florist') {
       navigate("/florist-dashboard");
     } else {
@@ -52,7 +69,7 @@ export const Header = () => {
               <Button variant="ghost" onClick={handleDashboardClick} className="text-xs h-8 font-mono">
                 Dashboard
               </Button>
-              <Button variant="ghost" onClick={() => signOut()} className="text-xs h-8 font-mono">
+              <Button variant="ghost" onClick={handleSignOut} className="text-xs h-8 font-mono">
                 Sign Out
               </Button>
             </>
@@ -61,7 +78,7 @@ export const Header = () => {
               <Button variant="ghost" onClick={() => navigate("/login")} className="text-xs h-8 font-mono">
                 Login
               </Button>
-              <Button onClick={() => navigate("/signup")} className="bg-primary hover:bg-primary/90 text-xs h-8 font-mono">
+              <Button onClick={() => navigate("/customer-signup")} className="bg-primary hover:bg-primary/90 text-xs h-8 font-mono">
                 Sign Up
               </Button>
             </>
