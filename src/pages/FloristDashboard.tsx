@@ -97,12 +97,7 @@ const FloristDashboard = () => {
             onStatusChange={handleStatusChange}
           />
 
-          <DashboardStats
-            orderCount={orders?.length || 0}
-            productCount={products?.length || 0}
-            revenue={orders?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0}
-            rating={4.8}
-          />
+          <DashboardStats floristId={user?.id} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <RecentOrders orders={orders || []} />
