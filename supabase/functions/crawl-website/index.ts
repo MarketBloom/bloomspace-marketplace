@@ -1,12 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 
-interface CrawlResponse {
-  success: boolean;
-  error?: string;
-  data?: any[];
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -43,11 +37,27 @@ serve(async (req) => {
     console.log('Crawl response:', crawlResponse)
 
     if (!response.ok) {
-      throw new Error(crawlResponse.error || 'Failed to crawl website')
+      return new Response(
+        JSON.stringify({
+          crawlResult: {
+            success: false,
+            error: crawlResponse.error || 'Failed to crawl website'
+          }
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400
+        }
+      )
     }
 
-    // Process the crawled data to extract relevant information
-    const processedData = processCrawledData(crawlResponse.data)
+    // Process the crawled data
+    const processedData = {
+      title: crawlResponse.title || '',
+      description: crawlResponse.description || '',
+      products: crawlResponse.products || [],
+      contact: crawlResponse.contact || {}
+    }
 
     return new Response(
       JSON.stringify({
@@ -77,20 +87,3 @@ serve(async (req) => {
     )
   }
 })
-
-function processCrawledData(data: any) {
-  // Extract relevant information from the crawled data
-  // This is a basic example - you can enhance this based on your needs
-  const processedData = {
-    title: '',
-    description: '',
-    products: [],
-    contact: {},
-  }
-
-  // Process the crawled data to extract relevant information
-  // This is where you'd implement the logic to parse the website content
-  // and structure it for your application
-
-  return processedData
-}

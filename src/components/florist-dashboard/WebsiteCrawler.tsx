@@ -13,7 +13,8 @@ interface CrawlResult {
   total?: number;
   creditsUsed?: number;
   expiresAt?: string;
-  data?: any[];
+  data?: any;
+  error?: string;
 }
 
 export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
@@ -30,33 +31,35 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
     setCrawlResult(null);
     
     try {
-      const { data: { crawlResult }, error } = await supabase.functions.invoke('crawl-website', {
+      console.log('Sending crawl request for URL:', url);
+      
+      const { data, error } = await supabase.functions.invoke('crawl-website', {
         body: { url, floristId }
       });
 
-      if (error) throw error;
+      console.log('Received response:', data);
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
       
-      if (crawlResult.success) {
+      if (data?.crawlResult?.success) {
         toast({
           title: "Success",
           description: "Website data extracted successfully",
           duration: 3000,
         });
-        setCrawlResult(crawlResult);
+        setCrawlResult(data.crawlResult);
         setProgress(100);
       } else {
-        toast({
-          title: "Error",
-          description: crawlResult.error || "Failed to extract website data",
-          variant: "destructive",
-          duration: 3000,
-        });
+        throw new Error(data?.crawlResult?.error || 'Failed to extract website data');
       }
     } catch (error) {
       console.error('Error crawling website:', error);
       toast({
         title: "Error",
-        description: "Failed to process website",
+        description: error.message || "Failed to process website",
         variant: "destructive",
         duration: 3000,
       });
