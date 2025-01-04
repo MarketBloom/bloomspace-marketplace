@@ -46,14 +46,12 @@ export const useAuth = () => {
 
       if (authError) {
         console.error("Auth error during signup:", authError);
-        toast.error(authError.message);
         return { data: null, error: authError };
       }
 
       if (!authData.user) {
         const error = new Error("No user data returned after signup");
         console.error(error);
-        toast.error("Failed to create account. Please try again.");
         return { data: null, error };
       }
 
@@ -74,15 +72,14 @@ export const useAuth = () => {
 
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
-          // Don't throw here, as the auth user is already created
+          // Continue anyway as the user account is created
           toast.error("Account created but there was an error setting up your florist profile.");
         } else {
           console.log("Florist profile created successfully");
         }
       }
 
-      toast.success("Account created successfully!");
-      
+      // Handle navigation based on role
       if (role === "florist") {
         navigate("/become-florist");
       } else {
@@ -92,7 +89,6 @@ export const useAuth = () => {
       return { data: authData, error: null };
     } catch (error: any) {
       console.error("Unexpected error during signup:", error);
-      toast.error(error.message || "An unexpected error occurred");
       return { data: null, error };
     }
   };

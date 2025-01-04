@@ -32,20 +32,25 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      const { error } = await signUp(email, password, fullName, role);
+      const { data, error } = await signUp(email, password, fullName, role);
       
-      if (error) throw error;
-
-      toast.success("Account created! Please check your email to confirm your account.");
-      
-      if (role === "florist") {
-        navigate("/become-florist");
-      } else {
-        navigate("/login");
+      if (error) {
+        console.error("Signup error:", error);
+        toast.error(error.message || "Failed to create account. Please try again.");
+        return;
       }
+
+      if (!data?.user) {
+        toast.error("Something went wrong. Please try again.");
+        return;
+      }
+
+      toast.success("Account created successfully!");
+      
+      // Let the useAuth hook handle navigation
     } catch (error: any) {
-      console.error("Signup error:", error);
-      toast.error(error.message || "Failed to create account. Please try again.");
+      console.error("Unexpected signup error:", error);
+      toast.error(error.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -71,6 +76,7 @@ const Signup = () => {
                   required
                   placeholder="Enter your full name"
                   className="mt-1"
+                  disabled={loading}
                 />
               </div>
               <div>
@@ -85,6 +91,7 @@ const Signup = () => {
                   required
                   placeholder="Enter your email"
                   className="mt-1"
+                  disabled={loading}
                 />
               </div>
               <div>
@@ -100,6 +107,7 @@ const Signup = () => {
                   placeholder="Create a password"
                   minLength={6}
                   className="mt-1"
+                  disabled={loading}
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Must be at least 6 characters long
@@ -115,11 +123,11 @@ const Signup = () => {
                   className="mt-1"
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="customer" id="customer" />
+                    <RadioGroupItem value="customer" id="customer" disabled={loading} />
                     <Label htmlFor="customer">Buy Flowers</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="florist" id="florist" />
+                    <RadioGroupItem value="florist" id="florist" disabled={loading} />
                     <Label htmlFor="florist">Sell Flowers</Label>
                   </div>
                 </RadioGroup>
@@ -133,6 +141,7 @@ const Signup = () => {
               <button
                 onClick={() => navigate("/login")}
                 className="text-primary hover:underline font-medium"
+                disabled={loading}
               >
                 Login
               </button>
