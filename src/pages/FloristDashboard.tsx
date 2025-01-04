@@ -5,6 +5,7 @@ import { StoreVisibility } from "@/components/florist-dashboard/StoreVisibility"
 import { DashboardStats } from "@/components/florist-dashboard/DashboardStats";
 import { RecentOrders } from "@/components/florist-dashboard/RecentOrders";
 import { ProductManagement } from "@/components/florist-dashboard/ProductManagement";
+import { WebsiteCrawler } from "@/components/florist-dashboard/WebsiteCrawler";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +75,8 @@ const FloristDashboard = () => {
             initialStatus={floristProfile?.store_status as "private" | "published"}
             onStatusChange={handleStatusChange}
           />
+
+          <WebsiteCrawler floristId={user.id} />
 
           <DashboardStats floristId={user?.id} />
 
