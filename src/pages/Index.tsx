@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export default function Index() {
+const Index = () => {
   const navigate = useNavigate();
   
   const { data: products, isLoading } = useQuery({
@@ -45,4 +45,6 @@ export default function Index() {
       <Testimonials />
     </div>
   );
-}
+};
+
+export default Index;
