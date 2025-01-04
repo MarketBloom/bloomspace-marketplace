@@ -20,20 +20,29 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password || !fullName) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
     setLoading(true);
     try {
       await signUp(email, password, fullName, "customer"); // Always sign up as customer initially
       toast.success("Account created! Please check your email to confirm your account.");
       
       if (role === "florist") {
-        // If they selected florist, redirect to become-florist flow
         navigate("/become-florist");
       } else {
         navigate("/login");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Signup error:", error);
-      toast.error("Failed to create account. Please try again.");
+      toast.error(error.message || "Failed to create account. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -48,7 +57,7 @@ const Signup = () => {
             <h1 className="text-2xl font-bold text-center mb-6">Create an Account</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="fullName">
                   Full Name <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -62,7 +71,7 @@ const Signup = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email">
                   Email <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -76,7 +85,7 @@ const Signup = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password">
                   Password <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -94,7 +103,7 @@ const Signup = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label>
                   I want to <span className="text-red-500">*</span>
                 </Label>
                 <RadioGroup 
