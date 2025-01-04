@@ -30,7 +30,8 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // First, create the auth user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -41,24 +42,32 @@ export const useAuth = () => {
         },
       });
 
-      if (error) throw error;
+      if (authError) throw authError;
 
-      // Create initial florist profile if role is florist
-      if (role === "florist" && data.user) {
+      if (!authData.user) {
+        throw new Error("No user data returned after signup");
+      }
+
+      // If role is florist, create initial florist profile
+      if (role === "florist") {
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
-            id: data.user.id,
+            id: authData.user.id,
             store_name: "",
             address: "",
             store_status: "private",
             setup_progress: 0
           });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error("Error creating florist profile:", profileError);
+          // Don't throw here, as the auth user is already created
+          toast.error("Account created but there was an error setting up your florist profile. Please contact support.");
+        }
       }
 
-      return { data, error: null };
+      return { data: authData, error: null };
     } catch (error: any) {
       console.error("Signup error:", error);
       return { data: null, error };
