@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import BecomeFlorist from "./pages/BecomeFlorist";
 import FloristDashboard from "./pages/FloristDashboard";
 import StoreManagement from "./pages/StoreManagement";
-import { Index } from "./pages/Index";
+import Index from "./pages/Index";
 
 const router = createBrowserRouter([
   {
