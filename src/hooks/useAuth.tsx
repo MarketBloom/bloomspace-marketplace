@@ -105,9 +105,13 @@ export const useAuth = () => {
         return { data: null, error };
       }
 
+      // Get user role from metadata
+      const role = data.user?.user_metadata?.role;
+      console.log("User role:", role);
+
       toast.success("Welcome back!");
       
-      const role = data.user?.user_metadata?.role;
+      // Navigate based on user role
       if (role === "florist") {
         navigate("/florist-dashboard");
       } else {
