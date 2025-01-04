@@ -9,9 +9,11 @@ import { WebsiteCrawler } from "@/components/florist-dashboard/WebsiteCrawler";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const FloristDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: floristProfile } = useQuery({
     queryKey: ["floristProfile", user?.id],
@@ -62,7 +64,7 @@ const FloristDashboard = () => {
               Welcome back, {floristProfile?.store_name || "New Florist"}
             </p>
           </div>
-          <Button onClick={() => window.location.href = "/store-settings"}>
+          <Button onClick={() => navigate("/store-settings")}>
             Store Settings
           </Button>
         </div>

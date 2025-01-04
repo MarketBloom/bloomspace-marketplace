@@ -8,6 +8,7 @@ import Cart from "@/pages/Cart";
 import ProductDetail from "@/pages/ProductDetail";
 import CustomerDashboard from "@/pages/CustomerDashboard";
 import FloristDashboard from "@/pages/FloristDashboard";
+import StoreSettings from "@/pages/StoreSettings";
 import BecomeFlorist from "@/pages/BecomeFlorist";
 import { CartProvider } from "@/contexts/CartContext";
 import { Toaster } from "@/components/ui/toaster";
@@ -32,6 +33,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/dashboard" element={<CustomerDashboard />} />
             <Route path="/florist-dashboard" element={<FloristDashboard />} />
+            <Route path="/store-settings" element={<StoreSettings />} />
             <Route path="/become-florist" element={<BecomeFlorist />} />
           </Routes>
           <Toaster />
