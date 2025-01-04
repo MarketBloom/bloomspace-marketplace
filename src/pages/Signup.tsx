@@ -26,8 +26,10 @@ const Signup = () => {
       toast.success("Account created! Please check your email to confirm your account.");
       if (role === "florist") {
         toast.success("You'll be redirected to your dashboard to complete your store setup.");
+        navigate("/florist-dashboard");
+      } else {
+        navigate("/login");
       }
-      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
       toast.error("Failed to create account. Please try again.");
