@@ -7,6 +7,7 @@ import {
   CreditCard,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,11 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
 
   const menuItems = [
+    {
+      icon: Home,
+      label: "Homepage",
+      path: "/",
+    },
     {
       icon: LayoutDashboard,
       label: "Dashboard",
