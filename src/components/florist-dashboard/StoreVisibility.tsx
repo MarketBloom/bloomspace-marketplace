@@ -7,7 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 interface StoreVisibilityProps {
   storeId: string;
   initialStatus: "private" | "published";
-  onStatusChange: (newStatus: "private" | "published") => void;
+  onStatusChange: (status: "private" | "published") => void;
 }
 
 export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: StoreVisibilityProps) => {
@@ -20,9 +20,9 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
 
     try {
       const { error } = await supabase
-        .from("florist_profiles")
+        .from('florist_profiles')
         .update({ store_status: newStatus })
-        .eq("id", storeId);
+        .eq('id', storeId);
 
       if (error) throw error;
 
@@ -46,33 +46,38 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      <div className="flex-1">
-        <h3 className="text-sm font-medium">Store Visibility</h3>
-        <p className="text-sm text-muted-foreground">
-          {status === "private"
-            ? "Your store is currently hidden from the marketplace"
-            : "Your store is visible to customers"}
-        </p>
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex items-center gap-4">
+        <div className="flex-1">
+          <h3 className="text-sm font-medium">Store Visibility</h3>
+          <p className="text-sm text-muted-foreground">
+            {status === "private"
+              ? "Your store is currently hidden from the marketplace"
+              : "Your store is visible to customers"}
+          </p>
+        </div>
+        <Button
+          variant={status === "published" ? "default" : "outline"}
+          size="sm"
+          onClick={toggleVisibility}
+          disabled={loading}
+          className="min-w-[100px]"
+        >
+          {loading ? (
+            "Updating..."
+          ) : status === "private" ? (
+            <>
+              <Eye className="h-4 w-4 mr-2" />
+              Publish
+            </>
+          ) : (
+            <>
+              <EyeOff className="h-4 w-4 mr-2" />
+              Unpublish
+            </>
+          )}
+        </Button>
       </div>
-      <Button
-        variant={status === "published" ? "default" : "outline"}
-        onClick={toggleVisibility}
-        disabled={loading}
-        className="min-w-[120px]"
-      >
-        {status === "private" ? (
-          <>
-            <Eye className="w-4 h-4 mr-2" />
-            Publish
-          </>
-        ) : (
-          <>
-            <EyeOff className="w-4 h-4 mr-2" />
-            Unpublish
-          </>
-        )}
-      </Button>
     </div>
   );
 };
