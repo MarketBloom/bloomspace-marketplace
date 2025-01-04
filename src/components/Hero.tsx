@@ -27,7 +27,7 @@ export const Hero = () => {
       <div className="container relative z-10 px-4 md:px-8 flex flex-col h-full pt-24 md:pt-0">
         <div className="max-w-md mx-auto md:max-w-none flex-1 flex flex-col justify-center">
           <div className="text-center mb-6 md:mb-5">
-            <h1 className="text-3xl md:text-4xl font-medium mb-3 text-white tracking-tight drop-shadow-md font-mono">
+            <h1 className="text-3xl md:text-4xl font-bold mb-3 text-white tracking-tight drop-shadow-md font-mono">
               Find local florists in your area
             </h1>
             <p className="text-base md:text-lg text-white/90 font-light drop-shadow font-mono">
