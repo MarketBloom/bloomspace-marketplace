@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -13,7 +13,6 @@ interface StoreVisibilityProps {
 export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: StoreVisibilityProps) => {
   const [status, setStatus] = useState(initialStatus);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const toggleVisibility = async () => {
     setLoading(true);
@@ -29,15 +28,17 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
 
       setStatus(newStatus);
       onStatusChange(newStatus);
-      toast({
-        title: `Store ${newStatus === "published" ? "Published" : "Unpublished"}`,
-        description: `Your store is now ${newStatus === "published" ? "visible to customers" : "private"}`,
-      });
+      toast.success(
+        `Store ${newStatus === "published" ? "Published" : "Unpublished"}`,
+        {
+          description: `Your store is now ${
+            newStatus === "published" ? "visible to customers" : "private"
+          }`,
+        }
+      );
     } catch (error) {
-      toast({
-        title: "Error updating store visibility",
+      toast.error("Error updating store visibility", {
         description: "Please try again later",
-        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -49,8 +50,8 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
       <div className="flex-1">
         <h3 className="text-sm font-medium">Store Visibility</h3>
         <p className="text-sm text-muted-foreground">
-          {status === "private" 
-            ? "Your store is currently hidden from the marketplace" 
+          {status === "private"
+            ? "Your store is currently hidden from the marketplace"
             : "Your store is visible to customers"}
         </p>
       </div>

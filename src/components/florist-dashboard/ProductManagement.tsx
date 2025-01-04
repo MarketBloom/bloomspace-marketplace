@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -26,7 +26,6 @@ export const ProductManagement = ({ products, floristId, onProductAdded }: Produ
     price: "",
     category: "",
   });
-  const { toast } = useToast();
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,16 +40,11 @@ export const ProductManagement = ({ products, floristId, onProductAdded }: Produ
 
       if (error) throw error;
 
-      toast({
-        title: "Product added successfully",
-      });
+      toast.success("Product added successfully");
       setNewProduct({ title: "", description: "", price: "", category: "" });
       onProductAdded();
     } catch (error) {
-      toast({
-        title: "Failed to add product",
-        variant: "destructive",
-      });
+      toast.error("Failed to add product");
     }
   };
 

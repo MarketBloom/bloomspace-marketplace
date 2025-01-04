@@ -65,9 +65,12 @@ const FloristDashboard = () => {
   });
 
   const handleStatusChange = (newStatus: "private" | "published") => {
-    // Refetch data after status change
     refetchProducts();
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -86,17 +89,14 @@ const FloristDashboard = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Setup Progress */}
           <SetupProgress progress={floristProfile?.setup_progress || 0} />
 
-          {/* Store Visibility Control */}
           <StoreVisibility
             storeId={user?.id || ""}
             initialStatus={floristProfile?.store_status as "private" | "published"}
             onStatusChange={handleStatusChange}
           />
 
-          {/* Dashboard Stats */}
           <DashboardStats
             orderCount={orders?.length || 0}
             productCount={products?.length || 0}
@@ -105,10 +105,7 @@ const FloristDashboard = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Recent Orders */}
             <RecentOrders orders={orders || []} />
-
-            {/* Product Management */}
             <ProductManagement
               products={products || []}
               floristId={user?.id || ""}
