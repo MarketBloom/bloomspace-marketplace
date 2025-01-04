@@ -7,7 +7,7 @@ import { TrustSection } from "@/components/TrustSection";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -16,32 +16,36 @@ const Index = () => {
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          florist_profiles!left (
-            store_name
-          )
-        `)
-        .eq('in_stock', true)
-        .eq('is_hidden', false)
-        .limit(6);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            *,
+            florist_profiles!left (
+              store_name
+            )
+          `)
+          .eq('in_stock', true)
+          .eq('is_hidden', false)
+          .limit(6);
 
-      if (error) {
-        console.error('Supabase error:', error);
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+        return data;
+      } catch (error) {
+        console.error('Query error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load featured products. Please try again later.",
+          variant: "destructive",
+        });
         throw error;
       }
-      return data;
     },
-    onError: (error) => {
-      console.error('Query error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load featured products. Please try again later.",
-        variant: "destructive",
-      });
-    },
+    retry: 3,
+    retryDelay: 1000,
   });
 
   return (
