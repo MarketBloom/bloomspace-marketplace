@@ -8,6 +8,7 @@ import { TimeFilter } from "./filters/TimeFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
 import { CategoryFilter } from "./filters/CategoryFilter";
 import { OccasionFilter } from "./filters/OccasionFilter";
+import { FulfillmentToggle } from "./filters/FulfillmentToggle";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const FilterBar = () => {
   const [time, setTime] = useState<string>("12:00");
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
   const handleSearch = () => {
     navigate('/search');
@@ -23,6 +25,11 @@ export const FilterBar = () => {
 
   return (
     <div className="space-y-3 border border-black/10 rounded-lg p-3">
+      <FulfillmentToggle 
+        fulfillmentType={fulfillmentType}
+        setFulfillmentType={setFulfillmentType}
+      />
+      
       <LocationFilter />
       
       <DateFilter 

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ProductImage } from "@/components/product/ProductImage";
 import { ProductInfo } from "@/components/product/ProductInfo";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
+import { ShoppingBag, Truck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   id: string;
@@ -12,6 +14,10 @@ interface ProductCardProps {
   images?: string[];
   floristName?: string;
   floristId: string;
+  isDeliveryAvailable?: boolean;
+  isPickupAvailable?: boolean;
+  deliveryCutoff?: string;
+  pickupCutoff?: string;
 }
 
 export const ProductCard = ({ 
@@ -20,7 +26,11 @@ export const ProductCard = ({
   price, 
   images, 
   floristName,
-  floristId 
+  floristId,
+  isDeliveryAvailable = true,
+  isPickupAvailable = true,
+  deliveryCutoff,
+  pickupCutoff
 }: ProductCardProps) => {
   const navigate = useNavigate();
 
@@ -31,6 +41,20 @@ export const ProductCard = ({
     >
       <CardHeader className="p-0">
         <ProductImage src={images?.[0]} alt={title} />
+        <div className="absolute top-2 right-2 flex flex-col gap-1">
+          {isDeliveryAvailable && (
+            <Badge variant="secondary" className="bg-white/90 text-[10px] flex items-center gap-1">
+              <Truck className="w-3 h-3" />
+              {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
+            </Badge>
+          )}
+          {isPickupAvailable && (
+            <Badge variant="secondary" className="bg-white/90 text-[10px] flex items-center gap-1">
+              <ShoppingBag className="w-3 h-3" />
+              {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="p-3 space-y-1">
         <ProductInfo 

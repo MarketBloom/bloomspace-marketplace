@@ -9,13 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { format } from "date-fns";
 
 const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
+  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
   const isMobile = useIsMobile();
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['products', fulfillmentType],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('products')
@@ -23,14 +25,33 @@ const Search = () => {
           *,
           florist_profiles (
             store_name,
-            address
+            address,
+            delivery_cutoff,
+            delivery_start_time,
+            delivery_end_time,
+            operating_hours
           )
         `)
         .eq('in_stock', true)
         .eq('is_hidden', false);
 
       if (error) throw error;
-      return data;
+
+      // Filter products based on fulfillment type and time constraints
+      const now = new Date();
+      const currentTime = format(now, 'HH:mm:ss');
+
+      return data.map(product => ({
+        ...product,
+        isDeliveryAvailable: fulfillmentType === "delivery" && 
+          product.florist_profiles?.delivery_cutoff && 
+          currentTime < product.florist_profiles.delivery_cutoff,
+        isPickupAvailable: fulfillmentType === "pickup" && 
+          product.florist_profiles?.operating_hours && 
+          currentTime < product.florist_profiles.delivery_end_time,
+        deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+        pickupCutoff: product.florist_profiles?.delivery_end_time
+      }));
     },
   });
 
@@ -111,7 +132,7 @@ const Search = () => {
               </Button>
             </div>
 
-            {/* Rest of the content */}
+            {/* Products View */}
             {viewMode === 'products' && (
               isLoadingProducts ? (
                 <div className="flex justify-center items-center h-[200px]">
@@ -129,6 +150,10 @@ const Search = () => {
                         images={product.images}
                         floristName={product.florist_profiles?.store_name}
                         floristId={product.florist_id}
+                        isDeliveryAvailable={product.isDeliveryAvailable}
+                        isPickupAvailable={product.isPickupAvailable}
+                        deliveryCutoff={product.deliveryCutoff}
+                        pickupCutoff={product.pickupCutoff}
                       />
                     </div>
                   ))}
@@ -137,13 +162,12 @@ const Search = () => {
                 <div className="text-center py-12 animate-fade-in">
                   <h2 className="text-xl font-semibold mb-2">No products found</h2>
                   <p className="text-sm text-muted-foreground">
-                    Try adjusting your search criteria
+                    Try adjusting your search criteria or switching fulfillment method
                   </p>
                 </div>
               )
             )}
 
-            {/* Florists View */}
             {viewMode === 'florists' && (
               isLoadingFlorists ? (
                 <div className="flex justify-center items-center h-[200px]">
