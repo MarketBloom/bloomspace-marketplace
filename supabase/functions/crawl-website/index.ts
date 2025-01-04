@@ -23,7 +23,7 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
-    console.log('Using API key:', apiKey.substring(0, 5) + '...')
+    console.log('API Key available:', !!apiKey)
 
     // Basic URL validation
     try {
@@ -39,72 +39,80 @@ serve(async (req) => {
     try {
       const testResponse = await fetch(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+          'User-Agent': 'Mozilla/5.0 (compatible; FirecrawlBot/1.0)'
         }
       })
+      
       if (!testResponse.ok) {
         throw new Error(`URL returned status ${testResponse.status}`)
       }
+      
+      console.log('URL validation successful')
     } catch (error) {
       console.error('URL validation error:', error)
       throw new Error('Website is not accessible')
     }
 
-    // Make the crawl request
+    // Prepare the request body
     const requestBody = {
       url,
-      limit: 5, // Reduced limit for testing
+      limit: 1,
       scrapeOptions: {
-        formats: ['markdown', 'html'],
+        formats: ['html'],
         selectors: {
           title: 'h1, title',
-          description: 'meta[name="description"], p',
-          products: '.product, [data-product], .woocommerce-loop-product',
-          prices: '.price, [data-price]',
-          images: 'img, [data-image]'
+          description: 'meta[name="description"]',
+          products: '.product'
         }
       }
     }
 
-    console.log('Making request to Firecrawl API with body:', JSON.stringify(requestBody))
-
-    const crawlResponse = await fetch('https://api.firecrawl.com/v1/crawl', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      },
-      body: JSON.stringify(requestBody)
-    })
-
-    console.log('Firecrawl response status:', crawlResponse.status)
+    console.log('Preparing Firecrawl API request...')
     
-    if (!crawlResponse.ok) {
-      const errorText = await crawlResponse.text()
-      console.error('Firecrawl API error response:', errorText)
-      throw new Error(`Firecrawl API error: ${crawlResponse.status} - ${errorText}`)
-    }
+    // Make the request to Firecrawl API
+    try {
+      console.log('Making request to Firecrawl API...')
+      
+      const response = await fetch('https://api.firecrawl.com/v1/crawl', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; FirecrawlBot/1.0)'
+        },
+        body: JSON.stringify(requestBody)
+      })
 
-    const data = await crawlResponse.json()
-    console.log('Firecrawl API success response:', JSON.stringify(data, null, 2))
+      console.log('Firecrawl API response status:', response.status)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Firecrawl API error response:', errorText)
+        throw new Error(`Firecrawl API error: ${response.status} - ${errorText}`)
+      }
 
-    return new Response(
-      JSON.stringify({
-        crawlResult: {
-          success: true,
-          status: 'completed',
-          data: {
-            url,
-            crawledAt: new Date().toISOString(),
-            content: data
+      const data = await response.json()
+      console.log('Firecrawl API success response:', JSON.stringify(data, null, 2))
+
+      return new Response(
+        JSON.stringify({
+          crawlResult: {
+            success: true,
+            status: 'completed',
+            data: {
+              url,
+              crawledAt: new Date().toISOString(),
+              content: data
+            }
           }
-        }
-      }),
-      { headers: corsHeaders }
-    )
-
+        }),
+        { headers: corsHeaders }
+      )
+    } catch (error) {
+      console.error('Error making request to Firecrawl API:', error)
+      throw new Error(`Failed to connect to Firecrawl API: ${error.message}`)
+    }
   } catch (error) {
     console.error('Error in crawl-website function:', error)
     return new Response(
