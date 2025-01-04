@@ -30,6 +30,8 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
+      console.log("Starting signup process...");
+      
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -48,14 +50,16 @@ export const useAuth = () => {
       }
 
       if (!authData.user) {
-        const error = new Error("No user data returned after signup");
-        console.error(error);
+        console.error("No user data returned after signup");
         toast.error("Failed to create account");
-        return { data: null, error };
+        return { data: null, error: new Error("No user data returned") };
       }
+
+      console.log("User created successfully:", authData.user.id);
 
       // If role is florist, create initial florist profile
       if (role === "florist") {
+        console.log("Creating florist profile...");
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
@@ -68,7 +72,10 @@ export const useAuth = () => {
 
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
+          // Don't return here, just show a warning
           toast.error("Account created but there was an error setting up your florist profile");
+        } else {
+          console.log("Florist profile created successfully");
         }
       }
 
