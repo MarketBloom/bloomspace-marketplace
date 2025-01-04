@@ -30,7 +30,7 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -43,12 +43,12 @@ export const useAuth = () => {
 
       if (error) throw error;
 
-      if (role === "florist") {
-        // Create initial florist profile
+      // Create initial florist profile if role is florist
+      if (role === "florist" && data.user) {
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
-            id: user?.id,
+            id: data.user.id,
             store_name: "",
             address: "",
             store_status: "private",
@@ -58,10 +58,10 @@ export const useAuth = () => {
         if (profileError) throw profileError;
       }
 
-      toast.success("Check your email for the confirmation link!");
-    } catch (error) {
-      toast.error(error.message);
-      throw error;
+      return { data, error: null };
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      return { data: null, error };
     }
   };
 
@@ -80,7 +80,7 @@ export const useAuth = () => {
       } else {
         navigate("/dashboard");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message);
       throw error;
     }
@@ -91,7 +91,7 @@ export const useAuth = () => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message);
     }
   };

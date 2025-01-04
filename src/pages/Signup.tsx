@@ -32,7 +32,10 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      await signUp(email, password, fullName, "customer"); // Always sign up as customer initially
+      const { error } = await signUp(email, password, fullName, role);
+      
+      if (error) throw error;
+
       toast.success("Account created! Please check your email to confirm your account.");
       
       if (role === "florist") {
