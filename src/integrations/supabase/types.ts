@@ -28,8 +28,11 @@ export type Database = {
           minimum_order_amount: number | null
           operating_hours: Json | null
           premium_since: string | null
+          setup_completed_at: string | null
+          setup_progress: number | null
           social_links: Json | null
           store_name: string
+          store_status: string | null
           updated_at: string
           verified: boolean | null
         }
@@ -51,8 +54,11 @@ export type Database = {
           minimum_order_amount?: number | null
           operating_hours?: Json | null
           premium_since?: string | null
+          setup_completed_at?: string | null
+          setup_progress?: number | null
           social_links?: Json | null
           store_name: string
+          store_status?: string | null
           updated_at?: string
           verified?: boolean | null
         }
@@ -74,8 +80,11 @@ export type Database = {
           minimum_order_amount?: number | null
           operating_hours?: Json | null
           premium_since?: string | null
+          setup_completed_at?: string | null
+          setup_progress?: number | null
           social_links?: Json | null
           store_name?: string
+          store_status?: string | null
           updated_at?: string
           verified?: boolean | null
         }

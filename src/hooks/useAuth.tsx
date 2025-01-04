@@ -11,14 +11,12 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -44,23 +42,47 @@ export const useAuth = () => {
       });
 
       if (error) throw error;
+
+      if (role === "florist") {
+        // Create initial florist profile
+        const { error: profileError } = await supabase
+          .from("florist_profiles")
+          .insert({
+            id: user?.id,
+            store_name: "",
+            address: "",
+            store_status: "private",
+            setup_progress: 0
+          });
+
+        if (profileError) throw profileError;
+      }
+
       toast.success("Check your email for the confirmation link!");
     } catch (error) {
       toast.error(error.message);
+      throw error;
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
-      navigate("/dashboard");
+
+      const role = data.user?.user_metadata?.role;
+      if (role === "florist") {
+        navigate("/florist-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       toast.error(error.message);
+      throw error;
     }
   };
 
