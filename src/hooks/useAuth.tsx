@@ -30,6 +30,8 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
+      console.log("Starting signup process...");
+      
       // First, create the auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -42,14 +44,24 @@ export const useAuth = () => {
         },
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error("Auth error during signup:", authError);
+        toast.error(authError.message);
+        return { data: null, error: authError };
+      }
 
       if (!authData.user) {
-        throw new Error("No user data returned after signup");
+        const error = new Error("No user data returned after signup");
+        console.error(error);
+        toast.error("Failed to create account. Please try again.");
+        return { data: null, error };
       }
+
+      console.log("Auth user created successfully:", authData.user.id);
 
       // If role is florist, create initial florist profile
       if (role === "florist") {
+        console.log("Creating florist profile...");
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
@@ -63,13 +75,24 @@ export const useAuth = () => {
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
           // Don't throw here, as the auth user is already created
-          toast.error("Account created but there was an error setting up your florist profile. Please contact support.");
+          toast.error("Account created but there was an error setting up your florist profile.");
+        } else {
+          console.log("Florist profile created successfully");
         }
+      }
+
+      toast.success("Account created successfully!");
+      
+      if (role === "florist") {
+        navigate("/become-florist");
+      } else {
+        navigate("/dashboard");
       }
 
       return { data: authData, error: null };
     } catch (error: any) {
-      console.error("Signup error:", error);
+      console.error("Unexpected error during signup:", error);
+      toast.error(error.message || "An unexpected error occurred");
       return { data: null, error };
     }
   };
@@ -81,7 +104,10 @@ export const useAuth = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        toast.error(error.message);
+        throw error;
+      }
 
       const role = data.user?.user_metadata?.role;
       if (role === "florist") {
