@@ -1,10 +1,17 @@
-import { createRoot } from 'react-dom/client';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
-import './index.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error('Failed to find the root element');
+// Create a client
+const queryClient = new QueryClient()
 
-const root = createRoot(rootElement);
-root.render(<RouterProvider router={router} />);
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </React.StrictMode>,
+)
