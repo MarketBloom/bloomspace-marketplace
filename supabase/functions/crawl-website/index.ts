@@ -1,6 +1,11 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import FirecrawlApp from 'https://esm.sh/@mendable/firecrawl-js'
 import { corsHeaders } from '../_shared/cors.ts'
+
+interface CrawlResponse {
+  success: boolean;
+  error?: string;
+  data?: any[];
+}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -17,18 +22,27 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
-    const firecrawl = new FirecrawlApp({ apiKey })
 
-    const crawlResponse = await firecrawl.crawlUrl(url, {
-      limit: 100,
-      scrapeOptions: {
-        formats: ['markdown', 'html'],
-      }
+    // Make direct fetch request to Firecrawl API
+    const response = await fetch('https://api.firecrawl.com/crawl', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        url,
+        limit: 100,
+        scrapeOptions: {
+          formats: ['markdown', 'html']
+        }
+      })
     })
 
+    const crawlResponse = await response.json()
     console.log('Crawl response:', crawlResponse)
 
-    if (!crawlResponse.success) {
+    if (!response.ok) {
       throw new Error(crawlResponse.error || 'Failed to crawl website')
     }
 

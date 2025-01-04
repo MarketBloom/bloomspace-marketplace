@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.add_florist_products]
 verify_jwt = false
+
+[functions.crawl-website]
+verify_jwt = false
