@@ -2,15 +2,25 @@ import { Header } from "@/components/Header";
 import { FilterBar } from "@/components/FilterBar";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { format } from "date-fns";
+import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
+
+  // Set initial fulfillment type from URL parameters
+  useEffect(() => {
+    const fulfillment = searchParams.get('fulfillment');
+    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
+      setFulfillmentType(fulfillment);
+    }
+  }, [searchParams]);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType],
@@ -73,7 +83,7 @@ const Search = () => {
             <div className="w-full">
               <div>
                 <h3 className="text-sm font-medium mb-3">Filters</h3>
-                <FilterBar />
+                <FilterBar initialFulfillmentType={fulfillmentType} />
               </div>
             </div>
           </aside>

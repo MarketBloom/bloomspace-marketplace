@@ -9,14 +9,18 @@ import { BudgetFilter } from "./filters/BudgetFilter";
 import { CategoryFilter } from "./filters/CategoryFilter";
 import { OccasionFilter } from "./filters/OccasionFilter";
 
-export const FilterBar = () => {
+interface FilterBarProps {
+  initialFulfillmentType?: "pickup" | "delivery";
+}
+
+export const FilterBar = ({ initialFulfillmentType = "delivery" }: FilterBarProps) => {
   const navigate = useNavigate();
   const [budget, setBudget] = useState<number[]>([500]);
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string | null>(null);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
+  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
 
   const handleSearch = () => {
     navigate('/search');
