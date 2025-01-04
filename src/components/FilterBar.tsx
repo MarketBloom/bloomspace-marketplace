@@ -51,7 +51,7 @@ export const FilterBar = () => {
       />
 
       <Button 
-        className="w-full text-xs bg-[#A8A646] hover:bg-[#A8A646]/90 text-white"
+        className="w-full text-xs bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
         onClick={handleSearch}
       >
         <Search className="w-3.5 h-3.5 mr-2" />

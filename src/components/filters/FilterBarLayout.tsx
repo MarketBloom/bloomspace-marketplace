@@ -13,7 +13,7 @@ export const FilterBarLayout = ({ children, onSearch }: FilterBarLayoutProps) =>
         {children}
         <div className="flex items-end">
           <Button 
-            className="bg-primary text-sm h-9 px-4 w-full"
+            className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black text-sm h-9 px-4 w-full rounded-full"
             onClick={onSearch}
           >
             Search Flowers

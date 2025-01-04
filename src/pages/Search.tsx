@@ -88,7 +88,11 @@ const Search = () => {
               <Button
                 variant={viewMode === 'products' ? 'default' : 'outline'}
                 onClick={() => setViewMode('products')}
-                className="flex-1 sm:flex-none text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
+                className={`flex-1 sm:flex-none text-sm ${
+                  viewMode === 'products' 
+                    ? 'bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black' 
+                    : ''
+                } rounded-full`}
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
                 Products
@@ -96,14 +100,18 @@ const Search = () => {
               <Button
                 variant={viewMode === 'florists' ? 'default' : 'outline'}
                 onClick={() => setViewMode('florists')}
-                className="flex-1 sm:flex-none text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
+                className={`flex-1 sm:flex-none text-sm ${
+                  viewMode === 'florists' 
+                    ? 'bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black' 
+                    : ''
+                } rounded-full`}
               >
                 <Store className="h-4 w-4 mr-2" />
                 Florists
               </Button>
             </div>
 
-            {/* Products View */}
+            {/* Rest of the content */}
             {viewMode === 'products' && (
               isLoadingProducts ? (
                 <div className="flex justify-center items-center h-[200px]">
