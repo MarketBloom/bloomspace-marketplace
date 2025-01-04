@@ -15,6 +15,7 @@ interface CrawlResult {
   expiresAt?: string;
   data?: any;
   error?: string;
+  details?: any;
 }
 
 export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
@@ -57,6 +58,7 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
         setCrawlResult(data.crawlResult);
         setProgress(100);
       } else {
+        console.error('Crawl error details:', data.crawlResult.details);
         throw new Error(data.crawlResult.error || 'Failed to extract website data');
       }
     } catch (error) {
@@ -106,6 +108,9 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
           <h3 className="text-md font-semibold">Extracted Data</h3>
           <div className="space-y-2 text-sm">
             <p>Status: {crawlResult.status}</p>
+            {crawlResult.error && (
+              <p className="text-red-500">Error: {crawlResult.error}</p>
+            )}
             {crawlResult.data && (
               <div className="mt-4">
                 <pre className="bg-gray-100 p-2 rounded overflow-auto max-h-60 text-xs">

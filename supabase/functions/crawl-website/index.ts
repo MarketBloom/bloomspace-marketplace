@@ -28,14 +28,14 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
+    console.log('Using API key:', apiKey.substring(0, 5) + '...')
 
-    // Make request to Firecrawl API with proper headers
-    const response = await fetch('https://api.firecrawl.com/crawl', {
+    // Make request to Firecrawl API
+    const response = await fetch('https://api.firecrawl.com/v1/crawl', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'Origin': 'https://api.firecrawl.com'
       },
       body: JSON.stringify({
         url,
@@ -46,39 +46,54 @@ serve(async (req) => {
       })
     })
 
-    const crawlResponse = await response.json()
-    console.log('Crawl response:', crawlResponse)
+    console.log('Firecrawl API response status:', response.status)
+    
+    const responseData = await response.json()
+    console.log('Firecrawl API response:', responseData)
 
-    // Always return a 200 status and handle errors in the response body
+    if (!response.ok) {
+      console.error('Firecrawl API error:', responseData)
+      return new Response(
+        JSON.stringify({
+          crawlResult: {
+            success: false,
+            error: responseData.error || 'Failed to crawl website',
+            details: responseData
+          }
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200
+        }
+      )
+    }
+
     return new Response(
       JSON.stringify({
         crawlResult: {
-          success: response.ok,
-          status: response.ok ? 'completed' : 'failed',
-          error: !response.ok ? (crawlResponse.error || 'Failed to crawl website') : undefined,
-          data: response.ok ? {
-            title: crawlResponse.title || '',
-            description: crawlResponse.description || '',
-            products: crawlResponse.products || [],
-            contact: crawlResponse.contact || {}
-          } : undefined
+          success: true,
+          status: 'completed',
+          data: {
+            title: responseData.title || '',
+            description: responseData.description || '',
+            products: responseData.products || [],
+            contact: responseData.contact || {}
+          }
         }
       }),
       {
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200
       }
     )
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error in crawl-website function:', error)
     return new Response(
       JSON.stringify({
         crawlResult: {
           success: false,
-          error: error.message || 'Internal server error'
+          error: error.message || 'Internal server error',
+          details: error
         }
       }),
       {
