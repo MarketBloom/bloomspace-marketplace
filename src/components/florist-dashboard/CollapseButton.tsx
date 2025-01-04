@@ -1,25 +1,31 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
 interface CollapseButtonProps {
   collapsed: boolean;
-  onToggle: () => void;
+  setCollapsed: (collapsed: boolean) => void;
 }
 
-export const CollapseButton = ({ collapsed, onToggle }: CollapseButtonProps) => {
+export const CollapseButton = ({ collapsed, setCollapsed }: CollapseButtonProps) => {
   return (
-    <div className="border-t border-gray-100 p-4">
-      <Button
-        variant="ghost"
-        className="w-full justify-center"
-        onClick={onToggle}
+    <button
+      onClick={() => setCollapsed(!collapsed)}
+      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+    >
+      <svg
+        className={`w-6 h-6 transition-transform duration-200 ${
+          collapsed ? "transform rotate-180" : ""
+        }`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
       >
-        {collapsed ? (
-          <ChevronRight className="h-5 w-5" />
-        ) : (
-          <ChevronLeft className="h-5 w-5" />
-        )}
-      </Button>
-    </div>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </button>
   );
 };
+
+export type { CollapseButtonProps };
