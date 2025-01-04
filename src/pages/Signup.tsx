@@ -22,11 +22,12 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await signUp(email, password, fullName, role);
+      await signUp(email, password, fullName, "customer"); // Always sign up as customer initially
       toast.success("Account created! Please check your email to confirm your account.");
+      
       if (role === "florist") {
-        toast.success("You'll be redirected to your dashboard to complete your store setup.");
-        navigate("/florist-dashboard");
+        // If they selected florist, redirect to become-florist flow
+        navigate("/become-florist");
       } else {
         navigate("/login");
       }
@@ -131,7 +132,7 @@ const Signup = () => {
                 Becoming a Florist
               </h2>
               <p className="text-sm text-blue-700">
-                After creating your account, you'll be directed to your dashboard where you can:
+                After creating your account, you'll be directed to set up your store where you can:
               </p>
               <ul className="mt-2 text-sm text-blue-700 list-disc list-inside">
                 <li>Set up your store profile</li>
