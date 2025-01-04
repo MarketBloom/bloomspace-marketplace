@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["M PLUS Rounded 1c", "sans-serif"],
-        mono: ["M PLUS Rounded 1c", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        mono: ["Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
