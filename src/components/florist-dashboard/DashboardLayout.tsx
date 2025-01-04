@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { DashboardLogo } from "./DashboardLogo";
 import { DashboardNavigation } from "./DashboardNavigation";
@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [isHome, setIsHome] = useState(location.pathname === "/");
 
   const handleHomeClick = () => {
@@ -27,7 +28,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="min-h-screen bg-gray-50">
       <div
         className={cn(
-          "fixed left-0 top-0 z-20 h-full bg-white border-r border-gray-200 transition-all duration-300",
+          "fixed left-0 top-0 z-20 h-full bg-white shadow-sm transition-all duration-300",
           collapsed ? "w-20" : "w-64"
         )}
       >
@@ -47,7 +48,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
       <div
         className={cn(
-          "transition-all duration-300",
+          "transition-all duration-300 bg-gray-50",
           collapsed ? "ml-20" : "ml-64"
         )}
       >
