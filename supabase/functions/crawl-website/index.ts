@@ -29,7 +29,7 @@ serve(async (req) => {
 
     console.log('Starting crawl for URL:', url)
 
-    // Make direct fetch request to Firecrawl API with proper headers
+    // Make request to Firecrawl API with proper headers
     const response = await fetch('https://api.firecrawl.com/crawl', {
       method: 'POST',
       headers: {
