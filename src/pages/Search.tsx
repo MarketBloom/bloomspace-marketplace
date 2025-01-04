@@ -60,128 +60,113 @@ const Search = () => {
     <div className="min-h-screen bg-background font-mono">
       <Header />
       
-      <main>
-        <div className="relative bg-white border-b">
-          <div className="container mx-auto px-4 pt-28 pb-12">
-            <div className="max-w-3xl mx-auto">
-              <h1 className="text-3xl md:text-4xl font-bold text-center mb-3 tracking-tight animate-fade-in">
-                Find Your Perfect Flowers
-              </h1>
-              <p className="text-sm text-muted-foreground text-center mb-4 animate-fade-in-up">
-                Browse our collection of fresh, locally-sourced arrangements
-              </p>
+      <div className="container mx-auto px-4 pt-24">
+        <div className="lg:grid lg:grid-cols-[220px_1fr] gap-6">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-12">
+            <FilterPanel />
+          </aside>
+
+          {/* Mobile Filter Button */}
+          <div className="lg:hidden mb-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="w-full text-sm">
+                  <SlidersHorizontal className="h-4 w-4 mr-2" />
+                  Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px]">
+                <FilterPanel />
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Main Content */}
+          <div>
+            {/* View Toggle */}
+            <div className="flex gap-2 mb-6">
+              <Button
+                variant={viewMode === 'products' ? 'default' : 'outline'}
+                onClick={() => setViewMode('products')}
+                className="flex-1 sm:flex-none animate-fade-in text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Products
+              </Button>
+              <Button
+                variant={viewMode === 'florists' ? 'default' : 'outline'}
+                onClick={() => setViewMode('florists')}
+                className="flex-1 sm:flex-none animate-fade-in text-sm"
+              >
+                <Store className="h-4 w-4 mr-2" />
+                Florists
+              </Button>
             </div>
+
+            {/* Products View */}
+            {viewMode === 'products' && (
+              isLoadingProducts ? (
+                <div className="flex justify-center items-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
+                </div>
+              ) : products && products.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                  {products.map((product) => (
+                    <div key={product.id} className="animate-fade-in-up">
+                      <ProductCard
+                        id={product.id}
+                        title={product.title}
+                        price={product.price}
+                        description={product.description}
+                        images={product.images}
+                        floristName={product.florist_profiles?.store_name}
+                        floristId={product.florist_id}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 animate-fade-in">
+                  <h2 className="text-xl font-semibold mb-2">No products found</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Try adjusting your search criteria
+                  </p>
+                </div>
+              )
+            )}
+
+            {/* Florists View */}
+            {viewMode === 'florists' && (
+              isLoadingFlorists ? (
+                <div className="flex justify-center items-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
+                </div>
+              ) : florists && florists.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                  {florists.map((florist) => (
+                    <div key={florist.id} className="animate-fade-in-up">
+                      <FloristCard
+                        id={florist.id}
+                        storeName={florist.store_name}
+                        address={florist.address}
+                        aboutText={florist.about_text}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 animate-fade-in">
+                  <h2 className="text-xl font-semibold mb-2">No florists found</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Try adjusting your search criteria
+                  </p>
+                </div>
+              )
+            )}
           </div>
         </div>
-
-        <div className="container mx-auto px-4 py-12">
-          <div className="lg:grid lg:grid-cols-[220px_1fr] gap-6">
-            {/* Desktop Sidebar */}
-            <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-12">
-              <FilterPanel />
-            </aside>
-
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden mb-6">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full text-sm">
-                    <SlidersHorizontal className="h-4 w-4 mr-2" />
-                    Filters
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-[280px]">
-                  <FilterPanel />
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            {/* Main Content */}
-            <div>
-              {/* View Toggle */}
-              <div className="flex gap-2 mb-6">
-                <Button
-                  variant={viewMode === 'products' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('products')}
-                  className="flex-1 sm:flex-none animate-fade-in text-sm"
-                >
-                  <ShoppingBag className="h-4 w-4 mr-2" />
-                  Products
-                </Button>
-                <Button
-                  variant={viewMode === 'florists' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('florists')}
-                  className="flex-1 sm:flex-none animate-fade-in text-sm"
-                >
-                  <Store className="h-4 w-4 mr-2" />
-                  Florists
-                </Button>
-              </div>
-
-              {/* Products View */}
-              {viewMode === 'products' && (
-                isLoadingProducts ? (
-                  <div className="flex justify-center items-center h-[200px]">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  </div>
-                ) : products && products.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                    {products.map((product) => (
-                      <div key={product.id} className="animate-fade-in-up">
-                        <ProductCard
-                          id={product.id}
-                          title={product.title}
-                          price={product.price}
-                          description={product.description}
-                          images={product.images}
-                          floristName={product.florist_profiles?.store_name}
-                          floristId={product.florist_id}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 animate-fade-in">
-                    <h2 className="text-xl font-semibold mb-2">No products found</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Try adjusting your search criteria
-                    </p>
-                  </div>
-                )
-              )}
-
-              {/* Florists View */}
-              {viewMode === 'florists' && (
-                isLoadingFlorists ? (
-                  <div className="flex justify-center items-center h-[200px]">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  </div>
-                ) : florists && florists.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                    {florists.map((florist) => (
-                      <div key={florist.id} className="animate-fade-in-up">
-                        <FloristCard
-                          id={florist.id}
-                          storeName={florist.store_name}
-                          address={florist.address}
-                          aboutText={florist.about_text}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 animate-fade-in">
-                    <h2 className="text-xl font-semibold mb-2">No florists found</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Try adjusting your search criteria
-                    </p>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 };

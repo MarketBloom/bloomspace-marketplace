@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
-import { ShoppingCart, Search, User } from "lucide-react";
+import { ShoppingCart, Search, User, Home } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -40,8 +40,8 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center space-x-8">
-          <a href="/" className="text-lg font-semibold">
-            Lovable
+          <a href="/" className="text-lg flex items-center space-x-2">
+            <Home className="h-5 w-5" />
           </a>
           <nav className="hidden md:flex items-center space-x-6">
             <a href="/search" className="text-sm text-gray-600 hover:text-black transition-colors">
@@ -90,7 +90,7 @@ export const Header = () => {
             <Button 
               variant="default"
               onClick={() => navigate("/login")}
-              className="h-9 px-4 text-sm bg-black text-white hover:bg-black/90"
+              className="h-9 px-4 text-sm bg-[#A8A646] hover:bg-[#A8A646]/90 text-white"
             >
               Sign In
             </Button>
