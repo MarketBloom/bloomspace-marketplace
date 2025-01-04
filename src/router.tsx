@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
-import { App } from "./App";
 import BecomeFlorist from "./pages/BecomeFlorist";
 import FloristDashboard from "./pages/FloristDashboard";
 import StoreManagement from "./pages/StoreManagement";
+import { Index } from "./pages/Index";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Index />,
   },
   {
     path: "/become-florist",
