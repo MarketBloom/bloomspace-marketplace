@@ -8,6 +8,7 @@ import { StoreDetailsForm } from "@/components/become-florist/StoreDetailsForm";
 import { DeliverySettingsForm } from "@/components/become-florist/DeliverySettingsForm";
 import { ImageUploadForm } from "@/components/become-florist/ImageUploadForm";
 import { StepIndicator } from "@/components/become-florist/StepIndicator";
+import { Button } from "@/components/ui/button";
 
 const BecomeFlorist = () => {
   const { user } = useAuth();
@@ -78,6 +79,38 @@ const BecomeFlorist = () => {
     }
   };
 
+  const handleSkip = async () => {
+    if (!user) {
+      toast.error("Please log in first");
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Create a basic florist profile with minimal information
+      const { error: floristError } = await supabase
+        .from("florist_profiles")
+        .insert({
+          id: user.id,
+          store_name: "My Store",
+          address: "",
+          store_status: "private",
+          setup_progress: 0
+        });
+
+      if (floristError) throw floristError;
+
+      toast.success("Welcome! You can set up your store later.");
+      navigate("/florist-dashboard");
+    } catch (error) {
+      console.error("Error creating basic florist profile:", error);
+      toast.error("Failed to create florist profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleImageUpload = (type: "logo" | "banner", url: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -123,9 +156,19 @@ const BecomeFlorist = () => {
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-8">
             <h1 className="text-2xl font-bold text-center mb-6">
-              Become a Florist
+              Set Up Your Store
             </h1>
-            <StepIndicator currentStep={step} totalSteps={3} />
+            <div className="flex justify-between items-center mb-6">
+              <StepIndicator currentStep={step} totalSteps={3} />
+              <Button
+                variant="ghost"
+                onClick={handleSkip}
+                disabled={loading}
+                className="text-muted-foreground hover:text-primary"
+              >
+                Skip for now
+              </Button>
+            </div>
             <form onSubmit={(e) => e.preventDefault()}>
               {renderStep()}
             </form>
