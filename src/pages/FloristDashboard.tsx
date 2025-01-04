@@ -1,6 +1,4 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { SetupProgress } from "@/components/florist-dashboard/SetupProgress";
 import { StoreVisibility } from "@/components/florist-dashboard/StoreVisibility";
@@ -8,6 +6,8 @@ import { DashboardStats } from "@/components/florist-dashboard/DashboardStats";
 import { RecentOrders } from "@/components/florist-dashboard/RecentOrders";
 import { ProductManagement } from "@/components/florist-dashboard/ProductManagement";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const FloristDashboard = () => {
   const { user } = useAuth();
@@ -33,28 +33,6 @@ const FloristDashboard = () => {
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("florist_id", user?.id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user,
-  });
-
-  const { data: orders } = useQuery({
-    queryKey: ["floristOrders", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select(`
-          *,
-          profiles:customer_id (full_name),
-          order_items (
-            *,
-            products (title)
-          )
-        `)
         .eq("florist_id", user?.id)
         .order("created_at", { ascending: false });
 
@@ -92,7 +70,7 @@ const FloristDashboard = () => {
           <SetupProgress progress={floristProfile?.setup_progress || 0} />
 
           <StoreVisibility
-            storeId={user?.id || ""}
+            storeId={user?.id}
             initialStatus={floristProfile?.store_status as "private" | "published"}
             onStatusChange={handleStatusChange}
           />
@@ -100,10 +78,10 @@ const FloristDashboard = () => {
           <DashboardStats floristId={user?.id} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <RecentOrders orders={orders || []} />
+            <RecentOrders floristId={user?.id} />
             <ProductManagement
               products={products || []}
-              floristId={user?.id || ""}
+              floristId={user?.id}
               onProductAdded={refetchProducts}
             />
           </div>
