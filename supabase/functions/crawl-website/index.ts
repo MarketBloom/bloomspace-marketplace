@@ -12,7 +12,19 @@ serve(async (req) => {
     const apiKey = Deno.env.get('FIRECRAWL_API_KEY')
 
     if (!apiKey) {
-      throw new Error('Firecrawl API key not configured')
+      console.error('Firecrawl API key not configured')
+      return new Response(
+        JSON.stringify({
+          crawlResult: {
+            success: false,
+            error: 'API configuration error'
+          }
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 // Changed to 200 to handle error in the response body instead
+        }
+      )
     }
 
     console.log('Starting crawl for URL:', url)
@@ -36,39 +48,24 @@ serve(async (req) => {
     const crawlResponse = await response.json()
     console.log('Crawl response:', crawlResponse)
 
-    if (!response.ok) {
-      return new Response(
-        JSON.stringify({
-          crawlResult: {
-            success: false,
-            error: crawlResponse.error || 'Failed to crawl website'
-          }
-        }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400
-        }
-      )
-    }
-
-    // Process the crawled data
-    const processedData = {
-      title: crawlResponse.title || '',
-      description: crawlResponse.description || '',
-      products: crawlResponse.products || [],
-      contact: crawlResponse.contact || {}
-    }
-
+    // Always return a 200 status and handle errors in the response body
     return new Response(
       JSON.stringify({
         crawlResult: {
-          success: true,
-          status: 'completed',
-          data: processedData
+          success: response.ok,
+          status: response.ok ? 'completed' : 'failed',
+          error: !response.ok ? (crawlResponse.error || 'Failed to crawl website') : undefined,
+          data: response.ok ? {
+            title: crawlResponse.title || '',
+            description: crawlResponse.description || '',
+            products: crawlResponse.products || [],
+            contact: crawlResponse.contact || {}
+          } : undefined
         }
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200
       },
     )
   } catch (error) {
@@ -77,12 +74,12 @@ serve(async (req) => {
       JSON.stringify({
         crawlResult: {
           success: false,
-          error: error.message
+          error: error.message || 'Internal server error'
         }
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
+        status: 200 // Changed to 200 to handle error in the response body
       },
     )
   }

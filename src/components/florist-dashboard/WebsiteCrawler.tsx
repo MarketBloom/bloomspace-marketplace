@@ -41,10 +41,14 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
 
       if (error) {
         console.error('Supabase function error:', error);
-        throw error;
+        throw new Error(error.message);
+      }
+
+      if (!data?.crawlResult) {
+        throw new Error('Invalid response format');
       }
       
-      if (data?.crawlResult?.success) {
+      if (data.crawlResult.success) {
         toast({
           title: "Success",
           description: "Website data extracted successfully",
@@ -53,7 +57,7 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
         setCrawlResult(data.crawlResult);
         setProgress(100);
       } else {
-        throw new Error(data?.crawlResult?.error || 'Failed to extract website data');
+        throw new Error(data.crawlResult.error || 'Failed to extract website data');
       }
     } catch (error) {
       console.error('Error crawling website:', error);
