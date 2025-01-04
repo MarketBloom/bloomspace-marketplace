@@ -87,13 +87,22 @@ export const Header = () => {
               <User className="h-4 w-4" />
             </Button>
           ) : (
-            <Button 
-              variant="default"
-              onClick={() => navigate("/login")}
-              className="h-8 px-3 text-sm"
-            >
-              Sign In
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="default"
+                onClick={() => navigate("/login")}
+                className="h-8 px-3 text-sm bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
+              >
+                Sign In
+              </Button>
+              <Button 
+                variant="default"
+                onClick={() => navigate("/signup")}
+                className="h-8 px-3 text-sm bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
+              >
+                Sign Up
+              </Button>
+            </div>
           )}
         </div>
       </div>
