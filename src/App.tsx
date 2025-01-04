@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
-import Signup from "@/pages/Signup";
+import CustomerSignup from "@/pages/CustomerSignup";
+import FloristSignup from "@/pages/FloristSignup";
 import Search from "@/pages/Search";
 import Cart from "@/pages/Cart";
 import ProductDetail from "@/pages/ProductDetail";
@@ -23,7 +24,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/customer-signup" element={<CustomerSignup />} />
+            <Route path="/florist-signup" element={<FloristSignup />} />
             <Route path="/search" element={<Search />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/product/:id" element={<ProductDetail />} />
