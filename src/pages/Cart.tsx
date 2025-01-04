@@ -50,7 +50,7 @@ const Cart = () => {
                   {item.floristName && (
                     <p className="text-sm text-gray-600">By {item.floristName}</p>
                   )}
-                  <p className="text-primary font-medium">${item.price.toFixed(2)}</p>
+                  <p className="text-[#C5E1A5] font-medium">${item.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
