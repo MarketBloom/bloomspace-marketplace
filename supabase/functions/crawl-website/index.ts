@@ -23,7 +23,7 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
-    console.log('Using API key starting with:', apiKey.substring(0, 5))
+    console.log('Using API key:', apiKey.substring(0, 5) + '...')
 
     // Basic URL validation
     try {
@@ -37,7 +37,11 @@ serve(async (req) => {
 
     // First try to fetch the URL to validate it's accessible
     try {
-      const testResponse = await fetch(url)
+      const testResponse = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+      })
       if (!testResponse.ok) {
         throw new Error(`URL returned status ${testResponse.status}`)
       }
@@ -47,27 +51,32 @@ serve(async (req) => {
     }
 
     // Make the crawl request
+    const requestBody = {
+      url,
+      limit: 5, // Reduced limit for testing
+      scrapeOptions: {
+        formats: ['markdown', 'html'],
+        selectors: {
+          title: 'h1, title',
+          description: 'meta[name="description"], p',
+          products: '.product, [data-product], .woocommerce-loop-product',
+          prices: '.price, [data-price]',
+          images: 'img, [data-image]'
+        }
+      }
+    }
+
+    console.log('Making request to Firecrawl API with body:', JSON.stringify(requestBody))
+
     const crawlResponse = await fetch('https://api.firecrawl.com/v1/crawl', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       },
-      body: JSON.stringify({
-        url,
-        limit: 5, // Reduced limit for testing
-        scrapeOptions: {
-          formats: ['markdown', 'html'],
-          selectors: {
-            title: 'h1, title',
-            description: 'meta[name="description"], p',
-            products: '.product, [data-product], .woocommerce-loop-product',
-            prices: '.price, [data-price]',
-            images: 'img, [data-image]'
-          }
-        }
-      })
+      body: JSON.stringify(requestBody)
     })
 
     console.log('Firecrawl response status:', crawlResponse.status)
