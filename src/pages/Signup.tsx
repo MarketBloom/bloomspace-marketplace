@@ -56,6 +56,11 @@ const Signup = () => {
     }
   };
 
+  const handleSkip = () => {
+    navigate("/dashboard");
+    toast.info("You can complete your profile later from the dashboard");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -132,9 +137,22 @@ const Signup = () => {
                   </div>
                 </RadioGroup>
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating account..." : "Sign Up"}
-              </Button>
+              <div className="space-y-2">
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Creating account..." : "Sign Up"}
+                </Button>
+                {role === "florist" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleSkip}
+                    disabled={loading}
+                  >
+                    Skip for now
+                  </Button>
+                )}
+              </div>
             </form>
             <p className="mt-4 text-center text-sm text-gray-600">
               Already have an account?{" "}
