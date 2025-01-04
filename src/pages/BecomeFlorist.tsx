@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
+import { StoreDetailsForm } from "@/components/become-florist/StoreDetailsForm";
+import { DeliverySettingsForm } from "@/components/become-florist/DeliverySettingsForm";
+import { ImageUploadForm } from "@/components/become-florist/ImageUploadForm";
+import { StepIndicator } from "@/components/become-florist/StepIndicator";
 
 const BecomeFlorist = () => {
   const { user } = useAuth();
@@ -22,6 +22,8 @@ const BecomeFlorist = () => {
     deliveryRadius: "5",
     deliveryFee: "0",
     minimumOrder: "0",
+    logoUrl: "",
+    bannerUrl: "",
     operatingHours: {
       monday: { open: "09:00", close: "17:00" },
       tuesday: { open: "09:00", close: "17:00" },
@@ -33,8 +35,7 @@ const BecomeFlorist = () => {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!user) {
       toast.error("Please log in first");
       navigate("/login");
@@ -61,6 +62,8 @@ const BecomeFlorist = () => {
           delivery_radius: parseFloat(formData.deliveryRadius),
           delivery_fee: parseFloat(formData.deliveryFee),
           minimum_order_amount: parseFloat(formData.minimumOrder),
+          logo_url: formData.logoUrl,
+          banner_url: formData.bannerUrl,
         });
 
       if (floristError) throw floristError;
@@ -75,96 +78,38 @@ const BecomeFlorist = () => {
     }
   };
 
+  const handleImageUpload = (type: "logo" | "banner", url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [type === "logo" ? "logoUrl" : "bannerUrl"]: url,
+    }));
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="storeName">Store Name</Label>
-              <Input
-                id="storeName"
-                value={formData.storeName}
-                onChange={(e) => setFormData({ ...formData, storeName: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                required
-              />
-            </div>
-            <Button onClick={() => setStep(2)}>Next</Button>
-          </div>
+          <StoreDetailsForm
+            formData={formData}
+            setFormData={setFormData}
+            onNext={() => setStep(2)}
+          />
         );
       case 2:
         return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="aboutText">About Your Store</Label>
-              <Textarea
-                id="aboutText"
-                value={formData.aboutText}
-                onChange={(e) => setFormData({ ...formData, aboutText: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="deliveryRadius">Delivery Radius (km)</Label>
-              <Input
-                id="deliveryRadius"
-                type="number"
-                min="0"
-                value={formData.deliveryRadius}
-                onChange={(e) => setFormData({ ...formData, deliveryRadius: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="deliveryFee">Delivery Fee ($)</Label>
-              <Input
-                id="deliveryFee"
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.deliveryFee}
-                onChange={(e) => setFormData({ ...formData, deliveryFee: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="minimumOrder">Minimum Order Amount ($)</Label>
-              <Input
-                id="minimumOrder"
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.minimumOrder}
-                onChange={(e) => setFormData({ ...formData, minimumOrder: e.target.value })}
-                required
-              />
-            </div>
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-              <Button onClick={handleSubmit} disabled={loading}>
-                {loading ? "Creating Profile..." : "Create Florist Profile"}
-              </Button>
-            </div>
-          </div>
+          <ImageUploadForm
+            onImageUpload={handleImageUpload}
+          />
+        );
+      case 3:
+        return (
+          <DeliverySettingsForm
+            formData={formData}
+            setFormData={setFormData}
+            onBack={() => setStep(2)}
+            onSubmit={handleSubmit}
+            loading={loading}
+          />
         );
       default:
         return null;
@@ -177,18 +122,10 @@ const BecomeFlorist = () => {
       <div className="container mx-auto px-4 pt-24">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-8">
-            <h1 className="text-2xl font-bold text-center mb-6">Become a Florist</h1>
-            <div className="mb-8">
-              <div className="flex justify-center items-center space-x-4">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 1 ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-                  1
-                </div>
-                <div className="h-1 w-16 bg-gray-200"></div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 2 ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-                  2
-                </div>
-              </div>
-            </div>
+            <h1 className="text-2xl font-bold text-center mb-6">
+              Become a Florist
+            </h1>
+            <StepIndicator currentStep={step} totalSteps={3} />
             <form onSubmit={(e) => e.preventDefault()}>
               {renderStep()}
             </form>
