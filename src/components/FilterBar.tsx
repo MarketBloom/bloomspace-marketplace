@@ -11,19 +11,38 @@ import { OccasionFilter } from "./filters/OccasionFilter";
 
 interface FilterBarProps {
   initialFulfillmentType?: "pickup" | "delivery";
+  initialDate?: Date;
+  initialTime?: string | null;
+  initialBudget?: number[];
+  initialLocation?: string;
 }
 
-export const FilterBar = ({ initialFulfillmentType = "delivery" }: FilterBarProps) => {
+export const FilterBar = ({ 
+  initialFulfillmentType = "delivery",
+  initialDate = new Date(),
+  initialTime = null,
+  initialBudget = [500],
+  initialLocation = ""
+}: FilterBarProps) => {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState<number[]>([500]);
-  const [date, setDate] = useState<Date>();
-  const [time, setTime] = useState<string | null>(null);
+  const [budget, setBudget] = useState<number[]>(initialBudget);
+  const [date, setDate] = useState<Date>(initialDate);
+  const [time, setTime] = useState<string | null>(initialTime);
+  const [location, setLocation] = useState<string>(initialLocation);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
 
   const handleSearch = () => {
-    navigate('/search');
+    const searchParams = new URLSearchParams();
+    
+    searchParams.append("fulfillment", fulfillmentType);
+    if (location) searchParams.append("location", location);
+    searchParams.append("date", date.toISOString());
+    if (time) searchParams.append("time", time);
+    searchParams.append("budget", budget[0].toString());
+    
+    navigate(`/search?${searchParams.toString()}`);
   };
 
   return (
@@ -58,7 +77,10 @@ export const FilterBar = ({ initialFulfillmentType = "delivery" }: FilterBarProp
         </div>
       </div>
       
-      <LocationFilter />
+      <LocationFilter 
+        location={location}
+        setLocation={setLocation}
+      />
       
       <DateFilter 
         date={date}

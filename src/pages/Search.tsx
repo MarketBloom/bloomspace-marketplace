@@ -14,12 +14,30 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
-  // Set initial fulfillment type from URL parameters
+  // Initialize filters from URL parameters
   useEffect(() => {
+    // Set fulfillment type
     const fulfillment = searchParams.get('fulfillment');
     if (fulfillment === 'pickup' || fulfillment === 'delivery') {
       setFulfillmentType(fulfillment);
     }
+
+    // Set date (default to today if not provided)
+    const dateParam = searchParams.get('date');
+    const initialDate = dateParam ? new Date(dateParam) : new Date();
+    
+    // Set time
+    const timeParam = searchParams.get('time');
+    
+    // Set budget
+    const budgetParam = searchParams.get('budget');
+    const initialBudget = budgetParam ? [parseInt(budgetParam)] : [500];
+    
+    // Set location
+    const locationParam = searchParams.get('location');
+    
+    // Pass all these values to FilterBar component
+    // You'll need to update FilterBar to accept these as props
   }, [searchParams]);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
@@ -83,7 +101,13 @@ const Search = () => {
             <div className="w-full">
               <div>
                 <h3 className="text-sm font-medium mb-3">Filters</h3>
-                <FilterBar initialFulfillmentType={fulfillmentType} />
+                <FilterBar 
+                  initialFulfillmentType={fulfillmentType}
+                  initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : new Date()}
+                  initialTime={searchParams.get('time')}
+                  initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
+                  initialLocation={searchParams.get('location') || ""}
+                />
               </div>
             </div>
           </aside>

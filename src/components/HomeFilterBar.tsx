@@ -12,19 +12,41 @@ export const HomeFilterBar = () => {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string | null>(null);
   const [budget, setBudget] = useState<number[]>([500]);
+  const [location, setLocation] = useState<string>("");
 
   const handleSearch = (fulfillmentType: "pickup" | "delivery") => {
-    // Navigate to search with fulfillment type as URL parameter
-    navigate(`/search?fulfillment=${fulfillmentType}`);
+    const searchParams = new URLSearchParams();
+    
+    // Add all filter parameters
+    searchParams.append("fulfillment", fulfillmentType);
+    if (location) searchParams.append("location", location);
+    if (date) searchParams.append("date", date.toISOString());
+    if (time) searchParams.append("time", time);
+    searchParams.append("budget", budget[0].toString());
+
+    // Navigate to search with all parameters
+    navigate(`/search?${searchParams.toString()}`);
   };
 
   return (
     <div className="bg-black/20 backdrop-blur-md rounded-2xl p-5 border border-white/10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <LocationFilter />
-        <DateFilter date={date} setDate={setDate} />
-        <TimeFilter time={time} setTime={setTime} />
-        <BudgetFilter budget={budget} setBudget={setBudget} />
+        <LocationFilter 
+          location={location}
+          setLocation={setLocation}
+        />
+        <DateFilter 
+          date={date} 
+          setDate={setDate} 
+        />
+        <TimeFilter 
+          time={time} 
+          setTime={setTime} 
+        />
+        <BudgetFilter 
+          budget={budget} 
+          setBudget={setBudget} 
+        />
       </div>
       
       <div className="grid grid-cols-2 gap-4 mt-4">
