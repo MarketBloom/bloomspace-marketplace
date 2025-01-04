@@ -4,12 +4,11 @@ import { SetupProgress } from "@/components/florist-dashboard/SetupProgress";
 import { StoreVisibility } from "@/components/florist-dashboard/StoreVisibility";
 import { DashboardStats } from "@/components/florist-dashboard/DashboardStats";
 import { RecentOrders } from "@/components/florist-dashboard/RecentOrders";
-import { ProductManagement } from "@/components/florist-dashboard/ProductManagement";
-import { WebsiteCrawler } from "@/components/florist-dashboard/WebsiteCrawler";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { Settings } from "lucide-react";
 
 const FloristDashboard = () => {
   const { user } = useAuth();
@@ -30,25 +29,6 @@ const FloristDashboard = () => {
     enabled: !!user,
   });
 
-  const { data: products, refetch: refetchProducts } = useQuery({
-    queryKey: ["products", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("florist_id", user?.id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user,
-  });
-
-  const handleStatusChange = (newStatus: "private" | "published") => {
-    refetchProducts();
-  };
-
   if (!user) {
     return null;
   }
@@ -64,8 +44,12 @@ const FloristDashboard = () => {
               Welcome back, {floristProfile?.store_name || "New Florist"}
             </p>
           </div>
-          <Button onClick={() => navigate("/store-settings")}>
-            Store Settings
+          <Button 
+            onClick={() => navigate("/store-management")}
+            className="flex items-center gap-2"
+          >
+            <Settings className="w-4 h-4" />
+            Manage Store
           </Button>
         </div>
 
@@ -75,20 +59,13 @@ const FloristDashboard = () => {
           <StoreVisibility
             storeId={user?.id}
             initialStatus={floristProfile?.store_status as "private" | "published"}
-            onStatusChange={handleStatusChange}
+            onStatusChange={() => {}}
           />
-
-          <WebsiteCrawler floristId={user.id} />
 
           <DashboardStats floristId={user?.id} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8">
             <RecentOrders floristId={user?.id} />
-            <ProductManagement
-              products={products || []}
-              floristId={user?.id}
-              onProductAdded={refetchProducts}
-            />
           </div>
         </div>
       </main>
