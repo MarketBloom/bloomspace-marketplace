@@ -22,7 +22,7 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className="space-y-4 border border-black/10 rounded-lg p-4">
+    <div className="space-y-3 border border-black/10 rounded-lg p-3">
       <LocationFilter />
       
       <DateFilter 
@@ -51,7 +51,7 @@ export const FilterBar = () => {
       />
 
       <Button 
-        className="w-full text-xs"
+        className="w-full text-xs bg-[#A8A646] hover:bg-[#A8A646]/90 text-white"
         onClick={handleSearch}
       >
         <Search className="w-3.5 h-3.5 mr-2" />

@@ -11,7 +11,6 @@ import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Search = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const isMobile = useIsMobile();
 
@@ -48,9 +47,9 @@ const Search = () => {
   });
 
   const FilterPanel = () => (
-    <div className="w-full space-y-6">
+    <div className="w-full">
       <div>
-        <h3 className="text-base font-semibold mb-4 font-mono">Filters</h3>
+        <h3 className="text-sm font-medium mb-3">Filters</h3>
         <FilterBar />
       </div>
     </div>
@@ -60,15 +59,15 @@ const Search = () => {
     <div className="min-h-screen bg-background font-mono">
       <Header />
       
-      <div className="container mx-auto px-4 pt-24">
-        <div className="lg:grid lg:grid-cols-[220px_1fr] gap-6">
+      <div className="container mx-auto px-4 pt-20">
+        <div className="lg:grid lg:grid-cols-[240px_1fr] gap-6">
           {/* Desktop Sidebar */}
-          <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-12">
+          <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
             <FilterPanel />
           </aside>
 
           {/* Mobile Filter Button */}
-          <div className="lg:hidden mb-6">
+          <div className="lg:hidden mb-4">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" className="w-full text-sm">
@@ -85,11 +84,11 @@ const Search = () => {
           {/* Main Content */}
           <div>
             {/* View Toggle */}
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-4">
               <Button
                 variant={viewMode === 'products' ? 'default' : 'outline'}
                 onClick={() => setViewMode('products')}
-                className="flex-1 sm:flex-none animate-fade-in text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
+                className="flex-1 sm:flex-none text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
                 Products
@@ -97,7 +96,7 @@ const Search = () => {
               <Button
                 variant={viewMode === 'florists' ? 'default' : 'outline'}
                 onClick={() => setViewMode('florists')}
-                className="flex-1 sm:flex-none animate-fade-in text-sm"
+                className="flex-1 sm:flex-none text-sm bg-[#A8A646] hover:bg-[#A8A646]/90"
               >
                 <Store className="h-4 w-4 mr-2" />
                 Florists
@@ -111,7 +110,7 @@ const Search = () => {
                   <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
                 </div>
               ) : products && products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                   {products.map((product) => (
                     <div key={product.id} className="animate-fade-in-up">
                       <ProductCard
@@ -143,7 +142,7 @@ const Search = () => {
                   <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
                 </div>
               ) : florists && florists.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                   {florists.map((florist) => (
                     <div key={florist.id} className="animate-fade-in-up">
                       <FloristCard
