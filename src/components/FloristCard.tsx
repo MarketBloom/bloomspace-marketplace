@@ -46,12 +46,12 @@ export const FloristCard = ({
 
         {/* Logo - Centered on banner */}
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-8">
-          <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-white bg-white shadow-2xl">
+          <div className="w-24 h-24 rounded-xl overflow-hidden shadow-2xl">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
                 alt={`${storeName} logo`}
-                className="w-full h-full object-cover p-1 bg-white"
+                className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
