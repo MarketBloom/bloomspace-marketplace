@@ -33,7 +33,7 @@ export const HomeFilterBar = () => {
 
   return (
     <div className="bg-black/20 backdrop-blur-md rounded-2xl p-5 border border-white/10">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <LocationFilter 
           location={location}
           setLocation={setLocation}
@@ -50,22 +50,23 @@ export const HomeFilterBar = () => {
           budget={budget} 
           setBudget={setBudget} 
         />
-        <div className="flex gap-2">
-          <Button 
-            className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black text-xs h-9 px-3 flex-1"
-            onClick={() => handleSearch("delivery")}
-          >
-            <Truck className="w-3.5 h-3.5 mr-1" />
-            Delivery
-          </Button>
-          <Button 
-            className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black text-xs h-9 px-3 flex-1"
-            onClick={() => handleSearch("pickup")}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 mr-1" />
-            Pickup
-          </Button>
-        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        <Button 
+          className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black text-sm h-11 px-4 w-full"
+          onClick={() => handleSearch("delivery")}
+        >
+          <Truck className="w-4 h-4 mr-2" />
+          Search Delivery
+        </Button>
+        <Button 
+          className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black text-sm h-11 px-4 w-full"
+          onClick={() => handleSearch("pickup")}
+        >
+          <ShoppingBag className="w-4 h-4 mr-2" />
+          Search Pickup
+        </Button>
       </div>
     </div>
   );
