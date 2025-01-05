@@ -28,7 +28,10 @@ const FloristDetail = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select(`
+          *,
+          product_sizes (*)
+        `)
         .eq('florist_id', id)
         .eq('in_stock', true)
         .eq('is_hidden', false);
@@ -137,6 +140,7 @@ const FloristDetail = () => {
                   id={product.id}
                   title={product.title}
                   price={product.price}
+                  displayPrice={product.price} // Add displayPrice prop
                   description={product.description}
                   images={product.images}
                   floristName={florist.store_name}

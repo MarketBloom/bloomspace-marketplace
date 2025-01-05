@@ -45,6 +45,7 @@ export const SearchResults = ({
               id={product.id}
               title={product.title}
               price={product.price}
+              displayPrice={product.displayPrice || product.price} // Add displayPrice prop
               description={product.description}
               images={product.images}
               floristName={product.florist_profiles?.store_name}
