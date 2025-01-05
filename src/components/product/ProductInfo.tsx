@@ -12,9 +12,9 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
   const { toast } = useToast();
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <div className="flex justify-between items-start gap-2">
-        <h3 className="text-base font-semibold leading-tight tracking-tight">
+        <h3 className="text-lg font-bold leading-tight tracking-tight">
           {title}
         </h3>
         <Button
@@ -33,15 +33,15 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
         </Button>
       </div>
       {floristName && (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           By {floristName}
         </p>
       )}
-      <div className="flex items-baseline gap-1">
-        <p className="text-sm font-medium text-primary">
+      <div className="flex items-baseline gap-2">
+        <p className="text-base font-semibold text-primary">
           ${price.toFixed(2)}
         </p>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-sm text-muted-foreground">
           {/* If there's a size, show it here */}
           Standard
         </span>
