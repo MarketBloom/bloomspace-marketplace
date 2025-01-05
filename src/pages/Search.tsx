@@ -24,10 +24,10 @@ const Search = () => {
 
     // Set date (default to today if not provided)
     const dateParam = searchParams.get('date');
-    const initialDate = dateParam ? new Date(dateParam) : new Date();
+    const initialDate = dateParam ? new Date(dateParam) : undefined;
     
     // Set time
-    const timeParam = searchParams.get('time');
+    const timeParam = searchParams.get('time') || null;
     
     // Set budget
     const budgetParam = searchParams.get('budget');
@@ -37,7 +37,6 @@ const Search = () => {
     const locationParam = searchParams.get('location');
     
     // Pass all these values to FilterBar component
-    // You'll need to update FilterBar to accept these as props
   }, [searchParams]);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
@@ -103,8 +102,8 @@ const Search = () => {
                 <h3 className="text-sm font-medium mb-3">Filters</h3>
                 <FilterBar 
                   initialFulfillmentType={fulfillmentType}
-                  initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : new Date()}
-                  initialTime={searchParams.get('time')}
+                  initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
+                  initialTime={searchParams.get('time') || null}
                   initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
                   initialLocation={searchParams.get('location') || ""}
                 />

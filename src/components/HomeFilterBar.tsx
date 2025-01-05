@@ -9,7 +9,7 @@ import { ShoppingBag, Truck } from "lucide-react";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
-  const [date, setDate] = useState<Date | undefined>();
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState<string | null>(null);
   const [budget, setBudget] = useState<number[]>([500]);
   const [location, setLocation] = useState<string>("");
