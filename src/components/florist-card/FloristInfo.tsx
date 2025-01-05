@@ -9,14 +9,14 @@ interface FloristInfoProps {
 
 export const FloristInfo = ({ storeName, address, aboutText }: FloristInfoProps) => {
   return (
-    <div className="text-center space-y-3">
-      <h3 className="text-xl font-semibold tracking-tight">{storeName}</h3>
-      <div className="flex items-center justify-center text-sm text-muted-foreground gap-1.5">
-        <MapPin className="h-4 w-4 flex-shrink-0" />
+    <div className="text-center space-y-4">
+      <h3 className="text-xl font-medium">{storeName}</h3>
+      <div className="flex items-center justify-center text-sm text-gray-500 gap-1">
+        <MapPin className="h-4 w-4" />
         <span>{address}</span>
       </div>
       {aboutText && (
-        <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{aboutText}</p>
+        <p className="text-sm text-gray-500 line-clamp-2">{aboutText}</p>
       )}
     </div>
   );

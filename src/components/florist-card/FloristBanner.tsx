@@ -7,13 +7,12 @@ interface FloristBannerProps {
 }
 
 export const FloristBanner = ({ bannerUrl, logoUrl, storeName }: FloristBannerProps) => {
-  // Ensure storeName is not undefined and has at least one character
   const firstLetter = storeName?.charAt(0) || '?';
 
   return (
     <div className="relative">
       {/* Banner Image */}
-      <div className="h-40 w-full overflow-hidden bg-gradient-to-r from-primary/10 to-secondary/10">
+      <div className="h-40 w-full overflow-hidden bg-gray-100">
         {bannerUrl && (
           <img 
             src={bannerUrl} 
@@ -25,16 +24,16 @@ export const FloristBanner = ({ bannerUrl, logoUrl, storeName }: FloristBannerPr
 
       {/* Logo - Centered on banner */}
       <div className="absolute left-1/2 -translate-x-1/2 -bottom-8">
-        <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-background shadow-xl">
+        <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white shadow-lg">
           {logoUrl ? (
             <img 
               src={logoUrl} 
               alt={`${storeName} logo`}
-              className="w-full h-full object-cover bg-white"
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-muted flex items-center justify-center">
-              <span className="text-3xl font-semibold text-muted-foreground">
+            <div className="w-full h-full bg-gray-50 flex items-center justify-center">
+              <span className="text-4xl font-medium text-gray-400">
                 {firstLetter}
               </span>
             </div>
