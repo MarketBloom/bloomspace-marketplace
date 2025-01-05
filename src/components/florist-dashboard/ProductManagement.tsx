@@ -3,19 +3,6 @@ import { ProductList } from "./ProductList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  product_sizes?: {
-    id: string;
-    name: string;
-    price: number;
-    isDefault: boolean;
-  }[];
-}
-
 interface ProductManagementProps {
   floristId: string;
 }
