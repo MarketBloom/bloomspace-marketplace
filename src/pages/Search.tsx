@@ -105,10 +105,17 @@ const Search = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('florist_profiles')
-        .select('*');
+        .select('*')
+        .eq('store_status', 'published');
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error('Error fetching florists:', error);
+        throw error;
+      }
+
+      // Add console.log to debug the data
+      console.log('Fetched florists:', data);
+      return data || [];
     },
   });
 
