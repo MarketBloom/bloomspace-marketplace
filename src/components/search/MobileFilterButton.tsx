@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SlidersHorizontal } from "lucide-react";
 import { FilterBar } from "@/components/FilterBar";
 import { useSearchParams } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const MobileFilterButton = () => {
   const [searchParams] = useSearchParams();
@@ -23,9 +24,9 @@ export const MobileFilterButton = () => {
             Filters
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[280px]">
-          <div className="w-full">
-            <div>
+        <SheetContent side="left" className="w-[280px] p-0">
+          <ScrollArea className="h-full px-4">
+            <div className="py-6">
               <h3 className="text-sm font-medium mb-3">Filters</h3>
               <FilterBar 
                 initialFulfillmentType={initialFulfillmentType}
@@ -35,7 +36,7 @@ export const MobileFilterButton = () => {
                 initialLocation={initialLocation}
               />
             </div>
-          </div>
+          </ScrollArea>
         </SheetContent>
       </Sheet>
     </div>
