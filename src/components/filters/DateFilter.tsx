@@ -31,10 +31,19 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
             )}
           >
             <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-            {date ? format(date, "PPP") : "Pick a date"}
+            {date ? format(date, "PPP") : "Any Date"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
+          <div className="p-2 border-b border-white/20">
+            <Button
+              variant="ghost"
+              className="w-full justify-start font-normal text-xs h-8"
+              onClick={() => handleSelect(undefined)}
+            >
+              Any Date
+            </Button>
+          </div>
           <Calendar
             mode="single"
             selected={date}

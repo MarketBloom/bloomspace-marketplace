@@ -19,14 +19,14 @@ interface FilterBarProps {
 
 export const FilterBar = ({ 
   initialFulfillmentType = "delivery",
-  initialDate = new Date(),
+  initialDate = undefined,
   initialTime = null,
   initialBudget = [500],
   initialLocation = ""
 }: FilterBarProps) => {
   const navigate = useNavigate();
   const [budget, setBudget] = useState<number[]>(initialBudget);
-  const [date, setDate] = useState<Date>(initialDate);
+  const [date, setDate] = useState<Date | undefined>(initialDate);
   const [time, setTime] = useState<string | null>(initialTime);
   const [location, setLocation] = useState<string>(initialLocation);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
@@ -38,7 +38,7 @@ export const FilterBar = ({
     
     searchParams.append("fulfillment", fulfillmentType);
     if (location) searchParams.append("location", location);
-    searchParams.append("date", date.toISOString());
+    if (date) searchParams.append("date", date.toISOString());
     if (time) searchParams.append("time", time);
     searchParams.append("budget", budget[0].toString());
     
