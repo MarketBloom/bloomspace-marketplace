@@ -100,9 +100,7 @@ export const FloristCard = ({
           
           {deliveryRadius && deliveryRadius > 0 && (
             <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <div className="flex items-center">
-                <span>Delivery Area:</span>
-              </div>
+              <span>Delivery Area:</span>
               <span className="font-medium">{deliveryRadius}km radius</span>
             </div>
           )}
