@@ -46,9 +46,9 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
           title: product.title,
           description: product.description,
           price: Number(product.product_sizes?.[0]?.price || 0),
-          images: product.images,
-          category: product.category,
-          occasion: product.occasion
+          images: product.images || [],
+          category: product.category || null,
+          occasion: product.occasion || []
         })
         .eq('id', product.id);
 
