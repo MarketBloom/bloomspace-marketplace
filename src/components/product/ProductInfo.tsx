@@ -15,25 +15,19 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
   const titleParts = title.split(' - ');
   const mainTitle = titleParts[0];
   const size = titleParts[1];
-  const details = titleParts[2];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Title Section */}
       <div className="flex justify-between items-start">
-        <div className="space-y-0 leading-tight">
-          <h3 className="text-[40px] font-semibold">
+        <div className="space-y-1">
+          <h3 className="text-[24px] font-semibold leading-tight">
             {mainTitle}
           </h3>
           {size && (
-            <h4 className="text-[40px] font-semibold">
-              - {size} -
-            </h4>
-          )}
-          {details && (
-            <h4 className="text-[40px] font-semibold">
-              {details}
-            </h4>
+            <p className="text-[14px] text-muted-foreground">
+              {size}
+            </p>
           )}
         </div>
         <Button
@@ -53,20 +47,13 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
       </div>
 
       {/* Price Section */}
-      <div className="space-y-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-[20px] font-medium">From</span>
-          <p className="text-[40px] font-semibold">
-            ${price.toFixed(2)}
-          </p>
-        </div>
-
-        <p className="text-[20px] font-medium text-muted-foreground">
-          Standard Size
+      <div className="space-y-2">
+        <p className="text-[14px] font-medium">
+          ${price.toFixed(2)}
         </p>
 
         {floristName && (
-          <p className="text-[20px] font-medium text-muted-foreground">
+          <p className="text-[14px] text-muted-foreground">
             By {floristName}
           </p>
         )}
