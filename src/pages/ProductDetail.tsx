@@ -1,9 +1,9 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ProductImages } from "@/components/product-detail/ProductImages";
 import { ProductSizeSelector } from "@/components/product-detail/ProductSizeSelector";
@@ -12,8 +12,20 @@ import { FloristInfo } from "@/components/product-detail/FloristInfo";
 const ProductDetail = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  const selectedSizeId = searchParams.get('size');
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBack = () => {
+    // Check if we came from the search page
+    if (location.key !== "default") {
+      navigate(-1); // Go back to previous page (search with filters)
+    } else {
+      navigate('/search'); // Fallback to search page if no history
+    }
+  };
+
+  const selectedSizeId = searchParams.get('size');
 
   const { data: productData, isLoading } = useQuery({
     queryKey: ['product', id],
@@ -87,6 +99,15 @@ const ProductDetail = () => {
     <div className="min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-8 pt-24">
+        <Button
+          variant="ghost"
+          className="mb-4"
+          onClick={handleBack}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Search
+        </Button>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <ProductImages images={displayImages} title={productData.title} />
           
