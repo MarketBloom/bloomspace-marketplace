@@ -7,6 +7,9 @@ interface FloristBannerProps {
 }
 
 export const FloristBanner = ({ bannerUrl, logoUrl, storeName }: FloristBannerProps) => {
+  // Ensure storeName is not undefined and has at least one character
+  const firstLetter = storeName?.charAt(0) || '?';
+
   return (
     <div className="relative">
       {/* Banner Image */}
@@ -34,7 +37,7 @@ export const FloristBanner = ({ bannerUrl, logoUrl, storeName }: FloristBannerPr
           ) : (
             <div className="w-full h-full bg-muted flex items-center justify-center">
               <span className="text-2xl font-bold text-muted-foreground">
-                {storeName[0]}
+                {firstLetter}
               </span>
             </div>
           )}
