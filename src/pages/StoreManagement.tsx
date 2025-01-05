@@ -26,21 +26,6 @@ const StoreManagement = () => {
     enabled: !!user,
   });
 
-  const { data: products, refetch: refetchProducts } = useQuery({
-    queryKey: ["products", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("florist_id", user?.id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user,
-  });
-
   const handleImageUpload = async (type: "logo" | "banner", url: string) => {
     try {
       const { error } = await supabase
@@ -131,11 +116,7 @@ const StoreManagement = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ProductManagement
-                    products={products || []}
-                    floristId={user.id}
-                    onProductAdded={refetchProducts}
-                  />
+                  <ProductManagement floristId={user.id} />
                 </CardContent>
               </Card>
             </div>
