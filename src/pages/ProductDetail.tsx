@@ -2,12 +2,15 @@ import { useParams, useSearchParams, useNavigate, useLocation } from "react-rout
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, ArrowLeft } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ProductImages } from "@/components/product-detail/ProductImages";
 import { ProductSizeSelector } from "@/components/product-detail/ProductSizeSelector";
 import { FloristInfo } from "@/components/product-detail/FloristInfo";
+import { ProductHeader } from "@/components/product-detail/ProductHeader";
+import { ProductActions } from "@/components/product-detail/ProductActions";
+import { ProductDescription } from "@/components/product-detail/ProductDescription";
+import { ProductPrice } from "@/components/product-detail/ProductPrice";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,11 +20,10 @@ const ProductDetail = () => {
   const location = useLocation();
 
   const handleBack = () => {
-    // Check if we came from the search page
     if (location.key !== "default") {
-      navigate(-1); // Go back to previous page (search with filters)
+      navigate(-1);
     } else {
-      navigate('/search'); // Fallback to search page if no history
+      navigate('/search');
     }
   };
 
@@ -99,14 +101,7 @@ const ProductDetail = () => {
     <div className="min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-8 pt-24">
-        <Button
-          variant="ghost"
-          className="mb-4"
-          onClick={handleBack}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Search
-        </Button>
+        <ProductHeader onBack={handleBack} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <ProductImages images={displayImages} title={productData.title} />
@@ -114,9 +109,7 @@ const ProductDetail = () => {
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold mb-2">{productData.title}</h1>
-              <p className="text-2xl font-semibold text-primary">
-                ${displayPrice.toFixed(2)}
-              </p>
+              <ProductPrice price={displayPrice} />
             </div>
             
             <ProductSizeSelector 
@@ -124,30 +117,17 @@ const ProductDetail = () => {
               selectedSizeId={selectedSize?.id || null}
               basePrice={productData.price}
               onSizeChange={(sizeId) => {
-                // Update URL with selected size
                 const newParams = new URLSearchParams(searchParams);
                 newParams.set('size', sizeId);
                 window.history.replaceState({}, '', `?${newParams.toString()}`);
               }}
             />
             
-            <div className="space-y-2">
-              <h2 className="font-semibold">Description</h2>
-              <p className="text-gray-600">{productData.description}</p>
-            </div>
+            <ProductDescription description={productData.description} />
             
             <FloristInfo floristProfile={productData.florist_profiles} />
             
-            <div className="pt-4">
-              <Button 
-                size="lg" 
-                className="w-full"
-                onClick={handleAddToCart}
-              >
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
-              </Button>
-            </div>
+            <ProductActions onAddToCart={handleAddToCart} />
           </div>
         </div>
       </main>
