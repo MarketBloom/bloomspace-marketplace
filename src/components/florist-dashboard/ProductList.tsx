@@ -39,33 +39,40 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
 
   const handleEdit = async (product: Product) => {
     try {
-      const sizes = product.product_sizes || [];
-      
-      // Use first size as base price
-      const basePrice = parseFloat(sizes[0]?.price || '0');
-
-      // Update product sizes
-      const { error: sizesError } = await supabase
-        .from('product_sizes')
-        .upsert(
-          sizes.map(size => ({
-            id: size.id.startsWith('temp-') ? undefined : size.id,
-            product_id: product.id,
-            name: size.name,
-            price_adjustment: parseFloat(size.price) - basePrice,
-            images: size.images || [],
-          }))
-        );
-
-      if (sizesError) throw sizesError;
-
-      // Update base product price
+      // First update the base product information
       const { error: productError } = await supabase
         .from('products')
-        .update({ price: basePrice })
+        .update({
+          title: product.title,
+          description: product.description,
+          price: Number(product.product_sizes?.[0]?.price || 0),
+          images: product.images,
+          category: product.category,
+          occasion: product.occasion
+        })
         .eq('id', product.id);
 
       if (productError) throw productError;
+
+      // Then handle the product sizes
+      if (product.product_sizes && product.product_sizes.length > 0) {
+        const basePrice = Number(product.product_sizes[0].price);
+        
+        // Update or insert product sizes
+        const { error: sizesError } = await supabase
+          .from('product_sizes')
+          .upsert(
+            product.product_sizes.map(size => ({
+              id: size.id.startsWith('temp-') ? undefined : size.id,
+              product_id: product.id,
+              name: size.name,
+              price_adjustment: Number(size.price) - basePrice,
+              images: size.images || []
+            }))
+          );
+
+        if (sizesError) throw sizesError;
+      }
 
       toast.success("Changes saved successfully");
       onProductDeleted(); // Refresh the product list
