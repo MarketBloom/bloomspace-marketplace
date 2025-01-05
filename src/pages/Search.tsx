@@ -43,7 +43,8 @@ const Search = () => {
           product_sizes (
             id,
             name,
-            price_adjustment
+            price_adjustment,
+            images
           )
         `)
         .eq('in_stock', true)
@@ -77,8 +78,8 @@ const Search = () => {
         // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
-          displaySize: size.name,
-          displayPrice: product.price + size.price_adjustment,
+          displaySize: size.name, // This is the full size name from the database
+          displayPrice: product.price + (size.price_adjustment || 0),
           sizeId: size.id,
           isDeliveryAvailable: fulfillmentType === "delivery" && 
             product.florist_profiles?.delivery_cutoff && 
@@ -87,7 +88,8 @@ const Search = () => {
             product.florist_profiles?.operating_hours && 
             currentTime < product.florist_profiles.delivery_end_time,
           deliveryCutoff: product.florist_profiles?.delivery_cutoff,
-          pickupCutoff: product.florist_profiles?.delivery_end_time
+          pickupCutoff: product.florist_profiles?.delivery_end_time,
+          images: size.images?.length ? size.images : product.images // Use size-specific images if available
         }));
       });
 
@@ -113,8 +115,6 @@ const Search = () => {
         throw error;
       }
 
-      // Add console.log to debug the data
-      console.log('Fetched florists:', data);
       return data || [];
     },
   });
