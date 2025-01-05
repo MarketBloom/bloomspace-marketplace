@@ -40,12 +40,12 @@ export const SearchResults = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {products.map((product) => (
-          <div key={product.id} className="animate-fade-in-up">
+          <div key={`${product.id}-${product.sizeId || 'default'}`} className="animate-fade-in-up">
             <ProductCard
               id={product.id}
               title={product.title}
               price={product.price}
-              displayPrice={product.displayPrice || product.price} // Add displayPrice prop
+              displayPrice={product.displayPrice}
               description={product.description}
               images={product.images}
               floristName={product.florist_profiles?.store_name}
@@ -54,6 +54,8 @@ export const SearchResults = ({
               isPickupAvailable={product.isPickupAvailable}
               deliveryCutoff={product.deliveryCutoff}
               pickupCutoff={product.pickupCutoff}
+              displaySize={product.displaySize}
+              sizeId={product.sizeId}
             />
           </div>
         ))}

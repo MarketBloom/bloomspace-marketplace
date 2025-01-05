@@ -14,7 +14,6 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
-  // Initialize filters from URL parameters
   useEffect(() => {
     const fulfillment = searchParams.get('fulfillment');
     if (fulfillment === 'pickup' || fulfillment === 'delivery') {
@@ -25,12 +24,11 @@ const Search = () => {
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
-      // Get the budget filter value
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
 
       // Query products with their sizes and florist information
-      const { data, error } = await supabase
+      const { data: productsData, error } = await supabase
         .from('products')
         .select(`
           *,
@@ -56,9 +54,9 @@ const Search = () => {
       const now = new Date();
       const currentTime = format(now, 'HH:mm:ss');
 
-      // Transform the data to create separate entries for each size variant
-      const productsWithVariants = data.flatMap(product => {
-        // If no sizes, return the product with base price
+      // Transform products with size variants
+      const productsWithVariants = productsData.flatMap(product => {
+        // If no sizes, return product with base price
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
             ...product,
@@ -76,7 +74,7 @@ const Search = () => {
           }];
         }
 
-        // Create an entry for each size variant
+        // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
           displaySize: size.name,
