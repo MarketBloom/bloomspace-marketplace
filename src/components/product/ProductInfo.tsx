@@ -11,13 +11,31 @@ interface ProductInfoProps {
 export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => {
   const { toast } = useToast();
 
+  // Split the title into parts for better formatting
+  const titleParts = title.split(' - ');
+  const mainTitle = titleParts[0];
+  const size = titleParts[1];
+  const details = titleParts[2];
+
   return (
     <div className="space-y-8">
       {/* Title Section */}
       <div className="flex justify-between items-start">
-        <h3 className="text-[40px] font-semibold leading-tight tracking-tight">
-          {title}
-        </h3>
+        <div className="space-y-0 leading-tight">
+          <h3 className="text-[40px] font-semibold">
+            {mainTitle}
+          </h3>
+          {size && (
+            <h4 className="text-[40px] font-semibold">
+              - {size} -
+            </h4>
+          )}
+          {details && (
+            <h4 className="text-[40px] font-semibold">
+              {details}
+            </h4>
+          )}
+        </div>
         <Button
           variant="ghost"
           size="icon"
@@ -34,24 +52,24 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
         </Button>
       </div>
 
-      {/* Price and Details Section */}
+      {/* Price Section */}
       <div className="space-y-4">
-        <div className="flex items-baseline">
+        <div className="flex items-baseline gap-2">
           <span className="text-[20px] font-medium">From</span>
-          <p className="text-[40px] font-semibold ml-2">
+          <p className="text-[40px] font-semibold">
             ${price.toFixed(2)}
           </p>
         </div>
+
+        <p className="text-[20px] font-medium text-muted-foreground">
+          Standard Size
+        </p>
 
         {floristName && (
           <p className="text-[20px] font-medium text-muted-foreground">
             By {floristName}
           </p>
         )}
-
-        <p className="text-[20px] font-medium text-muted-foreground">
-          Standard Size
-        </p>
       </div>
     </div>
   );
