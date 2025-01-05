@@ -8,7 +8,7 @@ interface CartItem {
   image?: string;
   floristId: string;
   floristName?: string;
-  sizeId?: string;
+  sizeId?: string | null;
   sizeName?: string;
 }
 
@@ -24,7 +24,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addItem = (newItem: Omit<CartItem, "quantity">) => {
