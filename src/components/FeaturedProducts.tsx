@@ -39,11 +39,12 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                   id={product.id}
                   title={product.title}
                   price={product.price}
-                  displayPrice={product.price} // Add displayPrice prop
+                  displayPrice={product.displayPrice || product.price}
                   description={product.description}
                   images={product.images}
                   floristName={product.florist_profiles?.store_name}
                   floristId={product.florist_id}
+                  displaySize={product.displaySize}
                 />
               ))}
             </div>

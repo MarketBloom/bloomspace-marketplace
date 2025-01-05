@@ -21,7 +21,7 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
       {/* Title Section */}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
-          <h3 className="text-[20px] font-semibold leading-tight">
+          <h3 className="text-[18px] font-semibold leading-tight">
             {mainTitle}
           </h3>
           {floristName && (
@@ -49,9 +49,14 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
       {/* Size and Price Section */}
       <div className="space-y-1.5">
         {size && (
-          <p className="text-[14px] text-foreground font-medium">
-            {size}
-          </p>
+          <div className="space-y-1">
+            <p className="text-[12px] text-muted-foreground">
+              Size:
+            </p>
+            <p className="text-[14px] text-foreground font-medium">
+              {size}
+            </p>
+          </div>
         )}
         <p className="text-[14px] font-medium">
           ${price.toFixed(2)}
