@@ -12,7 +12,6 @@ import Cart from "./pages/Cart";
 import Search from "./pages/Search";
 import ProductDetail from "./pages/ProductDetail";
 import FloristDetail from "./pages/FloristDetail";
-import FloristProducts from "./pages/FloristProducts";
 
 export const router = createBrowserRouter([
   {
@@ -66,9 +65,5 @@ export const router = createBrowserRouter([
   {
     path: "/florist/:id",
     element: <FloristDetail />,
-  },
-  {
-    path: "/florist-products",
-    element: <FloristProducts />,
   },
 ]);
