@@ -2,118 +2,118 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Edit2, Eye, ArrowUpDown } from "lucide-react";
+import { Plus, ArrowUpDown } from "lucide-react";
 import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
-interface FloristProductListProps {
-  floristId: string;
-}
-
-export const FloristProductList = ({ floristId }: FloristProductListProps) => {
+export const FloristProductList = () => {
+  const navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const { data: products, refetch } = useQuery({
-    queryKey: ["floristProducts", floristId, sortOrder],
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['florist-products'],
     queryFn: async () => {
+      const { data: floristId } = await supabase.auth.getUser();
+      
       const { data, error } = await supabase
-        .from("products")
+        .from('products')
         .select(`
           *,
+          florist_profiles!inner (
+            store_name,
+            delivery_cutoff,
+            delivery_start_time,
+            delivery_end_time
+          ),
           product_sizes (
             id,
             name,
-            price,
-            images
+            price_adjustment,
+            images,
+            is_default
           )
         `)
-        .eq("florist_id", floristId)
-        .order("created_at", { ascending: sortOrder === 'asc' });
+        .eq('florist_id', floristId.user?.id)
+        .order('created_at', { ascending: sortOrder === 'asc' });
 
       if (error) throw error;
-      return data;
-    },
+
+      // Transform products to include size variants
+      return data.map(product => {
+        const defaultSize = product.product_sizes?.find(size => size.is_default) || product.product_sizes?.[0];
+        
+        return {
+          ...product,
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          displayPrice: product.price + (defaultSize?.price_adjustment || 0),
+          displaySize: defaultSize?.name,
+          sizeId: defaultSize?.id,
+          images: defaultSize?.images?.length ? defaultSize.images : product.images,
+          floristName: product.florist_profiles.store_name,
+          floristId: product.florist_id,
+          isDeliveryAvailable: true,
+          isPickupAvailable: true,
+          deliveryCutoff: product.florist_profiles.delivery_cutoff,
+          pickupCutoff: product.florist_profiles.delivery_end_time
+        };
+      });
+    }
   });
 
-  const toggleProductVisibility = async (productId: string, currentStatus: boolean) => {
-    try {
-      const { error } = await supabase
-        .from("products")
-        .update({ is_hidden: !currentStatus })
-        .eq("id", productId);
-
-      if (error) throw error;
-
-      toast.success("Product visibility updated");
-      refetch();
-    } catch (error) {
-      toast.error("Failed to update product visibility");
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              <ArrowUpDown className="h-4 w-4 mr-2" />
-              Sort by Date
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setSortOrder('desc')}>
-              Newest First
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setSortOrder('asc')}>
-              Oldest First
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold">Products</h1>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+          >
+            <ArrowUpDown className="h-4 w-4 mr-2" />
+            Sort by Date
+          </Button>
+          <Button 
+            onClick={() => navigate('/florist/products/new')}
+            className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Product
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {products?.map((product) => (
-          <div key={product.id} className="group relative">
-            <ProductCard
-              id={product.id}
-              title={product.title}
-              price={product.price}
-              images={product.images}
-              floristId={floristId}
-              displayPrice={product.price}
-            />
-            <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button size="sm" variant="secondary" className="w-8 h-8 p-0">
-                <Eye className="h-4 w-4" />
+          <div key={product.id} className="relative group">
+            <ProductCard {...product} />
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => navigate(`/florist/products/${product.id}/edit`)}
+              >
+                Edit Product
               </Button>
-              <Button size="sm" variant="secondary" className="w-8 h-8 p-0">
-                <Edit2 className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Switch
-                checked={!product.is_hidden}
-                onCheckedChange={() => toggleProductVisibility(product.id, !product.is_hidden)}
-              />
             </div>
           </div>
         ))}
       </div>
 
       {products?.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">No products yet</h2>
-          <p className="text-muted-foreground">
-            Start adding products to your store
-          </p>
+        <div className="text-center py-12">
+          <p className="text-gray-500">No products found. Add your first product to get started!</p>
         </div>
       )}
     </div>
