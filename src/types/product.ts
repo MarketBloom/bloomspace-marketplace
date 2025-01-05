@@ -1,8 +1,8 @@
 export interface Size {
   id: string;
   name: string;
-  price: number;
-  isDefault: boolean;
+  price: string;
+  images?: string[];
 }
 
 export interface Product {

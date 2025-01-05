@@ -3,12 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { VariantRow } from "./VariantRow";
-
-interface Size {
-  name: string;
-  price: string;
-  images?: string[];
-}
+import { Size } from "@/types/product";
 
 interface ProductSizesProps {
   sizes: Size[];
@@ -17,6 +12,7 @@ interface ProductSizesProps {
 
 export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
   const [newSize, setNewSize] = useState<Size>({
+    id: `temp-${crypto.randomUUID()}`,
     name: "",
     price: "",
     images: [],
@@ -26,7 +22,12 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
   const handleAddSize = () => {
     if (!newSize.name || !newSize.price) return;
     setSizes([...sizes, newSize]);
-    setNewSize({ name: "", price: "", images: [] });
+    setNewSize({ 
+      id: `temp-${crypto.randomUUID()}`,
+      name: "", 
+      price: "", 
+      images: [] 
+    });
   };
 
   const handleSizeChange = (index: number, field: keyof Size, value: any) => {
@@ -40,7 +41,7 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
       <div className="space-y-4">
         {sizes.map((size, index) => (
           <VariantRow
-            key={index}
+            key={size.id}
             size={size}
             index={index}
             isUploading={isUploading}
