@@ -85,7 +85,7 @@ export const FloristProductList = () => {
             Sort by Date
           </Button>
           <Button 
-            onClick={() => navigate('/florist/products/new')}
+            onClick={() => navigate('/dashboard/products/new')}
             className="bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -102,7 +102,7 @@ export const FloristProductList = () => {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => navigate(`/florist/products/${product.id}/edit`)}
+                onClick={() => navigate(`/dashboard/products/${product.id}/edit`)}
               >
                 Edit Product
               </Button>
