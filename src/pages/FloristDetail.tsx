@@ -26,11 +26,16 @@ const FloristDetail = () => {
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['florist-products', id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: productsData, error } = await supabase
         .from('products')
         .select(`
           *,
-          product_sizes (*)
+          product_sizes (
+            id,
+            name,
+            price_adjustment,
+            images
+          )
         `)
         .eq('florist_id', id)
         .eq('in_stock', true)
@@ -39,7 +44,7 @@ const FloristDetail = () => {
       if (error) throw error;
 
       // Transform products to include variants
-      const productsWithVariants = products?.flatMap(product => {
+      const productsWithVariants = productsData?.flatMap(product => {
         // If no sizes, return product with base price
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
@@ -138,7 +143,7 @@ const FloristDetail = () => {
                   {florist.operating_hours && (
                     <div className="flex items-center text-muted-foreground">
                       <Clock className="h-4 w-4 mr-2" />
-                      <span>Open: Mon-Fri 9AM-5PM</span>
+                      <span>Open: {florist.operating_hours}</span>
                     </div>
                   )}
                 </div>
@@ -156,18 +161,18 @@ const FloristDetail = () => {
           {/* Products Grid */}
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold">Our Products</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products?.map((product) => (
-                <ProductCard
-                  key={`${product.id}-${product.sizeId || 'default'}`}
-                  {...product}
-                  floristName={florist.store_name}
-                  floristId={florist.id}
-                />
-              ))}
-            </div>
-
-            {products?.length === 0 && (
+            {products && products.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard
+                    key={`${product.id}-${product.sizeId || 'default'}`}
+                    {...product}
+                    floristName={florist.store_name}
+                    floristId={florist.id}
+                  />
+                ))}
+              </div>
+            ) : (
               <div className="text-center py-12 bg-white rounded-lg shadow-sm">
                 <h2 className="text-xl font-semibold mb-2">No products available</h2>
                 <p className="text-muted-foreground">
