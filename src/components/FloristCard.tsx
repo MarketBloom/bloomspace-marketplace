@@ -42,13 +42,13 @@ export const FloristCard = ({
           <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
         )}
         {/* Logo overlay - positioned in front of banner */}
-        <div className="absolute -bottom-6 left-4 z-10">
-          <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white bg-white shadow-xl">
+        <div className="absolute -bottom-8 left-4 z-20">
+          <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-white bg-white shadow-2xl">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
                 alt={`${storeName} logo`}
-                className="w-full h-full object-contain bg-white"
+                className="w-full h-full object-contain bg-white p-1"
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
@@ -61,7 +61,7 @@ export const FloristCard = ({
         </div>
       </div>
 
-      <CardHeader className="p-4 pt-10 pb-2 space-y-2">
+      <CardHeader className="p-4 pt-12 pb-2 space-y-2">
         <h3 className="text-sm font-semibold tracking-tight font-mono">{storeName}</h3>
         <div className="flex items-center text-xs text-muted-foreground space-x-1">
           <MapPin className="h-3 w-3 flex-shrink-0" />
