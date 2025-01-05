@@ -2,6 +2,13 @@ import { AddProductForm } from "./AddProductForm";
 import { ProductList } from "./ProductList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Plus, Package } from "lucide-react";
 
 interface ProductManagementProps {
   floristId: string;
@@ -27,7 +34,6 @@ export const ProductManagement = ({ floristId }: ProductManagementProps) => {
 
       if (error) throw error;
 
-      // Transform the data to include the actual price for each size
       return data.map((product: any) => ({
         ...product,
         product_sizes: product.product_sizes?.map((size: any) => ({
@@ -42,11 +48,31 @@ export const ProductManagement = ({ floristId }: ProductManagementProps) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Add New Product</h2>
-      <AddProductForm floristId={floristId} onProductAdded={refetch} />
+      <Accordion type="single" collapsible defaultValue="current-products">
+        <AccordionItem value="add-product">
+          <AccordionTrigger className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            <span>Add New Product</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-4">
+              <AddProductForm floristId={floristId} onProductAdded={refetch} />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      <h2 className="text-2xl font-semibold">Current Products</h2>
-      <ProductList products={products || []} onProductDeleted={refetch} />
+        <AccordionItem value="current-products">
+          <AccordionTrigger className="flex items-center gap-2">
+            <Package className="h-5 w-5" />
+            <span>Current Products</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-4">
+              <ProductList products={products || []} onProductDeleted={refetch} />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
