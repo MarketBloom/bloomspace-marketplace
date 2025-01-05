@@ -9,6 +9,8 @@ interface CartItem {
   image?: string;
   floristId: string;
   floristName?: string;
+  sizeId?: string | null;
+  sizeName?: string;
 }
 
 interface CartContextType {
@@ -29,11 +31,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
     setItems((currentItems) => {
-      const existingItem = currentItems.find((item) => item.id === newItem.id);
+      const existingItem = currentItems.find((item) => 
+        item.id === newItem.id && item.sizeId === newItem.sizeId
+      );
       
       if (existingItem) {
         return currentItems.map((item) =>
-          item.id === newItem.id
+          item.id === newItem.id && item.sizeId === newItem.sizeId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -44,7 +48,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     toast({
       title: "Added to cart",
-      description: "Item has been added to your cart.",
+      description: `${newItem.title}${newItem.sizeName ? ` (${newItem.sizeName})` : ''} has been added to your cart`,
     });
   }, [toast]);
 
