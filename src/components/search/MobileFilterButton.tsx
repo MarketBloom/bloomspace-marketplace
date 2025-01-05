@@ -19,7 +19,10 @@ export const MobileFilterButton = () => {
     <div className="lg:hidden mb-4">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" className="w-full text-sm">
+          <Button 
+            variant="outline" 
+            className="w-full text-sm bg-[#F3F3F3] hover:bg-[#E5E5E5] border-[#E5E5E5]"
+          >
             <SlidersHorizontal className="h-4 w-4 mr-2" />
             Filters
           </Button>
