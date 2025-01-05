@@ -13,30 +13,28 @@ export const FloristBanner = ({ bannerUrl, logoUrl, storeName }: FloristBannerPr
   return (
     <div className="relative">
       {/* Banner Image */}
-      <div className="h-40 w-full overflow-hidden">
-        {bannerUrl ? (
+      <div className="h-40 w-full overflow-hidden bg-gradient-to-r from-primary/10 to-secondary/10">
+        {bannerUrl && (
           <img 
             src={bannerUrl} 
             alt={`${storeName} banner`}
             className="w-full h-full object-cover"
           />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
         )}
       </div>
 
       {/* Logo - Centered on banner */}
       <div className="absolute left-1/2 -translate-x-1/2 -bottom-8">
-        <div className="w-24 h-24 rounded-xl overflow-hidden shadow-2xl">
+        <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-background shadow-xl">
           {logoUrl ? (
             <img 
               src={logoUrl} 
               alt={`${storeName} logo`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover bg-white"
             />
           ) : (
             <div className="w-full h-full bg-muted flex items-center justify-center">
-              <span className="text-2xl font-bold text-muted-foreground">
+              <span className="text-3xl font-semibold text-muted-foreground">
                 {firstLetter}
               </span>
             </div>
