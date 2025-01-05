@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { FloristCard } from "@/components/FloristCard";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Check, Loader2, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 
 interface SearchResultsProps {
   viewMode: 'products' | 'florists';
@@ -13,91 +16,108 @@ interface SearchResultsProps {
 export const SearchResults = ({ 
   viewMode, 
   products, 
-  florists, 
-  isLoadingProducts, 
+  florists,
+  isLoadingProducts,
   isLoadingFlorists 
 }: SearchResultsProps) => {
+  const [selectedItems, setSelectedItems] = useState<{ id: string, sizeId: string | null }[]>([]);
+  const [selectionMode, setSelectionMode] = useState(false);
+
+  const handleSelect = (id: string, sizeId: string | null) => {
+    setSelectedItems(prev => {
+      const isSelected = prev.some(item => item.id === id && item.sizeId === sizeId);
+      if (isSelected) {
+        return prev.filter(item => !(item.id === id && item.sizeId === sizeId));
+      } else {
+        return [...prev, { id, sizeId }];
+      }
+    });
+  };
+
+  const handleBatchAddToCart = () => {
+    // Here you would implement the logic to add multiple items to cart
+    toast.success(`Added ${selectedItems.length} items to cart`);
+    setSelectedItems([]);
+    setSelectionMode(false);
+  };
+
   if (viewMode === 'products') {
-    if (isLoadingProducts) {
-      return (
-        <div className="flex justify-center items-center h-[200px]">
-          <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
-        </div>
-      );
-    }
-
-    if (!products?.length) {
-      return (
-        <div className="text-center py-12 animate-fade-in">
-          <h2 className="text-xl font-semibold mb-2">No products found</h2>
-          <p className="text-sm text-muted-foreground">
-            Try adjusting your search criteria or switching fulfillment method
-          </p>
-        </div>
-      );
-    }
-
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <div key={`${product.id}-${product.sizeId || 'default'}`} className="animate-fade-in-up">
-            <ProductCard
-              id={product.id}
-              title={product.title}
-              price={product.price}
-              displayPrice={product.displayPrice}
-              description={product.description}
-              images={product.images}
-              floristName={product.florist_profiles?.store_name}
-              floristId={product.florist_id}
-              isDeliveryAvailable={product.isDeliveryAvailable}
-              isPickupAvailable={product.isPickupAvailable}
-              deliveryCutoff={product.deliveryCutoff}
-              pickupCutoff={product.pickupCutoff}
-              displaySize={product.displaySize}
-              sizeId={product.sizeId}
-            />
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">
+            {isLoadingProducts ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              `${products.length} Products Found`
+            )}
+          </h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSelectionMode(!selectionMode);
+              if (!selectionMode) {
+                setSelectedItems([]);
+              }
+            }}
+          >
+            {selectionMode ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Done
+              </>
+            ) : (
+              'Select Multiple'
+            )}
+          </Button>
+        </div>
+
+        {selectionMode && selectedItems.length > 0 && (
+          <div className="sticky top-0 z-10 bg-background p-4 border rounded-lg shadow-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                {selectedItems.length} items selected
+              </span>
+              <Button size="sm" onClick={handleBatchAddToCart}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Add All to Cart
+              </Button>
+            </div>
           </div>
-        ))}
-      </div>
-    );
-  }
+        )}
 
-  if (isLoadingFlorists) {
-    return (
-      <div className="flex justify-center items-center h-[200px]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#A8A646]" />
-      </div>
-    );
-  }
-
-  if (!florists?.length) {
-    return (
-      <div className="text-center py-12 animate-fade-in">
-        <h2 className="text-xl font-semibold mb-2">No florists found</h2>
-        <p className="text-sm text-muted-foreground">
-          Try adjusting your search criteria
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {products.map((product) => (
+            <ProductCard
+              key={`${product.id}-${product.sizeId || 'default'}`}
+              {...product}
+              isSelected={selectedItems.some(
+                item => item.id === product.id && item.sizeId === product.sizeId
+              )}
+              onSelect={handleSelect}
+              selectionMode={selectionMode}
+            />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      {florists.map((florist) => (
-        <div key={florist.id} className="animate-fade-in-up">
-          <FloristCard
-            id={florist.id}
-            storeName={florist.store_name}
-            address={florist.address}
-            aboutText={florist.about_text}
-            logoUrl={florist.logo_url}
-            bannerUrl={florist.banner_url}
-            deliveryFee={florist.delivery_fee}
-            deliveryRadius={florist.delivery_radius}
-          />
-        </div>
-      ))}
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">
+        {isLoadingFlorists ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          `${florists.length} Florists Found`
+        )}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {florists.map((florist) => (
+          <FloristCard key={florist.id} {...florist} />
+        ))}
+      </div>
     </div>
   );
 };

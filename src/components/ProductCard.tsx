@@ -5,6 +5,7 @@ import { ProductInfo } from "@/components/product/ProductInfo";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ShoppingBag, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductCardProps {
   id: string;
@@ -21,6 +22,9 @@ interface ProductCardProps {
   displaySize?: string | null;
   displayPrice: number;
   sizeId?: string | null;
+  isSelected?: boolean;
+  onSelect?: (id: string, sizeId: string | null) => void;
+  selectionMode?: boolean;
 }
 
 export const ProductCard = ({ 
@@ -35,12 +39,19 @@ export const ProductCard = ({
   pickupCutoff,
   displaySize,
   displayPrice,
-  sizeId
+  sizeId,
+  isSelected = false,
+  onSelect,
+  selectionMode = false
 }: ProductCardProps) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/product/${id}`);
+    if (selectionMode && onSelect) {
+      onSelect(id, sizeId);
+    } else {
+      navigate(`/product/${id}`);
+    }
   };
 
   const displayTitle = displaySize ? `${title} - ${displaySize}` : title;
@@ -50,6 +61,15 @@ export const ProductCard = ({
       className="group relative overflow-hidden transition-all duration-300 cursor-pointer bg-white hover:shadow-lg border-0"
       onClick={handleCardClick}
     >
+      {selectionMode && (
+        <div className="absolute top-2 left-2 z-10">
+          <Checkbox 
+            checked={isSelected}
+            className="bg-white/90"
+            onCheckedChange={() => onSelect?.(id, sizeId)}
+          />
+        </div>
+      )}
       <CardHeader className="p-0">
         <ProductImage src={images?.[0]} alt={displayTitle} />
         <div className="absolute top-2 right-2 flex flex-col gap-1">
