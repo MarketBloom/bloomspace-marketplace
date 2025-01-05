@@ -113,7 +113,13 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
 
       if (sizesError) throw sizesError;
 
-      toast.success("Product added successfully");
+      toast.success("Product added successfully", {
+        description: `${newProduct.title} has been added to your store.`,
+        action: {
+          label: "OK",
+          onClick: () => {}
+        }
+      });
       
       // Reset form
       setNewProduct({ title: "", description: "" });
