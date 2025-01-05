@@ -113,14 +113,7 @@ export const ProductListItem = ({
                         key={size.id} 
                         className="flex justify-between items-center p-2 bg-muted rounded-md"
                       >
-                        <div>
-                          <span className="font-medium">{size.name}</span>
-                          {size.isDefault && (
-                            <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
-                              Default
-                            </span>
-                          )}
-                        </div>
+                        <span className="font-medium">{size.name}</span>
                         <span className="font-medium">${size.price}</span>
                       </div>
                     ))}
