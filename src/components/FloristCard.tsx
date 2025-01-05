@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Clock, Truck } from "lucide-react";
@@ -30,29 +30,32 @@ export const FloristCard = ({
 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg border-0 bg-white">
-      {/* Banner Image */}
-      <div className="relative h-32 w-full overflow-hidden">
-        {bannerUrl ? (
-          <img 
-            src={bannerUrl} 
-            alt={`${storeName} banner`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
-        )}
-        {/* Logo overlay - positioned in front of banner */}
-        <div className="absolute -bottom-8 left-4 z-20">
-          <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-white bg-white shadow-2xl">
+      <div className="relative">
+        {/* Banner Image */}
+        <div className="h-40 w-full overflow-hidden">
+          {bannerUrl ? (
+            <img 
+              src={bannerUrl} 
+              alt={`${storeName} banner`}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
+          )}
+        </div>
+
+        {/* Logo - Centered on banner */}
+        <div className="absolute left-1/2 -translate-x-1/2 -bottom-10">
+          <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-white bg-white shadow-xl">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
                 alt={`${storeName} logo`}
-                className="w-full h-full object-contain bg-white p-1"
+                className="w-full h-full object-contain bg-white p-2"
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
-                <span className="text-xl font-bold text-muted-foreground">
+                <span className="text-2xl font-bold text-muted-foreground">
                   {storeName[0]}
                 </span>
               </div>
@@ -61,38 +64,38 @@ export const FloristCard = ({
         </div>
       </div>
 
-      <CardHeader className="p-4 pt-12 pb-2 space-y-2">
-        <h3 className="text-sm font-semibold tracking-tight font-mono">{storeName}</h3>
-        <div className="flex items-center text-xs text-muted-foreground space-x-1">
-          <MapPin className="h-3 w-3 flex-shrink-0" />
-          <span className="truncate font-mono">{address}</span>
+      <CardContent className="pt-14 pb-4 px-4 space-y-4">
+        {/* Store Info */}
+        <div className="text-center space-y-2">
+          <h3 className="text-lg font-semibold tracking-tight font-mono">{storeName}</h3>
+          <div className="flex items-center justify-center text-sm text-muted-foreground space-x-1">
+            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <span className="font-mono">{address}</span>
+          </div>
+          {aboutText && (
+            <p className="text-sm text-muted-foreground font-mono line-clamp-2 mt-2">{aboutText}</p>
+          )}
         </div>
-      </CardHeader>
-
-      <CardContent className="p-4 pt-0 space-y-3">
-        {aboutText && (
-          <p className="text-xs text-muted-foreground font-mono line-clamp-2">{aboutText}</p>
-        )}
 
         {/* Delivery Information */}
-        <div className="space-y-2 border-t pt-2">
-          <div className="flex items-center justify-between text-xs">
+        <div className="space-y-2 border-t border-b py-3">
+          <div className="flex items-center justify-between text-sm">
             <div className="flex items-center text-muted-foreground">
-              <Truck className="h-3 w-3 mr-1" />
+              <Truck className="h-4 w-4 mr-1" />
               <span>Delivery Fee:</span>
             </div>
             <span className="font-medium">${deliveryFee?.toFixed(2) || 'Free'}</span>
           </div>
           
           {minimumOrder && minimumOrder > 0 && (
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>Min. Order:</span>
               <span className="font-medium">${minimumOrder.toFixed(2)}</span>
             </div>
           )}
           
           {deliveryRadius && (
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>Delivery Area:</span>
               <span className="font-medium">{deliveryRadius}km radius</span>
             </div>
@@ -102,7 +105,7 @@ export const FloristCard = ({
         <Button 
           variant="outline" 
           onClick={() => navigate(`/florist/${id}`)}
-          className="w-full text-xs h-8 font-mono"
+          className="w-full text-sm h-10 font-mono"
         >
           View Products
         </Button>
