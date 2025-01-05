@@ -41,14 +41,14 @@ export const FloristCard = ({
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
         )}
-        {/* Logo overlay - adjusted positioning */}
-        <div className="absolute -bottom-6 left-4">
-          <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white bg-white shadow-md">
+        {/* Logo overlay - positioned in front of banner */}
+        <div className="absolute -bottom-8 left-4">
+          <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white bg-white shadow-lg">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
                 alt={`${storeName} logo`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain p-1"
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
