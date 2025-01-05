@@ -12,18 +12,12 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
   const { toast } = useToast();
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-start gap-2">
-        <div className="space-y-1.5">
-          <h3 className="text-2xl font-bold leading-tight">
-            {title}
-          </h3>
-          {floristName && (
-            <p className="text-sm font-medium text-muted-foreground">
-              By {floristName}
-            </p>
-          )}
-        </div>
+    <div className="space-y-8">
+      {/* Title Section */}
+      <div className="flex justify-between items-start">
+        <h3 className="text-[40px] font-semibold leading-tight tracking-tight">
+          {title}
+        </h3>
         <Button
           variant="ghost"
           size="icon"
@@ -40,13 +34,24 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
         </Button>
       </div>
 
-      <div className="flex items-baseline gap-3">
-        <p className="text-3xl font-bold text-foreground">
-          ${price.toFixed(2)}
+      {/* Price and Details Section */}
+      <div className="space-y-4">
+        <div className="flex items-baseline">
+          <span className="text-[20px] font-medium">From</span>
+          <p className="text-[40px] font-semibold ml-2">
+            ${price.toFixed(2)}
+          </p>
+        </div>
+
+        {floristName && (
+          <p className="text-[20px] font-medium text-muted-foreground">
+            By {floristName}
+          </p>
+        )}
+
+        <p className="text-[20px] font-medium text-muted-foreground">
+          Standard Size
         </p>
-        <span className="text-base font-medium text-muted-foreground">
-          Standard
-        </span>
       </div>
     </div>
   );
