@@ -88,6 +88,11 @@ export const SearchResults = ({
             storeName={florist.store_name}
             address={florist.address}
             aboutText={florist.about_text}
+            logoUrl={florist.logo_url}
+            bannerUrl={florist.banner_url}
+            deliveryFee={florist.delivery_fee}
+            minimumOrder={florist.minimum_order_amount}
+            deliveryRadius={florist.delivery_radius}
           />
         </div>
       ))}
