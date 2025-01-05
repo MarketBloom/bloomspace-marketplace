@@ -6,6 +6,22 @@ import { ProductCard } from "@/components/ProductCard";
 import { Loader2, MapPin, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
+// Helper function to format operating hours
+const formatOperatingHours = (hours: any): string => {
+  if (!hours) return "Not specified";
+  
+  try {
+    if (typeof hours === 'object') {
+      // Assuming hours is an object with days and times
+      // You can customize this based on your actual data structure
+      return JSON.stringify(hours);
+    }
+    return String(hours);
+  } catch (e) {
+    return "Not specified";
+  }
+};
+
 const FloristDetail = () => {
   const { id } = useParams();
 
@@ -143,7 +159,7 @@ const FloristDetail = () => {
                   {florist.operating_hours && (
                     <div className="flex items-center text-muted-foreground">
                       <Clock className="h-4 w-4 mr-2" />
-                      <span>Open: {florist.operating_hours}</span>
+                      <span>Open: {formatOperatingHours(florist.operating_hours)}</span>
                     </div>
                   )}
                 </div>
