@@ -18,7 +18,6 @@ interface AddProductFormProps {
 interface Size {
   name: string;
   price: string;
-  isDefault: boolean;
   images?: string[];
 }
 
@@ -68,19 +67,13 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
     }
 
     try {
-      const defaultSize = sizes.find(size => size.isDefault);
-      if (!defaultSize) {
-        toast.error("Please set a default size");
-        return;
-      }
-
       const { data: productData, error: productError } = await supabase
         .from("products")
         .insert({
           florist_id: floristId,
           title: newProduct.title,
           description: newProduct.description,
-          price: parseFloat(defaultSize.price),
+          price: parseFloat(sizes[0].price), // Use first size as base price
           category: selectedCategories[0],
           occasion: selectedOccasions,
           images: uploadedImages,
@@ -96,8 +89,7 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
           sizes.map(size => ({
             product_id: productData.id,
             name: size.name,
-            price_adjustment: parseFloat(size.price) - parseFloat(defaultSize.price),
-            is_default: size.isDefault,
+            price: parseFloat(size.price),
             images: size.images || [],
           }))
         );

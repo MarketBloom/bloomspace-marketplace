@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
 import { VariantImageUpload } from "./VariantImageUpload";
 
 interface Size {
   name: string;
   price: string;
-  isDefault: boolean;
   images?: string[];
 }
 
@@ -18,7 +16,6 @@ interface VariantRowProps {
   isUploading: boolean;
   onSizeChange: (index: number, field: keyof Size, value: any) => void;
   onRemoveSize: (index: number) => void;
-  onDefaultChange: (index: number, checked: boolean) => void;
   onUploadStart: () => void;
   onUploadEnd: () => void;
 }
@@ -29,7 +26,6 @@ export const VariantRow = ({
   isUploading,
   onSizeChange,
   onRemoveSize,
-  onDefaultChange,
   onUploadStart,
   onUploadEnd,
 }: VariantRowProps) => {
@@ -53,14 +49,6 @@ export const VariantRow = ({
             placeholder="Price"
             step="0.01"
           />
-        </div>
-        <div className="flex items-center gap-2 pt-6">
-          <Checkbox
-            id={`default-${index}`}
-            checked={size.isDefault}
-            onCheckedChange={(checked) => onDefaultChange(index, checked as boolean)}
-          />
-          <Label htmlFor={`default-${index}`}>Default</Label>
         </div>
         <Button
           variant="ghost"

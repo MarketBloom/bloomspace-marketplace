@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProductBasicInfoProps {
   title: string;
@@ -27,11 +28,13 @@ export const ProductBasicInfo = ({
       </div>
       <div>
         <Label htmlFor="description">Description</Label>
-        <Input
+        <Textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
+          className="min-h-[120px] resize-y"
+          placeholder="Enter a detailed description of your product..."
         />
       </div>
     </div>

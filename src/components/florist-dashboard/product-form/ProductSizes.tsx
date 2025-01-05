@@ -7,7 +7,6 @@ import { VariantRow } from "./VariantRow";
 interface Size {
   name: string;
   price: string;
-  isDefault: boolean;
   images?: string[];
 }
 
@@ -20,7 +19,6 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
   const [newSize, setNewSize] = useState<Size>({
     name: "",
     price: "",
-    isDefault: false,
     images: [],
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -28,20 +26,12 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
   const handleAddSize = () => {
     if (!newSize.name || !newSize.price) return;
     setSizes([...sizes, newSize]);
-    setNewSize({ name: "", price: "", isDefault: false, images: [] });
+    setNewSize({ name: "", price: "", images: [] });
   };
 
   const handleSizeChange = (index: number, field: keyof Size, value: any) => {
     const newSizes = [...sizes];
     newSizes[index] = { ...newSizes[index], [field]: value };
-    setSizes(newSizes);
-  };
-
-  const handleDefaultChange = (index: number, checked: boolean) => {
-    const newSizes = sizes.map((size, i) => ({
-      ...size,
-      isDefault: i === index ? checked : checked ? false : size.isDefault,
-    }));
     setSizes(newSizes);
   };
 
@@ -56,7 +46,6 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
             isUploading={isUploading}
             onSizeChange={handleSizeChange}
             onRemoveSize={(index) => setSizes(sizes.filter((_, i) => i !== index))}
-            onDefaultChange={handleDefaultChange}
             onUploadStart={() => setIsUploading(true)}
             onUploadEnd={() => setIsUploading(false)}
           />
