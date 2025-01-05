@@ -2,9 +2,11 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
-import { ProductCard } from "@/components/ProductCard";
 import { Loader2, MapPin, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { FloristProductFilters } from "@/components/filters/FloristProductFilters";
+import { FloristProducts } from "@/components/florist/FloristProducts";
+import { useState } from "react";
 
 // Helper function to format operating hours
 const formatOperatingHours = (hours: any): string => {
@@ -12,8 +14,6 @@ const formatOperatingHours = (hours: any): string => {
   
   try {
     if (typeof hours === 'object') {
-      // Assuming hours is an object with days and times
-      // You can customize this based on your actual data structure
       return JSON.stringify(hours);
     }
     return String(hours);
@@ -24,6 +24,11 @@ const formatOperatingHours = (hours: any): string => {
 
 const FloristDetail = () => {
   const { id } = useParams();
+  const [filters, setFilters] = useState({
+    budget: [500],
+    categories: [] as string[],
+    occasions: [] as string[]
+  });
 
   const { data: florist, isLoading: isLoadingFlorist } = useQuery({
     queryKey: ['florist', id],
@@ -59,9 +64,7 @@ const FloristDetail = () => {
 
       if (error) throw error;
 
-      // Transform products to include variants
       const productsWithVariants = productsData?.flatMap(product => {
-        // If no sizes, return product with base price
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
             ...product,
@@ -71,7 +74,6 @@ const FloristDetail = () => {
           }];
         }
 
-        // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
           displaySize: size.name,
@@ -174,28 +176,19 @@ const FloristDetail = () => {
             )}
           </div>
 
-          {/* Products Grid */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">Our Products</h2>
-            {products && products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => (
-                  <ProductCard
-                    key={`${product.id}-${product.sizeId || 'default'}`}
-                    {...product}
-                    floristName={florist.store_name}
-                    floristId={florist.id}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-                <h2 className="text-xl font-semibold mb-2">No products available</h2>
-                <p className="text-muted-foreground">
-                  This florist hasn't added any products yet
-                </p>
-              </div>
-            )}
+          {/* Products Section with Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="md:col-span-1">
+              <FloristProductFilters onFilterChange={setFilters} />
+            </div>
+            <div className="md:col-span-3">
+              <FloristProducts 
+                products={products || []}
+                floristName={florist.store_name}
+                floristId={florist.id}
+                filters={filters}
+              />
+            </div>
           </div>
         </div>
       </main>
