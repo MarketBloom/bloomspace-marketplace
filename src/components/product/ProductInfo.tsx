@@ -11,10 +11,9 @@ interface ProductInfoProps {
 export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => {
   const { toast } = useToast();
 
-  // Split the title into parts for better formatting
-  const titleParts = title.split(' - ');
-  const mainTitle = titleParts[0];
-  const size = titleParts[1];
+  // Split only on the first hyphen to preserve any other hyphens in the size description
+  const [mainTitle, ...sizeParts] = title.split(' - ');
+  const size = sizeParts.join(' - '); // Rejoin any remaining parts with hyphens
 
   return (
     <div className="space-y-4">
