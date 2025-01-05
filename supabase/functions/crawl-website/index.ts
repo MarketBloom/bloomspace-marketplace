@@ -23,21 +23,27 @@ serve(async (req) => {
     }
 
     console.log('Starting crawl for URL:', url)
-    console.log('API Key available:', !!apiKey)
 
-    // Basic URL validation
+    // Validate and format URL
+    let formattedUrl: string
     try {
       const urlObj = new URL(url)
+      // Remove any trailing slashes and ensure proper protocol
+      formattedUrl = urlObj.toString().replace(/\/$/, '')
+      
       if (!urlObj.protocol.startsWith('http')) {
         throw new Error('Invalid URL protocol')
       }
-    } catch {
+
+      console.log('Formatted URL:', formattedUrl)
+    } catch (error) {
+      console.error('URL validation error:', error)
       throw new Error('Invalid URL format')
     }
 
     // First try to fetch the URL to validate it's accessible
     try {
-      const testResponse = await fetch(url, {
+      const testResponse = await fetch(formattedUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; FirecrawlBot/1.0)'
         }
@@ -49,13 +55,13 @@ serve(async (req) => {
       
       console.log('URL validation successful')
     } catch (error) {
-      console.error('URL validation error:', error)
+      console.error('URL accessibility error:', error)
       throw new Error('Website is not accessible')
     }
 
     // Prepare the request body
     const requestBody = {
-      url,
+      url: formattedUrl,
       limit: 1,
       scrapeOptions: {
         formats: ['html'],
@@ -67,52 +73,45 @@ serve(async (req) => {
       }
     }
 
-    console.log('Preparing Firecrawl API request...')
+    console.log('Making request to Firecrawl API with body:', JSON.stringify(requestBody))
     
     // Make the request to Firecrawl API
-    try {
-      console.log('Making request to Firecrawl API...')
-      
-      const response = await fetch('https://api.firecrawl.com/v1/crawl', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; FirecrawlBot/1.0)'
-        },
-        body: JSON.stringify(requestBody)
-      })
+    const response = await fetch('https://api.firecrawl.com/v1/crawl', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; FirecrawlBot/1.0)'
+      },
+      body: JSON.stringify(requestBody)
+    })
 
-      console.log('Firecrawl API response status:', response.status)
-      
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Firecrawl API error response:', errorText)
-        throw new Error(`Firecrawl API error: ${response.status} - ${errorText}`)
-      }
-
-      const data = await response.json()
-      console.log('Firecrawl API success response:', JSON.stringify(data, null, 2))
-
-      return new Response(
-        JSON.stringify({
-          crawlResult: {
-            success: true,
-            status: 'completed',
-            data: {
-              url,
-              crawledAt: new Date().toISOString(),
-              content: data
-            }
-          }
-        }),
-        { headers: corsHeaders }
-      )
-    } catch (error) {
-      console.error('Error making request to Firecrawl API:', error)
-      throw new Error(`Failed to connect to Firecrawl API: ${error.message}`)
+    console.log('Firecrawl API response status:', response.status)
+    
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Firecrawl API error response:', errorText)
+      throw new Error(`Firecrawl API error: ${response.status} - ${errorText}`)
     }
+
+    const data = await response.json()
+    console.log('Firecrawl API success response:', JSON.stringify(data, null, 2))
+
+    return new Response(
+      JSON.stringify({
+        crawlResult: {
+          success: true,
+          status: 'completed',
+          data: {
+            url: formattedUrl,
+            crawledAt: new Date().toISOString(),
+            content: data
+          }
+        }
+      }),
+      { headers: corsHeaders }
+    )
   } catch (error) {
     console.error('Error in crawl-website function:', error)
     return new Response(
