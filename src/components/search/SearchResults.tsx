@@ -91,7 +91,6 @@ export const SearchResults = ({
             logoUrl={florist.logo_url}
             bannerUrl={florist.banner_url}
             deliveryFee={florist.delivery_fee}
-            minimumOrder={florist.minimum_order_amount}
             deliveryRadius={florist.delivery_radius}
           />
         </div>
