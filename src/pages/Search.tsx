@@ -64,6 +64,7 @@ const Search = () => {
             displaySize: null,
             displayPrice: product.price,
             sizeId: null,
+            floristName: product.florist_profiles?.store_name,
             isDeliveryAvailable: fulfillmentType === "delivery" && 
               product.florist_profiles?.delivery_cutoff && 
               currentTime < product.florist_profiles.delivery_cutoff,
@@ -78,9 +79,10 @@ const Search = () => {
         // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
-          displaySize: size.name, // This is the full size name from the database
+          displaySize: size.name,
           displayPrice: product.price + (size.price_adjustment || 0),
           sizeId: size.id,
+          floristName: product.florist_profiles?.store_name,
           isDeliveryAvailable: fulfillmentType === "delivery" && 
             product.florist_profiles?.delivery_cutoff && 
             currentTime < product.florist_profiles.delivery_cutoff,
@@ -89,7 +91,7 @@ const Search = () => {
             currentTime < product.florist_profiles.delivery_end_time,
           deliveryCutoff: product.florist_profiles?.delivery_cutoff,
           pickupCutoff: product.florist_profiles?.delivery_end_time,
-          images: size.images?.length ? size.images : product.images // Use size-specific images if available
+          images: size.images?.length ? size.images : product.images
         }));
       });
 

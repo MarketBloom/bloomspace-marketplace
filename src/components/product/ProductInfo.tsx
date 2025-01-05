@@ -20,7 +20,7 @@ export const ProductInfo = ({ title, price, floristName }: ProductInfoProps) => 
     <div className="space-y-4">
       {/* Title Section */}
       <div className="flex justify-between items-start">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <h3 className="text-[18px] font-semibold leading-tight">
             {mainTitle}
           </h3>
