@@ -19,7 +19,7 @@ interface ProductCardProps {
   deliveryCutoff?: string;
   pickupCutoff?: string;
   displaySize?: string | null;
-  displayPrice: number;
+  displayPrice: number;  // This is now required
   sizeId?: string | null;
 }
 

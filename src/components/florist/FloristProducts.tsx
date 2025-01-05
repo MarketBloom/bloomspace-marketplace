@@ -66,6 +66,7 @@ export const FloristProducts = ({
             <ProductCard
               key={`${product.id}-${product.sizeId || 'default'}`}
               {...product}
+              displayPrice={product.displayPrice || product.price} // Ensure displayPrice is always provided
               floristName={floristName}
               floristId={floristId}
             />

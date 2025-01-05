@@ -25,7 +25,7 @@ const formatOperatingHours = (hours: any): string => {
 const FloristDetail = () => {
   const { id } = useParams();
   const [filters, setFilters] = useState({
-    budget: [500],
+    budget: [500] as number[],
     categories: [] as string[],
     occasions: [] as string[]
   });
@@ -109,6 +109,18 @@ const FloristDetail = () => {
     );
   }
 
+  const handleFilterChange = (newFilters: {
+    budget?: number[];
+    categories?: string[];
+    occasions?: string[];
+  }) => {
+    setFilters(prev => ({
+      budget: newFilters.budget || prev.budget,
+      categories: newFilters.categories || prev.categories,
+      occasions: newFilters.occasions || prev.occasions
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -179,7 +191,7 @@ const FloristDetail = () => {
           {/* Products Section with Filters */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="md:col-span-1">
-              <FloristProductFilters onFilterChange={setFilters} />
+              <FloristProductFilters onFilterChange={handleFilterChange} />
             </div>
             <div className="md:col-span-3">
               <FloristProducts 
