@@ -7,10 +7,17 @@ import { ImageUpload } from "./product-form/ImageUpload";
 import { ProductBasicInfo } from "./product-form/ProductBasicInfo";
 import { CategorySelection } from "./product-form/CategorySelection";
 import { OccasionSelection } from "./product-form/OccasionSelection";
+import { ProductSizes } from "./product-form/ProductSizes";
 
 interface AddProductFormProps {
   floristId: string;
   onProductAdded: () => void;
+}
+
+interface Size {
+  name: string;
+  priceAdjustment: string;
+  isDefault: boolean;
 }
 
 const categories = [
@@ -45,6 +52,7 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<Size[]>([]);
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,25 +62,48 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
     }
 
     try {
-      const { error } = await supabase.from("products").insert({
-        florist_id: floristId,
-        title: newProduct.title,
-        description: newProduct.description,
-        price: parseFloat(newProduct.price),
-        category: selectedCategories[0],
-        occasion: selectedOccasions,
-        images: uploadedImages,
-      });
+      // First insert the product
+      const { data: productData, error: productError } = await supabase
+        .from("products")
+        .insert({
+          florist_id: floristId,
+          title: newProduct.title,
+          description: newProduct.description,
+          price: parseFloat(newProduct.price),
+          category: selectedCategories[0],
+          occasion: selectedOccasions,
+          images: uploadedImages,
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (productError) throw productError;
+
+      // Then insert the sizes if any
+      if (sizes.length > 0) {
+        const { error: sizesError } = await supabase
+          .from("product_sizes")
+          .insert(
+            sizes.map(size => ({
+              product_id: productData.id,
+              name: size.name,
+              price_adjustment: parseFloat(size.priceAdjustment),
+              is_default: size.isDefault,
+            }))
+          );
+
+        if (sizesError) throw sizesError;
+      }
 
       toast.success("Product added successfully");
       setNewProduct({ title: "", description: "", price: "" });
       setSelectedCategories([]);
       setSelectedOccasions([]);
       setUploadedImages([]);
+      setSizes([]);
       onProductAdded();
     } catch (error) {
+      console.error("Error adding product:", error);
       toast.error("Failed to add product");
     }
   };
@@ -106,6 +137,8 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
             selectedOccasions={selectedOccasions}
             setSelectedOccasions={setSelectedOccasions}
           />
+
+          <ProductSizes sizes={sizes} setSizes={setSizes} />
 
           <Button type="submit" className="w-full">Add Product</Button>
         </form>
