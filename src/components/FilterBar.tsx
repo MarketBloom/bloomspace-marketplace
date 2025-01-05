@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Search, ShoppingBag, Truck } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { LocationFilter } from "./filters/LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
 import { TimeFilter } from "./filters/TimeFilter";
@@ -15,6 +14,7 @@ interface FilterBarProps {
   initialTime?: string | null;
   initialBudget?: number[];
   initialLocation?: string;
+  onFilterChange?: (updates: Record<string, string>) => void;
 }
 
 export const FilterBar = ({ 
@@ -22,9 +22,9 @@ export const FilterBar = ({
   initialDate = undefined,
   initialTime = null,
   initialBudget = [500],
-  initialLocation = ""
+  initialLocation = "",
+  onFilterChange
 }: FilterBarProps) => {
-  const navigate = useNavigate();
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [time, setTime] = useState<string | null>(initialTime);
@@ -33,17 +33,21 @@ export const FilterBar = ({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
 
-  const handleSearch = () => {
-    const searchParams = new URLSearchParams();
-    
-    searchParams.append("fulfillment", fulfillmentType);
-    if (location) searchParams.append("location", location);
-    if (date) searchParams.append("date", date.toISOString());
-    if (time) searchParams.append("time", time);
-    searchParams.append("budget", budget[0].toString());
-    
-    navigate(`/search?${searchParams.toString()}`);
-  };
+  // Update URL params whenever filters change
+  useEffect(() => {
+    if (onFilterChange) {
+      const updates: Record<string, string> = {
+        fulfillment: fulfillmentType,
+        budget: budget[0].toString()
+      };
+      
+      if (location) updates.location = location;
+      if (date) updates.date = date.toISOString();
+      if (time) updates.time = time;
+      
+      onFilterChange(updates);
+    }
+  }, [fulfillmentType, location, date, time, budget, onFilterChange]);
 
   return (
     <div className="space-y-3 border border-black/10 rounded-lg p-3">
@@ -106,14 +110,6 @@ export const FilterBar = ({
         selectedOccasions={selectedOccasions}
         setSelectedOccasions={setSelectedOccasions}
       />
-
-      <Button 
-        className="w-full text-xs bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
-        onClick={handleSearch}
-      >
-        <Search className="w-3.5 h-3.5 mr-2" />
-        Search Flowers
-      </Button>
     </div>
   );
 };

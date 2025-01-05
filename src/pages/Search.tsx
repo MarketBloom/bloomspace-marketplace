@@ -10,9 +10,22 @@ import { format } from "date-fns";
 import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
+
+  // Update URL params without navigation
+  const updateSearchParams = (updates: Record<string, string>) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
+    setSearchParams(newParams, { replace: true });
+  };
 
   useEffect(() => {
     const fulfillment = searchParams.get('fulfillment');
@@ -79,7 +92,7 @@ const Search = () => {
         // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
-          displaySize: size.name, // This contains the full size name (e.g., "Standard - 12 Stems")
+          displaySize: size.name,
           displayPrice: product.price + (size.price_adjustment || 0),
           sizeId: size.id,
           floristName: product.florist_profiles?.store_name,
@@ -138,6 +151,7 @@ const Search = () => {
                   initialTime={searchParams.get('time') || null}
                   initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
                   initialLocation={searchParams.get('location') || ""}
+                  onFilterChange={updateSearchParams}
                 />
               </div>
             </div>
