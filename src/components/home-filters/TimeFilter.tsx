@@ -14,6 +14,13 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
     return [`${hour}:00`, `${hour}:30`];
   }).flat();
 
+  const handleSelect = (value: string) => {
+    setTime(value);
+    // Close popover by removing focus from trigger
+    const popoverTrigger = document.activeElement as HTMLElement;
+    popoverTrigger?.blur();
+  };
+
   return (
     <div className="space-y-1.5">
       <label className="text-white text-xs font-medium drop-shadow-sm">Time</label>
@@ -40,11 +47,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                   "w-full justify-start font-normal text-xs h-8",
                   time === slot ? "bg-primary/20 text-primary" : ""
                 )}
-                onClick={() => {
-                  setTime(slot);
-                  const popoverTrigger = document.activeElement as HTMLElement;
-                  popoverTrigger?.blur();
-                }}
+                onClick={() => handleSelect(slot)}
               >
                 {slot}
               </Button>

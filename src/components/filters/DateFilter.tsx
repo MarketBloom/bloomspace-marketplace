@@ -11,6 +11,13 @@ interface DateFilterProps {
 }
 
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
+  const handleSelect = (date: Date | undefined) => {
+    setDate(date);
+    // Close popover by removing focus from trigger
+    const popoverTrigger = document.activeElement as HTMLElement;
+    popoverTrigger?.blur();
+  };
+
   return (
     <div className="space-y-1.5">
       <label className="text-foreground text-xs font-medium">Pickup or Delivered by</label>
@@ -31,7 +38,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Calendar
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={handleSelect}
             initialFocus
             className="rounded-md border border-white/20"
           />
