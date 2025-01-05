@@ -79,7 +79,7 @@ const Search = () => {
         // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
-          displaySize: size.name,
+          displaySize: size.name, // This contains the full size name (e.g., "Standard - 12 Stems")
           displayPrice: product.price + (size.price_adjustment || 0),
           sizeId: size.id,
           floristName: product.florist_profiles?.store_name,
