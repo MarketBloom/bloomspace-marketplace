@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import React, { createContext, useContext, useState } from "react";
 
 interface CartItem {
   id: string;
@@ -9,7 +8,7 @@ interface CartItem {
   image?: string;
   floristId: string;
   floristName?: string;
-  sizeId?: string | null;
+  sizeId?: string;
   sizeName?: string;
 }
 
@@ -18,87 +17,71 @@ interface CartContextType {
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
-  clearCart: () => void;
   total: number;
-  itemCount: number;
+  clear: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  const { toast } = useToast();
 
-  const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
-    setItems((currentItems) => {
-      const existingItem = currentItems.find((item) => 
-        item.id === newItem.id && item.sizeId === newItem.sizeId
+  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+    setItems(currentItems => {
+      // Find existing item with same id and size
+      const existingItemIndex = currentItems.findIndex(
+        item => item.id === newItem.id && item.sizeId === newItem.sizeId
       );
-      
-      if (existingItem) {
-        return currentItems.map((item) =>
-          item.id === newItem.id && item.sizeId === newItem.sizeId
+
+      if (existingItemIndex > -1) {
+        // Update quantity of existing item
+        return currentItems.map((item, index) =>
+          index === existingItemIndex
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      
+
+      // Add new item with quantity 1
       return [...currentItems, { ...newItem, quantity: 1 }];
     });
+  };
 
-    toast({
-      title: "Added to cart",
-      description: `${newItem.title}${newItem.sizeName ? ` (${newItem.sizeName})` : ''} has been added to your cart`,
-    });
-  }, [toast]);
+  const removeItem = (id: string) => {
+    setItems(currentItems => currentItems.filter(item => item.id !== id));
+  };
 
-  const removeItem = useCallback((id: string) => {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== id));
-    
-    toast({
-      title: "Removed from cart",
-      description: "Item has been removed from your cart.",
-    });
-  }, [toast]);
-
-  const updateQuantity = useCallback((id: string, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
-    
-    setItems((currentItems) =>
-      currentItems.map((item) =>
+    setItems(currentItems =>
+      currentItems.map(item =>
         item.id === id ? { ...item, quantity } : item
       )
     );
-  }, []);
+  };
 
-  const clearCart = useCallback(() => {
+  const clear = () => {
     setItems([]);
-  }, []);
+  };
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        total,
-        itemCount,
-      }}
+      value={{ items, addItem, removeItem, updateQuantity, total, clear }}
     >
       {children}
     </CartContext.Provider>
   );
-}
+};
 
-export function useCart() {
+export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
     throw new Error("useCart must be used within a CartProvider");
   }
   return context;
-}
+};
