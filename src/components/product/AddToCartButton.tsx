@@ -10,6 +10,8 @@ interface AddToCartButtonProps {
   image?: string;
   floristId: string;
   floristName?: string;
+  selectedSizeId?: string | null;
+  selectedSizeName?: string;
 }
 
 export const AddToCartButton = ({ 
@@ -18,7 +20,9 @@ export const AddToCartButton = ({
   price, 
   image, 
   floristId, 
-  floristName 
+  floristName,
+  selectedSizeId,
+  selectedSizeName
 }: AddToCartButtonProps) => {
   const { addItem } = useCart();
   const { toast } = useToast();
@@ -31,11 +35,13 @@ export const AddToCartButton = ({
       price,
       image,
       floristId,
-      floristName
+      floristName,
+      sizeId: selectedSizeId,
+      sizeName: selectedSizeName
     });
     toast({
       title: "Added to cart",
-      description: "Item has been added to your cart",
+      description: `${title}${selectedSizeName ? ` (${selectedSizeName})` : ''} has been added to your cart`,
     });
   };
 
