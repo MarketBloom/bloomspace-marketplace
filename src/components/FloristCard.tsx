@@ -45,13 +45,13 @@ export const FloristCard = ({
         </div>
 
         {/* Logo - Centered on banner */}
-        <div className="absolute left-1/2 -translate-x-1/2 -bottom-10">
-          <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-white bg-white shadow-xl">
+        <div className="absolute left-1/2 -translate-x-1/2 -bottom-8">
+          <div className="w-24 h-24 rounded-xl overflow-hidden border-4 border-white bg-white shadow-2xl">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
                 alt={`${storeName} logo`}
-                className="w-full h-full object-contain bg-white p-2"
+                className="w-full h-full object-cover p-1 bg-white"
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
@@ -64,7 +64,7 @@ export const FloristCard = ({
         </div>
       </div>
 
-      <CardContent className="pt-14 pb-4 px-4 space-y-4">
+      <CardContent className="pt-12 pb-4 px-4 space-y-4">
         {/* Store Info */}
         <div className="text-center space-y-2">
           <h3 className="text-lg font-semibold tracking-tight font-mono">{storeName}</h3>
@@ -79,13 +79,17 @@ export const FloristCard = ({
 
         {/* Delivery Information */}
         <div className="space-y-2 border-t border-b py-3">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center text-muted-foreground">
-              <Truck className="h-4 w-4 mr-1" />
-              <span>Delivery Fee:</span>
+          {deliveryFee !== undefined && (
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center text-muted-foreground">
+                <Truck className="h-4 w-4 mr-1" />
+                <span>Delivery Fee:</span>
+              </div>
+              <span className="font-medium">
+                {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
+              </span>
             </div>
-            <span className="font-medium">${deliveryFee?.toFixed(2) || 'Free'}</span>
-          </div>
+          )}
           
           {minimumOrder && minimumOrder > 0 && (
             <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -94,7 +98,7 @@ export const FloristCard = ({
             </div>
           )}
           
-          {deliveryRadius && (
+          {deliveryRadius && deliveryRadius > 0 && (
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>Delivery Area:</span>
               <span className="font-medium">{deliveryRadius}km radius</span>
