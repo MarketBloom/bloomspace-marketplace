@@ -50,7 +50,17 @@ export const SearchResults = ({
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {florists.map((florist) => (
-          <FloristCard key={florist.id} {...florist} />
+          <FloristCard 
+            key={florist.id}
+            id={florist.id}
+            storeName={florist.store_name}
+            address={florist.address}
+            aboutText={florist.about_text}
+            logoUrl={florist.logo_url}
+            bannerUrl={florist.banner_url}
+            deliveryFee={florist.delivery_fee}
+            deliveryRadius={florist.delivery_radius}
+          />
         ))}
       </div>
     </div>
