@@ -16,32 +16,20 @@ const Search = () => {
 
   // Initialize filters from URL parameters
   useEffect(() => {
-    // Set fulfillment type
     const fulfillment = searchParams.get('fulfillment');
     if (fulfillment === 'pickup' || fulfillment === 'delivery') {
       setFulfillmentType(fulfillment);
     }
-
-    // Set date (default to today if not provided)
-    const dateParam = searchParams.get('date');
-    const initialDate = dateParam ? new Date(dateParam) : undefined;
-    
-    // Set time
-    const timeParam = searchParams.get('time') || null;
-    
-    // Set budget
-    const budgetParam = searchParams.get('budget');
-    const initialBudget = budgetParam ? [parseInt(budgetParam)] : [500];
-    
-    // Set location
-    const locationParam = searchParams.get('location');
-    
-    // Pass all these values to FilterBar component
   }, [searchParams]);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products', fulfillmentType],
+    queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
+      // Get the budget filter value
+      const budgetStr = searchParams.get('budget');
+      const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
+
+      // Query products with their sizes and florist information
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -53,6 +41,11 @@ const Search = () => {
             delivery_start_time,
             delivery_end_time,
             operating_hours
+          ),
+          product_sizes (
+            id,
+            name,
+            price_adjustment
           )
         `)
         .eq('in_stock', true)
@@ -63,17 +56,49 @@ const Search = () => {
       const now = new Date();
       const currentTime = format(now, 'HH:mm:ss');
 
-      return data.map(product => ({
-        ...product,
-        isDeliveryAvailable: fulfillmentType === "delivery" && 
-          product.florist_profiles?.delivery_cutoff && 
-          currentTime < product.florist_profiles.delivery_cutoff,
-        isPickupAvailable: fulfillmentType === "pickup" && 
-          product.florist_profiles?.operating_hours && 
-          currentTime < product.florist_profiles.delivery_end_time,
-        deliveryCutoff: product.florist_profiles?.delivery_cutoff,
-        pickupCutoff: product.florist_profiles?.delivery_end_time
-      }));
+      // Transform the data to create separate entries for each size variant
+      const productsWithVariants = data.flatMap(product => {
+        // If no sizes, return the product with base price
+        if (!product.product_sizes || product.product_sizes.length === 0) {
+          return [{
+            ...product,
+            displaySize: null,
+            displayPrice: product.price,
+            sizeId: null,
+            isDeliveryAvailable: fulfillmentType === "delivery" && 
+              product.florist_profiles?.delivery_cutoff && 
+              currentTime < product.florist_profiles.delivery_cutoff,
+            isPickupAvailable: fulfillmentType === "pickup" && 
+              product.florist_profiles?.operating_hours && 
+              currentTime < product.florist_profiles.delivery_end_time,
+            deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+            pickupCutoff: product.florist_profiles?.delivery_end_time
+          }];
+        }
+
+        // Create an entry for each size variant
+        return product.product_sizes.map(size => ({
+          ...product,
+          displaySize: size.name,
+          displayPrice: product.price + size.price_adjustment,
+          sizeId: size.id,
+          isDeliveryAvailable: fulfillmentType === "delivery" && 
+            product.florist_profiles?.delivery_cutoff && 
+            currentTime < product.florist_profiles.delivery_cutoff,
+          isPickupAvailable: fulfillmentType === "pickup" && 
+            product.florist_profiles?.operating_hours && 
+            currentTime < product.florist_profiles.delivery_end_time,
+          deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+          pickupCutoff: product.florist_profiles?.delivery_end_time
+        }));
+      });
+
+      // Apply budget filter if present
+      if (maxBudget) {
+        return productsWithVariants.filter(product => product.displayPrice <= maxBudget);
+      }
+
+      return productsWithVariants;
     },
   });
 
