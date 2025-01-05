@@ -24,8 +24,11 @@ export const HomeFilterBar = () => {
     if (time) searchParams.append("time", time);
     searchParams.append("budget", budget[0].toString());
 
-    // Navigate to search with all parameters
-    navigate(`/search?${searchParams.toString()}`);
+    // Navigate to search page with parameters
+    navigate({
+      pathname: "/search",
+      search: searchParams.toString()
+    });
   };
 
   return (
