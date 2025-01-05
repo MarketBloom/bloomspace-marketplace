@@ -25,19 +25,10 @@ export const SizeVariantEditor = ({
       <Input
         type="number"
         value={size.price}
-        onChange={(e) => onChange(size.id, 'price', parseFloat(e.target.value))}
+        onChange={(e) => onChange(size.id, 'price', e.target.value)}
         placeholder="Price"
         className="w-32"
       />
-      <div className="flex items-center gap-2">
-        <input
-          type="radio"
-          checked={size.isDefault}
-          onChange={(e) => onChange(size.id, 'isDefault', e.target.checked)}
-          className="mr-1"
-        />
-        <span className="text-sm">Default</span>
-      </div>
       <Button
         variant="ghost"
         size="sm"

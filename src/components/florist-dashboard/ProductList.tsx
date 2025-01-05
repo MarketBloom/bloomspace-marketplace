@@ -40,12 +40,9 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
   const handleEdit = async (product: Product) => {
     try {
       const sizes = product.product_sizes || [];
-      const defaultSize = sizes.find(size => size.isDefault);
       
-      if (!defaultSize) {
-        toast.error("Please set a default size");
-        return;
-      }
+      // Use first size as base price
+      const basePrice = parseFloat(sizes[0]?.price || '0');
 
       // Update product sizes
       const { error: sizesError } = await supabase
@@ -55,8 +52,8 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
             id: size.id.startsWith('temp-') ? undefined : size.id,
             product_id: product.id,
             name: size.name,
-            price_adjustment: size.price - defaultSize.price,
-            is_default: size.isDefault,
+            price_adjustment: parseFloat(size.price) - basePrice,
+            images: size.images || [],
           }))
         );
 
@@ -65,7 +62,7 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
       // Update base product price
       const { error: productError } = await supabase
         .from('products')
-        .update({ price: defaultSize.price })
+        .update({ price: basePrice })
         .eq('id', product.id);
 
       if (productError) throw productError;

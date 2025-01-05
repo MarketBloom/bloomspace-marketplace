@@ -9,16 +9,11 @@ import { CategorySelection } from "./product-form/CategorySelection";
 import { OccasionSelection } from "./product-form/OccasionSelection";
 import { ProductSizes } from "./product-form/ProductSizes";
 import { Separator } from "@/components/ui/separator";
+import { Size } from "@/types/product";
 
 interface AddProductFormProps {
   floristId: string;
   onProductAdded: () => void;
-}
-
-interface Size {
-  name: string;
-  price: string;
-  images?: string[];
 }
 
 const categories = [
