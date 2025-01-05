@@ -19,7 +19,7 @@ interface ProductCardProps {
   deliveryCutoff?: string;
   pickupCutoff?: string;
   displaySize?: string | null;
-  displayPrice: number;  // This is now required
+  displayPrice: number;
   sizeId?: string | null;
 }
 
@@ -40,10 +40,15 @@ export const ProductCard = ({
   const navigate = useNavigate();
   const displayTitle = displaySize ? `${title} - ${displaySize}` : title;
 
+  const handleClick = () => {
+    const url = sizeId ? `/product/${id}?size=${sizeId}` : `/product/${id}`;
+    navigate(url);
+  };
+
   return (
     <Card 
       className="group relative overflow-hidden transition-all duration-300 cursor-pointer bg-white hover:shadow-lg border-0"
-      onClick={() => navigate(`/product/${id}`)}
+      onClick={handleClick}
     >
       <CardHeader className="p-0">
         <ProductImage src={images?.[0]} alt={displayTitle} />
