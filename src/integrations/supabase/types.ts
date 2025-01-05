@@ -204,6 +204,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          images: string[] | null
           is_default: boolean | null
           name: string
           price_adjustment: number
@@ -213,6 +214,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          images?: string[] | null
           is_default?: boolean | null
           name: string
           price_adjustment?: number
@@ -222,6 +224,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          images?: string[] | null
           is_default?: boolean | null
           name?: string
           price_adjustment?: number
