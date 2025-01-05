@@ -41,9 +41,9 @@ export const FloristCard = ({
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
         )}
-        {/* Logo overlay */}
-        <div className="absolute -bottom-8 left-4">
-          <div className="w-16 h-16 rounded-lg overflow-hidden border-4 border-white bg-white shadow-sm">
+        {/* Logo overlay - adjusted positioning */}
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
+          <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-white bg-white shadow-sm">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
@@ -61,9 +61,9 @@ export const FloristCard = ({
         </div>
       </div>
 
-      <CardHeader className="p-4 pt-10 pb-2 space-y-2">
-        <h3 className="text-sm font-semibold tracking-tight font-mono">{storeName}</h3>
-        <div className="flex items-center text-xs text-muted-foreground space-x-1">
+      <CardHeader className="p-4 pt-12 pb-2 space-y-2">
+        <h3 className="text-sm font-semibold tracking-tight font-mono text-center">{storeName}</h3>
+        <div className="flex items-center justify-center text-xs text-muted-foreground space-x-1">
           <MapPin className="h-3 w-3 flex-shrink-0" />
           <span className="truncate font-mono">{address}</span>
         </div>
@@ -71,7 +71,7 @@ export const FloristCard = ({
 
       <CardContent className="p-4 pt-0 space-y-3">
         {aboutText && (
-          <p className="text-xs text-muted-foreground font-mono line-clamp-2">{aboutText}</p>
+          <p className="text-xs text-muted-foreground font-mono line-clamp-2 text-center">{aboutText}</p>
         )}
 
         {/* Delivery Information */}
