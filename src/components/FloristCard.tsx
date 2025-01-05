@@ -23,7 +23,6 @@ export const FloristCard = ({
   logoUrl,
   bannerUrl,
   deliveryFee,
-  minimumOrder,
   deliveryRadius
 }: FloristCardProps) => {
   const navigate = useNavigate();
@@ -88,13 +87,6 @@ export const FloristCard = ({
               <span className="font-medium">
                 {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
               </span>
-            </div>
-          )}
-          
-          {minimumOrder && minimumOrder > 0 && (
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Min. Order:</span>
-              <span className="font-medium">${minimumOrder.toFixed(2)}</span>
             </div>
           )}
           
