@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
-import { Loader2, MapPin, Clock, Phone } from "lucide-react";
+import { Loader2, MapPin, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const FloristDetail = () => {
@@ -37,7 +37,30 @@ const FloristDetail = () => {
         .eq('is_hidden', false);
 
       if (error) throw error;
-      return data;
+
+      // Transform products to include variants
+      const productsWithVariants = products?.flatMap(product => {
+        // If no sizes, return product with base price
+        if (!product.product_sizes || product.product_sizes.length === 0) {
+          return [{
+            ...product,
+            displaySize: null,
+            displayPrice: product.price,
+            sizeId: null
+          }];
+        }
+
+        // Create entries for each size variant
+        return product.product_sizes.map(size => ({
+          ...product,
+          displaySize: size.name,
+          displayPrice: product.price + (size.price_adjustment || 0),
+          sizeId: size.id,
+          images: size.images?.length ? size.images : product.images
+        }));
+      });
+
+      return productsWithVariants || [];
     },
   });
 
@@ -136,13 +159,8 @@ const FloristDetail = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products?.map((product) => (
                 <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  price={product.price}
-                  displayPrice={product.price} // Add displayPrice prop
-                  description={product.description}
-                  images={product.images}
+                  key={`${product.id}-${product.sizeId || 'default'}`}
+                  {...product}
                   floristName={florist.store_name}
                   floristId={florist.id}
                 />
