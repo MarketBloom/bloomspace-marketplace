@@ -40,7 +40,11 @@ export const ProductCard = ({
   const navigate = useNavigate();
   const displayTitle = displaySize ? `${title} - ${displaySize}` : title;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent event bubbling
+    e.preventDefault();
+    e.stopPropagation();
+    
     const url = sizeId ? `/product/${id}?size=${sizeId}` : `/product/${id}`;
     navigate(url);
   };
@@ -49,6 +53,8 @@ export const ProductCard = ({
     <Card 
       className="group relative overflow-hidden transition-all duration-300 cursor-pointer bg-white hover:shadow-lg border-0"
       onClick={handleClick}
+      role="link"
+      tabIndex={0}
     >
       <CardHeader className="p-0">
         <ProductImage src={images?.[0]} alt={displayTitle} />
