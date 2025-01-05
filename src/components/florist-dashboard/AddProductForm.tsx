@@ -16,7 +16,7 @@ interface AddProductFormProps {
 
 interface Size {
   name: string;
-  priceAdjustment: string;
+  price: string;
   isDefault: boolean;
 }
 
@@ -47,7 +47,6 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
   const [newProduct, setNewProduct] = useState({
     title: "",
     description: "",
-    price: "",
   });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
@@ -61,7 +60,19 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
       return;
     }
 
+    if (sizes.length === 0) {
+      toast.error("Please add at least one size option");
+      return;
+    }
+
     try {
+      // Get the default size's price as the base product price
+      const defaultSize = sizes.find(size => size.isDefault);
+      if (!defaultSize) {
+        toast.error("Please set a default size");
+        return;
+      }
+
       // First insert the product
       const { data: productData, error: productError } = await supabase
         .from("products")
@@ -69,7 +80,7 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
           florist_id: floristId,
           title: newProduct.title,
           description: newProduct.description,
-          price: parseFloat(newProduct.price),
+          price: parseFloat(defaultSize.price),
           category: selectedCategories[0],
           occasion: selectedOccasions,
           images: uploadedImages,
@@ -79,24 +90,22 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
 
       if (productError) throw productError;
 
-      // Then insert the sizes if any
-      if (sizes.length > 0) {
-        const { error: sizesError } = await supabase
-          .from("product_sizes")
-          .insert(
-            sizes.map(size => ({
-              product_id: productData.id,
-              name: size.name,
-              price_adjustment: parseFloat(size.priceAdjustment),
-              is_default: size.isDefault,
-            }))
-          );
+      // Then insert the sizes
+      const { error: sizesError } = await supabase
+        .from("product_sizes")
+        .insert(
+          sizes.map(size => ({
+            product_id: productData.id,
+            name: size.name,
+            price_adjustment: parseFloat(size.price) - parseFloat(defaultSize.price),
+            is_default: size.isDefault,
+          }))
+        );
 
-        if (sizesError) throw sizesError;
-      }
+      if (sizesError) throw sizesError;
 
       toast.success("Product added successfully");
-      setNewProduct({ title: "", description: "", price: "" });
+      setNewProduct({ title: "", description: "" });
       setSelectedCategories([]);
       setSelectedOccasions([]);
       setUploadedImages([]);
@@ -117,9 +126,12 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
             setTitle={(title) => setNewProduct({ ...newProduct, title })}
             description={newProduct.description}
             setDescription={(description) => setNewProduct({ ...newProduct, description })}
-            price={newProduct.price}
-            setPrice={(price) => setNewProduct({ ...newProduct, price })}
           />
+
+          <div className="border-t pt-6">
+            <h2 className="text-lg font-semibold mb-4">Product Sizes and Pricing</h2>
+            <ProductSizes sizes={sizes} setSizes={setSizes} />
+          </div>
 
           <ImageUpload
             uploadedImages={uploadedImages}
@@ -137,8 +149,6 @@ export const AddProductForm = ({ floristId, onProductAdded }: AddProductFormProp
             selectedOccasions={selectedOccasions}
             setSelectedOccasions={setSelectedOccasions}
           />
-
-          <ProductSizes sizes={sizes} setSizes={setSizes} />
 
           <Button type="submit" className="w-full">Add Product</Button>
         </form>

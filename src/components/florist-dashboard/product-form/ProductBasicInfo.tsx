@@ -6,8 +6,6 @@ interface ProductBasicInfoProps {
   setTitle: (title: string) => void;
   description: string;
   setDescription: (description: string) => void;
-  price: string;
-  setPrice: (price: string) => void;
 }
 
 export const ProductBasicInfo = ({
@@ -15,8 +13,6 @@ export const ProductBasicInfo = ({
   setTitle,
   description,
   setDescription,
-  price,
-  setPrice,
 }: ProductBasicInfoProps) => {
   return (
     <div className="grid gap-4">
@@ -35,17 +31,6 @@ export const ProductBasicInfo = ({
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <Label htmlFor="price">Price</Label>
-        <Input
-          id="price"
-          type="number"
-          step="0.01"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
           required
         />
       </div>

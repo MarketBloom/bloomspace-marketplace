@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 
 interface Size {
   name: string;
-  priceAdjustment: string;
+  price: string;
   isDefault: boolean;
 }
 
@@ -19,14 +19,14 @@ interface ProductSizesProps {
 export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
   const [newSize, setNewSize] = useState<Size>({
     name: "",
-    priceAdjustment: "0",
+    price: "",
     isDefault: false,
   });
 
   const handleAddSize = () => {
-    if (!newSize.name) return;
+    if (!newSize.name || !newSize.price) return;
     setSizes([...sizes, newSize]);
-    setNewSize({ name: "", priceAdjustment: "0", isDefault: false });
+    setNewSize({ name: "", price: "", isDefault: false });
   };
 
   const handleRemoveSize = (index: number) => {
@@ -44,7 +44,6 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
 
   return (
     <div className="space-y-4">
-      <Label>Product Sizes</Label>
       <div className="space-y-4">
         {sizes.map((size, index) => (
           <div key={index} className="flex items-center gap-4">
@@ -58,17 +57,19 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
               placeholder="Size name"
               className="flex-1"
             />
-            <Input
-              type="number"
-              value={size.priceAdjustment}
-              onChange={(e) => {
-                const newSizes = [...sizes];
-                newSizes[index].priceAdjustment = e.target.value;
-                setSizes(newSizes);
-              }}
-              placeholder="Price adjustment"
-              className="w-32"
-            />
+            <div className="w-32">
+              <Input
+                type="number"
+                value={size.price}
+                onChange={(e) => {
+                  const newSizes = [...sizes];
+                  newSizes[index].price = e.target.value;
+                  setSizes(newSizes);
+                }}
+                placeholder="Price"
+                step="0.01"
+              />
+            </div>
             <div className="flex items-center gap-2">
               <Checkbox
                 id={`default-${index}`}
@@ -89,7 +90,7 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
       </div>
 
       <div className="flex items-end gap-4">
-        <div className="flex-1 space-y-2">
+        <div className="flex-1">
           <Input
             value={newSize.name}
             onChange={(e) =>
@@ -98,14 +99,15 @@ export const ProductSizes = ({ sizes, setSizes }: ProductSizesProps) => {
             placeholder="Size name"
           />
         </div>
-        <div className="w-32 space-y-2">
+        <div className="w-32">
           <Input
             type="number"
-            value={newSize.priceAdjustment}
+            value={newSize.price}
             onChange={(e) =>
-              setNewSize({ ...newSize, priceAdjustment: e.target.value })
+              setNewSize({ ...newSize, price: e.target.value })
             }
-            placeholder="Price adjustment"
+            placeholder="Price"
+            step="0.01"
           />
         </div>
         <div className="flex items-center gap-2">
