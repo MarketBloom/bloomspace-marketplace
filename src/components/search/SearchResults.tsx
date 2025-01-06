@@ -19,7 +19,7 @@ export const SearchResults = ({
 }: SearchResultsProps) => {
   if (viewMode === 'products') {
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         <h2 className="text-lg font-semibold">
           {isLoadingProducts ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -27,7 +27,7 @@ export const SearchResults = ({
             `${products.length} Products Found`
           )}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {products.map((product) => (
             <ProductCard
               key={`${product.id}-${product.sizeId || 'default'}`}
@@ -40,7 +40,7 @@ export const SearchResults = ({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <h2 className="text-lg font-semibold">
         {isLoadingFlorists ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -48,7 +48,7 @@ export const SearchResults = ({
           `${florists.length} Florists Found`
         )}
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {florists.map((florist) => (
           <FloristCard 
             key={florist.id}
