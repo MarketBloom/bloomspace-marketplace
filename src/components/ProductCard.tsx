@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { ProductImage } from "@/components/product/ProductImage";
 import { ProductInfo } from "@/components/product/ProductInfo";
@@ -50,12 +50,12 @@ export const ProductCard = ({
   return (
     <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full"
+        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 h-full rounded-xl"
         onClick={handleClick}
         role="link"
         tabIndex={0}
       >
-        <div className="h-[70%] relative">
+        <div className="h-[75%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
             {isDeliveryAvailable && (
@@ -72,7 +72,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[30%] p-4">
+        <div className="h-[25%] px-4 py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}

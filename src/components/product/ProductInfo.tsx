@@ -9,7 +9,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   return (
     <div className="h-full flex flex-col justify-between">
       <div className="space-y-0.5">
-        <h3 className="text-[15px] font-semibold leading-tight text-foreground line-clamp-2">
+        <h3 className="text-[14px] font-semibold leading-tight text-foreground line-clamp-2">
           {title}
         </h3>
         {floristName && (
@@ -18,7 +18,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
           </p>
         )}
       </div>
-      <p className="text-[14px] font-semibold text-foreground">
+      <p className="text-[13px] font-semibold text-foreground">
         ${price.toFixed(2)}
       </p>
     </div>
