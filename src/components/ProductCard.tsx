@@ -49,7 +49,7 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="group relative overflow-hidden cursor-pointer bg-white border-0 transition-all duration-300 h-full flex flex-col"
+      className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full flex flex-col"
       onClick={handleClick}
       role="link"
       tabIndex={0}

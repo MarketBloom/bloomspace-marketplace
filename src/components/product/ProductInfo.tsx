@@ -13,7 +13,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <h3 className="text-[17px] font-semibold leading-tight text-foreground min-h-[42px]">
+        <h3 className="text-[17px] font-semibold leading-tight text-foreground min-h-[42px] line-clamp-2">
           {mainTitle}
         </h3>
         {floristName && (

@@ -8,7 +8,7 @@ interface ProductImageProps {
 
 export const ProductImage = ({ src, alt, className }: ProductImageProps) => {
   return (
-    <div className={cn("relative pb-[125%] overflow-hidden bg-secondary", className)}>
+    <div className={cn("relative pb-[125%] overflow-hidden bg-secondary rounded-t-lg", className)}>
       <img
         src={src || "/placeholder.svg"}
         alt={alt}
