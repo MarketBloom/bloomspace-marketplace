@@ -31,7 +31,7 @@ export const HomeFilterBar = () => {
   };
 
   return (
-    <div className="bg-[#050407]/40 backdrop-blur-lg rounded-2xl p-6 border border-[#EFEEEA]/10">
+    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/40">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <LocationFilter 
           location={location}
@@ -56,7 +56,7 @@ export const HomeFilterBar = () => {
           className={`h-12 text-sm ${
             fulfillmentType === "delivery" 
               ? "bg-[#FCBA24] hover:bg-[#FCBA24]/90 text-[#050407]" 
-              : "bg-[#EFEEEA]/10 hover:bg-[#EFEEEA]/20 text-[#EFEEEA]"
+              : "bg-[#050407]/5 hover:bg-[#050407]/10 text-[#050407]"
           }`}
           onClick={() => setFulfillmentType("delivery")}
         >
@@ -67,7 +67,7 @@ export const HomeFilterBar = () => {
           className={`h-12 text-sm ${
             fulfillmentType === "pickup" 
               ? "bg-[#FCBA24] hover:bg-[#FCBA24]/90 text-[#050407]" 
-              : "bg-[#EFEEEA]/10 hover:bg-[#EFEEEA]/20 text-[#EFEEEA]"
+              : "bg-[#050407]/5 hover:bg-[#050407]/10 text-[#050407]"
           }`}
           onClick={() => setFulfillmentType("pickup")}
         >
