@@ -28,6 +28,10 @@ export const SearchResults = ({
   const [isDoubleColumn, setIsDoubleColumn] = useState(false);
 
   useEffect(() => {
+    // Only apply scroll animations if there are at least 7 items
+    const items = viewMode === 'products' ? products : florists;
+    if (items.length < 7) return;
+
     // Create scroll animations for each product card
     const cards = document.querySelectorAll('.product-card-animate');
     
@@ -104,7 +108,7 @@ export const SearchResults = ({
           {products.map((product, index) => (
             <div 
               key={`${product.id}-${product.sizeId || 'default'}`}
-              className="product-card-animate"
+              className={`product-card-animate ${products.length >= 7 ? 'opacity-0' : ''}`}
             >
               <ProductCard {...product} />
             </div>
@@ -127,7 +131,7 @@ export const SearchResults = ({
         {florists.map((florist) => (
           <div 
             key={florist.id}
-            className="product-card-animate"
+            className={`product-card-animate ${florists.length >= 7 ? 'opacity-0' : ''}`}
           >
             <FloristCard 
               id={florist.id}
