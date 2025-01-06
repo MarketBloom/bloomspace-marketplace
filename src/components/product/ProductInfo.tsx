@@ -9,7 +9,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   return (
     <div className="h-full flex flex-col justify-between">
       <div className="space-y-1.5">
-        <h3 className="text-[15px] font-semibold leading-tight text-foreground line-clamp-2">
+        <h3 className="text-[15px] font-semibold leading-tight text-foreground line-clamp-1">
           {title}
         </h3>
         {floristName && (
