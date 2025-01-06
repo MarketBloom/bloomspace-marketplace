@@ -5,11 +5,11 @@ export const Hero = () => {
     <section className="relative h-[50vh] min-h-[600px] flex items-center justify-center bg-[#000000]">
       <div className="absolute inset-0">
         <img 
-          src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
-          alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
+          src="/lovable-uploads/76f9e94c-1f57-4223-bdbc-e9525dbee6df.png"
+          alt="Person carrying a beautiful floral arrangement with purple alliums and trailing amaranthus"
           className="h-full w-full object-cover"
           style={{ 
-            objectPosition: 'center 20%' // This crops more from the top of the image
+            objectPosition: 'center center' // This centers the image perfectly
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
