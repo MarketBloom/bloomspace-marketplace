@@ -24,7 +24,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : "Select date"}
+            {date ? format(date, "PPP") : "Any Date"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

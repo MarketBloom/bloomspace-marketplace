@@ -33,7 +33,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
             )}
           >
             <Clock className="mr-2 h-4 w-4" />
-            {time || "Select time"}
+            {time || "Any Time"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-48 p-0 border-white/20" align="start">
@@ -44,7 +44,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start h-9",
-                  time === slot.value ? "bg-[#FCBA24] text-[#050407]" : "text-foreground"
+                  time === slot.value ? "bg-[#D02D53] text-white" : "text-foreground"
                 )}
                 onClick={() => setTime(slot.value)}
               >

@@ -53,10 +53,11 @@ export const HomeFilterBar = () => {
       
       <div className="grid grid-cols-2 gap-4">
         <Button 
+          variant={fulfillmentType === "delivery" ? "default" : "secondary"}
           className={`h-12 text-sm ${
             fulfillmentType === "delivery" 
-              ? "bg-[#FCBA24] hover:bg-[#FCBA24]/90 text-[#050407]" 
-              : "bg-[#050407]/5 hover:bg-[#050407]/10 text-[#050407]"
+              ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
+              : "bg-secondary hover:bg-secondary/90"
           }`}
           onClick={() => setFulfillmentType("delivery")}
         >
@@ -64,10 +65,11 @@ export const HomeFilterBar = () => {
           Delivery
         </Button>
         <Button 
+          variant={fulfillmentType === "pickup" ? "default" : "secondary"}
           className={`h-12 text-sm ${
             fulfillmentType === "pickup" 
-              ? "bg-[#FCBA24] hover:bg-[#FCBA24]/90 text-[#050407]" 
-              : "bg-[#050407]/5 hover:bg-[#050407]/10 text-[#050407]"
+              ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
+              : "bg-secondary hover:bg-secondary/90"
           }`}
           onClick={() => setFulfillmentType("pickup")}
         >
