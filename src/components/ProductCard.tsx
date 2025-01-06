@@ -53,12 +53,12 @@ export const ProductCard = ({
     <div className="aspect-[4/5] w-full">
       <Card 
         className="group relative overflow-hidden cursor-pointer bg-white border-0 
-                   transition-all duration-500 h-full rounded-xl shadow-apple hover:shadow-apple-hover"
+                   transition-all duration-500 h-full rounded-xl md:shadow-apple md:hover:shadow-apple-hover"
         onClick={handleClick}
         role="link"
         tabIndex={0}
       >
-        <div className="h-[75%] relative overflow-hidden">
+        <div className="h-full relative overflow-hidden">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
@@ -74,14 +74,14 @@ export const ProductCard = ({
               </Badge>
             )}
           </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/90 via-white/60 to-transparent p-4">
-          <ProductInfo 
-            title={displayTitle} 
-            price={displayPrice}
-            floristName={floristName} 
-            displaySize={displaySize}
-          />
+          <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 md:bg-gradient-to-t md:from-white/90 md:via-white/60 md:to-transparent md:p-4">
+            <ProductInfo 
+              title={displayTitle} 
+              price={displayPrice}
+              floristName={floristName} 
+              displaySize={displaySize}
+            />
+          </div>
         </div>
       </Card>
     </div>
