@@ -15,14 +15,15 @@ export const HomeFilterBar = () => {
   const [location, setLocation] = useState<string>("");
   const [fulfillmentType, setFulfillmentType] = useState<"delivery" | "pickup">("delivery");
 
-  const handleSearch = () => {
+  const handleSearch = (type: "delivery" | "pickup") => {
+    setFulfillmentType(type);
     const searchParams = new URLSearchParams();
     
     if (location) searchParams.append("location", location);
     if (date) searchParams.append("date", date.toISOString());
     if (time) searchParams.append("time", time);
     searchParams.append("budget", budget[0].toString());
-    searchParams.append("fulfillment", fulfillmentType);
+    searchParams.append("fulfillment", type);
 
     navigate({
       pathname: "/search",
@@ -59,7 +60,7 @@ export const HomeFilterBar = () => {
               ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
               : "bg-secondary hover:bg-secondary/90"
           }`}
-          onClick={() => setFulfillmentType("delivery")}
+          onClick={() => handleSearch("delivery")}
         >
           <Truck className="w-4 h-4 mr-2" />
           Delivery
@@ -71,7 +72,7 @@ export const HomeFilterBar = () => {
               ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
               : "bg-secondary hover:bg-secondary/90"
           }`}
-          onClick={() => setFulfillmentType("pickup")}
+          onClick={() => handleSearch("pickup")}
         >
           <ShoppingBag className="w-4 h-4 mr-2" />
           Pickup
