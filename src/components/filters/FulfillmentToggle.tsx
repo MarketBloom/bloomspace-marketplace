@@ -15,24 +15,24 @@ export const FulfillmentToggle = ({
       <label className="text-foreground text-xs font-medium">Fulfillment Method</label>
       <div className="grid grid-cols-2 gap-2">
         <Button
-          variant={fulfillmentType === "delivery" ? "default" : "secondary"}
+          variant={fulfillmentType === "delivery" ? "default" : "outline"}
           onClick={() => setFulfillmentType("delivery")}
           className={`flex items-center justify-center h-[42px] text-xs ${
             fulfillmentType === "delivery" 
               ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
-              : ""
+              : "hover:bg-secondary"
           }`}
         >
           <Truck className="w-3.5 h-3.5 mr-2" />
           Delivery
         </Button>
         <Button
-          variant={fulfillmentType === "pickup" ? "default" : "secondary"}
+          variant={fulfillmentType === "pickup" ? "default" : "outline"}
           onClick={() => setFulfillmentType("pickup")}
           className={`flex items-center justify-center h-[42px] text-xs ${
             fulfillmentType === "pickup" 
               ? "bg-[#D02D53] hover:bg-[#D02D53]/90 text-white" 
-              : ""
+              : "hover:bg-secondary"
           }`}
         >
           <ShoppingBag className="w-3.5 h-3.5 mr-2" />
