@@ -76,19 +76,19 @@ export const Hero = () => {
       <div className="container relative z-10 px-4 md:px-8 flex flex-col items-center">
         <div 
           ref={textRef}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="max-w-3xl mx-auto text-center mb-8 md:mb-16"
         >
-          <h1 className="text-4xl md:text-7xl font-bold mb-6 text-white tracking-tight leading-[1.1] drop-shadow-lg">
+          <h1 className="text-3xl md:text-7xl font-bold mb-4 md:mb-6 text-white tracking-tight leading-[1.1] drop-shadow-lg">
             Same-Day Flowers,
             <br />
             Delivered with Care
           </h1>
-          <p className="text-base md:text-xl text-white/95 font-light mx-auto leading-relaxed drop-shadow-md max-w-[800px]">
+          <p className="text-sm md:text-xl text-white/95 font-light mx-auto leading-relaxed drop-shadow-md max-w-[800px]">
             Support local florists and discover the perfect arrangement for any occasion
           </p>
         </div>
         
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl px-2 md:px-0">
           <HomeFilterBar />
         </div>
       </div>

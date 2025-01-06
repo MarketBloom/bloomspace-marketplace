@@ -68,16 +68,16 @@ export const Categories = ({ navigate }: CategoriesProps) => {
   return (
     <section 
       ref={sectionRef}
-      className="py-8 bg-isabelline"
+      className="py-6 md:py-8 bg-isabelline"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 md:px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-12 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">Shop by Category</h2>
-            <p className="text-lg text-black/60">Explore our curated collection of floral categories</p>
+          <div className="mb-8 md:mb-12 text-center">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-black">Shop by Category</h2>
+            <p className="text-base md:text-lg text-black/60">Explore our curated collection of floral categories</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
             {categories.map((category, index) => (
               <div
                 key={category.name}
@@ -93,10 +93,10 @@ export const Categories = ({ navigate }: CategoriesProps) => {
                                group-hover:scale-110"
                     />
                   </div>
-                  <div className="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+                  <div className="absolute inset-0 flex items-end p-6 md:p-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
                     <div>
-                      <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
-                      <p className="text-white/90">{category.description}</p>
+                      <h3 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">{category.name}</h3>
+                      <p className="text-sm md:text-base text-white/90">{category.description}</p>
                     </div>
                   </div>
                 </div>

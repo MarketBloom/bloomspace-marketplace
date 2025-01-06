@@ -47,13 +47,13 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
   }, [products]);
 
   return (
-    <section ref={sectionRef} className="py-8 bg-white">
-      <div className="container mx-auto px-4">
+    <section ref={sectionRef} className="py-6 md:py-8 bg-white">
+      <div className="container mx-auto px-3 md:px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-end mb-12">
+          <div className="flex justify-between items-end mb-8 md:mb-12">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">Featured Arrangements</h2>
-              <p className="text-lg text-black/60">Fresh picks from local artisan florists</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-black mb-3 md:mb-4">Featured Arrangements</h2>
+              <p className="text-base md:text-lg text-black/60">Fresh picks from local artisan florists</p>
             </div>
             <Button 
               variant="outline"
@@ -70,7 +70,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                 {products?.map((product) => (
                   <div key={product.id} className="product-card">
                     <ProductCard
@@ -87,11 +87,11 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                   </div>
                 ))}
               </div>
-              <div className="mt-12 text-center md:hidden">
+              <div className="mt-8 text-center md:hidden">
                 <Button 
                   variant="outline"
                   onClick={() => navigate('/search')}
-                  className="border-selective_yellow/20 text-selective_yellow hover:bg-selective_yellow hover:text-black"
+                  className="w-full sm:w-auto border-selective_yellow/20 text-selective_yellow hover:bg-selective_yellow hover:text-black"
                 >
                   View All
                 </Button>
