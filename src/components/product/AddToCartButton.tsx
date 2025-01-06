@@ -49,7 +49,7 @@ export const AddToCartButton = ({
     <Button 
       variant="outline"
       size="sm"
-      className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs h-8 font-mono"
+      className="w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs h-8 font-medium border border-primary hover:bg-primary hover:text-primary-foreground"
       onClick={handleAddToCart}
     >
       <ShoppingCart className="h-3.5 w-3.5 mr-2" />

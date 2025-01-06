@@ -8,11 +8,11 @@ interface ProductImageProps {
 
 export const ProductImage = ({ src, alt, className }: ProductImageProps) => {
   return (
-    <div className={cn("aspect-square overflow-hidden", className)}>
+    <div className={cn("aspect-[4/3] overflow-hidden bg-secondary", className)}>
       <img
         src={src || "/placeholder.svg"}
         alt={alt}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
       />
     </div>
   );

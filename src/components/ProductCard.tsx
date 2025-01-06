@@ -50,36 +50,39 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="relative overflow-hidden cursor-pointer bg-white shadow-apple hover:shadow-apple-hover transition-all duration-300 border-0"
+      className="group relative overflow-hidden cursor-pointer bg-white border-0 transition-all duration-300"
       onClick={handleClick}
       role="link"
       tabIndex={0}
     >
       <CardHeader className="p-0">
-        <ProductImage src={images?.[0]} alt={displayTitle} />
-        <div className="absolute top-2 right-2 flex flex-col gap-1">
-          {isDeliveryAvailable && (
-            <Badge variant="secondary" className="bg-white/90 text-[10px] flex items-center gap-1">
-              <Truck className="w-3 h-3" />
-              {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
-            </Badge>
-          )}
-          {isPickupAvailable && (
-            <Badge variant="secondary" className="bg-white/90 text-[10px] flex items-center gap-1">
-              <ShoppingBag className="w-3 h-3" />
-              {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
-            </Badge>
-          )}
+        <div className="relative">
+          <ProductImage src={images?.[0]} alt={displayTitle} />
+          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+            {isDeliveryAvailable && (
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium">
+                <Truck className="w-3 h-3" />
+                {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
+              </Badge>
+            )}
+            {isPickupAvailable && (
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium">
+                <ShoppingBag className="w-3 h-3" />
+                {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
+              </Badge>
+            )}
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="p-3 space-y-1">
+      <CardContent className="p-4 space-y-1">
         <ProductInfo 
           title={displayTitle} 
           price={displayPrice}
           floristName={floristName} 
+          displaySize={displaySize}
         />
       </CardContent>
-      <CardFooter className="p-3 pt-0">
+      <CardFooter className="p-4 pt-0">
         <AddToCartButton
           id={id}
           title={displayTitle}
