@@ -3,18 +3,13 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 export const Hero = () => {
   return (
     <section className="relative h-[50vh] min-h-[600px] flex items-center justify-center bg-[#000000]">
-      <div className="absolute inset-0 flex justify-center">
-        <div className="relative h-full w-full max-w-[1400px] overflow-hidden">
-          <img 
-            src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
-            alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
-            className="h-full w-full object-cover opacity-90"
-            style={{ 
-              objectPosition: 'center 30%',
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
-        </div>
+      <div className="absolute inset-0">
+        <img 
+          src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
+          alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
       </div>
       
       <div className="container relative z-10 px-4 md:px-8 flex flex-col items-center">
