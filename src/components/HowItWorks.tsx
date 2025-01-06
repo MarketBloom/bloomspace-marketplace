@@ -13,7 +13,7 @@ export const HowItWorks = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Local Florists */}
-          <div className="bg-secondary/50 rounded-2xl p-8">
+          <div className="bg-secondary rounded-2xl p-8">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
               <p className="text-muted-foreground mb-8">
@@ -28,7 +28,7 @@ export const HowItWorks = () => {
           </div>
 
           {/* Care & Support */}
-          <div className="bg-secondary/50 rounded-2xl p-8">
+          <div className="bg-secondary rounded-2xl p-8">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
               <p className="text-muted-foreground mb-8">
@@ -43,7 +43,7 @@ export const HowItWorks = () => {
           </div>
 
           {/* Easy Filters */}
-          <div className="bg-secondary/50 rounded-2xl p-8">
+          <div className="bg-secondary rounded-2xl p-8">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
               <p className="text-muted-foreground mb-8">
@@ -58,7 +58,7 @@ export const HowItWorks = () => {
           </div>
 
           {/* Delivery Options */}
-          <div className="bg-secondary/50 rounded-2xl p-8">
+          <div className="bg-secondary rounded-2xl p-8">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
               <p className="text-muted-foreground mb-8">
@@ -73,7 +73,7 @@ export const HowItWorks = () => {
           </div>
 
           {/* Perfect Gifts */}
-          <div className="bg-secondary/50 rounded-2xl p-8">
+          <div className="bg-secondary rounded-2xl p-8">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
               <p className="text-muted-foreground mb-8">
