@@ -28,7 +28,7 @@ export const Hero = () => {
             <br />
             delivered with care.
           </h1>
-          <p className="text-base md:text-xl text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-4 md:mb-8">
+          <p className="text-base text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-4 whitespace-normal md:whitespace-nowrap md:text-lg md:mb-8">
             Support local florists and get fresh arrangements delivered right to your door.
           </p>
         </div>
