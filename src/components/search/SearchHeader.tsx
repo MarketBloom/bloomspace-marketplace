@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Store, ShoppingBag } from "lucide-react";
+import { ShoppingBag, Store } from "lucide-react";
 
 interface SearchHeaderProps {
   viewMode: 'products' | 'florists';
@@ -15,8 +15,8 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         className={`flex-1 sm:flex-none text-sm ${
           viewMode === 'products' 
             ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-            : 'border-black/20'
-        } md:rounded-full`}
+            : ''
+        } rounded-full`}
       >
         <ShoppingBag className="h-4 w-4 mr-2" />
         Products
@@ -27,8 +27,8 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         className={`flex-1 sm:flex-none text-sm ${
           viewMode === 'florists' 
             ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-            : 'border-black/20'
-        } md:rounded-full`}
+            : ''
+        } rounded-full`}
       >
         <Store className="h-4 w-4 mr-2" />
         Florists
