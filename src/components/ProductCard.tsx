@@ -58,23 +58,33 @@ export const ProductCard = ({
         role="link"
         tabIndex={0}
       >
-        <div className="h-full relative overflow-hidden">
-          <ProductImage src={images?.[0]} alt={displayTitle} />
-          <div className="absolute top-3 right-3 flex flex-col gap-1">
-            {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
-                <Truck className="w-3 h-3" />
-                {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
-              </Badge>
-            )}
-            {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
-                <ShoppingBag className="w-3 h-3" />
-                {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
-              </Badge>
-            )}
+        <div className="flex flex-col h-full">
+          <div className="relative h-[70%] overflow-hidden bg-secondary">
+            <ProductImage src={images?.[0]} alt={displayTitle} />
+            <div className="absolute top-3 right-3 flex flex-col gap-1">
+              {isDeliveryAvailable && (
+                <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+                  <Truck className="w-3 h-3" />
+                  {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
+                </Badge>
+              )}
+              {isPickupAvailable && (
+                <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+                  <ShoppingBag className="w-3 h-3" />
+                  {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
+                </Badge>
+              )}
+            </div>
           </div>
-          <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 md:bg-gradient-to-t md:from-white/90 md:via-white/60 md:to-transparent md:p-4">
+          <div className="p-2 h-[30%] md:hidden">
+            <ProductInfo 
+              title={displayTitle} 
+              price={displayPrice}
+              floristName={floristName} 
+              displaySize={displaySize}
+            />
+          </div>
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/90 via-white/60 to-transparent p-4">
             <ProductInfo 
               title={displayTitle} 
               price={displayPrice}
