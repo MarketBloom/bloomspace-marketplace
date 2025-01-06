@@ -51,16 +51,25 @@ export const Hero = () => {
         backgroundImage: 'url("/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+        backgroundAttachment: 'fixed',
+        filter: 'contrast(1.05) brightness(0.95)'
       }}
     >
-      {/* Light overlay with noise texture */}
+      {/* Grain effect overlay */}
+      <div 
+        className="absolute inset-0 mix-blend-overlay opacity-40"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+        }}
+      />
+      
+      {/* Light gradient overlay */}
       <div 
         ref={overlayRef}
-        className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-black/30"
+        className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/30"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          opacity: 0.05
+          backdropFilter: 'brightness(0.95)',
         }}
       />
       
@@ -74,7 +83,7 @@ export const Hero = () => {
             <br />
             Delivered with Care
           </h1>
-          <p className="text-base md:text-xl text-white/95 font-light mx-auto leading-relaxed drop-shadow-md max-w-2xl">
+          <p className="text-base md:text-xl text-white/95 font-light mx-auto leading-relaxed drop-shadow-md max-w-[800px]">
             Support local florists and discover the perfect arrangement for any occasion
           </p>
         </div>
