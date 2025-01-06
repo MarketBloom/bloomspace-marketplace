@@ -19,8 +19,8 @@ export const FulfillmentToggle = ({
           onClick={() => setFulfillmentType("delivery")}
           className={`flex items-center justify-center h-[42px] text-xs ${
             fulfillmentType === "delivery" 
-              ? "bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black" 
-              : ""
+              ? "bg-primary hover:bg-primary/90 text-primary-foreground" 
+              : "hover:bg-accent hover:text-accent-foreground"
           }`}
         >
           <Truck className="w-3.5 h-3.5 mr-2" />
@@ -31,8 +31,8 @@ export const FulfillmentToggle = ({
           onClick={() => setFulfillmentType("pickup")}
           className={`flex items-center justify-center h-[42px] text-xs ${
             fulfillmentType === "pickup" 
-              ? "bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black" 
-              : ""
+              ? "bg-primary hover:bg-primary/90 text-primary-foreground" 
+              : "hover:bg-accent hover:text-accent-foreground"
           }`}
         >
           <ShoppingBag className="w-3.5 h-3.5 mr-2" />
