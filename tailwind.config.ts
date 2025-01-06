@@ -26,49 +26,35 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#EFEEEA", // Isabelline as background
-        foreground: "#FCBA24", // Selective Yellow as text color
+        background: "#FFFFFF",
+        foreground: "#1D1D1F",
         primary: {
-          DEFAULT: "#050407", // Black as primary
-          foreground: "#EFEEEA", // Isabelline text on primary
-          100: "#010101",
-          200: "#020103",
-          300: "#030204",
-          400: "#040305",
-          500: "#050407",
-          600: "#322846",
-          700: "#604d85",
-          800: "#9280b6",
-          900: "#c9c0db",
+          DEFAULT: "#D73459",
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#FCBA24", // Selective Yellow as secondary
-          foreground: "#050407", // Black text on secondary
-          100: "#382801",
-          200: "#714f02",
-          300: "#a97703",
-          400: "#e19f03",
-          500: "#fcba24",
-          600: "#fcc84e",
-          700: "#fdd67a",
-          800: "#fee4a7",
-          900: "#fef1d3",
+          DEFAULT: "#F5F5F7",
+          foreground: "#1D1D1F",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#EFEEEA", // Isabelline as muted
-          foreground: "#604d85", // A mid-tone for muted text
+          DEFAULT: "#F5F5F7",
+          foreground: "#86868B",
         },
         accent: {
-          DEFAULT: "#050407", // Black as accent
-          foreground: "#EFEEEA", // Isabelline text on accent
+          DEFAULT: "#F5F5F7",
+          foreground: "#1D1D1F",
         },
         popover: {
-          DEFAULT: "#EFEEEA", // Isabelline as popover background
-          foreground: "#FCBA24", // Selective Yellow text in popovers
+          DEFAULT: "#FFFFFF",
+          foreground: "#1D1D1F",
         },
         card: {
-          DEFAULT: "#EFEEEA", // Isabelline as card background
-          foreground: "#FCBA24", // Selective Yellow text in cards
+          DEFAULT: "#FFFFFF",
+          foreground: "#1D1D1F",
         },
       },
       boxShadow: {
