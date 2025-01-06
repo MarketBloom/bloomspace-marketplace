@@ -26,7 +26,7 @@ export const Testimonials = () => {
   ];
 
   return (
-    <section className="py-12 bg-[#F5F5F7]">
+    <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-semibold mb-3 tracking-tight text-foreground">What Our Customers Say</h2>
@@ -37,7 +37,7 @@ export const Testimonials = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-6 rounded-2xl hover:shadow-lg transition-shadow">
+            <div key={index} className="bg-[#F5F5F7] p-6 rounded-2xl hover:shadow-lg transition-shadow">
               <div className="flex items-center space-x-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-primary text-primary" />

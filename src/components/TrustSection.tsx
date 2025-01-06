@@ -26,7 +26,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
   ];
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12">
@@ -56,7 +56,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 rounded-2xl bg-[#F5F5F7] hover:shadow-sm transition-shadow">
+              <div key={index} className="p-6 rounded-2xl bg-white hover:shadow-sm transition-shadow">
                 <div className="mb-4">{feature.icon}</div>
                 <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>

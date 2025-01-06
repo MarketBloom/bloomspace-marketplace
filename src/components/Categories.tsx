@@ -29,7 +29,7 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-8 bg-[#F5F5F7]">
+    <section className="py-8 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-semibold text-foreground mb-2">Shop by Category</h2>
         <p className="text-base text-muted-foreground mb-6">
@@ -39,7 +39,7 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-white hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
+              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-[#F5F5F7] hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
               <div className="aspect-[4/5] overflow-hidden">

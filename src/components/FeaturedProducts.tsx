@@ -10,7 +10,7 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-8 bg-white">
+    <section className="py-8 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <div>
