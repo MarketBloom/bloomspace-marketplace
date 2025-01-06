@@ -150,7 +150,7 @@ const Search = () => {
 
           <MobileFilterButton />
 
-          <div className="bg-primary p-6 rounded-2xl shadow-apple">
+          <div className="bg-primary p-6 rounded-2xl">
             <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
             <SearchResults 
               viewMode={viewMode}
