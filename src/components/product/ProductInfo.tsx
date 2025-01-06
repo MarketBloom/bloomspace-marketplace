@@ -1,4 +1,5 @@
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Store } from "lucide-react";
 
 interface ProductInfoProps {
   title: string;
@@ -17,7 +18,8 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
           {title}
         </h3>
         {floristName && (
-          <p className="text-[10px] md:text-[12px] text-white/80 font-normal line-clamp-1">
+          <p className="text-[10px] md:text-[12px] text-white/80 font-normal line-clamp-1 flex items-center gap-1">
+            <Store className="w-2.5 h-2.5 md:w-3 md:h-3" />
             {floristName}
           </p>
         )}
