@@ -51,7 +51,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start font-normal text-xs h-8",
-                  time === slot.value ? "bg-[#D02D53]/20 text-[#D02D53]" : ""
+                  time === slot.value ? "bg-primary/20 text-primary" : ""
                 )}
                 onClick={() => handleSelect(slot.value)}
               >

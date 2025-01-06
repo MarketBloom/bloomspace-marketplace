@@ -2,7 +2,6 @@ import { Categories } from "@/components/Categories";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { HowItWorks } from "@/components/HowItWorks";
 import { Testimonials } from "@/components/Testimonials";
 import { TrustSection } from "@/components/TrustSection";
 import { useNavigate } from "react-router-dom";
@@ -49,45 +48,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <Hero />
-      <HowItWorks />
-      
-      {/* Value Proposition Section */}
-      <section className="py-12 bg-white">
-        <div className="container px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {/* Local Shopping */}
-            <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-                Shop Local, Support Local
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Connect directly with talented florists in your neighborhood
-              </p>
-            </div>
-            
-            {/* Wide Selection */}
-            <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-                100+ Local Florists
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Discover unique arrangements from the best florists in your area
-              </p>
-            </div>
-            
-            {/* Same Day Delivery */}
-            <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-                Same-Day Delivery
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Filter by delivery time to find florists available for last-minute orders
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Categories navigate={navigate} />
       <FeaturedProducts 
         products={products || []} 

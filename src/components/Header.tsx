@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
 import { ShoppingCart, Search, User, Home } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
+  const [isHome, setIsHome] = useState(true);
 
   const handleSignOut = async () => {
     try {
@@ -38,22 +40,16 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center space-x-6">
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="h-8 w-8"
-          >
+          <a href="/" className="text-lg">
             <Home className="h-5 w-5" />
-          </Button>
+          </a>
           <nav className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/search")}
-              className="text-sm text-gray-600 hover:text-black transition-colors"
-            >
+            <a href="/search" className="text-sm text-gray-600 hover:text-black transition-colors">
               Browse
-            </Button>
+            </a>
+            <a href="/about" className="text-sm text-gray-600 hover:text-black transition-colors">
+              About
+            </a>
           </nav>
         </div>
 
@@ -75,7 +71,7 @@ export const Header = () => {
           >
             <ShoppingCart className="h-4 w-4" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#D02D53] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {itemCount}
               </span>
             )}
@@ -95,14 +91,14 @@ export const Header = () => {
               <Button 
                 variant="default"
                 onClick={() => navigate("/login")}
-                className="h-8 px-3 text-sm bg-[#D02D53] hover:bg-[#D02D53]/90 text-white rounded-full"
+                className="h-8 px-3 text-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
                 Sign In
               </Button>
               <Button 
                 variant="default"
                 onClick={() => navigate("/signup")}
-                className="h-8 px-3 text-sm bg-[#D02D53] hover:bg-[#D02D53]/90 text-white rounded-full"
+                className="h-8 px-3 text-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
                 Sign Up
               </Button>

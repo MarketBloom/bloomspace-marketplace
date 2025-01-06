@@ -9,22 +9,22 @@ gsap.registerPlugin(ScrollTrigger);
 export const TrustSection = ({ navigate }: { navigate: (path: string) => void }) => {
   const features = [
     {
-      icon: <Shield className="h-6 w-6 text-selective_yellow" />,
+      icon: <Shield className="h-5 w-5 text-primary" />,
       title: "100% Satisfaction",
       description: "Every arrangement is crafted with care and backed by our satisfaction guarantee"
     },
     {
-      icon: <Truck className="h-6 w-6 text-selective_yellow" />,
+      icon: <Truck className="h-5 w-5 text-primary" />,
       title: "Same Day Delivery",
       description: "Order by 1pm for same-day delivery in most areas"
     },
     {
-      icon: <Clock className="h-6 w-6 text-selective_yellow" />,
+      icon: <Clock className="h-5 w-5 text-primary" />,
       title: "Fresh & On Time",
       description: "We ensure your flowers arrive fresh and exactly when you need them"
     },
     {
-      icon: <Heart className="h-6 w-6 text-selective_yellow" />,
+      icon: <Heart className="h-5 w-5 text-primary" />,
       title: "Local Artisans",
       description: "Support talented local florists in your community"
     }
@@ -34,15 +34,15 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate the image
+      // Animate the image and content separately
       gsap.fromTo(".trust-image",
         { 
           opacity: 0,
-          y: 50
+          x: -50
         },
         {
           opacity: 1,
-          y: 0,
+          x: 0,
           duration: 1,
           scrollTrigger: {
             trigger: ".trust-image",
@@ -53,15 +53,14 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
         }
       );
 
-      // Animate the content
       gsap.fromTo(".trust-content",
         { 
           opacity: 0,
-          y: 50
+          x: 50
         },
         {
           opacity: 1,
-          y: 0,
+          x: 0,
           duration: 1,
           scrollTrigger: {
             trigger: ".trust-content",
@@ -100,23 +99,20 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-8 bg-white">
+    <section ref={sectionRef} className="py-12 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="trust-image relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12">
+            <div className="trust-image">
               <img 
                 src="/lovable-uploads/c7fd657a-4ba4-4d9b-bb36-f03266f5cdc0.png"
                 alt="Local florist creating an arrangement"
-                className="rounded-2xl shadow-apple"
+                className="rounded-2xl shadow-lg"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-selective_yellow/10 to-transparent rounded-2xl" />
             </div>
-            <div className="trust-content space-y-8">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-black">
-                Support Local Artisan Florists
-              </h2>
-              <p className="text-lg md:text-xl text-black/60 leading-relaxed">
+            <div className="trust-content space-y-6">
+              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Support Local Artisan Florists</h2>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 Every arrangement is crafted with care by passionate local florists in your area. 
                 Get fresh, beautiful flowers delivered right to your door or pick up from the shop, 
                 all while supporting small businesses in your community.
@@ -124,22 +120,23 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
               <Button 
                 size="lg"
                 onClick={() => navigate('/search')}
-                className="text-base bg-selective_yellow hover:bg-selective_yellow/90 text-black"
+                className="text-base"
               >
                 Find Your Local Florist
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="feature-card p-8 rounded-2xl bg-isabelline/30 hover:shadow-apple transition-all duration-500"
+                className="feature-card p-6 rounded-2xl bg-white hover:shadow-sm transition-shadow"
+                data-speed={1 + Math.random() * 0.5}
               >
-                <div className="mb-6">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-black">{feature.title}</h3>
-                <p className="text-base text-black/60 leading-relaxed">{feature.description}</p>
+                <div className="mb-4">{feature.icon}</div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>

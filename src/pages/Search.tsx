@@ -132,9 +132,8 @@ const Search = () => {
     <div className="min-h-screen bg-[#F5F5F7] font-mono">
       <Header />
       
-      <div className="max-w-[1800px] mx-auto px-4 md:px-6 pt-14 md:pt-20">
+      <div className="max-w-[1800px] mx-auto px-4 pt-20">
         <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
-          {/* Desktop Filter Sidebar */}
           <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
             <div className="w-full">
               <h3 className="text-sm font-medium mb-3">Filters</h3>
@@ -149,12 +148,9 @@ const Search = () => {
             </div>
           </aside>
 
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden -mx-4 px-4 mb-4 sticky top-14 pt-4 pb-2 bg-[#F5F5F7] z-10">
-            <MobileFilterButton />
-          </div>
+          <MobileFilterButton />
 
-          <div className="bg-secondary p-4 md:p-6 rounded-lg">
+          <div className="bg-secondary p-4">
             <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
             <SearchResults 
               viewMode={viewMode}
