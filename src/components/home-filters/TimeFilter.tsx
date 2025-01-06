@@ -20,40 +20,33 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
     }).flat()
   ];
 
-  const handleSelect = (value: string | null) => {
-    setTime(value);
-    // Close popover by removing focus from trigger
-    const popoverTrigger = document.activeElement as HTMLElement;
-    popoverTrigger?.blur();
-  };
-
   return (
     <div className="space-y-1.5">
-      <label className="text-white text-xs font-medium drop-shadow-sm">Time</label>
+      <label className="text-[#EFEEEA]/80 text-xs font-medium">Time</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-9 text-xs",
-              !time && "text-muted-foreground"
+              "w-full justify-start text-left h-12 bg-[#EFEEEA]/10 border-[#EFEEEA]/10 text-[#EFEEEA]",
+              !time && "text-[#EFEEEA]/40"
             )}
           >
-            <Clock className="mr-2 h-3.5 w-3.5" />
-            {time || "Any Time"}
+            <Clock className="mr-2 h-4 w-4" />
+            {time || "Select time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border border-white/20" align="start">
+        <PopoverContent className="w-48 p-0 border-[#EFEEEA]/10" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button
                 key={slot.value || 'any'}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start font-normal text-xs h-8",
-                  time === slot.value ? "bg-primary/20 text-primary" : ""
+                  "w-full justify-start h-9",
+                  time === slot.value ? "bg-[#FCBA24] text-[#050407]" : "text-[#EFEEEA]"
                 )}
-                onClick={() => handleSelect(slot.value)}
+                onClick={() => setTime(slot.value)}
               >
                 {slot.label}
               </Button>
