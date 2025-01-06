@@ -10,7 +10,7 @@ export const FloristGrid = ({ florists }: FloristGridProps) => {
 
   const getGridClassName = () => {
     if (!isMobile) return "grid grid-cols-3 gap-3";
-    return "grid grid-cols-2 gap-2";
+    return "grid grid-cols-2 gap-2 px-2";
   };
 
   return (
