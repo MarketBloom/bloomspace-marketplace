@@ -5,7 +5,6 @@ export const getDashboardMenuItems = (handleHomeClick: () => void, isHome: boole
     icon: Home,
     label: "Homepage",
     path: "/",
-    onClick: handleHomeClick,
     className: `transition-transform duration-200 ${!isHome ? 'rotate-180' : ''}`
   },
   {
