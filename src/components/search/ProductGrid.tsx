@@ -12,8 +12,8 @@ export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
   const getGridClassName = () => {
     if (!isMobile) return "grid grid-cols-3 gap-3";
     return isDoubleColumn 
-      ? "grid grid-cols-2 gap-1" 
-      : "grid grid-cols-1 gap-1"; // Changed gap to 1px for single column as well
+      ? "grid grid-cols-2 gap-1" // Reduced gap to 1px to maximize tile size
+      : "grid grid-cols-1 gap-3 px-3";
   };
 
   return (
