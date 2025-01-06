@@ -33,7 +33,7 @@ const categories = [
 
 export const Categories = ({ navigate }: CategoriesProps) => {
   return (
-    <section className="py-8">
+    <section className="py-4 md:py-8 mt-4 md:mt-0">
       <div className="container mx-auto px-4">
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-foreground">Shop by Category</h2>
