@@ -71,7 +71,7 @@ export const Header = () => {
           >
             <ShoppingCart className="h-4 w-4" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#A8A646] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {itemCount}
               </span>
             )}
@@ -91,14 +91,14 @@ export const Header = () => {
               <Button 
                 variant="default"
                 onClick={() => navigate("/login")}
-                className="h-8 px-3 text-sm bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
+                className="h-8 px-3 text-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
                 Sign In
               </Button>
               <Button 
                 variant="default"
                 onClick={() => navigate("/signup")}
-                className="h-8 px-3 text-sm bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black rounded-full"
+                className="h-8 px-3 text-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
                 Sign Up
               </Button>

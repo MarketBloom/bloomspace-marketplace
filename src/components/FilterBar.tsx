@@ -56,10 +56,10 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "delivery" ? "default" : "outline"}
             onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs shadow-sm hover:shadow-apple-hover transition-shadow ${
+            className={`flex items-center justify-center h-[42px] text-xs ${
               fulfillmentType === "delivery" 
-                ? "bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black" 
-                : ""
+                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
+                : ''
             }`}
           >
             <Truck className="w-3.5 h-3.5 mr-2" />
@@ -68,10 +68,10 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "pickup" ? "default" : "outline"}
             onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs shadow-sm hover:shadow-apple-hover transition-shadow ${
+            className={`flex items-center justify-center h-[42px] text-xs ${
               fulfillmentType === "pickup" 
-                ? "bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black" 
-                : ""
+                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
+                : ''
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5 mr-2" />

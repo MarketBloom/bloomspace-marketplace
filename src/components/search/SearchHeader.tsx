@@ -14,7 +14,7 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         onClick={() => setViewMode('products')}
         className={`flex-1 sm:flex-none text-sm ${
           viewMode === 'products' 
-            ? 'bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black' 
+            ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
             : ''
         } rounded-full`}
       >
@@ -26,7 +26,7 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         onClick={() => setViewMode('florists')}
         className={`flex-1 sm:flex-none text-sm ${
           viewMode === 'florists' 
-            ? 'bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black' 
+            ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
             : ''
         } rounded-full`}
       >
