@@ -84,19 +84,19 @@ export const Categories = ({ navigate }: CategoriesProps) => {
                 className="category-card group cursor-pointer"
                 onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
               >
-                <div className="relative overflow-hidden rounded-2xl bg-black">
+                <div className="relative overflow-hidden rounded-2xl bg-white shadow-apple">
                   <div className="aspect-[16/9] overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover transition-transform duration-700 
-                               group-hover:scale-110 group-hover:opacity-80"
+                               group-hover:scale-110"
                     />
                   </div>
-                  <div className="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+                  <div className="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
                     <div>
-                      <h3 className="text-2xl font-bold text-isabelline mb-2">{category.name}</h3>
-                      <p className="text-isabelline/80">{category.description}</p>
+                      <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
+                      <p className="text-white/90">{category.description}</p>
                     </div>
                   </div>
                 </div>

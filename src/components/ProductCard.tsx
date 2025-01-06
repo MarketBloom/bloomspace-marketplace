@@ -52,8 +52,8 @@ export const ProductCard = ({
   return (
     <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-black border-0 
-                   transition-all duration-500 h-full rounded-xl"
+        className="group relative overflow-hidden cursor-pointer bg-white border-0 
+                   transition-all duration-500 h-full rounded-xl shadow-apple hover:shadow-apple-hover"
         onClick={handleClick}
         role="link"
         tabIndex={0}
@@ -62,20 +62,20 @@ export const ProductCard = ({
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-black/80 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
                 <Truck className="w-3 h-3" />
                 {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
               </Badge>
             )}
             {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-black/80 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
                 <ShoppingBag className="w-3 h-3" />
                 {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
               </Badge>
             )}
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/90 via-white/60 to-transparent p-4">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}

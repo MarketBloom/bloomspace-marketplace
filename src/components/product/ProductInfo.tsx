@@ -12,16 +12,16 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   
   return (
     <div className="space-y-1">
-      <h3 className="text-sm md:text-base font-medium text-isabelline line-clamp-1 break-words">
+      <h3 className="text-sm md:text-base font-medium text-black line-clamp-1 break-words">
         {title}
       </h3>
       {floristName && (
-        <p className="text-xs md:text-sm text-isabelline/60 font-normal line-clamp-1">
+        <p className="text-xs md:text-sm text-black/60 font-normal line-clamp-1">
           {floristName}
         </p>
       )}
       <div className="flex justify-between items-center">
-        <p className="text-xs md:text-sm text-isabelline/80 line-clamp-1 max-w-[60%]">
+        <p className="text-xs md:text-sm text-black/80 line-clamp-1 max-w-[60%]">
           {displaySize || "Standard"}
         </p>
         <p className="text-xs md:text-sm font-medium text-selective_yellow whitespace-nowrap pl-1">

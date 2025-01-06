@@ -47,18 +47,18 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
   }, [products]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-black">
+    <section ref={sectionRef} className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-isabelline mb-4">Featured Arrangements</h2>
-              <p className="text-lg text-isabelline/60">Fresh picks from local artisan florists</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">Featured Arrangements</h2>
+              <p className="text-lg text-black/60">Fresh picks from local artisan florists</p>
             </div>
             <Button 
               variant="outline"
               onClick={() => navigate('/search')}
-              className="hidden md:flex border-isabelline/20 text-isabelline hover:bg-isabelline/10"
+              className="hidden md:flex hover:bg-selective_yellow hover:text-black border-selective_yellow/20 text-selective_yellow"
             >
               View All
             </Button>
@@ -66,7 +66,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           
           {isLoading ? (
             <div className="flex justify-center items-center h-[200px]">
-              <Loader2 className="h-6 w-6 animate-spin text-isabelline" />
+              <Loader2 className="h-6 w-6 animate-spin text-selective_yellow" />
             </div>
           ) : (
             <>
@@ -91,7 +91,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                 <Button 
                   variant="outline"
                   onClick={() => navigate('/search')}
-                  className="border-isabelline/20 text-isabelline hover:bg-isabelline/10"
+                  className="border-selective_yellow/20 text-selective_yellow hover:bg-selective_yellow hover:text-black"
                 >
                   View All
                 </Button>
