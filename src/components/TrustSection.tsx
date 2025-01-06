@@ -7,29 +7,6 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const TrustSection = ({ navigate }: { navigate: (path: string) => void }) => {
-  const features = [
-    {
-      icon: <Shield className="h-5 w-5 text-primary" />,
-      title: "100% Satisfaction",
-      description: "Every arrangement is crafted with care and backed by our satisfaction guarantee"
-    },
-    {
-      icon: <Truck className="h-5 w-5 text-primary" />,
-      title: "Same Day Delivery",
-      description: "Order by 1pm for same-day delivery in most areas"
-    },
-    {
-      icon: <Clock className="h-5 w-5 text-primary" />,
-      title: "Fresh & On Time",
-      description: "We ensure your flowers arrive fresh and exactly when you need them"
-    },
-    {
-      icon: <Heart className="h-5 w-5 text-primary" />,
-      title: "Local Artisans",
-      description: "Support talented local florists in your community"
-    }
-  ];
-
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -70,29 +47,6 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
           }
         }
       );
-
-      // Animate feature cards
-      const cards = gsap.utils.toArray<HTMLElement>('.feature-card');
-      cards.forEach((card, i) => {
-        gsap.fromTo(card,
-          { 
-            opacity: 0,
-            y: 30
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: i * 0.2,
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom-=50",
-              end: "top center",
-              toggleActions: "play none none reverse",
-            }
-          }
-        );
-      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -102,7 +56,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
     <section ref={sectionRef} className="py-12 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="trust-image">
               <img 
                 src="/lovable-uploads/c7fd657a-4ba4-4d9b-bb36-f03266f5cdc0.png"
@@ -125,20 +79,6 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
                 Find Your Local Florist
               </Button>
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {features.map((feature, index) => (
-              <div 
-                key={index} 
-                className="feature-card p-6 rounded-2xl bg-white hover:shadow-sm transition-shadow"
-                data-speed={1 + Math.random() * 0.5}
-              >
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
