@@ -36,9 +36,11 @@ const Index = () => {
     },
     retry: 1,
     retryDelay: 1000,
-    onError: (error) => {
-      console.error('Query error:', error);
-      toast.error("Failed to load featured products. Please try again later.");
+    meta: {
+      onError: () => {
+        console.error('Query error:', error);
+        toast.error("Failed to load featured products. Please try again later.");
+      }
     }
   });
 
