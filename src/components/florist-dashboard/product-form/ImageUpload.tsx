@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ImagePlus, Loader2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Crop } from 'react-image-crop';
+import { UploadedImages } from "./image-upload/UploadedImages";
+import { UploadButton } from "./image-upload/UploadButton";
+import { CropDialog } from "./image-upload/CropDialog";
 
 interface ImageUploadProps {
   uploadedImages: string[];
@@ -12,41 +14,104 @@ interface ImageUploadProps {
 
 export const ImageUpload = ({ uploadedImages, setUploadedImages }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [crop, setCrop] = useState<Crop>({
+    unit: '%',
+    width: 100,
+    height: 100,
+    x: 0,
+    y: 0
+  });
+  const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
+  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-      setIsUploading(true);
-      const newImages: string[] = [];
+    const file = files[0];
+    const reader = new FileReader();
+    
+    reader.onload = () => {
+      setCurrentImage(reader.result as string);
+      setCropDialogOpen(true);
+    };
+    
+    reader.readAsDataURL(file);
+  };
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const fileExt = file.name.split(".").pop();
-        const filePath = `${crypto.randomUUID()}.${fileExt}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("florist-images")
-          .upload(filePath, file);
-
-        if (uploadError) {
-          toast.error(`Failed to upload image ${file.name}`);
-          continue;
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from("florist-images")
-          .getPublicUrl(filePath);
-
-        newImages.push(publicUrl);
+  const getCroppedImage = (): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      if (!imageRef || !crop) {
+        reject(new Error('No image or crop data'));
+        return;
       }
 
-      setUploadedImages([...uploadedImages, ...newImages]);
-      toast.success("Images uploaded successfully");
+      const canvas = document.createElement('canvas');
+      const scaleX = imageRef.naturalWidth / imageRef.width;
+      const scaleY = imageRef.naturalHeight / imageRef.height;
+      
+      canvas.width = (crop.width * imageRef.width) / 100;
+      canvas.height = (crop.height * imageRef.height) / 100;
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('No 2d context'));
+        return;
+      }
+
+      ctx.drawImage(
+        imageRef,
+        (crop.x * imageRef.width) / 100,
+        (crop.y * imageRef.height) / 100,
+        (crop.width * imageRef.width) / 100,
+        (crop.height * imageRef.height) / 100,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error('Canvas is empty'));
+            return;
+          }
+          resolve(blob);
+        },
+        'image/jpeg',
+        0.95
+      );
+    });
+  };
+
+  const handleCropComplete = async () => {
+    try {
+      setIsUploading(true);
+      const croppedBlob = await getCroppedImage();
+      const file = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
+      
+      const fileExt = 'jpg';
+      const filePath = `${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("florist-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("florist-images")
+        .getPublicUrl(filePath);
+
+      setUploadedImages([...uploadedImages, publicUrl]);
+      toast.success("Image uploaded successfully");
+      setCropDialogOpen(false);
+      setCurrentImage(null);
     } catch (error) {
-      console.error("Error uploading images:", error);
-      toast.error("Failed to upload images");
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image");
     } finally {
       setIsUploading(false);
     }
@@ -60,55 +125,33 @@ export const ImageUpload = ({ uploadedImages, setUploadedImages }: ImageUploadPr
     <div>
       <Label htmlFor="images" className="block mb-2">Product Images</Label>
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-4">
-          {uploadedImages.map((image, index) => (
-            <div key={index} className="relative group">
-              <img 
-                src={image} 
-                alt={`Product ${index + 1}`} 
-                className="w-24 h-24 object-cover rounded-lg border"
-              />
-              <button
-                type="button"
-                onClick={() => removeImage(index)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-        <div>
-          <input
-            type="file"
-            id="images"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-            disabled={isUploading}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => document.getElementById("images")?.click()}
-            disabled={isUploading}
-            className="w-full"
-          >
-            {isUploading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <ImagePlus className="w-4 h-4 mr-2" />
-                Upload Images
-              </>
-            )}
-          </Button>
-        </div>
+        <UploadedImages images={uploadedImages} onRemove={removeImage} />
+        <UploadButton
+          isUploading={isUploading}
+          onClick={() => document.getElementById("images")?.click()}
+        />
       </div>
+
+      <input
+        type="file"
+        id="images"
+        accept="image/*"
+        onChange={handleImageSelect}
+        className="hidden"
+        disabled={isUploading}
+      />
+
+      <CropDialog
+        open={cropDialogOpen}
+        onOpenChange={setCropDialogOpen}
+        currentImage={currentImage}
+        crop={crop}
+        onCropChange={setCrop}
+        onImageLoad={setImageRef}
+        imageRef={imageRef}
+        onCropComplete={handleCropComplete}
+        isUploading={isUploading}
+      />
     </div>
   );
 };

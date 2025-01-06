@@ -57,30 +57,34 @@ export const ProductCard = ({
         role="link"
         tabIndex={0}
       >
-        <div className="h-[70%] md:h-[80%] relative">
+        <div className="absolute inset-0">
           <ProductImage src={images?.[0]} alt={displayTitle} />
-          <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
-            {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
-                <Truck className="w-3 h-3 md:w-3 md:h-3" />
-                {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
-              </Badge>
-            )}
-            {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
-                <ShoppingBag className="w-3 h-3 md:w-3 md:h-3" />
-                {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
-              </Badge>
-            )}
-          </div>
         </div>
-        <div className="h-[30%] md:h-[20%] px-1.5 py-1.5 md:px-3 lg:px-3 xl:px-4 md:py-2">
-          <ProductInfo 
-            title={displayTitle} 
-            price={displayPrice}
-            floristName={floristName} 
-            displaySize={displaySize}
-          />
+        <div className="relative h-full">
+          <div className="h-[70%] md:h-[80%] relative">
+            <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
+              {isDeliveryAvailable && (
+                <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
+                  <Truck className="w-3 h-3 md:w-3 md:h-3" />
+                  {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
+                </Badge>
+              )}
+              {isPickupAvailable && (
+                <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
+                  <ShoppingBag className="w-3 h-3 md:w-3 md:h-3" />
+                  {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
+                </Badge>
+              )}
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[30%] md:h-[20%] px-1.5 py-1.5 md:px-3 lg:px-3 xl:px-4 md:py-2 bg-white/10 bg-black/20 backdrop-blur-md">
+            <ProductInfo 
+              title={displayTitle} 
+              price={displayPrice}
+              floristName={floristName} 
+              displaySize={displaySize}
+            />
+          </div>
         </div>
       </Card>
     </div>
