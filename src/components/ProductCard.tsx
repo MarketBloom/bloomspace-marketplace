@@ -1,8 +1,7 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { ProductImage } from "@/components/product/ProductImage";
 import { ProductInfo } from "@/components/product/ProductInfo";
-import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ShoppingBag, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -74,7 +73,7 @@ export const ProductCard = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-4 space-y-1">
+      <CardContent className="p-4">
         <ProductInfo 
           title={displayTitle} 
           price={displayPrice}
@@ -82,18 +81,6 @@ export const ProductCard = ({
           displaySize={displaySize}
         />
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <AddToCartButton
-          id={id}
-          title={displayTitle}
-          price={displayPrice}
-          image={images?.[0]}
-          floristId={floristId}
-          floristName={floristName}
-          selectedSizeId={sizeId}
-          selectedSizeName={displaySize || undefined}
-        />
-      </CardFooter>
     </Card>
   );
 };
