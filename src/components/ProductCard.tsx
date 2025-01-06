@@ -74,7 +74,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[30%] md:h-[20%] px-1.5 py-1.5 md:px-3 lg:px-3 xl:px-4 md:py-2">
+        <div className="h-[30%] md:h-[20%] px-1.5 py-1.5 md:px-3 lg:px-3 xl:px-4 md:py-2 bg-black/20 backdrop-blur-md">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
