@@ -58,8 +58,8 @@ export default {
         },
       },
       boxShadow: {
-        'apple': '0 2px 5px -2px rgba(0,0,0,0.08), 0 2px 8px -2px rgba(0,0,0,0.06)',
-        'apple-hover': '0 4px 12px -4px rgba(0,0,0,0.12), 0 4px 16px -4px rgba(0,0,0,0.12)',
+        'apple': '0 4px 8px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06)',
+        'apple-hover': '0 8px 16px -4px rgba(0, 0, 0, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.1)',
       },
       borderRadius: {
         lg: "var(--radius)",
