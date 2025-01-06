@@ -132,7 +132,7 @@ const Search = () => {
     <div className="min-h-screen bg-[#F5F5F7] font-mono">
       <Header />
       
-      <div className="container mx-auto px-4 pt-24 md:pt-20">
+      <div className="container mx-auto px-4 pt-28 md:pt-20">
         <div className="lg:grid lg:grid-cols-[280px_1fr] gap-6">
           <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
             <div className="w-full">
