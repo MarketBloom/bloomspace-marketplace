@@ -14,11 +14,13 @@ export const HowItWorks = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Local Florists */}
           <div className="bg-secondary rounded-2xl p-8">
-            <div className="aspect-[4/5]">
-              <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
-              <p className="text-muted-foreground mb-8">
-                Support talented florists in your community crafting unique arrangements
-              </p>
+            <div className="aspect-[4/5] flex flex-col">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
+                <p className="text-muted-foreground">
+                  Support talented florists in your community crafting unique arrangements
+                </p>
+              </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Flower className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
@@ -29,11 +31,13 @@ export const HowItWorks = () => {
 
           {/* Care & Support */}
           <div className="bg-secondary rounded-2xl p-8">
-            <div className="aspect-[4/5]">
-              <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
-              <p className="text-muted-foreground mb-8">
-                Every arrangement is made with love and backed by our satisfaction guarantee
-              </p>
+            <div className="aspect-[4/5] flex flex-col">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
+                <p className="text-muted-foreground">
+                  Every arrangement is made with love and backed by our satisfaction guarantee
+                </p>
+              </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Heart className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-2/3 mb-2" />
@@ -44,11 +48,13 @@ export const HowItWorks = () => {
 
           {/* Easy Filters */}
           <div className="bg-secondary rounded-2xl p-8">
-            <div className="aspect-[4/5]">
-              <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
-              <p className="text-muted-foreground mb-8">
-                Filter by occasion, style, and budget to find your perfect arrangement
-              </p>
+            <div className="aspect-[4/5] flex flex-col">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
+                <p className="text-muted-foreground">
+                  Filter by occasion, style, and budget to find your perfect arrangement
+                </p>
+              </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Filter className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
@@ -59,11 +65,13 @@ export const HowItWorks = () => {
 
           {/* Delivery Options */}
           <div className="bg-secondary rounded-2xl p-8">
-            <div className="aspect-[4/5]">
-              <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
-              <p className="text-muted-foreground mb-8">
-                Same-day delivery available for those last-minute moments
-              </p>
+            <div className="aspect-[4/5] flex flex-col">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
+                <p className="text-muted-foreground">
+                  Same-day delivery available for those last-minute moments
+                </p>
+              </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Truck className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
@@ -74,11 +82,13 @@ export const HowItWorks = () => {
 
           {/* Perfect Gifts */}
           <div className="bg-secondary rounded-2xl p-8">
-            <div className="aspect-[4/5]">
-              <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
-              <p className="text-muted-foreground mb-8">
-                Find the ideal floral gift for any special occasion or celebration
-              </p>
+            <div className="aspect-[4/5] flex flex-col">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
+                <p className="text-muted-foreground">
+                  Find the ideal floral gift for any special occasion or celebration
+                </p>
+              </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Gift className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
