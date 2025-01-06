@@ -32,7 +32,7 @@ export const HomeFilterBar = () => {
   };
 
   return (
-    <div className="bg-black/20 backdrop-blur-md rounded-2xl p-5 border border-white/10 -mt-8">
+    <div className="bg-black/20 backdrop-blur-md rounded-2xl p-5 border border-white/10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <LocationFilter 
           location={location}
