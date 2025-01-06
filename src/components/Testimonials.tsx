@@ -26,33 +26,42 @@ export const Testimonials = () => {
   ];
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-24 bg-isabelline/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-semibold mb-3 tracking-tight text-foreground">What Our Customers Say</h2>
-          <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto">
+        <div className="text-center mb-16 opacity-0 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black tracking-tight">
+            What Our Customers Say
+          </h2>
+          <p className="text-lg md:text-xl text-black/60 max-w-2xl mx-auto">
             Real reviews from happy customers who found their perfect florists through our platform
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-[#F5F5F7] p-6 rounded-2xl hover:shadow-lg transition-shadow">
-              <div className="flex items-center space-x-1 mb-4">
+            <div 
+              key={index} 
+              className="bg-white rounded-2xl p-8 shadow-apple hover:shadow-apple-hover transition-all duration-500
+                         opacity-0 animate-fade-in"
+              style={{ animationDelay: `${index * 200}ms` }}
+            >
+              <div className="flex items-center space-x-1 mb-6">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                  <Star key={i} className="h-4 w-4 fill-selective_yellow text-selective_yellow" />
                 ))}
               </div>
-              <p className="text-base text-foreground/90 mb-6 leading-relaxed">"{testimonial.text}"</p>
-              <div className="flex items-center space-x-3">
+              <p className="text-lg text-black/80 mb-8 leading-relaxed italic">
+                "{testimonial.text}"
+              </p>
+              <div className="flex items-center space-x-4">
                 <img 
                   src={testimonial.image} 
                   alt={testimonial.name}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-white"
                 />
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground">{testimonial.name}</h4>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  <h4 className="text-base font-semibold text-black">{testimonial.name}</h4>
+                  <p className="text-sm text-black/60">{testimonial.role}</p>
                 </div>
               </div>
             </div>
