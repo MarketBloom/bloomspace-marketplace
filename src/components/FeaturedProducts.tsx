@@ -20,7 +20,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           <Button 
             variant="secondary"
             onClick={() => navigate('/search')}
-            className="hidden md:flex"
+            className="hidden md:flex shadow-apple hover:shadow-apple-hover transition-all duration-300"
           >
             View All
           </Button>
@@ -52,7 +52,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
               <Button 
                 variant="secondary"
                 onClick={() => navigate('/search')}
-                className="md:hidden"
+                className="md:hidden shadow-apple hover:shadow-apple-hover transition-all duration-300"
               >
                 View All
               </Button>
