@@ -29,17 +29,17 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-12 bg-[#FBFBFD]">
+    <section className="py-8 bg-[#000000]">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-semibold text-center mb-3 tracking-tight">Shop by Category</h2>
-        <p className="text-base md:text-lg text-muted-foreground text-center mb-8 max-w-xl mx-auto">
+        <h2 className="text-2xl font-semibold text-white mb-2">Shop by Category</h2>
+        <p className="text-base text-white/80 mb-6">
           Find fresh, local arrangements for every occasion
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-white hover:shadow-lg transition-all duration-300"
+              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-[#1A1F2C] hover:bg-[#2A2F3C] transition-all duration-300 shadow-lg"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
               <div className="aspect-[4/5] overflow-hidden">
@@ -51,9 +51,9 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="mb-2 text-white">{category.icon}</div>
-                <h3 className="text-lg font-semibold mb-1 text-white tracking-tight">{category.name}</h3>
-                <p className="text-sm text-white/90">{category.description}</p>
+                <div className="mb-2 text-white/90">{category.icon}</div>
+                <h3 className="text-lg font-semibold mb-1 text-white">{category.name}</h3>
+                <p className="text-sm text-white/80">{category.description}</p>
               </div>
             </div>
           ))}

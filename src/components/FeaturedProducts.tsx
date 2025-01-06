@@ -10,17 +10,17 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-12 bg-white">
+    <section className="py-8 bg-[#000000]">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Featured Arrangements</h2>
-            <p className="text-base md:text-lg text-muted-foreground mt-2">Fresh picks from local artisan florists</p>
+            <h2 className="text-2xl font-semibold text-white">Featured Arrangements</h2>
+            <p className="text-base text-white/80 mt-1">Fresh picks from local artisan florists</p>
           </div>
           <Button 
-            variant="outline"
+            variant="secondary"
             onClick={() => navigate('/search')}
-            className="hidden md:flex"
+            className="hidden md:flex bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]"
           >
             View All
           </Button>
@@ -28,7 +28,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
         
         {isLoading ? (
           <div className="flex justify-center items-center h-[200px]">
-            <Loader2 className="h-6 w-6 animate-spin" />
+            <Loader2 className="h-6 w-6 animate-spin text-white" />
           </div>
         ) : (
           <>
@@ -48,11 +48,11 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                 />
               ))}
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-6 text-center">
               <Button 
-                variant="outline"
+                variant="secondary"
                 onClick={() => navigate('/search')}
-                className="md:hidden"
+                className="md:hidden bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]"
               >
                 View All
               </Button>
