@@ -48,14 +48,14 @@ export const ProductCard = ({
   };
 
   return (
-    <div className="aspect-[4/5] w-full">
+    <div className="aspect-[3/4] w-full">
       <Card 
         className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full rounded-xl"
         onClick={handleClick}
         role="link"
         tabIndex={0}
       >
-        <div className="h-[72%] relative">
+        <div className="h-[80%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
             {isDeliveryAvailable && (
@@ -72,7 +72,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[28%] px-4 py-3">
+        <div className="h-[20%] px-4 py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
