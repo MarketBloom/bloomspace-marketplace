@@ -57,7 +57,7 @@ export const ProductCard = ({
         role="link"
         tabIndex={0}
       >
-        <div className="h-[65%] relative">
+        <div className="h-[65%] md:h-[75%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
@@ -74,7 +74,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[35%] px-2 py-2 md:px-4 md:py-3">
+        <div className="h-[35%] md:h-[25%] px-2 py-2 md:px-4 md:py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
