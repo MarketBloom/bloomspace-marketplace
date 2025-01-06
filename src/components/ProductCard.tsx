@@ -48,14 +48,14 @@ export const ProductCard = ({
   };
 
   return (
-    <Card 
-      className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full"
-      onClick={handleClick}
-      role="link"
-      tabIndex={0}
-    >
-      <CardHeader className="p-0">
-        <div className="relative">
+    <div className="aspect-[4/5] w-full">
+      <Card 
+        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full"
+        onClick={handleClick}
+        role="link"
+        tabIndex={0}
+      >
+        <div className="h-[70%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
             {isDeliveryAvailable && (
@@ -72,15 +72,15 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="p-4">
-        <ProductInfo 
-          title={displayTitle} 
-          price={displayPrice}
-          floristName={floristName} 
-          displaySize={displaySize}
-        />
-      </CardContent>
-    </Card>
+        <div className="h-[30%] p-4">
+          <ProductInfo 
+            title={displayTitle} 
+            price={displayPrice}
+            floristName={floristName} 
+            displaySize={displaySize}
+          />
+        </div>
+      </Card>
+    </div>
   );
 };
