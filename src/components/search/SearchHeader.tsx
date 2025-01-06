@@ -8,7 +8,7 @@ interface SearchHeaderProps {
 
 export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex gap-2 mb-4 px-2 lg:px-0">
       <Button
         variant={viewMode === 'products' ? 'default' : 'outline'}
         onClick={() => setViewMode('products')}
