@@ -2,7 +2,7 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative mt-32 md:mt-0 h-[65vh] min-h-[700px] flex items-center justify-center">
+    <section className="relative h-[65vh] min-h-[700px] flex items-center justify-center">
       <div className="absolute inset-0">
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
@@ -21,7 +21,7 @@ export const Hero = () => {
         />
       </div>
       
-      <div className="container relative z-10 px-4 md:px-8 flex flex-col items-center mt-16 md:mt-0">
+      <div className="container relative z-10 px-4 md:px-8 flex flex-col items-center">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-semibold mb-4 text-white tracking-tight">
             Fresh flowers,
