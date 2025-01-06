@@ -2,7 +2,7 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative h-screen md:h-[50vh] min-h-[600px] flex items-center justify-center bg-[#FFFFFF] mt-16 md:mt-0">
+    <section className="relative h-[100dvh] md:h-[50vh] min-h-[600px] flex flex-col md:items-center md:justify-center bg-[#FFFFFF] mt-16 md:mt-0">
       <div className="absolute inset-0">
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
@@ -22,8 +22,8 @@ export const Hero = () => {
         />
       </div>
       
-      <div className="container relative z-10 px-4 md:px-8 flex flex-col items-center">
-        <div className="max-w-3xl mx-auto text-center mb-8">
+      <div className="container relative z-10 px-4 md:px-8 flex flex-col h-full pt-16 md:pt-0 md:items-center">
+        <div className="max-w-3xl mx-auto text-center mb-8 md:mb-8">
           <h1 className="text-4xl md:text-6xl font-semibold mb-3 text-white tracking-tight">
             Fresh flowers,
             <br />
@@ -33,7 +33,7 @@ export const Hero = () => {
             Support local florists and get fresh arrangements delivered right to your door.
           </p>
         </div>
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl mt-auto md:mt-0">
           <HomeFilterBar />
         </div>
       </div>
