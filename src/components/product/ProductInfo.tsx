@@ -13,7 +13,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <h3 className="text-[17px] font-semibold leading-tight text-foreground">
+        <h3 className="text-[17px] font-semibold leading-tight text-foreground min-h-[42px]">
           {mainTitle}
         </h3>
         {floristName && (
@@ -27,7 +27,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
           </p>
         )}
       </div>
-      <p className="text-[15px] font-semibold text-foreground">
+      <p className="text-[15px] font-semibold text-foreground mt-auto">
         ${price.toFixed(2)}
       </p>
     </div>
