@@ -10,17 +10,17 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-8 bg-[#000000]">
+    <section className="py-8 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-white">Featured Arrangements</h2>
-            <p className="text-base text-white/80 mt-1">Fresh picks from local artisan florists</p>
+            <h2 className="text-2xl font-semibold text-foreground">Featured Arrangements</h2>
+            <p className="text-base text-muted-foreground mt-1">Fresh picks from local artisan florists</p>
           </div>
           <Button 
             variant="secondary"
             onClick={() => navigate('/search')}
-            className="hidden md:flex bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]"
+            className="hidden md:flex"
           >
             View All
           </Button>
@@ -28,7 +28,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
         
         {isLoading ? (
           <div className="flex justify-center items-center h-[200px]">
-            <Loader2 className="h-6 w-6 animate-spin text-white" />
+            <Loader2 className="h-6 w-6 animate-spin text-foreground" />
           </div>
         ) : (
           <>
@@ -52,7 +52,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
               <Button 
                 variant="secondary"
                 onClick={() => navigate('/search')}
-                className="md:hidden bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]"
+                className="md:hidden"
               >
                 View All
               </Button>

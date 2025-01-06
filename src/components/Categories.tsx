@@ -29,17 +29,17 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-8 bg-[#000000]">
+    <section className="py-8 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-semibold text-white mb-2">Shop by Category</h2>
-        <p className="text-base text-white/80 mb-6">
+        <h2 className="text-2xl font-semibold text-foreground mb-2">Shop by Category</h2>
+        <p className="text-base text-muted-foreground mb-6">
           Find fresh, local arrangements for every occasion
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-[#1A1F2C] hover:bg-[#2A2F3C] transition-all duration-300 shadow-lg"
+              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-white hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
               <div className="aspect-[4/5] overflow-hidden">
@@ -48,12 +48,12 @@ export const Categories = ({ navigate }: { navigate: (path: string) => void }) =
                   alt={category.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/20 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="mb-2 text-white/90">{category.icon}</div>
-                <h3 className="text-lg font-semibold mb-1 text-white">{category.name}</h3>
-                <p className="text-sm text-white/80">{category.description}</p>
+                <div className="mb-2 text-foreground">{category.icon}</div>
+                <h3 className="text-lg font-semibold mb-1 text-foreground">{category.name}</h3>
+                <p className="text-sm text-muted-foreground">{category.description}</p>
               </div>
             </div>
           ))}

@@ -38,7 +38,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
               />
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Support Local Artisan Florists</h2>
+              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Support Local Artisan Florists</h2>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 Every arrangement is crafted with care by passionate local florists in your area. 
                 Get fresh, beautiful flowers delivered right to your door or pick up from the shop, 
@@ -56,9 +56,9 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 rounded-2xl bg-[#FBFBFD] hover:shadow-sm transition-shadow">
+              <div key={index} className="p-6 rounded-2xl bg-[#F5F5F7] hover:shadow-sm transition-shadow">
                 <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}

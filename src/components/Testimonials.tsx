@@ -26,10 +26,10 @@ export const Testimonials = () => {
   ];
 
   return (
-    <section className="py-12 bg-[#FBFBFD]">
+    <section className="py-12 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-semibold mb-3 tracking-tight">What Our Customers Say</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold mb-3 tracking-tight text-foreground">What Our Customers Say</h2>
           <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto">
             Real reviews from happy customers who found their perfect florists through our platform
           </p>
@@ -51,7 +51,7 @@ export const Testimonials = () => {
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className="text-sm font-semibold">{testimonial.name}</h4>
+                  <h4 className="text-sm font-semibold text-foreground">{testimonial.name}</h4>
                   <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                 </div>
               </div>
