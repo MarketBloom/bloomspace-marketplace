@@ -8,10 +8,10 @@ interface BudgetFilterProps {
 export const BudgetFilter = ({ budget, setBudget }: BudgetFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-white text-xs font-medium drop-shadow-sm">
+      <label className="text-black text-xs font-medium">
         Budget {budget[0] === 500 ? "$500+" : `$${budget[0]}`}
       </label>
-      <div className="h-9 bg-white/90 border border-white/20 rounded-md flex items-center px-2">
+      <div className="h-11 bg-white border border-black/10 rounded-full flex items-center px-4">
         <Slider
           value={budget}
           onValueChange={setBudget}

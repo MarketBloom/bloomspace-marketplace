@@ -22,20 +22,19 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   const handleSelect = (value: string | null) => {
     setTime(value);
-    // Close popover by removing focus from trigger
     const popoverTrigger = document.activeElement as HTMLElement;
     popoverTrigger?.blur();
   };
 
   return (
     <div className="space-y-1.5">
-      <label className="text-white text-xs font-medium drop-shadow-sm">Time</label>
+      <label className="text-black text-xs font-medium">Time</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-9 text-xs",
+              "w-full justify-start text-left font-normal bg-white border-black/10 h-11 text-xs rounded-full",
               !time && "text-muted-foreground"
             )}
           >
@@ -43,7 +42,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
             {time || "Any Time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border border-white/20" align="start">
+        <PopoverContent className="w-48 p-0 border border-black/10" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button
@@ -51,7 +50,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start font-normal text-xs h-8",
-                  time === slot.value ? "bg-primary/20 text-primary" : ""
+                  time === slot.value ? "bg-black/5" : ""
                 )}
                 onClick={() => handleSelect(slot.value)}
               >
