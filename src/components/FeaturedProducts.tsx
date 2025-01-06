@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
 import { Loader2 } from "lucide-react";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface FeaturedProductsProps {
   products: any[];
@@ -9,8 +14,38 @@ interface FeaturedProductsProps {
 }
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray('.product-card');
+      cards.forEach((card, i) => {
+        gsap.fromTo(card,
+          { 
+            opacity: 0,
+            y: 50
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom-=100",
+              end: "top center",
+              toggleActions: "play none none reverse",
+            }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [products]);
+
   return (
-    <section className="py-8 bg-[#F5F5F7]">
+    <section ref={sectionRef} className="py-8 bg-[#F5F5F7]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -34,18 +69,19 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {products?.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  price={product.price}
-                  displayPrice={product.displayPrice || product.price}
-                  description={product.description}
-                  images={product.images}
-                  floristName={product.florist_profiles?.store_name}
-                  floristId={product.florist_id}
-                  displaySize={product.displaySize}
-                />
+                <div key={product.id} className="product-card" data-speed={1 + Math.random()}>
+                  <ProductCard
+                    id={product.id}
+                    title={product.title}
+                    price={product.price}
+                    displayPrice={product.displayPrice || product.price}
+                    description={product.description}
+                    images={product.images}
+                    floristName={product.florist_profiles?.store_name}
+                    floristId={product.florist_id}
+                    displaySize={product.displaySize}
+                  />
+                </div>
               ))}
             </div>
             <div className="mt-6 text-center">

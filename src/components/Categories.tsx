@@ -1,4 +1,9 @@
 import { Flower2, Gift, Heart, Star } from "lucide-react";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface CategoriesProps {
   navigate: (path: string) => void;
@@ -32,8 +37,38 @@ const categories = [
 ];
 
 export const Categories = ({ navigate }: CategoriesProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray('.category-card');
+      cards.forEach((card, i) => {
+        gsap.fromTo(card,
+          { 
+            opacity: 0,
+            y: 50
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom-=100",
+              end: "top center",
+              toggleActions: "play none none reverse",
+            }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-4 md:py-8 mt-4 md:mt-0">
+    <section ref={sectionRef} className="py-4 md:py-8 mt-4 md:mt-0">
       <div className="container mx-auto px-4">
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-foreground">Shop by Category</h2>
@@ -44,8 +79,9 @@ export const Categories = ({ navigate }: CategoriesProps) => {
           {categories.map((category) => (
             <div
               key={category.name}
-              className="relative overflow-hidden cursor-pointer rounded-2xl bg-white shadow-apple hover:shadow-apple-hover transition-shadow duration-300"
+              className="category-card relative overflow-hidden cursor-pointer rounded-2xl bg-white shadow-apple hover:shadow-apple-hover transition-shadow duration-300"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
+              data-speed={1 + Math.random()}
             >
               <div className="aspect-[4/5] overflow-hidden">
                 <img
