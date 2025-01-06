@@ -3,10 +3,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProductGridProps {
   products: any[];
-  isDoubleColumn: boolean;
 }
 
-export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
+export const ProductGrid = ({ products }: ProductGridProps) => {
   const isMobile = useIsMobile();
 
   const getGridClassName = () => {

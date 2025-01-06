@@ -3,15 +3,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FloristGridProps {
   florists: any[];
-  isDoubleColumn: boolean;
 }
 
-export const FloristGrid = ({ florists, isDoubleColumn }: FloristGridProps) => {
+export const FloristGrid = ({ florists }: FloristGridProps) => {
   const isMobile = useIsMobile();
 
   const getGridClassName = () => {
     if (!isMobile) return "grid grid-cols-3 gap-3";
-    return isDoubleColumn ? "grid grid-cols-2 gap-2" : "grid grid-cols-1 gap-3";
+    return "grid grid-cols-2 gap-2";
   };
 
   return (

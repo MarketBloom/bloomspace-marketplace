@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { ProductGrid } from "./ProductGrid";
@@ -22,8 +22,6 @@ export const SearchResults = ({
   isLoadingProducts,
   isLoadingFlorists 
 }: SearchResultsProps) => {
-  const [isDoubleColumn, setIsDoubleColumn] = useState(false);
-
   useEffect(() => {
     // Only apply scroll animations if there are at least 7 items
     const items = viewMode === 'products' ? products : florists;
@@ -71,13 +69,8 @@ export const SearchResults = ({
           isLoading={isLoadingProducts}
           count={products.length}
           type="products"
-          isDoubleColumn={isDoubleColumn}
-          setIsDoubleColumn={setIsDoubleColumn}
         />
-        <ProductGrid 
-          products={products}
-          isDoubleColumn={isDoubleColumn}
-        />
+        <ProductGrid products={products} />
       </div>
     );
   }
@@ -88,13 +81,8 @@ export const SearchResults = ({
         isLoading={isLoadingFlorists}
         count={florists.length}
         type="florists"
-        isDoubleColumn={isDoubleColumn}
-        setIsDoubleColumn={setIsDoubleColumn}
       />
-      <FloristGrid 
-        florists={florists}
-        isDoubleColumn={isDoubleColumn}
-      />
+      <FloristGrid florists={florists} />
     </div>
   );
 };
