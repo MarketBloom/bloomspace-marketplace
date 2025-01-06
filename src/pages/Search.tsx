@@ -14,7 +14,6 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
-  // Update URL params without navigation
   const updateSearchParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);
     Object.entries(updates).forEach(([key, value]) => {
@@ -40,7 +39,6 @@ const Search = () => {
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
 
-      // Query products with their sizes and florist information
       const { data: productsData, error } = await supabase
         .from('products')
         .select(`
@@ -68,9 +66,7 @@ const Search = () => {
       const now = new Date();
       const currentTime = format(now, 'HH:mm:ss');
 
-      // Transform products with size variants
       const productsWithVariants = productsData.flatMap(product => {
-        // If no sizes, return product with base price
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
             ...product,
@@ -89,7 +85,6 @@ const Search = () => {
           }];
         }
 
-        // Create entries for each size variant
         return product.product_sizes.map(size => ({
           ...product,
           displaySize: size.name,
@@ -108,7 +103,6 @@ const Search = () => {
         }));
       });
 
-      // Apply budget filter if present
       if (maxBudget) {
         return productsWithVariants.filter(product => product.displayPrice <= maxBudget);
       }
@@ -135,33 +129,28 @@ const Search = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background font-mono">
+    <div className="min-h-screen bg-[#F5F5F7] font-mono">
       <Header />
       
       <div className="container mx-auto px-4 pt-20">
-        <div className="lg:grid lg:grid-cols-[240px_1fr] gap-6">
-          {/* Desktop Sidebar */}
+        <div className="lg:grid lg:grid-cols-[280px_1fr] gap-6">
           <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
             <div className="w-full">
-              <div>
-                <h3 className="text-sm font-medium mb-3">Filters</h3>
-                <FilterBar 
-                  initialFulfillmentType={fulfillmentType}
-                  initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
-                  initialTime={searchParams.get('time') || null}
-                  initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
-                  initialLocation={searchParams.get('location') || ""}
-                  onFilterChange={updateSearchParams}
-                />
-              </div>
+              <h3 className="text-sm font-medium mb-3">Filters</h3>
+              <FilterBar 
+                initialFulfillmentType={fulfillmentType}
+                initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
+                initialTime={searchParams.get('time') || null}
+                initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
+                initialLocation={searchParams.get('location') || ""}
+                onFilterChange={updateSearchParams}
+              />
             </div>
           </aside>
 
-          {/* Mobile Filter Button */}
           <MobileFilterButton />
 
-          {/* Main Content */}
-          <div>
+          <div className="bg-white p-6 rounded-2xl shadow-apple">
             <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
             <SearchResults 
               viewMode={viewMode}

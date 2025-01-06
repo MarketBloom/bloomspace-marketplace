@@ -57,6 +57,10 @@ export default {
           foreground: "#1D1D1F",
         },
       },
+      boxShadow: {
+        'apple': '0 2px 5px -2px rgba(0,0,0,0.1), 0 2px 8px -2px rgba(0,0,0,0.1)',
+        'apple-hover': '0 4px 12px -4px rgba(0,0,0,0.2), 0 4px 16px -4px rgba(0,0,0,0.2)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

@@ -33,7 +33,6 @@ export const FilterBar = ({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
 
-  // Update URL params whenever filters change
   useEffect(() => {
     if (onFilterChange) {
       const updates: Record<string, string> = {
@@ -50,16 +49,16 @@ export const FilterBar = ({
   }, [fulfillmentType, location, date, time, budget, onFilterChange]);
 
   return (
-    <div className="space-y-3 border border-black/10 rounded-lg p-3">
+    <div className="space-y-3 bg-white shadow-apple rounded-2xl p-4 border border-gray-100">
       <div className="space-y-1.5">
         <label className="text-foreground text-xs font-medium">Fulfillment Method</label>
         <div className="grid grid-cols-2 gap-2">
           <Button
             variant={fulfillmentType === "delivery" ? "default" : "outline"}
             onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs ${
+            className={`flex items-center justify-center h-[42px] text-xs shadow-sm hover:shadow-apple-hover transition-shadow ${
               fulfillmentType === "delivery" 
-                ? "bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black" 
+                ? "bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black" 
                 : ""
             }`}
           >
@@ -69,9 +68,9 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "pickup" ? "default" : "outline"}
             onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs ${
+            className={`flex items-center justify-center h-[42px] text-xs shadow-sm hover:shadow-apple-hover transition-shadow ${
               fulfillmentType === "pickup" 
-                ? "bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black" 
+                ? "bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black" 
                 : ""
             }`}
           >
