@@ -26,10 +26,10 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12">
             <div>
               <img 
                 src="/lovable-uploads/c7fd657a-4ba4-4d9b-bb36-f03266f5cdc0.png"
@@ -54,7 +54,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
             </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {features.map((feature, index) => (
               <div key={index} className="p-6 rounded-2xl bg-[#FBFBFD] hover:shadow-sm transition-shadow">
                 <div className="mb-4">{feature.icon}</div>

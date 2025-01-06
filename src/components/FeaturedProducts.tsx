@@ -10,9 +10,9 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-12">
+        <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Featured Arrangements</h2>
             <p className="text-base md:text-lg text-muted-foreground mt-2">Fresh picks from local artisan florists</p>
@@ -32,7 +32,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {products?.map((product) => (
                 <ProductCard
                   key={product.id}

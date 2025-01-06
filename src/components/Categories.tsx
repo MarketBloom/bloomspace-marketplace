@@ -29,17 +29,17 @@ const categories = [
 
 export const Categories = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
-    <section className="py-24 bg-[#FBFBFD]">
+    <section className="py-12 bg-[#FBFBFD]">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-semibold text-center mb-3 tracking-tight">Shop by Category</h2>
-        <p className="text-base md:text-lg text-muted-foreground text-center mb-12 max-w-xl mx-auto">
+        <p className="text-base md:text-lg text-muted-foreground text-center mb-8 max-w-xl mx-auto">
           Find fresh, local arrangements for every occasion
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-white shadow-sm hover:shadow-md transition-all duration-300"
+              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-white hover:shadow-lg transition-all duration-300"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
               <div className="aspect-[4/5] overflow-hidden">
