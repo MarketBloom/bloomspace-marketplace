@@ -36,20 +36,18 @@ export const Categories = ({ navigate }: CategoriesProps) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Diagonal scroll effect for category cards
       const cards = gsap.utils.toArray<HTMLElement>('.category-card');
       cards.forEach((card, i) => {
         gsap.fromTo(card,
           { 
             opacity: 0,
-            x: -50,
             y: 50
           },
           {
             opacity: 1,
-            x: 0,
             y: 0,
             duration: 1,
+            delay: i * 0.2,
             ease: "power2.out",
             scrollTrigger: {
               trigger: card,
@@ -68,32 +66,32 @@ export const Categories = ({ navigate }: CategoriesProps) => {
   return (
     <section 
       ref={sectionRef}
-      className="py-8 bg-isabelline"
+      className="py-24 bg-white"
     >
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-12 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">Shop by Category</h2>
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl md:text-display font-bold mb-4 text-black tracking-tight">Shop by Category</h2>
             <p className="text-lg text-black/60">Explore our curated collection of floral categories</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {categories.map((category, index) => (
               <div
                 key={category.name}
                 className="category-card group cursor-pointer"
                 onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
               >
-                <div className="relative overflow-hidden rounded-2xl bg-white shadow-apple">
+                <div className="relative overflow-hidden rounded-lg bg-white shadow-card hover:shadow-card-hover transition-shadow duration-300">
                   <div className="aspect-[16/9] overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover transition-transform duration-700 
-                               group-hover:scale-110"
+                               group-hover:scale-105"
                     />
                   </div>
-                  <div className="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+                  <div className="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/60 to-transparent">
                     <div>
                       <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
                       <p className="text-white/90">{category.description}</p>
