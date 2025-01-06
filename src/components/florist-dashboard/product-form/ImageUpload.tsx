@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import ReactCrop, { Crop } from 'react-image-crop';
+import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {
   Dialog,
@@ -28,8 +28,7 @@ export const ImageUpload = ({ uploadedImages, setUploadedImages }: ImageUploadPr
     width: 100,
     height: 100,
     x: 0,
-    y: 0,
-    aspect: 4/5
+    y: 0
   });
   const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
 
