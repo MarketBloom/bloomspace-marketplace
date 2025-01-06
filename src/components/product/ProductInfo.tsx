@@ -6,27 +6,21 @@ interface ProductInfoProps {
 }
 
 export const ProductInfo = ({ title, price, floristName, displaySize }: ProductInfoProps) => {
-  // Split only on the first hyphen to preserve any other hyphens in the size description
-  const [mainTitle, ...sizeParts] = title.split(' - ');
-  const size = sizeParts.join(' - '); // Rejoin any remaining parts with hyphens
-
   return (
-    <div className="space-y-2">
-      <div className="space-y-1">
-        <h3 className="text-[17px] font-semibold leading-tight text-foreground min-h-[42px] line-clamp-2">
-          {mainTitle}
-        </h3>
-        {floristName && (
-          <p className="text-[12px] text-muted-foreground font-normal">
-            By {floristName}
-          </p>
-        )}
-        {displaySize && (
-          <p className="text-[14px] text-foreground font-normal">
-            {displaySize}
-          </p>
-        )}
-      </div>
+    <div className="flex flex-col justify-end h-full space-y-1">
+      <h3 className="text-[17px] font-semibold leading-tight text-foreground min-h-[42px] line-clamp-2">
+        {title}
+      </h3>
+      {floristName && (
+        <p className="text-[12px] text-muted-foreground font-normal">
+          By {floristName}
+        </p>
+      )}
+      {displaySize && (
+        <p className="text-[14px] text-foreground font-normal">
+          {displaySize}
+        </p>
+      )}
       <p className="text-[15px] font-semibold text-foreground mt-auto">
         ${price.toFixed(2)}
       </p>

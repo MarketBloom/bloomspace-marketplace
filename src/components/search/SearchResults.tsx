@@ -27,7 +27,7 @@ export const SearchResults = ({
             `${products.length} Products Found`
           )}
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {products.map((product) => (
             <ProductCard
               key={`${product.id}-${product.sizeId || 'default'}`}
@@ -48,7 +48,7 @@ export const SearchResults = ({
           `${florists.length} Florists Found`
         )}
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {florists.map((florist) => (
           <FloristCard 
             key={florist.id}

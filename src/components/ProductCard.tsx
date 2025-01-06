@@ -49,12 +49,12 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full flex flex-col"
+      className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full"
       onClick={handleClick}
       role="link"
       tabIndex={0}
     >
-      <CardHeader className="p-0 flex-shrink-0">
+      <CardHeader className="p-0">
         <div className="relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
@@ -73,7 +73,7 @@ export const ProductCard = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-4 flex-grow flex flex-col justify-end">
+      <CardContent className="p-4">
         <ProductInfo 
           title={displayTitle} 
           price={displayPrice}
