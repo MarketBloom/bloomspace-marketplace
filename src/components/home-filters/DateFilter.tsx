@@ -25,7 +25,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white border-black/10 h-11 text-xs rounded-full",
+              "w-full justify-start text-left font-normal bg-white border-[1.5px] border-black/10 h-11 text-xs rounded-lg",
               !date && "text-muted-foreground"
             )}
           >
@@ -39,7 +39,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
             selected={date}
             onSelect={handleSelect}
             initialFocus
-            className="rounded-lg border border-black/10"
+            className="rounded-lg border-[1.5px] border-black/10"
           />
         </PopoverContent>
       </Popover>

@@ -34,7 +34,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white border-black/10 h-11 text-xs rounded-full",
+              "w-full justify-start text-left font-normal bg-white border-[1.5px] border-black/10 h-11 text-xs rounded-lg",
               !time && "text-muted-foreground"
             )}
           >
@@ -42,7 +42,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
             {time || "Any Time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border border-black/10" align="start">
+        <PopoverContent className="w-48 p-0 border-[1.5px] border-black/10" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button
