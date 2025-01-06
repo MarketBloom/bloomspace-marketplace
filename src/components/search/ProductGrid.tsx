@@ -14,7 +14,7 @@ export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
       return "grid grid-cols-3 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 gap-3";
     }
     return isDoubleColumn 
-      ? "grid grid-cols-2 gap-1" 
+      ? "grid grid-cols-2 gap-1 px-1" // Added px-1 to maximize width
       : "grid grid-cols-1 gap-1";
   };
 
