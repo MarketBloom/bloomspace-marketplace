@@ -50,7 +50,7 @@ export const ProductCard = ({
   return (
     <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 h-full rounded-xl"
+        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full rounded-xl"
         onClick={handleClick}
         role="link"
         tabIndex={0}
