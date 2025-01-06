@@ -59,7 +59,7 @@ export const ProductCard = ({
       >
         <div className="h-[65%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
-          <div className="absolute top-1 right-1 md:top-3 md:right-3 flex flex-col gap-1">
+          <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
               <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[8px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1 py-0.5">
                 <Truck className="w-2.5 h-2.5 md:w-3 md:h-3" />
@@ -74,7 +74,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[35%] px-2 py-1.5 md:px-4 md:py-3">
+        <div className="h-[35%] px-1 py-1 md:px-4 md:py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}

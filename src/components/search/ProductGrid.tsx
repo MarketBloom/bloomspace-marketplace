@@ -12,7 +12,7 @@ export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
   const getGridClassName = () => {
     if (!isMobile) return "grid grid-cols-3 gap-3";
     return isDoubleColumn 
-      ? "grid grid-cols-2 gap-1.5 px-1.5" 
+      ? "grid grid-cols-2 gap-1 px-1" 
       : "grid grid-cols-1 gap-3 px-3";
   };
 

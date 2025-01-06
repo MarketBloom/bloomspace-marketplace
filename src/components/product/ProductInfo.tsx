@@ -13,19 +13,19 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
   return (
     <div className="h-full flex flex-col justify-between">
       <div className="space-y-0.5 md:space-y-1.5">
-        <h3 className="text-[11px] md:text-[15px] font-semibold leading-tight text-foreground line-clamp-2 break-words">
+        <h3 className="text-[10px] md:text-[15px] font-semibold leading-tight text-foreground line-clamp-2 break-words">
           {title}
         </h3>
         {floristName && (
-          <p className="text-[9px] md:text-[12px] text-muted-foreground font-normal line-clamp-1">
+          <p className="text-[8px] md:text-[12px] text-muted-foreground font-normal line-clamp-1">
             {floristName}
           </p>
         )}
         <div className="flex justify-between items-center pt-0.5">
-          <p className="text-[9px] md:text-[12px] text-foreground line-clamp-1 max-w-[60%]">
+          <p className="text-[8px] md:text-[12px] text-foreground line-clamp-1 max-w-[60%]">
             {displaySize || "Standard"}
           </p>
-          <p className="text-[10px] md:text-[12px] font-medium text-foreground whitespace-nowrap pl-1.5">
+          <p className="text-[9px] md:text-[12px] font-medium text-foreground whitespace-nowrap pl-1">
             ${price.toFixed(2)}
           </p>
         </div>
