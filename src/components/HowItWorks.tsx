@@ -1,4 +1,4 @@
-import { Flower, Heart, Filter, Truck } from "lucide-react";
+import { Flower, Heart, Filter, Truck, Gift } from "lucide-react";
 
 export const HowItWorks = () => {
   return (
@@ -6,12 +6,12 @@ export const HowItWorks = () => {
       <h2 className="text-4xl md:text-6xl font-bold text-center mb-4">
         Support local florists
       </h2>
-      <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-8 md:mb-12">
+      <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-8 md:mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
         Connect with talented local artisans and get fresh flowers delivered when you need them
       </p>
       
       <div className="container max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
           {/* Local Florists */}
           <div className="bg-secondary/50 rounded-2xl p-6">
             <div className="aspect-[4/5]">
@@ -66,6 +66,21 @@ export const HowItWorks = () => {
               </p>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Truck className="w-8 h-8 text-primary mb-3" />
+                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
+                <div className="h-2 bg-muted rounded-full w-1/2" />
+              </div>
+            </div>
+          </div>
+
+          {/* Special Occasions */}
+          <div className="bg-secondary/50 rounded-2xl p-6">
+            <div className="aspect-[4/5]">
+              <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
+              <p className="text-muted-foreground mb-8">
+                Find the ideal floral gift for any special occasion or celebration
+              </p>
+              <div className="bg-white rounded-xl p-4 shadow-sm">
+                <Gift className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
                 <div className="h-2 bg-muted rounded-full w-1/2" />
               </div>
