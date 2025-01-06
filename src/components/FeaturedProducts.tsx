@@ -10,17 +10,17 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProductsProps) => {
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-12">
           <div>
-            <h2 className="text-xl font-medium tracking-tight font-mono">Featured Arrangements</h2>
-            <p className="text-sm text-gray-600 mt-0.5 font-mono">Fresh picks from local artisan florists</p>
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Featured Arrangements</h2>
+            <p className="text-base md:text-lg text-muted-foreground mt-2">Fresh picks from local artisan florists</p>
           </div>
           <Button 
             variant="outline"
             onClick={() => navigate('/search')}
-            className="hidden md:flex text-xs font-mono"
+            className="hidden md:flex"
           >
             View All
           </Button>
@@ -32,7 +32,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products?.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -48,11 +48,11 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                 />
               ))}
             </div>
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <Button 
                 variant="outline"
                 onClick={() => navigate('/search')}
-                className="md:hidden text-xs font-mono"
+                className="md:hidden"
               >
                 View All
               </Button>

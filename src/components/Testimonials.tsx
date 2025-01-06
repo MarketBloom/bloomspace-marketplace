@@ -26,33 +26,33 @@ export const Testimonials = () => {
   ];
 
   return (
-    <section className="py-12">
+    <section className="py-24 bg-[#FBFBFD]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-medium mb-2 tracking-tight font-mono">What Our Customers Say</h2>
-          <p className="text-sm text-gray-600 font-mono max-w-xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-3 tracking-tight">What Our Customers Say</h2>
+          <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto">
             Real reviews from happy customers who found their perfect florists through our platform
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center space-x-0.5 mb-2">
+            <div key={index} className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center space-x-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-3 w-3 fill-primary text-primary" />
+                  <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-xs text-gray-600 mb-3 font-mono leading-relaxed">"{testimonial.text}"</p>
-              <div className="flex items-center space-x-2">
+              <p className="text-base text-foreground/90 mb-6 leading-relaxed">"{testimonial.text}"</p>
+              <div className="flex items-center space-x-3">
                 <img 
                   src={testimonial.image} 
                   alt={testimonial.name}
-                  className="w-8 h-8 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className="text-xs font-medium font-mono">{testimonial.name}</h4>
-                  <p className="text-xs text-gray-500 font-mono">{testimonial.role}</p>
+                  <h4 className="text-sm font-semibold">{testimonial.name}</h4>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                 </div>
               </div>
             </div>
