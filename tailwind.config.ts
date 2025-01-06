@@ -19,42 +19,42 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        mono: ["Inter", "sans-serif"],
+        sans: ["SF Pro Display", "Inter", "sans-serif"],
+        mono: ["SF Pro Display", "Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "#FFFFFF",
-        foreground: "#1A1A1A",
+        foreground: "#1D1D1F",
         primary: {
-          DEFAULT: "#1A1A1A",
+          DEFAULT: "#0071E3",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#F3F3F3",
-          foreground: "#1A1A1A",
+          DEFAULT: "#F5F5F7",
+          foreground: "#1D1D1F",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#F3F3F3",
-          foreground: "#666666",
+          DEFAULT: "#F5F5F7",
+          foreground: "#86868B",
         },
         accent: {
-          DEFAULT: "#E8E8E8",
-          foreground: "#1A1A1A",
+          DEFAULT: "#F5F5F7",
+          foreground: "#1D1D1F",
         },
         popover: {
           DEFAULT: "#FFFFFF",
-          foreground: "#1A1A1A",
+          foreground: "#1D1D1F",
         },
         card: {
           DEFAULT: "#FFFFFF",
-          foreground: "#1A1A1A",
+          foreground: "#1D1D1F",
         },
       },
       borderRadius: {
