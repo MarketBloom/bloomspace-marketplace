@@ -8,6 +8,9 @@ export const Hero = () => {
           src="/lovable-uploads/a34f291e-3fa3-456b-8406-e5162ca38103.png"
           alt="Elegant floral arrangement with hands holding flowers in a soft blue dress"
           className="h-full w-full object-cover"
+          style={{ 
+            objectPosition: 'center 20%' // This crops more from the top of the image
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
       </div>
