@@ -2,7 +2,7 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-[650px] md:h-[50vh] md:min-h-[600px] flex items-center justify-center bg-[#FFFFFF] py-8 mt-16 md:mt-0">
+    <section className="relative min-h-[650px] md:h-[50vh] md:min-h-[600px] flex items-center justify-center bg-[#FFFFFF] py-8">
       <div className="absolute inset-0">
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
