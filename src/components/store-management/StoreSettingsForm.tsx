@@ -76,41 +76,53 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="delivery_fee">Delivery Fee ($)</Label>
-          <Input
-            id="delivery_fee"
-            type="number"
-            min="0"
-            step="0.01"
-            value={formData.delivery_fee}
-            onChange={(e) => setFormData(prev => ({ ...prev, delivery_fee: parseFloat(e.target.value) }))}
-          />
+          <Label htmlFor="delivery_fee">Delivery Fee</Label>
+          <div className="relative">
+            <Input
+              id="delivery_fee"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.delivery_fee}
+              onChange={(e) => setFormData(prev => ({ ...prev, delivery_fee: parseFloat(e.target.value) }))}
+              className="pl-6"
+            />
+            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+          </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="delivery_radius">Delivery Radius (km)</Label>
-          <Input
-            id="delivery_radius"
-            type="number"
-            min="0"
-            step="0.1"
-            value={formData.delivery_radius}
-            onChange={(e) => setFormData(prev => ({ ...prev, delivery_radius: parseFloat(e.target.value) }))}
-          />
+          <Label htmlFor="delivery_radius">Delivery Radius</Label>
+          <div className="relative">
+            <Input
+              id="delivery_radius"
+              type="number"
+              min="0"
+              step="0.1"
+              value={formData.delivery_radius}
+              onChange={(e) => setFormData(prev => ({ ...prev, delivery_radius: parseFloat(e.target.value) }))}
+              className="pr-8"
+            />
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">km</span>
+          </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="minimum_order_amount">Minimum Order ($)</Label>
-          <Input
-            id="minimum_order_amount"
-            type="number"
-            min="0"
-            step="0.01"
-            value={formData.minimum_order_amount}
-            onChange={(e) => setFormData(prev => ({ ...prev, minimum_order_amount: parseFloat(e.target.value) }))}
-          />
+          <Label htmlFor="minimum_order_amount">Minimum Order</Label>
+          <div className="relative">
+            <Input
+              id="minimum_order_amount"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.minimum_order_amount}
+              onChange={(e) => setFormData(prev => ({ ...prev, minimum_order_amount: parseFloat(e.target.value) }))}
+              className="pl-6"
+            />
+            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+          </div>
         </div>
       </div>
 
