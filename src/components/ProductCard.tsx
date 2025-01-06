@@ -52,29 +52,30 @@ export const ProductCard = ({
   return (
     <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover active:shadow-apple-hover transition-all duration-300 h-full rounded-lg md:rounded-xl touch-manipulation"
+        className="group relative overflow-hidden cursor-pointer bg-black border-0 
+                   transition-all duration-500 h-full rounded-xl"
         onClick={handleClick}
         role="link"
         tabIndex={0}
       >
-        <div className="h-[70%] md:h-[80%] relative">
+        <div className="h-[75%] relative overflow-hidden">
           <ProductImage src={images?.[0]} alt={displayTitle} />
-          <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
+          <div className="absolute top-3 right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
-                <Truck className="w-3 h-3 md:w-3 md:h-3" />
+              <Badge variant="secondary" className="bg-black/80 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+                <Truck className="w-3 h-3" />
                 {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
               </Badge>
             )}
             {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
-                <ShoppingBag className="w-3 h-3 md:w-3 md:h-3" />
+              <Badge variant="secondary" className="bg-black/80 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-2 py-1">
+                <ShoppingBag className="w-3 h-3" />
                 {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
               </Badge>
             )}
           </div>
         </div>
-        <div className="h-[30%] md:h-[20%] px-1.5 py-1.5 md:px-3 lg:px-3 xl:px-4 md:py-2">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
