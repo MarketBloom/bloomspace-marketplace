@@ -50,7 +50,7 @@ export const ProductCard = ({
 
   return (
     <Card 
-      className="relative overflow-hidden cursor-pointer bg-accent shadow-apple hover:shadow-apple-hover transition-all duration-300 border-0"
+      className="relative overflow-hidden cursor-pointer bg-white shadow-apple hover:shadow-apple-hover transition-all duration-300 border-0"
       onClick={handleClick}
       role="link"
       tabIndex={0}
@@ -72,14 +72,14 @@ export const ProductCard = ({
           )}
         </div>
       </CardHeader>
-      <CardContent className="p-3 space-y-1 bg-white">
+      <CardContent className="p-3 space-y-1">
         <ProductInfo 
           title={displayTitle} 
           price={displayPrice}
           floristName={floristName} 
         />
       </CardContent>
-      <CardFooter className="p-3 pt-0 bg-white">
+      <CardFooter className="p-3 pt-0">
         <AddToCartButton
           id={id}
           title={displayTitle}

@@ -45,8 +45,8 @@ export default {
           foreground: "#86868B",
         },
         accent: {
-          DEFAULT: "#FFDEE2",
-          foreground: "#1D1D1F",
+          DEFAULT: "#D73459",
+          foreground: "#FFFFFF",
         },
         popover: {
           DEFAULT: "#FFFFFF",
