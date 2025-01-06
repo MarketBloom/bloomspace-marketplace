@@ -29,14 +29,14 @@ export const FloristCard = ({
   const navigate = useNavigate();
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-apple-hover shadow-apple border-0 bg-white">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-apple-hover shadow-apple border-0 bg-accent">
       <FloristBanner 
         bannerUrl={bannerUrl}
         logoUrl={logoUrl}
         storeName={storeName}
       />
 
-      <CardContent className="pt-12 pb-4 px-4 space-y-4">
+      <CardContent className="pt-12 pb-4 px-4 space-y-4 bg-white">
         <FloristInfo 
           storeName={storeName}
           address={address}
