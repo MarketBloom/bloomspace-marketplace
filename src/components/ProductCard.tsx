@@ -74,7 +74,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[20%] px-2 py-2 md:px-4 md:py-2">
+        <div className="h-[20%] px-2 py-2 md:px-3 lg:px-3 xl:px-4 md:py-2">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
