@@ -26,14 +26,14 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#FFFFFF",
+        background: "#FFFFFF", // 60% - Primary background
         foreground: "#1D1D1F",
         primary: {
-          DEFAULT: "#0071E3",
-          foreground: "#FFFFFF",
+          DEFAULT: "#E3E2E2", // Changed from green to platinum - 40% secondary color
+          foreground: "#1D1D1F",
         },
         secondary: {
-          DEFAULT: "#F5F5F7",
+          DEFAULT: "#F5F5F7", // Light gray for contrast - part of 40%
           foreground: "#1D1D1F",
         },
         destructive: {
@@ -42,11 +42,11 @@ export default {
         },
         muted: {
           DEFAULT: "#F5F5F7",
-          foreground: "#86868B",
+          foreground: "#86868B", // Apple's muted text color
         },
         accent: {
-          DEFAULT: "#F5F5F7",
-          foreground: "#1D1D1F",
+          DEFAULT: "#D73459", // 10% - Accent color (Cerise)
+          foreground: "#FFFFFF",
         },
         popover: {
           DEFAULT: "#FFFFFF",
