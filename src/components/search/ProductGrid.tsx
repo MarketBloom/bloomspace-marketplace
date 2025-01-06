@@ -12,7 +12,7 @@ export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
   const getGridClassName = () => {
     if (!isMobile) return "grid grid-cols-3 gap-3";
     return isDoubleColumn 
-      ? "grid grid-cols-2 gap-2" // Removed all outer padding, only keep gap between cards
+      ? "grid grid-cols-2 gap-1" // Reduced gap to 1px to maximize tile size
       : "grid grid-cols-1 gap-3 px-3";
   };
 
