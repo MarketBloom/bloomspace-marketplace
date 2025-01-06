@@ -37,7 +37,7 @@ export const ProductCard = ({
   sizeId
 }: ProductCardProps) => {
   const navigate = useNavigate();
-  const displayTitle = displaySize ? `${title} - ${displaySize}` : title;
+  const displayTitle = displaySize ? `${title}` : title;
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,7 +55,7 @@ export const ProductCard = ({
         role="link"
         tabIndex={0}
       >
-        <div className="h-[75%] relative">
+        <div className="h-[72%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-3 right-3 flex flex-col gap-1.5">
             {isDeliveryAvailable && (
@@ -72,7 +72,7 @@ export const ProductCard = ({
             )}
           </div>
         </div>
-        <div className="h-[25%] px-4 py-3">
+        <div className="h-[28%] px-4 py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
