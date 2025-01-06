@@ -41,7 +41,6 @@ export const ProductCard = ({
   const displayTitle = displaySize ? `${title} - ${displaySize}` : title;
 
   const handleClick = (e: React.MouseEvent) => {
-    // Prevent event bubbling
     e.preventDefault();
     e.stopPropagation();
     
