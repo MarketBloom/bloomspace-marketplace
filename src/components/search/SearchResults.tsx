@@ -64,7 +64,7 @@ export const SearchResults = ({
 
   if (viewMode === 'products') {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 px-2 lg:px-0">
         <SearchResultsHeader 
           isLoading={isLoadingProducts}
           count={products.length}
@@ -76,7 +76,7 @@ export const SearchResults = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-2 lg:px-0">
       <SearchResultsHeader 
         isLoading={isLoadingFlorists}
         count={florists.length}
