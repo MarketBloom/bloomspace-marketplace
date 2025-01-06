@@ -50,7 +50,7 @@ const Index = () => {
       <Hero />
       
       {/* Value Proposition Section */}
-      <section className="py-24 bg-white">
+      <section className="py-12 bg-white">
         <div className="container px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
             {/* Local Shopping */}
@@ -79,7 +79,7 @@ const Index = () => {
                 Same-Day Delivery
               </h2>
               <p className="text-lg text-muted-foreground">
-                Order by 2 PM for guaranteed same-day delivery
+                Filter by delivery time to find florists available for last-minute orders
               </p>
             </div>
           </div>
