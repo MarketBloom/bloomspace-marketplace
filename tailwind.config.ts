@@ -26,14 +26,14 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#FFFFFF", // 60% - Primary background
+        background: "#FFFFFF",
         foreground: "#1D1D1F",
         primary: {
-          DEFAULT: "#E3E2E2", // Changed from green to platinum - 40% secondary color
+          DEFAULT: "#E3E2E2",
           foreground: "#1D1D1F",
         },
         secondary: {
-          DEFAULT: "#F5F5F7", // Light gray for contrast - part of 40%
+          DEFAULT: "#F5F5F7",
           foreground: "#1D1D1F",
         },
         destructive: {
@@ -42,10 +42,10 @@ export default {
         },
         muted: {
           DEFAULT: "#F5F5F7",
-          foreground: "#86868B", // Apple's muted text color
+          foreground: "#86868B",
         },
         accent: {
-          DEFAULT: "#D73459", // 10% - Accent color (Cerise)
+          DEFAULT: "#D73459",
           foreground: "#FFFFFF",
         },
         popover: {
@@ -58,8 +58,8 @@ export default {
         },
       },
       boxShadow: {
-        'apple': '0 2px 5px -2px rgba(0,0,0,0.1), 0 2px 8px -2px rgba(0,0,0,0.1)',
-        'apple-hover': '0 4px 12px -4px rgba(0,0,0,0.2), 0 4px 16px -4px rgba(0,0,0,0.2)',
+        'apple': '0 2px 5px -2px rgba(0,0,0,0.08), 0 2px 8px -2px rgba(0,0,0,0.06)',
+        'apple-hover': '0 4px 12px -4px rgba(0,0,0,0.12), 0 4px 16px -4px rgba(0,0,0,0.12)',
       },
       borderRadius: {
         lg: "var(--radius)",

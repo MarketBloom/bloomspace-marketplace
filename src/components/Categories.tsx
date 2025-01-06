@@ -44,7 +44,7 @@ export const Categories = ({ navigate }: CategoriesProps) => {
           {categories.map((category) => (
             <div
               key={category.name}
-              className="group relative overflow-hidden cursor-pointer rounded-2xl bg-[#F5F5F7] shadow-apple hover:shadow-apple-hover transition-shadow duration-300"
+              className="relative overflow-hidden cursor-pointer rounded-2xl bg-white shadow-apple hover:shadow-apple-hover transition-shadow duration-300"
               onClick={() => navigate(`/search?category=${category.name.toLowerCase()}`)}
             >
               <div className="aspect-[4/5] overflow-hidden">
