@@ -14,7 +14,6 @@ interface FloristCardProps {
   bannerUrl?: string;
   deliveryFee?: number;
   deliveryRadius?: number;
-  minimumOrderAmount?: number;
 }
 
 export const FloristCard = ({ 
@@ -25,8 +24,7 @@ export const FloristCard = ({
   logoUrl,
   bannerUrl,
   deliveryFee,
-  deliveryRadius,
-  minimumOrderAmount
+  deliveryRadius
 }: FloristCardProps) => {
   const navigate = useNavigate();
 
@@ -48,7 +46,6 @@ export const FloristCard = ({
         <DeliveryInfo 
           deliveryFee={deliveryFee}
           deliveryRadius={deliveryRadius}
-          minimumOrderAmount={minimumOrderAmount}
         />
 
         <Button 

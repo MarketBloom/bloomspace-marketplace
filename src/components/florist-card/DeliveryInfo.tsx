@@ -4,10 +4,9 @@ import { Truck } from 'lucide-react';
 interface DeliveryInfoProps {
   deliveryFee?: number;
   deliveryRadius?: number;
-  minimumOrderAmount?: number;
 }
 
-export const DeliveryInfo = ({ deliveryFee, deliveryRadius, minimumOrderAmount }: DeliveryInfoProps) => {
+export const DeliveryInfo = ({ deliveryFee, deliveryRadius }: DeliveryInfoProps) => {
   return (
     <div className="space-y-2 border-t border-b py-3">
       {deliveryFee !== undefined && (
@@ -26,13 +25,6 @@ export const DeliveryInfo = ({ deliveryFee, deliveryRadius, minimumOrderAmount }
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>Delivery Area:</span>
           <span className="font-medium">{deliveryRadius}km radius</span>
-        </div>
-      )}
-
-      {minimumOrderAmount && minimumOrderAmount > 0 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Minimum Order:</span>
-          <span className="font-medium">${minimumOrderAmount.toFixed(2)}</span>
         </div>
       )}
     </div>
