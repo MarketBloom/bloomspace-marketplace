@@ -17,11 +17,11 @@ export const DashboardNavigation = ({
   const navigate = useNavigate();
   const menuItems = getDashboardMenuItems(handleHomeClick, isHome);
 
-  const handleItemClick = (item: any) => {
-    if (item.label === "Homepage") {
+  const handleItemClick = (path: string, label: string) => {
+    if (label === "Homepage") {
       handleHomeClick();
     } else {
-      navigate(item.path);
+      navigate(path);
     }
   };
 
@@ -36,7 +36,7 @@ export const DashboardNavigation = ({
                 "w-full justify-start gap-3 hover:bg-gray-100",
                 collapsed && "justify-center px-2"
               )}
-              onClick={() => handleItemClick(item)}
+              onClick={() => handleItemClick(item.path, item.label)}
             >
               <item.icon className={cn("h-5 w-5", item.className)} />
               <span
