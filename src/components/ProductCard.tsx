@@ -4,6 +4,7 @@ import { ProductImage } from "@/components/product/ProductImage";
 import { ProductInfo } from "@/components/product/ProductInfo";
 import { ShoppingBag, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProductCardProps {
   id: string;
@@ -37,6 +38,7 @@ export const ProductCard = ({
   sizeId
 }: ProductCardProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const displayTitle = displaySize ? `${title}` : title;
 
   const handleClick = (e: React.MouseEvent) => {
@@ -48,31 +50,31 @@ export const ProductCard = ({
   };
 
   return (
-    <div className="aspect-[3/4] w-full">
+    <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover transition-all duration-300 h-full rounded-xl"
+        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover active:shadow-apple-hover transition-all duration-300 h-full rounded-lg md:rounded-xl touch-manipulation"
         onClick={handleClick}
         role="link"
         tabIndex={0}
       >
-        <div className="h-[80%] relative">
+        <div className="h-[75%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
-          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+          <div className="absolute top-2 right-2 md:top-3 md:right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium">
-                <Truck className="w-3 h-3" />
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[9px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap">
+                <Truck className="w-2.5 h-2.5 md:w-3 md:h-3" />
                 {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
               </Badge>
             )}
             {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] flex items-center gap-1 font-medium">
-                <ShoppingBag className="w-3 h-3" />
+              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[9px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap">
+                <ShoppingBag className="w-2.5 h-2.5 md:w-3 md:h-3" />
                 {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
               </Badge>
             )}
           </div>
         </div>
-        <div className="h-[20%] px-4 py-3">
+        <div className="h-[25%] px-2.5 py-2 md:px-4 md:py-3">
           <ProductInfo 
             title={displayTitle} 
             price={displayPrice}
