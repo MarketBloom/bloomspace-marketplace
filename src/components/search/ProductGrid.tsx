@@ -13,8 +13,8 @@ export const ProductGrid = ({ products, isDoubleColumn }: ProductGridProps) => {
     if (!isMobile) {
       return "grid grid-cols-3 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 gap-3";
     }
-    // Always use 2 columns on mobile with minimal gap and no padding
-    return "grid grid-cols-2 gap-0.5 px-0.5";
+    // Always use 2 columns on mobile, ignoring isDoubleColumn prop
+    return "grid grid-cols-2 gap-1 px-1";
   };
 
   return (
