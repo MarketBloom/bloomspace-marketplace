@@ -41,7 +41,7 @@ export const Categories = ({ navigate }: CategoriesProps) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray('.category-card');
+      const cards = gsap.utils.toArray<HTMLElement>('.category-card');
       cards.forEach((card, i) => {
         gsap.fromTo(card,
           { 

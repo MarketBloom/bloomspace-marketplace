@@ -72,7 +72,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
       );
 
       // Animate feature cards
-      const cards = gsap.utils.toArray('.feature-card');
+      const cards = gsap.utils.toArray<HTMLElement>('.feature-card');
       cards.forEach((card, i) => {
         gsap.fromTo(card,
           { 

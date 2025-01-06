@@ -18,7 +18,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray('.product-card');
+      const cards = gsap.utils.toArray<HTMLElement>('.product-card');
       cards.forEach((card, i) => {
         gsap.fromTo(card,
           { 
