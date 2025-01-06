@@ -68,7 +68,7 @@ export const Categories = ({ navigate }: CategoriesProps) => {
   return (
     <section 
       ref={sectionRef}
-      className="py-24 bg-isabelline"
+      className="py-12 bg-isabelline"
     >
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">

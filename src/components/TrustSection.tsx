@@ -100,7 +100,7 @@ export const TrustSection = ({ navigate }: { navigate: (path: string) => void })
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-white">
+    <section ref={sectionRef} className="py-12 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
