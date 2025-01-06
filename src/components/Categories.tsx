@@ -1,5 +1,9 @@
 import { Flower2, Gift, Heart, Star } from "lucide-react";
 
+interface CategoriesProps {
+  navigate: (path: string) => void;
+}
+
 const categories = [
   {
     name: "Birthday",
