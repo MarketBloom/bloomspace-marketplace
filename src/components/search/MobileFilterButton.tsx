@@ -16,21 +16,21 @@ export const MobileFilterButton = () => {
   const initialLocation = searchParams.get('location') || "";
 
   return (
-    <div className="lg:hidden mb-4">
+    <div className="lg:hidden mb-2">
       <Sheet>
         <SheetTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full text-sm bg-secondary hover:bg-secondary/80 border-secondary"
+            className="w-full text-sm bg-secondary hover:bg-secondary/80 border-black/20"
           >
             <SlidersHorizontal className="h-4 w-4 mr-2" />
             Filters
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] p-0">
-          <ScrollArea className="h-full px-4">
-            <div className="py-6">
-              <h3 className="text-sm font-medium mb-3">Filters</h3>
+        <SheetContent side="left" className="w-[280px] p-0 border-r border-black/20">
+          <ScrollArea className="h-full px-3">
+            <div className="py-4">
+              <h3 className="text-sm font-medium mb-2">Filters</h3>
               <FilterBar 
                 initialFulfillmentType={initialFulfillmentType}
                 initialDate={initialDate}
