@@ -13,14 +13,14 @@ interface DateFilterProps {
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
   return (
     <div className="space-y-1.5">
-      <label className="text-[#EFEEEA]/80 text-xs font-medium">Date</label>
+      <label className="text-foreground text-xs font-medium">Date</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left h-12 bg-[#EFEEEA]/10 border-[#EFEEEA]/10 text-[#EFEEEA]",
-              !date && "text-[#EFEEEA]/40"
+              "w-full justify-start text-left h-12 bg-white/90 border-white/20 text-foreground",
+              !date && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -33,7 +33,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
             selected={date}
             onSelect={setDate}
             initialFocus
-            className="rounded-md border-[#EFEEEA]/10"
+            className="rounded-md border-white/20"
           />
         </PopoverContent>
       </Popover>

@@ -22,21 +22,21 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   return (
     <div className="space-y-1.5">
-      <label className="text-[#EFEEEA]/80 text-xs font-medium">Time</label>
+      <label className="text-foreground text-xs font-medium">Time</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left h-12 bg-[#EFEEEA]/10 border-[#EFEEEA]/10 text-[#EFEEEA]",
-              !time && "text-[#EFEEEA]/40"
+              "w-full justify-start text-left h-12 bg-white/90 border-white/20 text-foreground",
+              !time && "text-muted-foreground"
             )}
           >
             <Clock className="mr-2 h-4 w-4" />
             {time || "Select time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border-[#EFEEEA]/10" align="start">
+        <PopoverContent className="w-48 p-0 border-white/20" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button
@@ -44,7 +44,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start h-9",
-                  time === slot.value ? "bg-[#FCBA24] text-[#050407]" : "text-[#EFEEEA]"
+                  time === slot.value ? "bg-[#FCBA24] text-[#050407]" : "text-foreground"
                 )}
                 onClick={() => setTime(slot.value)}
               >
