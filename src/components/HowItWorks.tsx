@@ -2,16 +2,16 @@ import { Flower, Heart, Filter, Truck, Gift } from "lucide-react";
 
 export const HowItWorks = () => {
   return (
-    <section className="py-12 md:py-16 px-4">
-      <h2 className="text-4xl md:text-6xl font-bold text-center mb-4">
-        Support local florists
-      </h2>
-      <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-8 md:mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
-        Connect with talented local artisans and get fresh flowers delivered when you need them
-      </p>
-      
-      <div className="container max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
+    <section className="py-8 md:py-12">
+      <div className="container max-w-[1200px] mx-auto px-4">
+        <h2 className="text-4xl md:text-6xl font-bold text-center mb-4">
+          Support local florists
+        </h2>
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-8 md:mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
+          Connect with talented local artisans and get fresh flowers delivered when you need them
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Local Florists */}
           <div className="bg-secondary/50 rounded-2xl p-6">
             <div className="aspect-[4/5]">
@@ -72,7 +72,7 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Special Occasions */}
+          {/* Perfect Gifts */}
           <div className="bg-secondary/50 rounded-2xl p-6">
             <div className="aspect-[4/5]">
               <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
