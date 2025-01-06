@@ -58,7 +58,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
             <Button 
               variant="outline"
               onClick={() => navigate('/search')}
-              className="hidden md:flex hover:bg-selective_yellow hover:text-black border-selective_yellow/20 text-selective_yellow"
+              className="hidden md:flex hover:bg-[#D73459] hover:text-white border-[#D73459]/20 text-[#D73459]"
             >
               View All
             </Button>
@@ -66,7 +66,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
           
           {isLoading ? (
             <div className="flex justify-center items-center h-[200px]">
-              <Loader2 className="h-6 w-6 animate-spin text-selective_yellow" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#D73459]" />
             </div>
           ) : (
             <>
@@ -91,7 +91,7 @@ export const FeaturedProducts = ({ products, isLoading, navigate }: FeaturedProd
                 <Button 
                   variant="outline"
                   onClick={() => navigate('/search')}
-                  className="border-selective_yellow/20 text-selective_yellow hover:bg-selective_yellow hover:text-black"
+                  className="border-[#D73459]/20 text-[#D73459] hover:bg-[#D73459] hover:text-white"
                 >
                   View All
                 </Button>
