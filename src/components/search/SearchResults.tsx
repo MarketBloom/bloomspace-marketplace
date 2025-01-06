@@ -22,18 +22,15 @@ export const SearchResults = ({
   isLoadingProducts,
   isLoadingFlorists 
 }: SearchResultsProps) => {
-  const [isDoubleColumn, setIsDoubleColumn] = useState(false);
+  const [isDoubleColumn, setIsDoubleColumn] = useState(true);
 
   useEffect(() => {
-    // Only apply scroll animations if there are at least 7 items
     const items = viewMode === 'products' ? products : florists;
     if (items.length < 7) return;
 
-    // Create scroll animations for each product card
     const cards = document.querySelectorAll('.product-card-animate');
     
     cards.forEach((card, index) => {
-      // Alternate between different scroll speeds
       const speed = [0.8, 1.2, 2.0][index % 3];
       card.setAttribute('data-speed', speed.toString());
 
@@ -58,7 +55,6 @@ export const SearchResults = ({
       );
     });
 
-    // Cleanup
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };

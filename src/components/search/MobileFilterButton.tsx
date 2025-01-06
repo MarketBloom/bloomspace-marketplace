@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export const MobileFilterButton = () => {
   const [searchParams] = useSearchParams();
 
-  // Get initial values from URL parameters
   const initialFulfillmentType = (searchParams.get('fulfillment') as "pickup" | "delivery") || "delivery";
   const initialDate = searchParams.get('date') ? new Date(searchParams.get('date')!) : new Date();
   const initialTime = searchParams.get('time') || null;
@@ -16,32 +15,30 @@ export const MobileFilterButton = () => {
   const initialLocation = searchParams.get('location') || "";
 
   return (
-    <div className="lg:hidden mb-4">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button 
-            variant="outline" 
-            className="w-full text-sm bg-secondary hover:bg-secondary/80 border-secondary"
-          >
-            <SlidersHorizontal className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] p-0">
-          <ScrollArea className="h-full px-4">
-            <div className="py-6">
-              <h3 className="text-sm font-medium mb-3">Filters</h3>
-              <FilterBar 
-                initialFulfillmentType={initialFulfillmentType}
-                initialDate={initialDate}
-                initialTime={initialTime}
-                initialBudget={initialBudget}
-                initialLocation={initialLocation}
-              />
-            </div>
-          </ScrollArea>
-        </SheetContent>
-      </Sheet>
-    </div>
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full text-sm bg-white hover:bg-white/90 border-gray-200 shadow-sm h-10"
+        >
+          <SlidersHorizontal className="h-4 w-4 mr-2" />
+          Filters
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-full sm:w-[300px] p-0">
+        <ScrollArea className="h-full px-4">
+          <div className="py-6">
+            <h3 className="text-base font-medium mb-4">Filters</h3>
+            <FilterBar 
+              initialFulfillmentType={initialFulfillmentType}
+              initialDate={initialDate}
+              initialTime={initialTime}
+              initialBudget={initialBudget}
+              initialLocation={initialLocation}
+            />
+          </div>
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
   );
 };
