@@ -8,7 +8,7 @@ export const MobileHeroImage = () => {
         style={{ 
           objectPosition: '50% 25%',
           objectFit: 'cover',
-          scale: '1.8'
+          scale: '1.8'  // Increased from previous value
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
