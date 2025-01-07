@@ -7,9 +7,11 @@ export const Hero = () => {
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
           alt="Beautiful pink and coral carnations arranged with dramatic shadows"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover md:object-cover"
           style={{ 
-            objectPosition: '50% 50%'
+            objectPosition: '50% 50%',
+            objectFit: 'cover',
+            scale: window.innerWidth < 768 ? '1.2' : '1'
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
