@@ -49,14 +49,14 @@ export const FilterBar = ({
   }, [fulfillmentType, location, date, time, budget, onFilterChange]);
 
   return (
-    <div className="space-y-3 bg-white shadow-apple rounded-2xl p-4 border border-gray-100">
+    <div className="space-y-3">
       <div className="space-y-1.5">
         <label className="text-foreground text-xs font-medium">Fulfillment Method</label>
         <div className="grid grid-cols-2 gap-2">
           <Button
             variant={fulfillmentType === "delivery" ? "default" : "outline"}
             onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs ${
+            className={`flex items-center justify-center h-[42px] text-xs border border-black ${
               fulfillmentType === "delivery" 
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
                 : ''
@@ -68,7 +68,7 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "pickup" ? "default" : "outline"}
             onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs ${
+            className={`flex items-center justify-center h-[42px] text-xs border border-black ${
               fulfillmentType === "pickup" 
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
                 : ''

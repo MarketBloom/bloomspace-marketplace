@@ -22,7 +22,6 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   const handleSelect = (value: string | null) => {
     setTime(value);
-    // Close popover by removing focus from trigger
     const popoverTrigger = document.activeElement as HTMLElement;
     popoverTrigger?.blur();
   };
@@ -35,7 +34,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-[42px] text-xs",
+              "w-full justify-start text-left font-normal bg-white/90 border border-black h-[42px] text-xs",
               !time && "text-muted-foreground"
             )}
           >
@@ -43,7 +42,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
             {time || "Any Time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border border-white/20" align="start">
+        <PopoverContent className="w-48 p-0 border border-black" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button

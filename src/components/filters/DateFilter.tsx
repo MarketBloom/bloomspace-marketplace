@@ -13,7 +13,6 @@ interface DateFilterProps {
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
   const handleSelect = (date: Date | undefined) => {
     setDate(date);
-    // Close popover by removing focus from trigger
     const popoverTrigger = document.activeElement as HTMLElement;
     popoverTrigger?.blur();
   };
@@ -26,7 +25,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border-white/20 h-[42px] text-xs",
+              "w-full justify-start text-left font-normal bg-white/90 border border-black h-[42px] text-xs",
               !date && "text-muted-foreground"
             )}
           >
@@ -35,21 +34,12 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <div className="p-2 border-b border-white/20">
-            <Button
-              variant="ghost"
-              className="w-full justify-start font-normal text-xs h-8"
-              onClick={() => handleSelect(undefined)}
-            >
-              Any Date
-            </Button>
-          </div>
           <Calendar
             mode="single"
             selected={date}
             onSelect={handleSelect}
             initialFocus
-            className="rounded-md border border-white/20"
+            className="rounded-lg border border-black"
           />
         </PopoverContent>
       </Popover>
