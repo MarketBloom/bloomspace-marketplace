@@ -30,8 +30,8 @@ export const HomeFilterBar = () => {
   };
 
   return (
-    <div className="bg-[#eed2d8]/80 backdrop-blur-sm rounded-lg p-3 md:p-5 border border-black">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-2 md:mb-4">
+    <div className="bg-[#eed2d8]/80 backdrop-blur-sm rounded-lg p-2 md:p-5 border border-black">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 md:gap-4 mb-2 md:mb-4">
         <LocationFilter 
           location={location}
           setLocation={setLocation}
@@ -50,7 +50,7 @@ export const HomeFilterBar = () => {
         />
       </div>
       
-      <div className="grid grid-cols-2 gap-2 md:gap-4">
+      <div className="grid grid-cols-2 gap-1.5 md:gap-4">
         <Button 
           className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
           onClick={() => handleSearch("delivery")}
