@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { MobileFilterButton } from "@/components/search/MobileFilterButton";
+import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -144,6 +145,8 @@ const Search = () => {
       
       <div className="relative">
         <div className="relative z-10 lg:max-w-[1800px] mx-auto lg:px-4 pt-20">
+          <DeliveryInfo />
+          
           <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
             {/* Sidebar */}
             <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
