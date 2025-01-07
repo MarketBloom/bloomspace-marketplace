@@ -7,8 +7,7 @@ export const DeliveryInfo = () => {
       
       <p className="text-center text-muted-foreground mb-6 max-w-4xl mx-auto text-sm">
         We source our flowers from local and ethical growers, creating thoughtful bouquets for 
-        our community. We offer delivery across the city and curation for corporate, wholesale, 
-        weddings and events.
+        our community. We offer delivery across the city to bring fresh flowers right to your door.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
