@@ -1,10 +1,10 @@
 import { HomeFilterBar } from "@/components/HomeFilterBar";
-import { HeroBackground } from "@/components/HeroBackground";
+import { MobileHeroImage } from "@/components/MobileHeroImage";
 
 export const MobileHero = () => {
   return (
     <section className="relative h-[420px] flex items-end justify-center bg-[#FFFFFF] md:hidden pb-1">
-      <HeroBackground />
+      <MobileHeroImage />
       <div className="container relative z-10 px-4">
         <div className="max-w-3xl mx-auto text-center mb-6">
           <h1 className="text-3xl font-semibold mb-2 text-white tracking-tight">
