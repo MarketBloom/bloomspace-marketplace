@@ -4,10 +4,10 @@ export const MobileHowItWorks = () => {
   return (
     <section className="py-8 mt-[180px] md:hidden">
       <div className="container px-4">
-        <h2 className="text-4xl font-bold text-center mb-4">
+        <h2 className="text-4xl font-bold text-center mb-6">
           Support local florists
         </h2>
-        <p className="text-lg text-muted-foreground text-center mb-8">
+        <p className="text-lg text-muted-foreground text-center mb-12">
           Connect with talented local artisans and get fresh flowers delivered
         </p>
         
