@@ -13,14 +13,13 @@ import { format } from "date-fns";
 
 const Search = () => {
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
+  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
   if (isMobile) {
     return <MobileSearch />;
   }
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
-  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
   const updateSearchParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);
