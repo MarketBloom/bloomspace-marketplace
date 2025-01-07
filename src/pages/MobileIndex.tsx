@@ -1,21 +1,15 @@
-import { Categories } from "@/components/Categories";
-import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { HowItWorks } from "@/components/HowItWorks";
-import { Testimonials } from "@/components/Testimonials";
-import { TrustSection } from "@/components/TrustSection";
-import { useNavigate } from "react-router-dom";
+import { MobileHero } from "@/components/MobileHero";
+import { MobileHowItWorks } from "@/components/MobileHowItWorks";
+import { MobileCategories } from "@/components/mobile/MobileCategories";
+import { MobileFeaturedProducts } from "@/components/mobile/MobileFeaturedProducts";
+import { MobileTrustSection } from "@/components/mobile/MobileTrustSection";
+import { MobileTestimonials } from "@/components/mobile/MobileTestimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useIsMobile } from "@/hooks/use-mobile";
-import MobileIndex from "./MobileIndex";
 
-const Index = () => {
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  
+const MobileIndex = () => {
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
@@ -48,25 +42,20 @@ const Index = () => {
     }
   });
 
-  if (isMobile) {
-    return <MobileIndex />;
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <Hero />
-      <HowItWorks />
-      <Categories navigate={navigate} />
-      <FeaturedProducts 
+      <MobileHero />
+      <MobileHowItWorks />
+      <MobileCategories />
+      <MobileFeaturedProducts 
         products={products || []} 
         isLoading={isLoading} 
-        navigate={navigate}
       />
-      <TrustSection navigate={navigate} />
-      <Testimonials />
+      <MobileTrustSection />
+      <MobileTestimonials />
     </div>
   );
 };
 
-export default Index;
+export default MobileIndex;
