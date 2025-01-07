@@ -155,7 +155,7 @@ const Search = () => {
             <MobileFilterButton />
 
             {/* Main Content */}
-            <div className="bg-[#FFDEE2] rounded-2xl lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
+            <div className="bg-[#F5F4F2] rounded-2xl lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
               <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
               <SearchResults 
                 viewMode={viewMode}
