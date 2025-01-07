@@ -30,8 +30,8 @@ export const HomeFilterBar = () => {
   };
 
   return (
-    <div className="bg-[#eed2d8]/80 backdrop-blur-sm rounded-lg p-3 md:p-5 border border-black mt-[120px] md:mt-0">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+    <div className="bg-[#eed2d8]/80 backdrop-blur-sm rounded-lg p-5 border border-black mt-[180px] md:mt-0">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 mb-6 md:mb-4">
         <LocationFilter 
           location={location}
           setLocation={setLocation}
@@ -50,19 +50,19 @@ export const HomeFilterBar = () => {
         />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4">
         <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
+          className="bg-white hover:bg-white/90 text-black text-base md:text-sm h-14 md:h-11 px-4 w-full rounded-lg border border-black flex items-center justify-center"
           onClick={() => handleSearch("delivery")}
         >
-          <Truck className="w-4 h-4 mr-2" />
+          <Truck className="w-5 h-5 mr-2" />
           Search Delivery
         </Button>
         <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
+          className="bg-white hover:bg-white/90 text-black text-base md:text-sm h-14 md:h-11 px-4 w-full rounded-lg border border-black flex items-center justify-center"
           onClick={() => handleSearch("pickup")}
         >
-          <ShoppingBag className="w-4 h-4 mr-2" />
+          <ShoppingBag className="w-5 h-5 mr-2" />
           Search Pickup
         </Button>
       </div>
