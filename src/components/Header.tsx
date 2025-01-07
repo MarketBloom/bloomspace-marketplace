@@ -14,14 +14,14 @@ export const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-[70px] md:h-[60px]">
+        <div className="flex items-center justify-between h-[60px]">
           {/* Logo/Home */}
           <Button
             variant="ghost"
-            className="font-semibold text-base md:text-lg hover:bg-transparent hover:text-primary flex items-center gap-2 px-2 md:px-4"
+            className="font-semibold text-lg hover:bg-transparent hover:text-primary flex items-center gap-2"
             onClick={() => handleNavigate("/")}
           >
-            <Home className="h-4 w-4 md:h-5 md:w-5" />
+            <Home className="h-5 w-5" />
             MktBloom
           </Button>
 
@@ -50,14 +50,14 @@ export const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => handleNavigate("/dashboard")}
-                  className="text-xs md:text-sm font-medium px-2 md:px-4"
+                  className="text-sm font-medium"
                 >
                   Dashboard
                 </Button>
                 <Button
                   variant="default"
                   onClick={() => signOut()}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs md:text-sm px-2 md:px-4"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Sign Out
                 </Button>
@@ -67,14 +67,14 @@ export const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => handleNavigate("/login")}
-                  className="text-xs md:text-sm font-medium px-2 md:px-4"
+                  className="text-sm font-medium"
                 >
                   Sign In
                 </Button>
                 <Button
                   variant="default"
                   onClick={() => handleNavigate("/signup")}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs md:text-sm px-2 md:px-4"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Sign Up
                 </Button>
