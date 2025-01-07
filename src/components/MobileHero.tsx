@@ -23,7 +23,7 @@ export const MobileHero = () => {
         />
       </div>
       
-      <div className="container relative z-10 px-4">
+      <div className="container relative z-10 px-4 -mb-[200px]">
         <div className="max-w-3xl mx-auto text-center mb-6">
           <h1 className="text-3xl font-semibold mb-2 text-white tracking-tight">
             Fresh flowers,
