@@ -133,7 +133,7 @@ const MobileSearch = () => {
       <Header />
       
       <div className="relative">
-        <div className="relative z-10 px-4 pt-16">
+        <div className="relative z-10 px-4 pt-14">
           <MobileFilterButton />
 
           <div className="mt-4">

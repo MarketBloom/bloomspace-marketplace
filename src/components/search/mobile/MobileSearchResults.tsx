@@ -19,7 +19,7 @@ export const MobileSearchResults = ({
 }: MobileSearchResultsProps) => {
   if (viewMode === 'products') {
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
         <SearchResultsHeader 
           isLoading={isLoadingProducts}
           count={products.length}
@@ -31,7 +31,7 @@ export const MobileSearchResults = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <SearchResultsHeader 
         isLoading={isLoadingFlorists}
         count={florists.length}
