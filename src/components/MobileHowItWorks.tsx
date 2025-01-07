@@ -2,7 +2,7 @@ import { Flower, Heart, Filter, Truck } from "lucide-react";
 
 export const MobileHowItWorks = () => {
   return (
-    <section className="py-8 mt-[208px] md:hidden">
+    <section className="py-8 mt-[180px] md:hidden">
       <div className="container px-4">
         <h2 className="text-4xl font-bold text-center mb-4">
           Support local florists
