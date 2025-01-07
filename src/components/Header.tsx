@@ -40,16 +40,29 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center space-x-6">
-          <a href="/" className="text-lg">
-            <Home className="h-5 w-5" />
-          </a>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/")}
+            className="h-8 w-8"
+          >
+            <Home className="h-4 w-4" />
+          </Button>
           <nav className="hidden md:flex items-center space-x-4">
-            <a href="/search" className="text-sm text-gray-600 hover:text-black transition-colors">
+            <Button
+              variant="ghost"
+              className="text-sm text-gray-600 hover:text-black transition-colors"
+              onClick={() => navigate("/search")}
+            >
               Browse
-            </a>
-            <a href="/about" className="text-sm text-gray-600 hover:text-black transition-colors">
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-sm text-gray-600 hover:text-black transition-colors"
+              onClick={() => navigate("/about")}
+            >
               About
-            </a>
+            </Button>
           </nav>
         </div>
 
