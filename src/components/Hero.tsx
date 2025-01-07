@@ -2,16 +2,16 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const Hero = () => {
   return (
-    <section className="relative h-[75vh] md:h-[50vh] min-h-[600px] flex items-center justify-center bg-[#FFFFFF]">
+    <section className="relative h-[85vh] md:h-[50vh] min-h-[600px] flex items-center justify-center bg-[#FFFFFF]">
       <div className="absolute inset-0">
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
           alt="Beautiful pink and coral carnations arranged with dramatic shadows"
           className="h-full w-full object-cover md:object-cover"
           style={{ 
-            objectPosition: '50% 50%',
+            objectPosition: '50% 30%',
             objectFit: 'cover',
-            scale: window.innerWidth < 768 ? '1.4' : '1'
+            scale: window.innerWidth < 768 ? '1.6' : '1'
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
