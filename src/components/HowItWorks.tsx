@@ -1,4 +1,4 @@
-import { Flower, Heart, Filter, Truck, Gift } from "lucide-react";
+import { Flower, Heart, Filter, Truck } from "lucide-react";
 
 export const HowItWorks = () => {
   return (
@@ -11,10 +11,10 @@ export const HowItWorks = () => {
           Connect with talented local artisans and get fresh flowers delivered when you need them
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Local Florists */}
           <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
-            <div className="aspect-[4/5] flex flex-col">
+            <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
                 <p className="text-muted-foreground">
@@ -31,7 +31,7 @@ export const HowItWorks = () => {
 
           {/* Care & Support */}
           <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
-            <div className="aspect-[4/5] flex flex-col">
+            <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
                 <p className="text-muted-foreground">
@@ -48,7 +48,7 @@ export const HowItWorks = () => {
 
           {/* Easy Filters */}
           <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
-            <div className="aspect-[4/5] flex flex-col">
+            <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
                 <p className="text-muted-foreground">
@@ -65,7 +65,7 @@ export const HowItWorks = () => {
 
           {/* Delivery Options */}
           <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
-            <div className="aspect-[4/5] flex flex-col">
+            <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
                 <p className="text-muted-foreground">
@@ -74,23 +74,6 @@ export const HowItWorks = () => {
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
                 <Truck className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
-            </div>
-          </div>
-
-          {/* Perfect Gifts */}
-          <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
-            <div className="aspect-[4/5] flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Perfect Gifts</h3>
-                <p className="text-muted-foreground">
-                  Find the ideal floral gift for any special occasion or celebration
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Gift className="w-8 h-8 text-primary mb-3" />
                 <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
                 <div className="h-2 bg-muted rounded-full w-1/2" />
               </div>
