@@ -129,14 +129,14 @@ const MobileSearch = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background font-mono">
+    <div className="min-h-screen bg-[#eed2d8]">
       <Header />
       
       <div className="relative">
         <div className="relative z-10 px-4 pt-16">
           <MobileFilterButton />
 
-          <div className="bg-[#eed2d8] rounded-xl p-4 mt-4 border border-black">
+          <div className="mt-4">
             <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
             <MobileSearchResults 
               viewMode={viewMode}
