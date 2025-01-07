@@ -1,28 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const logoRef = useRef<HTMLImageElement>(null);
 
   const handleNavigate = (path: string) => {
     navigate(path);
   };
-
-  useEffect(() => {
-    if (logoRef.current) {
-      gsap.to(logoRef.current, {
-        rotation: 360,
-        duration: 10,
-        ease: "none",
-        repeat: -1,
-      });
-    }
-  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border">
@@ -31,15 +17,10 @@ export const Header = () => {
           {/* Logo/Home */}
           <Button
             variant="ghost"
-            className="font-semibold text-lg hover:bg-transparent hover:text-primary p-0"
+            className="font-semibold text-lg hover:bg-transparent hover:text-primary"
             onClick={() => handleNavigate("/")}
           >
-            <img
-              ref={logoRef}
-              src="/lovable-uploads/da714545-96c0-4238-991e-26bb04c6c730.png"
-              alt="Lovable"
-              className="h-12 w-12"
-            />
+            Lovable
           </Button>
 
           {/* Navigation */}
