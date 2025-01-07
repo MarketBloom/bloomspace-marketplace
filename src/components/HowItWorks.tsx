@@ -1,17 +1,25 @@
 import { Flower, Heart, Filter, Truck } from "lucide-react";
+import { MobileHowItWorks } from "./MobileHowItWorks";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const HowItWorks = () => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileHowItWorks />;
+  }
+
   return (
-    <section className="py-8 mt-[208px] md:mt-0 md:py-12">
+    <section className="hidden md:block py-12">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-6xl font-bold text-center mb-4">
+        <h2 className="text-6xl font-bold text-center mb-4">
           Support local florists
         </h2>
-        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-8 md:mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
           Connect with talented local artisans and get fresh flowers delivered when you need them
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {/* Local Florists */}
           <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
             <div className="aspect-square flex flex-col">
