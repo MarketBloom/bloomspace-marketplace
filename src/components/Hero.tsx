@@ -12,9 +12,8 @@ export const Hero = () => {
             alt="Beautiful pink and coral carnations arranged with dramatic shadows"
             className="h-full w-full object-cover"
             style={{ 
-              objectPosition: '50% 25%',
+              objectPosition: '50% 30%',
               objectFit: 'cover',
-              scale: '1.8'
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
@@ -25,6 +24,7 @@ export const Hero = () => {
             }}
           />
         </div>
+        
         <div className="container relative z-10 px-8 flex flex-col items-center">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <h1 className="text-6xl font-semibold mb-3 text-white tracking-tight">
