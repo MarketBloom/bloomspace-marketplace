@@ -11,6 +11,16 @@ export const Header = () => {
     navigate(path);
   };
 
+  const handleDashboardClick = () => {
+    // Get user role from metadata
+    const role = user?.user_metadata?.role;
+    if (role === "florist") {
+      navigate("/florist-dashboard");
+    } else {
+      navigate("/customer-dashboard");
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border">
       <div className="container mx-auto px-4">
@@ -49,7 +59,7 @@ export const Header = () => {
               <>
                 <Button
                   variant="ghost"
-                  onClick={() => handleNavigate("/dashboard")}
+                  onClick={handleDashboardClick}
                   className="text-sm font-medium"
                 >
                   Dashboard
