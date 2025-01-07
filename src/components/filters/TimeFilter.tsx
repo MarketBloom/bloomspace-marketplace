@@ -28,13 +28,13 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   return (
     <div className="space-y-1.5">
-      <label className="text-foreground text-xs font-medium">Time</label>
+      <label className="text-black text-xs font-medium">Time</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border border-black h-[42px] text-xs",
+              "w-full justify-start text-left font-normal bg-white border border-black h-[42px] text-xs rounded-lg",
               !time && "text-muted-foreground"
             )}
           >
@@ -42,7 +42,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
             {time || "Any Time"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0 border border-black" align="start">
+        <PopoverContent className="w-48 p-0 border border-black rounded-lg" align="start">
           <div className="h-64 overflow-auto p-1">
             {timeSlots.map((slot) => (
               <Button
@@ -50,7 +50,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start font-normal text-xs h-8",
-                  time === slot.value ? "bg-primary/20 text-primary" : ""
+                  time === slot.value ? "bg-black/5" : ""
                 )}
                 onClick={() => handleSelect(slot.value)}
               >

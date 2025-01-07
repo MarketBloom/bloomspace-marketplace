@@ -56,7 +56,7 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "delivery" ? "default" : "outline"}
             onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black ${
+            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
               fulfillmentType === "delivery" 
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
                 : ''
@@ -68,7 +68,7 @@ export const FilterBar = ({
           <Button
             variant={fulfillmentType === "pickup" ? "default" : "outline"}
             onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black ${
+            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
               fulfillmentType === "pickup" 
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
                 : ''

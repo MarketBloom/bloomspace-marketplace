@@ -25,7 +25,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white/90 border border-black h-[42px] text-xs",
+              "w-full justify-start text-left font-normal bg-white/90 border border-black h-[42px] text-xs rounded-lg",
               !date && "text-muted-foreground"
             )}
           >
