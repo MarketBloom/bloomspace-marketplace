@@ -8,15 +8,15 @@ interface SearchHeaderProps {
 
 export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
   return (
-    <div className="flex gap-2 mb-4 px-2 lg:px-0">
+    <div className="flex gap-2 mb-4">
       <Button
         variant={viewMode === 'products' ? 'default' : 'outline'}
         onClick={() => setViewMode('products')}
-        className={`flex-1 sm:flex-none text-sm ${
+        className={`flex-1 sm:flex-none text-xs h-11 ${
           viewMode === 'products' 
-            ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-            : ''
-        } rounded-full`}
+            ? 'bg-white hover:bg-white/90 text-black border border-black' 
+            : 'bg-white hover:bg-white/90 text-black border border-black'
+        } rounded-lg`}
       >
         <ShoppingBag className="h-4 w-4 mr-2" />
         Products
@@ -24,11 +24,11 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
       <Button
         variant={viewMode === 'florists' ? 'default' : 'outline'}
         onClick={() => setViewMode('florists')}
-        className={`flex-1 sm:flex-none text-sm ${
+        className={`flex-1 sm:flex-none text-xs h-11 ${
           viewMode === 'florists' 
-            ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-            : ''
-        } rounded-full`}
+            ? 'bg-white hover:bg-white/90 text-black border border-black' 
+            : 'bg-white hover:bg-white/90 text-black border border-black'
+        } rounded-lg`}
       >
         <Store className="h-4 w-4 mr-2" />
         Florists
