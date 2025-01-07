@@ -52,14 +52,14 @@ export const HomeFilterBar = () => {
       
       <div className="grid grid-cols-2 gap-2 md:gap-4">
         <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border-[1.5px] border-black/20"
+          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border-[1.5px] border-black"
           onClick={() => handleSearch("delivery")}
         >
           <Truck className="w-4 h-4 mr-2" />
           Search Delivery
         </Button>
         <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border-[1.5px] border-black/20"
+          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border-[1.5px] border-black"
           onClick={() => handleSearch("pickup")}
         >
           <ShoppingBag className="w-4 h-4 mr-2" />

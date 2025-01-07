@@ -17,7 +17,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           placeholder="Enter city or postcode"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full pl-8 h-11 bg-white border-[1.5px] border-black/20 text-xs rounded-lg"
+          className="w-full pl-8 h-11 bg-white border-[1.5px] border-black text-xs rounded-lg"
         />
       </div>
     </div>
