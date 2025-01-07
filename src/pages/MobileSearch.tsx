@@ -136,7 +136,7 @@ const MobileSearch = () => {
         <div className="relative z-10 px-4 pt-[72px]">
           <MobileFilterButton />
 
-          <div className="mt-4">
+          <div className="mt-3">
             <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
             <MobileSearchResults 
               viewMode={viewMode}
