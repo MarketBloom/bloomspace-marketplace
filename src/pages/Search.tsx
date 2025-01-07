@@ -12,34 +12,13 @@ import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 
 const Search = () => {
+  // Move all hooks to the top level
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
-  if (isMobile) {
-    return <MobileSearch />;
-  }
-
-  const updateSearchParams = (updates: Record<string, string>) => {
-    const newParams = new URLSearchParams(searchParams);
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value) {
-        newParams.set(key, value);
-      } else {
-        newParams.delete(key);
-      }
-    });
-    setSearchParams(newParams, { replace: true });
-  };
-
-  useEffect(() => {
-    const fulfillment = searchParams.get('fulfillment');
-    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
-      setFulfillmentType(fulfillment);
-    }
-  }, [searchParams]);
-
+  // Extract common query logic
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
@@ -134,6 +113,30 @@ const Search = () => {
       return data || [];
     },
   });
+
+  useEffect(() => {
+    const fulfillment = searchParams.get('fulfillment');
+    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
+      setFulfillmentType(fulfillment);
+    }
+  }, [searchParams]);
+
+  const updateSearchParams = (updates: Record<string, string>) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
+    setSearchParams(newParams, { replace: true });
+  };
+
+  // Return mobile version after all hooks are initialized
+  if (isMobile) {
+    return <MobileSearch />;
+  }
 
   return (
     <div className="min-h-screen bg-background font-mono">
