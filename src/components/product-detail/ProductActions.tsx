@@ -11,7 +11,7 @@ export const ProductActions = ({ onAddToCart }: ProductActionsProps) => {
     <div className="pt-4">
       <Button 
         size="lg" 
-        className="w-full"
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
         onClick={onAddToCart}
       >
         <ShoppingCart className="mr-2 h-5 w-5" />
