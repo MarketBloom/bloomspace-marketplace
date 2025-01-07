@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { MobileSearchResults } from "@/components/search/mobile/MobileSearchResults";
 import { MobileFilterButton } from "@/components/search/MobileFilterButton";
+import { MobileDeliveryInfo } from "@/components/search/mobile/MobileDeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -134,6 +135,7 @@ const MobileSearch = () => {
       
       <div className="relative">
         <div className="relative z-10 px-4 pt-[72px]">
+          <MobileDeliveryInfo />
           <MobileFilterButton />
 
           <div className="mt-3">
