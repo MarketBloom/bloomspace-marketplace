@@ -23,18 +23,18 @@ export const MobileHero = () => {
         />
       </div>
       
-      <div className="container relative z-10 px-4 flex flex-col items-center mt-20">
-        <div className="max-w-3xl mx-auto text-center mb-4">
+      <div className="container relative z-10 px-4 flex flex-col items-center mt-28">
+        <div className="max-w-3xl mx-auto text-center mb-6">
           <h1 className="text-3xl font-semibold mb-2 text-white tracking-tight">
             Fresh flowers,
             <br />
             delivered with care.
           </h1>
-          <p className="text-base text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-4 whitespace-normal">
+          <p className="text-base text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-6 whitespace-normal">
             Support local florists and get fresh arrangements delivered right to your door.
           </p>
         </div>
-        <div className="w-full max-w-4xl px-2 mb-8">
+        <div className="w-full max-w-4xl px-2">
           <HomeFilterBar />
         </div>
       </div>
