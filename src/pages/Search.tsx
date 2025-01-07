@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { MobileFilterButton } from "@/components/search/MobileFilterButton";
-import { format } from "date-fns";
 import { useSearchParams } from "react-router-dom";
+import { format } from "date-fns";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -133,40 +133,22 @@ const Search = () => {
       <Header />
       
       <div className="relative">
-        {/* Background Image and Overlay */}
-        <div className="absolute inset-0 h-[50vh] min-h-[400px]">
-          <img 
-            src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
-            alt="Beautiful pink and coral carnations arranged with dramatic shadows"
-            className="h-full w-full object-cover"
-            style={{ 
-              objectPosition: '50% 50%'
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
-          <div 
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
-
-        {/* Content */}
         <div className="relative z-10 lg:max-w-[1800px] mx-auto lg:px-4 pt-20">
           <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
             {/* Sidebar */}
             <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
               <div className="w-full">
-                <h3 className="text-sm font-medium mb-3 text-white">Filters</h3>
-                <FilterBar 
-                  initialFulfillmentType={fulfillmentType}
-                  initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
-                  initialTime={searchParams.get('time') || null}
-                  initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
-                  initialLocation={searchParams.get('location') || ""}
-                  onFilterChange={updateSearchParams}
-                />
+                <h3 className="text-sm font-medium mb-3">Filters</h3>
+                <div className="bg-[#F5F4F2]/80 backdrop-blur-sm rounded-lg p-3 border border-black">
+                  <FilterBar 
+                    initialFulfillmentType={fulfillmentType}
+                    initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
+                    initialTime={searchParams.get('time') || null}
+                    initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
+                    initialLocation={searchParams.get('location') || ""}
+                    onFilterChange={updateSearchParams}
+                  />
+                </div>
               </div>
             </aside>
 
