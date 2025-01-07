@@ -52,7 +52,7 @@ export const ProductCard = ({
   return (
     <div className="aspect-[4/5] w-full">
       <Card 
-        className="group relative overflow-hidden cursor-pointer bg-white border-0 shadow-apple hover:shadow-apple-hover active:shadow-apple-hover transition-all duration-300 h-full rounded-lg md:rounded-xl touch-manipulation"
+        className="group relative overflow-hidden cursor-pointer bg-white border border-black shadow-apple hover:shadow-apple-hover active:shadow-apple-hover transition-all duration-300 h-full rounded-lg md:rounded-xl touch-manipulation"
         onClick={handleClick}
         role="link"
         tabIndex={0}
@@ -61,13 +61,13 @@ export const ProductCard = ({
           <ProductImage src={images?.[0]} alt={displayTitle} />
           <div className="absolute top-0.5 right-0.5 md:top-3 md:right-3 flex flex-col gap-1">
             {isDeliveryAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
+              <Badge variant="secondary" className="bg-white text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
                 <Truck className="w-3 h-3 md:w-3 md:h-3" />
                 {deliveryCutoff ? `Until ${deliveryCutoff}` : 'Available'}
               </Badge>
             )}
             {isPickupAvailable && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
+              <Badge variant="secondary" className="bg-white text-[10px] md:text-[10px] flex items-center gap-1 font-medium whitespace-nowrap px-1.5 py-0.5">
                 <ShoppingBag className="w-3 h-3 md:w-3 md:h-3" />
                 {pickupCutoff ? `Until ${pickupCutoff}` : 'Available'}
               </Badge>

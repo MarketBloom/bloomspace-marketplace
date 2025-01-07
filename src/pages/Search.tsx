@@ -79,7 +79,7 @@ const Search = () => {
               currentTime < product.florist_profiles.delivery_cutoff,
             isPickupAvailable: fulfillmentType === "pickup" && 
               product.florist_profiles?.operating_hours && 
-              currentTime < product.florist_profiles.delivery_end_time,
+              currentTime < product.florist_profiles?.delivery_end_time,
             deliveryCutoff: product.florist_profiles?.delivery_cutoff,
             pickupCutoff: product.florist_profiles?.delivery_end_time
           }];
@@ -139,7 +139,7 @@ const Search = () => {
             <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
               <div className="w-full">
                 <h3 className="text-sm font-medium mb-3">Filters</h3>
-                <div className="bg-[#F5F4F2]/80 backdrop-blur-sm rounded-lg p-3 border border-black">
+                <div className="bg-[#F5F4F2] rounded-lg p-3 border border-black">
                   <FilterBar 
                     initialFulfillmentType={fulfillmentType}
                     initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
@@ -155,7 +155,7 @@ const Search = () => {
             <MobileFilterButton />
 
             {/* Main Content */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
+            <div className="bg-[#FFDEE2] rounded-2xl lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
               <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
               <SearchResults 
                 viewMode={viewMode}
