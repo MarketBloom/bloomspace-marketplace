@@ -16,7 +16,7 @@ export const MobileFilterButton = () => {
   const initialLocation = searchParams.get('location') || "";
 
   return (
-    <div className="lg:hidden mb-4">
+    <div className="lg:hidden mb-4 relative z-[60]">
       <Sheet>
         <SheetTrigger asChild>
           <Button 
