@@ -1,23 +1,15 @@
-import { useIsMobile } from "@/hooks/use-mobile";
-import MobileSearch from "./MobileSearch";
 import { Header } from "@/components/Header";
 import { FilterBar } from "@/components/FilterBar";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { SearchHeader } from "@/components/search/SearchHeader";
-import { SearchResults } from "@/components/search/SearchResults";
+import { MobileSearchResults } from "@/components/search/mobile/MobileSearchResults";
 import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 
-const Search = () => {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return <MobileSearch />;
-  }
-
+const MobileSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
@@ -141,38 +133,18 @@ const Search = () => {
       <Header />
       
       <div className="relative">
-        <div className="relative z-10 lg:max-w-[1800px] mx-auto lg:px-4 pt-20">
-          <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
-            {/* Sidebar */}
-            <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
-              <div className="w-full">
-                <h3 className="text-sm font-medium mb-3">Filters</h3>
-                <div className="bg-[#eed2d8] rounded-lg p-3 border border-black">
-                  <FilterBar 
-                    initialFulfillmentType={fulfillmentType}
-                    initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
-                    initialTime={searchParams.get('time') || null}
-                    initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
-                    initialLocation={searchParams.get('location') || ""}
-                    onFilterChange={updateSearchParams}
-                  />
-                </div>
-              </div>
-            </aside>
+        <div className="relative z-10 px-4 pt-16">
+          <MobileFilterButton />
 
-            <MobileFilterButton />
-
-            {/* Main Content */}
-            <div className="bg-[#eed2d8] rounded-2xl lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
-              <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
-              <SearchResults 
-                viewMode={viewMode}
-                products={products || []}
-                florists={florists || []}
-                isLoadingProducts={isLoadingProducts}
-                isLoadingFlorists={isLoadingFlorists}
-              />
-            </div>
+          <div className="bg-[#eed2d8] rounded-xl p-4 mt-4 border border-black">
+            <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
+            <MobileSearchResults 
+              viewMode={viewMode}
+              products={products || []}
+              florists={florists || []}
+              isLoadingProducts={isLoadingProducts}
+              isLoadingFlorists={isLoadingFlorists}
+            />
           </div>
         </div>
       </div>
@@ -180,4 +152,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default MobileSearch;
