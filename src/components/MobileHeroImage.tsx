@@ -6,9 +6,9 @@ export const MobileHeroImage = () => {
         alt="Beautiful pink and coral carnations arranged with dramatic shadows"
         className="h-full w-full object-cover"
         style={{ 
-          objectPosition: '50% 25%',
+          objectPosition: '50% 35%',  // Moved down from 25% to 35%
           objectFit: 'cover',
-          scale: '1.8'  // Increased from previous value
+          scale: '1.85'  // Increased scale and allowing it to take more space below
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/40" />
