@@ -2,7 +2,7 @@ import { Flower, Heart, Filter, Truck } from "lucide-react";
 
 export const HowItWorks = () => {
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-8 mt-[200px] md:mt-0 md:py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl md:text-6xl font-bold text-center mb-4">
           Support local florists
