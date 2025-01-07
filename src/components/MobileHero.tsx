@@ -2,7 +2,7 @@ import { HomeFilterBar } from "@/components/HomeFilterBar";
 
 export const MobileHero = () => {
   return (
-    <section className="relative h-[580px] flex items-end justify-center bg-[#FFFFFF] md:hidden pb-1">
+    <section className="relative h-[480px] flex items-end justify-center bg-[#FFFFFF] md:hidden pb-1">
       <div className="absolute inset-0">
         <img 
           src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
