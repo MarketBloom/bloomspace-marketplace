@@ -149,9 +149,8 @@ const Search = () => {
           
           <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
             {/* Sidebar */}
-            <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
+            <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
               <div className="w-full">
-                <h3 className="text-sm font-medium mb-3">Filters</h3>
                 <div className="bg-[#eed2d8] rounded-lg p-3 border border-black">
                   <FilterBar 
                     initialFulfillmentType={fulfillmentType}
