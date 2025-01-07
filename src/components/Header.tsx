@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { Home } from "lucide-react";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -17,10 +18,11 @@ export const Header = () => {
           {/* Logo/Home */}
           <Button
             variant="ghost"
-            className="font-semibold text-lg hover:bg-transparent hover:text-primary"
+            className="font-semibold text-lg hover:bg-transparent hover:text-primary flex items-center gap-2"
             onClick={() => handleNavigate("/")}
           >
-            Lovable
+            <Home className="h-5 w-5" />
+            MktBloom
           </Button>
 
           {/* Navigation */}
