@@ -86,6 +86,7 @@ export type Database = {
           commission_rate: number | null
           created_at: string
           delivery_cutoff: string | null
+          delivery_days: string[] | null
           delivery_end_time: string | null
           delivery_fee: number | null
           delivery_radius: number | null
@@ -96,6 +97,7 @@ export type Database = {
           logo_url: string | null
           minimum_order_amount: number | null
           operating_hours: Json | null
+          pickup_only_days: string[] | null
           premium_since: string | null
           setup_completed_at: string | null
           setup_progress: number | null
@@ -112,6 +114,7 @@ export type Database = {
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
+          delivery_days?: string[] | null
           delivery_end_time?: string | null
           delivery_fee?: number | null
           delivery_radius?: number | null
@@ -122,6 +125,7 @@ export type Database = {
           logo_url?: string | null
           minimum_order_amount?: number | null
           operating_hours?: Json | null
+          pickup_only_days?: string[] | null
           premium_since?: string | null
           setup_completed_at?: string | null
           setup_progress?: number | null
@@ -138,6 +142,7 @@ export type Database = {
           commission_rate?: number | null
           created_at?: string
           delivery_cutoff?: string | null
+          delivery_days?: string[] | null
           delivery_end_time?: string | null
           delivery_fee?: number | null
           delivery_radius?: number | null
@@ -148,6 +153,7 @@ export type Database = {
           logo_url?: string | null
           minimum_order_amount?: number | null
           operating_hours?: Json | null
+          pickup_only_days?: string[] | null
           premium_since?: string | null
           setup_completed_at?: string | null
           setup_progress?: number | null

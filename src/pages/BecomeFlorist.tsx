@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { StoreDetailsForm } from "@/components/become-florist/StoreDetailsForm";
 import { DeliverySettingsForm } from "@/components/become-florist/DeliverySettingsForm";
 import { ImageUploadForm } from "@/components/become-florist/ImageUploadForm";
+import { OperatingHoursForm } from "@/components/become-florist/OperatingHoursForm";
 import { StepIndicator } from "@/components/become-florist/StepIndicator";
 import { Button } from "@/components/ui/button";
 
@@ -34,6 +35,8 @@ const BecomeFlorist = () => {
       saturday: { open: "09:00", close: "17:00" },
       sunday: { open: "09:00", close: "17:00" },
     },
+    deliveryDays: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+    pickupOnlyDays: [],
   });
 
   const handleSubmit = async () => {
@@ -65,6 +68,8 @@ const BecomeFlorist = () => {
           minimum_order_amount: parseFloat(formData.minimumOrder),
           logo_url: formData.logoUrl,
           banner_url: formData.bannerUrl,
+          delivery_days: formData.deliveryDays,
+          pickup_only_days: formData.pickupOnlyDays,
         });
 
       if (floristError) throw floristError;
@@ -88,7 +93,6 @@ const BecomeFlorist = () => {
 
     setLoading(true);
     try {
-      // Create a basic florist profile with minimal information
       const { error: floristError } = await supabase
         .from("florist_profiles")
         .insert({
@@ -130,16 +134,27 @@ const BecomeFlorist = () => {
         );
       case 2:
         return (
-          <ImageUploadForm
-            onImageUpload={handleImageUpload}
+          <OperatingHoursForm
+            formData={formData}
+            setFormData={setFormData}
+            onNext={() => setStep(3)}
+            onBack={() => setStep(1)}
           />
         );
       case 3:
         return (
+          <ImageUploadForm
+            onImageUpload={handleImageUpload}
+            onNext={() => setStep(4)}
+            onBack={() => setStep(2)}
+          />
+        );
+      case 4:
+        return (
           <DeliverySettingsForm
             formData={formData}
             setFormData={setFormData}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(3)}
             onSubmit={handleSubmit}
             loading={loading}
           />
@@ -159,7 +174,7 @@ const BecomeFlorist = () => {
               Set Up Your Store
             </h1>
             <div className="flex justify-between items-center mb-6">
-              <StepIndicator currentStep={step} totalSteps={3} />
+              <StepIndicator currentStep={step} totalSteps={4} />
               <Button
                 variant="ghost"
                 onClick={handleSkip}
