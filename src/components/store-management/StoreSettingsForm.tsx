@@ -76,10 +76,11 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="delivery_fee">Delivery Fee</Label>
-          <div className="relative">
+          <Label htmlFor="delivery_fee" className="font-medium">Delivery Fee</Label>
+          <div className="relative rounded-lg border border-gray-200">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</div>
             <Input
               id="delivery_fee"
               type="number"
@@ -87,15 +88,14 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
               step="0.01"
               value={formData.delivery_fee}
               onChange={(e) => setFormData(prev => ({ ...prev, delivery_fee: parseFloat(e.target.value) }))}
-              className="pl-6"
+              className="pl-7 h-12 border-0"
             />
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="delivery_radius">Delivery Radius</Label>
-          <div className="relative">
+          <Label htmlFor="delivery_radius" className="font-medium">Delivery Radius</Label>
+          <div className="relative rounded-lg border border-gray-200">
             <Input
               id="delivery_radius"
               type="number"
@@ -103,15 +103,16 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
               step="0.1"
               value={formData.delivery_radius}
               onChange={(e) => setFormData(prev => ({ ...prev, delivery_radius: parseFloat(e.target.value) }))}
-              className="pr-8"
+              className="pr-12 h-12 border-0"
             />
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">km</span>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">km</div>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="minimum_order_amount">Minimum Order</Label>
-          <div className="relative">
+          <Label htmlFor="minimum_order_amount" className="font-medium">Minimum Order</Label>
+          <div className="relative rounded-lg border border-gray-200">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</div>
             <Input
               id="minimum_order_amount"
               type="number"
@@ -119,9 +120,8 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
               step="0.01"
               value={formData.minimum_order_amount}
               onChange={(e) => setFormData(prev => ({ ...prev, minimum_order_amount: parseFloat(e.target.value) }))}
-              className="pl-6"
+              className="pl-7 h-12 border-0"
             />
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
           </div>
         </div>
       </div>
