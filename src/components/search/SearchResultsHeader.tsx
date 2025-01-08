@@ -19,10 +19,17 @@ export const SearchResultsHeader = ({
     );
   }
 
+  const getMessage = () => {
+    if (type === 'florists') {
+      return `${count} curated ${count === 1 ? 'florist' : 'florists'} in your area`;
+    }
+    return `${count} handcrafted ${count === 1 ? 'arrangement' : 'arrangements'} available`;
+  };
+
   return (
     <div className="flex items-center justify-between">
       <h2 className="text-lg font-medium">
-        {count} {type} found
+        {getMessage()}
       </h2>
     </div>
   );

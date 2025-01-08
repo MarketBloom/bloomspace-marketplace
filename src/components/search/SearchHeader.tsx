@@ -19,7 +19,7 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         } rounded-lg`}
       >
         <ShoppingBag className="h-4 w-4 mr-2" />
-        Products
+        Artisanal Arrangements
       </Button>
       <Button
         variant={viewMode === 'florists' ? 'default' : 'outline'}
@@ -31,7 +31,7 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         } rounded-lg`}
       >
         <Store className="h-4 w-4 mr-2" />
-        Florists
+        Curated Florists
       </Button>
     </div>
   );
