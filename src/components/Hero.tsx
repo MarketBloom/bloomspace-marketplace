@@ -28,12 +28,12 @@ export const Hero = () => {
         <div className="container relative z-10 px-8 flex flex-col items-center">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <h1 className="text-6xl font-semibold mb-3 text-white tracking-tight">
-              Artisanal flowers,
+              Fresh flowers,
               <br />
-              curated with care.
+              delivered with care.
             </h1>
             <p className="text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-8 whitespace-nowrap text-lg">
-              Experience handcrafted arrangements from our carefully selected local florists.
+              Order from our curated selection of local florists, delivering beautiful arrangements to your door.
             </p>
           </div>
           <div className="w-full max-w-4xl">

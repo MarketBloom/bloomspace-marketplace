@@ -23,7 +23,7 @@ export const SearchResultsHeader = ({
     if (type === 'florists') {
       return `${count} curated ${count === 1 ? 'florist' : 'florists'} in your area`;
     }
-    return `${count} handcrafted ${count === 1 ? 'arrangement' : 'arrangements'} available`;
+    return `${count} fresh ${count === 1 ? 'arrangement' : 'arrangements'} available`;
   };
 
   return (

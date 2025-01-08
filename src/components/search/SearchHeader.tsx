@@ -14,20 +14,20 @@ export const SearchHeader = ({ viewMode, setViewMode }: SearchHeaderProps) => {
         onClick={() => setViewMode('products')}
         className={`flex-1 sm:flex-none text-xs h-11 ${
           viewMode === 'products' 
-            ? 'bg-white hover:bg-white/90 text-black border border-black' 
-            : 'bg-white hover:bg-white/90 text-black border border-black'
+            ? 'bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black' 
+            : ''
         } rounded-lg`}
       >
         <ShoppingBag className="h-4 w-4 mr-2" />
-        Artisanal Arrangements
+        Fresh Arrangements
       </Button>
       <Button
         variant={viewMode === 'florists' ? 'default' : 'outline'}
         onClick={() => setViewMode('florists')}
         className={`flex-1 sm:flex-none text-xs h-11 ${
           viewMode === 'florists' 
-            ? 'bg-white hover:bg-white/90 text-black border border-black' 
-            : 'bg-white hover:bg-white/90 text-black border border-black'
+            ? 'bg-[#E3E2E2] hover:bg-[#E3E2E2]/90 text-black' 
+            : ''
         } rounded-lg`}
       >
         <Store className="h-4 w-4 mr-2" />
