@@ -36,6 +36,7 @@ const ApplicationReview = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -55,20 +56,41 @@ const ApplicationReview = () => {
     setApplications(data);
   };
 
-  const handleStatusUpdate = async (id: string, status: string) => {
-    const { error } = await supabase
-      .from("florist_applications")
-      .update({ status })
-      .eq("id", id);
+  const handleApprove = async (id: string) => {
+    setIsApproving(true);
+    try {
+      const { error } = await supabase.functions.invoke('approve-florist-application', {
+        body: { applicationId: id }
+      });
 
-    if (error) {
-      toast.error("Failed to update application status");
-      return;
+      if (error) throw error;
+
+      toast.success("Application approved successfully");
+      fetchApplications();
+      setIsDetailsOpen(false);
+    } catch (error: any) {
+      console.error("Error approving application:", error);
+      toast.error(error.message || "Failed to approve application");
+    } finally {
+      setIsApproving(false);
     }
+  };
 
-    toast.success(`Application ${status}`);
-    fetchApplications();
-    setIsDetailsOpen(false);
+  const handleReject = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("florist_applications")
+        .update({ status: "rejected" })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast.success("Application rejected");
+      fetchApplications();
+      setIsDetailsOpen(false);
+    } catch (error: any) {
+      toast.error("Failed to reject application");
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -180,18 +202,15 @@ const ApplicationReview = () => {
                   <div className="flex justify-end gap-4 mt-6">
                     <Button
                       variant="outline"
-                      onClick={() =>
-                        handleStatusUpdate(selectedApp.id, "rejected")
-                      }
+                      onClick={() => handleReject(selectedApp.id)}
                     >
                       Reject
                     </Button>
                     <Button
-                      onClick={() =>
-                        handleStatusUpdate(selectedApp.id, "approved")
-                      }
+                      onClick={() => handleApprove(selectedApp.id)}
+                      disabled={isApproving}
                     >
-                      Approve
+                      {isApproving ? "Approving..." : "Approve"}
                     </Button>
                   </div>
                 )}
