@@ -1,28 +1,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2, ChevronDown, ChevronUp, Eye } from "lucide-react";
-import { Size } from "@/types/product";
+import { Edit2, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Size, Product } from "@/types/product";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ProductEditForm } from "./ProductEditForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 interface ProductListItemProps {
-  product: {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images?: string[];
-    category?: string;
-    occasion?: string[];
-    product_sizes?: Size[];
-  };
+  product: Product;
   isExpanded: boolean;
   onToggle: () => void;
   onDelete: (id: string) => void;
-  onEdit: (product: any) => void;
+  onEdit: (product: Product) => void;
 }
 
 export const ProductListItem = ({
