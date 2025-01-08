@@ -45,14 +45,13 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
   };
 
   return (
-    <div className="space-y-4">
-      <Label className="text-base font-semibold">Non Same-Day Delivery Options</Label>
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Select and customize up to 3 time slots for future deliveries
-        </p>
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">
+        Select and customize up to 3 time slots for future deliveries
+      </p>
+      <div className="space-y-3">
         {Object.entries(defaultTimeFrames).map(([key, defaultValue]) => (
-          <div key={key} className="space-y-2 border rounded-lg p-4">
+          <div key={key} className="border rounded-lg p-3">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id={`timeFrame-${key}`}
@@ -69,12 +68,12 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
               </Label>
             </div>
             {formData.timeFrames[key as keyof typeof defaultTimeFrames] && (
-              <div className="ml-6">
+              <div className="ml-6 mt-2">
                 <Input
                   value={customTimeFrames[key as keyof typeof defaultTimeFrames]}
                   onChange={(e) => handleTimeFrameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
                   placeholder={defaultValue}
-                  className="mt-2"
+                  className="h-8"
                 />
               </div>
             )}

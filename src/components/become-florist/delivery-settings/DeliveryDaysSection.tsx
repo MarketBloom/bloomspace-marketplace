@@ -76,10 +76,9 @@ export const DeliveryDaysSection = ({ formData, setFormData }: DeliveryDaysSecti
 
   return (
     <div className="space-y-2">
-      <Label>Delivery & Pickup Availability</Label>
       <div className="grid gap-2">
         {daysOfWeek.map((day) => (
-          <div key={day} className="grid grid-cols-[1fr_auto_auto] gap-4 items-center">
+          <div key={day} className="grid grid-cols-[1fr_auto_auto] gap-4 items-center border rounded-lg p-2">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -124,7 +123,7 @@ export const DeliveryDaysSection = ({ formData, setFormData }: DeliveryDaysSecti
                       type="time"
                       value={formData.cutoffTimes[day] || "14:00"}
                       onChange={(e) => handleCutoffTimeChange(day, e.target.value)}
-                      className="w-32"
+                      className="w-32 h-8"
                     />
                     <span className="text-sm text-muted-foreground">cutoff</span>
                   </div>

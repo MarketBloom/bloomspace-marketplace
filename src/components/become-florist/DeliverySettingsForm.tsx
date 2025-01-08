@@ -36,14 +36,14 @@ export const DeliverySettingsForm = ({
   loading,
 }: DeliverySettingsFormProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card className="border border-gray-200">
-        <CardHeader>
-          <CardTitle>Basic Delivery Settings</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Basic Delivery Settings</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="grid grid-cols-3 gap-3">
           <div>
-            <Label htmlFor="deliveryRadius">Delivery Radius (km)</Label>
+            <Label htmlFor="deliveryRadius" className="text-sm">Delivery Radius (km)</Label>
             <Input
               id="deliveryRadius"
               type="number"
@@ -51,10 +51,11 @@ export const DeliverySettingsForm = ({
               value={formData.deliveryRadius}
               onChange={(e) => setFormData({ ...formData, deliveryRadius: e.target.value })}
               required
+              className="h-8"
             />
           </div>
           <div>
-            <Label htmlFor="deliveryFee">Delivery Fee ($)</Label>
+            <Label htmlFor="deliveryFee" className="text-sm">Delivery Fee ($)</Label>
             <Input
               id="deliveryFee"
               type="number"
@@ -63,10 +64,11 @@ export const DeliverySettingsForm = ({
               value={formData.deliveryFee}
               onChange={(e) => setFormData({ ...formData, deliveryFee: e.target.value })}
               required
+              className="h-8"
             />
           </div>
           <div>
-            <Label htmlFor="minimumOrder">Minimum Order Amount ($)</Label>
+            <Label htmlFor="minimumOrder" className="text-sm">Minimum Order ($)</Label>
             <Input
               id="minimumOrder"
               type="number"
@@ -75,14 +77,15 @@ export const DeliverySettingsForm = ({
               value={formData.minimumOrder}
               onChange={(e) => setFormData({ ...formData, minimumOrder: e.target.value })}
               required
+              className="h-8"
             />
           </div>
         </CardContent>
       </Card>
 
       <Card className="border border-gray-200">
-        <CardHeader>
-          <CardTitle>Operating Hours</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Operating Hours</CardTitle>
         </CardHeader>
         <CardContent>
           <OperatingHoursSection 
@@ -93,8 +96,8 @@ export const DeliverySettingsForm = ({
       </Card>
 
       <Card className="border border-gray-200">
-        <CardHeader>
-          <CardTitle>Future Delivery Time Frames</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Non Same-Day Delivery Options</CardTitle>
         </CardHeader>
         <CardContent>
           <TimeFramesSection 
@@ -105,8 +108,8 @@ export const DeliverySettingsForm = ({
       </Card>
 
       <Card className="border border-gray-200">
-        <CardHeader>
-          <CardTitle>Delivery Availability & Cutoff Times</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Delivery Availability & Cutoff Times</CardTitle>
         </CardHeader>
         <CardContent>
           <DeliveryDaysSection 
