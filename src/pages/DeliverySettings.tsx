@@ -62,6 +62,7 @@ const DeliverySettings = () => {
           delivery_fee: formData.deliveryFee,
           minimum_order_amount: formData.minimumOrder,
           about_text: formData.aboutText,
+          delivery_cutoff_times: formData.cutoffTimes
         })
         .eq("id", user?.id);
 
@@ -125,6 +126,7 @@ const DeliverySettings = () => {
                     minimumOrder: floristProfile?.minimum_order_amount?.toString() || "0",
                     deliveryDays: floristProfile?.delivery_days || [],
                     pickupOnlyDays: floristProfile?.pickup_only_days || [],
+                    cutoffTimes: floristProfile?.delivery_cutoff_times || {}
                   }}
                   setFormData={handleDeliverySettingsSubmit}
                   loading={loading}

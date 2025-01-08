@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Clock } from "lucide-react";
 
 interface DeliverySettingsFormProps {
   formData: {
@@ -12,6 +13,9 @@ interface DeliverySettingsFormProps {
     minimumOrder: string;
     deliveryDays: string[];
     pickupOnlyDays: string[];
+    cutoffTimes: {
+      [key: string]: string;
+    };
   };
   setFormData: (data: any) => void;
   loading: boolean;
@@ -55,6 +59,16 @@ export const DeliverySettingsForm = ({
       ...formData,
       deliveryDays: newDeliveryDays,
       pickupOnlyDays: newPickupOnlyDays,
+    });
+  };
+
+  const handleCutoffTimeChange = (day: string, time: string) => {
+    setFormData({
+      ...formData,
+      cutoffTimes: {
+        ...formData.cutoffTimes,
+        [day]: time,
+      },
     });
   };
 
@@ -105,24 +119,38 @@ export const DeliverySettingsForm = ({
         />
       </div>
       <div className="space-y-2">
-        <Label>Delivery Availability</Label>
+        <Label>Delivery Availability & Cutoff Times</Label>
         <div className="grid gap-2">
           {daysOfWeek.map((day) => (
-            <div key={day} className="flex items-center space-x-2">
-              <Checkbox
-                id={`delivery-${day}`}
-                checked={formData.deliveryDays.includes(day)}
-                onCheckedChange={() => handleDeliveryDayToggle(day)}
-              />
-              <label
-                htmlFor={`delivery-${day}`}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
-              >
-                {day}
-                {formData.deliveryDays.includes(day) && " - Delivery Available"}
-                {formData.pickupOnlyDays.includes(day) && " - Pickup Only"}
-                {!formData.deliveryDays.includes(day) && !formData.pickupOnlyDays.includes(day) && " - Closed"}
-              </label>
+            <div key={day} className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 min-w-[300px]">
+                <Checkbox
+                  id={`delivery-${day}`}
+                  checked={formData.deliveryDays.includes(day)}
+                  onCheckedChange={() => handleDeliveryDayToggle(day)}
+                />
+                <label
+                  htmlFor={`delivery-${day}`}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+                >
+                  {day}
+                  {formData.deliveryDays.includes(day) && " - Delivery Available"}
+                  {formData.pickupOnlyDays.includes(day) && " - Pickup Only"}
+                  {!formData.deliveryDays.includes(day) && !formData.pickupOnlyDays.includes(day) && " - Closed"}
+                </label>
+              </div>
+              {formData.deliveryDays.includes(day) && (
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="time"
+                    value={formData.cutoffTimes[day] || "14:00"}
+                    onChange={(e) => handleCutoffTimeChange(day, e.target.value)}
+                    className="w-32"
+                  />
+                  <span className="text-sm text-muted-foreground">cutoff</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
