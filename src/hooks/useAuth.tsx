@@ -95,13 +95,15 @@ export const useAuth = () => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log("Attempting sign in for email:", email);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        toast.error(error.message);
+        console.error("Sign in error:", error);
         return { data: null, error };
       }
 
@@ -120,7 +122,7 @@ export const useAuth = () => {
 
       return { data, error: null };
     } catch (error: any) {
-      toast.error(error.message);
+      console.error("Unexpected error during sign in:", error);
       return { data: null, error };
     }
   };
