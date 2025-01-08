@@ -41,7 +41,6 @@ const DeliverySettings = () => {
           delivery_radius: formData.deliveryRadius,
           delivery_fee: formData.deliveryFee,
           minimum_order_amount: formData.minimumOrder,
-          about_text: formData.aboutText,
           delivery_cutoff_times: formData.cutoffTimes,
           delivery_time_frames: formData.timeFrames,
           same_day_enabled: formData.sameDayEnabled,
@@ -80,7 +79,6 @@ const DeliverySettings = () => {
             <CardContent>
               <DeliverySettingsForm
                 formData={{
-                  aboutText: floristProfile.about_text || "",
                   deliveryRadius: floristProfile.delivery_radius?.toString() || "5",
                   deliveryFee: floristProfile.delivery_fee?.toString() || "0",
                   minimumOrder: floristProfile.minimum_order_amount?.toString() || "0",
