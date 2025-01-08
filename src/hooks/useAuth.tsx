@@ -45,13 +45,11 @@ export const useAuth = () => {
 
       if (authError) {
         console.error("Auth error during signup:", authError);
-        toast.error(authError.message);
         return { data: null, error: authError };
       }
 
       if (!authData.user) {
         console.error("No user data returned after signup");
-        toast.error("Failed to create account");
         return { data: null, error: new Error("No user data returned") };
       }
 
@@ -71,13 +69,10 @@ export const useAuth = () => {
 
         if (profileError) {
           console.error("Error creating florist profile:", profileError);
-          toast.error("Account created but there was an error setting up your florist profile");
         } else {
           console.log("Florist profile created successfully");
         }
       }
-
-      toast.success("Account created successfully!");
       
       if (role === "florist") {
         navigate("/become-florist");
@@ -88,7 +83,6 @@ export const useAuth = () => {
       return { data: authData, error: null };
     } catch (error: any) {
       console.error("Unexpected error during signup:", error);
-      toast.error(error.message || "An unexpected error occurred");
       return { data: null, error };
     }
   };
@@ -110,8 +104,6 @@ export const useAuth = () => {
       // Get user role from metadata
       const role = data.user?.user_metadata?.role;
       console.log("User role:", role);
-
-      toast.success("Welcome back!");
       
       // Navigate based on user role
       if (role === "florist") {
@@ -129,26 +121,20 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
-      // First, clear the local state
       setUser(null);
       setSession(null);
 
-      // Then sign out from Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Error signing out:", error);
-        toast.error(error.message);
         return { error };
       }
 
-      // Only navigate and show success message if sign out was successful
-      toast.success("Signed out successfully");
       navigate("/");
       return { error: null };
     } catch (error: any) {
       console.error("Unexpected error during sign out:", error);
-      toast.error(error.message || "An unexpected error occurred");
       return { error };
     }
   };
