@@ -8,6 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
 
+interface OperatingHours {
+  [key: string]: { open: string; close: string };
+}
+
 const DeliverySettings = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -27,7 +31,7 @@ const DeliverySettings = () => {
     enabled: !!user,
   });
 
-  const handleOperatingHoursSubmit = async (formData: any) => {
+  const handleOperatingHoursSubmit = async (formData: { operatingHours: OperatingHours }) => {
     setLoading(true);
     try {
       const { error } = await supabase
@@ -74,6 +78,8 @@ const DeliverySettings = () => {
 
   if (!user) return null;
 
+  const operatingHours = floristProfile?.operating_hours as OperatingHours || {};
+
   return (
     <DashboardLayout>
       <div className="p-8">
@@ -94,9 +100,9 @@ const DeliverySettings = () => {
               <CardContent>
                 <OperatingHoursForm
                   formData={{
-                    operatingHours: floristProfile?.operating_hours || {},
+                    operatingHours: operatingHours,
                   }}
-                  setFormData={(data) => handleOperatingHoursSubmit(data)}
+                  setFormData={handleOperatingHoursSubmit}
                   onNext={() => {}}
                   onBack={() => {}}
                 />
@@ -121,8 +127,6 @@ const DeliverySettings = () => {
                     pickupOnlyDays: floristProfile?.pickup_only_days || [],
                   }}
                   setFormData={handleDeliverySettingsSubmit}
-                  onNext={() => {}}
-                  onBack={() => {}}
                   loading={loading}
                 />
               </CardContent>

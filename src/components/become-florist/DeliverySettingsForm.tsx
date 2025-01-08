@@ -14,8 +14,6 @@ interface DeliverySettingsFormProps {
     pickupOnlyDays: string[];
   };
   setFormData: (data: any) => void;
-  onBack: () => void;
-  onSubmit: () => void;
   loading: boolean;
 }
 
@@ -32,8 +30,6 @@ const daysOfWeek = [
 export const DeliverySettingsForm = ({
   formData,
   setFormData,
-  onBack,
-  onSubmit,
   loading,
 }: DeliverySettingsFormProps) => {
   const handleDeliveryDayToggle = (day: string) => {
@@ -131,12 +127,9 @@ export const DeliverySettingsForm = ({
           ))}
         </div>
       </div>
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button onClick={onSubmit} disabled={loading}>
-          {loading ? "Creating Profile..." : "Create Florist Profile"}
+      <div className="flex justify-end">
+        <Button onClick={() => setFormData(formData)} disabled={loading}>
+          {loading ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </div>
