@@ -33,11 +33,15 @@ const DeliverySettings = () => {
   });
 
   const handleOperatingHoursSubmit = async (formData: { operatingHours: OperatingHours }) => {
+    if (!floristProfile) return;
+    
     setLoading(true);
     try {
       const { error } = await supabase
         .from("florist_profiles")
-        .update({ operating_hours: formData.operatingHours })
+        .update({ 
+          operating_hours: formData.operatingHours,
+        })
         .eq("id", user?.id);
 
       if (error) throw error;
@@ -52,6 +56,8 @@ const DeliverySettings = () => {
   };
 
   const handleDeliverySettingsSubmit = async (formData: any) => {
+    if (!floristProfile) return;
+    
     setLoading(true);
     try {
       const { error } = await supabase
@@ -63,7 +69,7 @@ const DeliverySettings = () => {
           delivery_fee: formData.deliveryFee,
           minimum_order_amount: formData.minimumOrder,
           about_text: formData.aboutText,
-          delivery_cutoff_times: formData.cutoffTimes
+          delivery_cutoff_times: formData.cutoffTimes,
         })
         .eq("id", user?.id);
 
@@ -79,8 +85,6 @@ const DeliverySettings = () => {
   };
 
   if (!user) return null;
-
-  const operatingHours = floristProfile?.operating_hours as OperatingHours || {};
 
   return (
     <DashboardLayout>
@@ -102,7 +106,7 @@ const DeliverySettings = () => {
               <CardContent>
                 <OperatingHoursForm
                   formData={{
-                    operatingHours: operatingHours,
+                    operatingHours: floristProfile?.operating_hours || {},
                   }}
                   setFormData={handleOperatingHoursSubmit}
                   onNext={() => {}}

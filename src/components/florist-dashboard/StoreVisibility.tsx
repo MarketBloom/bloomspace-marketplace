@@ -21,7 +21,9 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
     try {
       const { error } = await supabase
         .from('florist_profiles')
-        .update({ store_status: newStatus })
+        .update({ 
+          store_status: newStatus,
+        })
         .eq('id', storeId);
 
       if (error) throw error;
