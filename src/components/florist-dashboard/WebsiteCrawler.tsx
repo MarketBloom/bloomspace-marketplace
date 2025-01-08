@@ -29,10 +29,21 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
 
   const validateUrl = (url: string): boolean => {
     try {
-      const urlObj = new URL(url);
-      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+      new URL(url);
+      return true;
     } catch {
       return false;
+    }
+  };
+
+  const normalizeUrl = (url: string): string => {
+    try {
+      const urlObj = new URL(url);
+      // Remove any trailing colons from the hostname
+      urlObj.hostname = urlObj.hostname.replace(/:+$/, '');
+      return urlObj.toString();
+    } catch {
+      return url;
     }
   };
 
@@ -54,11 +65,12 @@ export const WebsiteCrawler = ({ floristId }: { floristId: string }) => {
     setCrawlResult(null);
     
     try {
-      console.log('Starting crawl for URL:', url);
+      const normalizedUrl = normalizeUrl(url);
+      console.log('Starting crawl for URL:', normalizedUrl);
       setProgress(50);
       
       const { data: response, error: supabaseError } = await supabase.functions.invoke('crawl-website', {
-        body: { url, floristId }
+        body: { url: normalizedUrl, floristId }
       });
 
       console.log('Received response:', response);
