@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingBag, Clock, Star } from "lucide-react";
+import { OrderStatusTracker } from "@/components/order/OrderStatusTracker";
+import { OrderStatus } from "@/types/order";
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
@@ -55,7 +57,9 @@ const CustomerDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {orders?.filter(order => order.status === "pending").length || 0}
+                {orders?.filter(order => 
+                  ["pending", "confirmed", "preparing", "out_for_delivery"].includes(order.status)
+                ).length || 0}
               </div>
             </CardContent>
           </Card>
@@ -103,14 +107,22 @@ const CustomerDashboard = () => {
                         </p>
                       </div>
                     </div>
+
+                    <OrderStatusTracker
+                      orderId={order.id}
+                      currentStatus={order.status as OrderStatus}
+                      className="mb-6"
+                    />
+
                     <div className="space-y-2">
                       {order.order_items?.map((item) => (
                         <div key={item.id} className="flex justify-between text-sm">
-                          <span>{item.products?.title} x{item.quantity}</span>
+                          <span>{item.products?.title} × {item.quantity}</span>
                           <span>${item.price_at_time}</span>
                         </div>
                       ))}
                     </div>
+
                     <div className="mt-4 flex justify-end space-x-2">
                       {order.status === "delivered" && (
                         <Button variant="outline">Leave Review</Button>
