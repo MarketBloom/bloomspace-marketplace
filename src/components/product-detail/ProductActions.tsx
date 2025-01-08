@@ -1,18 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { showSuccessToast } from "@/utils/notifications";
 
 interface ProductActionsProps {
   onAddToCart: () => void;
+  productTitle: string;
 }
 
-export const ProductActions = ({ onAddToCart }: ProductActionsProps) => {
+export const ProductActions = ({ onAddToCart, productTitle }: ProductActionsProps) => {
+  const handleAddToCart = () => {
+    onAddToCart();
+    showSuccessToast(
+      "Added to Cart",
+      `${productTitle} has been added to your cart`
+    );
+  };
+
   return (
     <div className="pt-4">
       <Button 
         size="lg" 
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-        onClick={onAddToCart}
+        onClick={handleAddToCart}
       >
         <ShoppingCart className="mr-2 h-5 w-5" />
         Add to Cart
