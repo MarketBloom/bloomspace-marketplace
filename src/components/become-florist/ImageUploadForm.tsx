@@ -6,9 +6,11 @@ import { toast } from "sonner";
 
 interface ImageUploadFormProps {
   onImageUpload: (type: "logo" | "banner", url: string) => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
-export const ImageUploadForm = ({ onImageUpload }: ImageUploadFormProps) => {
+export const ImageUploadForm = ({ onImageUpload, onNext, onBack }: ImageUploadFormProps) => {
   const [uploading, setUploading] = useState({ logo: false, banner: false });
 
   const handleFileUpload = async (
@@ -86,6 +88,18 @@ export const ImageUploadForm = ({ onImageUpload }: ImageUploadFormProps) => {
             {uploading.banner ? "Uploading..." : "Upload Banner"}
           </Button>
         </div>
+      </div>
+      <div className="flex justify-between mt-8">
+        {onBack && (
+          <Button type="button" variant="outline" onClick={onBack}>
+            Back
+          </Button>
+        )}
+        {onNext && (
+          <Button type="button" onClick={onNext} className="ml-auto">
+            Next
+          </Button>
+        )}
       </div>
     </div>
   );
