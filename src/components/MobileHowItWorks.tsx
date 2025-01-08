@@ -27,44 +27,44 @@ export const MobileHowItWorks = () => {
             </div>
           </div>
 
-          {/* Quality Guaranteed */}
+          {/* Seamless Selection */}
           <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Heart className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">Quality Guaranteed</h3>
+                <h3 className="text-lg font-semibold mb-2">Seamless Selection</h3>
                 <p className="text-muted-foreground text-sm">
-                  Every arrangement is crafted with care and backed by our satisfaction guarantee
+                  Browse and filter arrangements from our florists, and complete your order in one place
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Simple Shopping */}
+          {/* Secure Checkout */}
           <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Filter className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">Simple Shopping</h3>
+                <h3 className="text-lg font-semibold mb-2">Secure Checkout</h3>
                 <p className="text-muted-foreground text-sm">
-                  Find your perfect arrangement by occasion, style, and budget
+                  Shop with confidence using our safe and effortless payment system
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Quick Delivery */}
+          {/* Doorstep Delivery */}
           <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Truck className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">Quick Delivery</h3>
+                <h3 className="text-lg font-semibold mb-2">Doorstep Delivery</h3>
                 <p className="text-muted-foreground text-sm">
                   Same-day delivery available for those special moments
                 </p>

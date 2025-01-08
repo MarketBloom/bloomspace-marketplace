@@ -37,13 +37,13 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Quality Guaranteed */}
+          {/* Seamless Selection */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Quality Guaranteed</h3>
+                <h3 className="text-xl font-semibold mb-3">Seamless Selection</h3>
                 <p className="text-muted-foreground">
-                  Every arrangement is crafted with care and backed by our satisfaction guarantee
+                  Browse and filter arrangements from our florists, and complete your order in one place
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
