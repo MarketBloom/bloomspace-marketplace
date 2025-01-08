@@ -12,8 +12,8 @@ export const MobileHowItWorks = () => {
         </p>
         
         <div className="space-y-4">
-          {/* Local Florists */}
-          <div className="bg-secondary rounded-2xl p-6 border border-[#eed2d8]">
+          {/* Local Artisans */}
+          <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Flower className="w-6 h-6 text-primary" />
@@ -27,8 +27,8 @@ export const MobileHowItWorks = () => {
             </div>
           </div>
 
-          {/* Care & Support */}
-          <div className="bg-secondary rounded-2xl p-6 border border-[#eed2d8]">
+          {/* Crafted with Care */}
+          <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Heart className="w-6 h-6 text-primary" />
@@ -42,8 +42,8 @@ export const MobileHowItWorks = () => {
             </div>
           </div>
 
-          {/* Easy Filters */}
-          <div className="bg-secondary rounded-2xl p-6 border border-[#eed2d8]">
+          {/* Easy to Find */}
+          <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Filter className="w-6 h-6 text-primary" />
@@ -57,8 +57,8 @@ export const MobileHowItWorks = () => {
             </div>
           </div>
 
-          {/* Delivery Options */}
-          <div className="bg-secondary rounded-2xl p-6 border border-[#eed2d8]">
+          {/* Quick Delivery */}
+          <div className="bg-[#eed2d8] rounded-2xl p-6">
             <div className="flex items-start gap-4">
               <div className="bg-white rounded-xl p-3 shadow-sm">
                 <Truck className="w-6 h-6 text-primary" />

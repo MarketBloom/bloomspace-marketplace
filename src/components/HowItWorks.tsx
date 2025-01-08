@@ -15,13 +15,13 @@ export const HowItWorks = () => {
         <h2 className="text-6xl font-bold text-center mb-4">
           Support local florists
         </h2>
-        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12 whitespace-nowrap overflow-hidden text-ellipsis">
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
           Connect with talented local artisans and get fresh flowers delivered when you need them
         </p>
         
         <div className="grid grid-cols-4 gap-4">
-          {/* Local Florists */}
-          <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
+          {/* Local Artisans */}
+          <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
@@ -37,8 +37,8 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Care & Support */}
-          <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
+          {/* Crafted with Care */}
+          <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
@@ -54,8 +54,8 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Easy Filters */}
-          <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
+          {/* Easy to Find */}
+          <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
@@ -71,8 +71,8 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Delivery Options */}
-          <div className="bg-secondary rounded-2xl p-8 border border-[#eed2d8]">
+          {/* Quick Delivery */}
+          <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
