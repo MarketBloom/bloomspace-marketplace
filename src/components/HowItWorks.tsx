@@ -54,13 +54,13 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Simple Shopping */}
+          {/* Secure Checkout */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Simple Shopping</h3>
+                <h3 className="text-xl font-semibold mb-3">Secure Checkout</h3>
                 <p className="text-muted-foreground">
-                  Find your perfect arrangement by occasion, style, and budget
+                  Shop with confidence using our safe and effortless payment system
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -71,13 +71,13 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Quick Delivery */}
+          {/* Doorstep Delivery */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
+                <h3 className="text-xl font-semibold mb-3">Doorstep Delivery</h3>
                 <p className="text-muted-foreground">
-                  Same-day delivery available for those special moments
+                  Your beautiful arrangement delivered right to your door, same day available
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
