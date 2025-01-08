@@ -93,6 +93,7 @@ export type Database = {
           delivery_radius: number | null
           delivery_slot_duration: unknown | null
           delivery_start_time: string | null
+          delivery_time_frames: Json | null
           id: string
           is_premium: boolean | null
           logo_url: string | null
@@ -100,6 +101,7 @@ export type Database = {
           operating_hours: Json | null
           pickup_only_days: string[] | null
           premium_since: string | null
+          same_day_enabled: boolean | null
           setup_completed_at: string | null
           setup_progress: number | null
           social_links: Json | null
@@ -122,6 +124,7 @@ export type Database = {
           delivery_radius?: number | null
           delivery_slot_duration?: unknown | null
           delivery_start_time?: string | null
+          delivery_time_frames?: Json | null
           id: string
           is_premium?: boolean | null
           logo_url?: string | null
@@ -129,6 +132,7 @@ export type Database = {
           operating_hours?: Json | null
           pickup_only_days?: string[] | null
           premium_since?: string | null
+          same_day_enabled?: boolean | null
           setup_completed_at?: string | null
           setup_progress?: number | null
           social_links?: Json | null
@@ -151,6 +155,7 @@ export type Database = {
           delivery_radius?: number | null
           delivery_slot_duration?: unknown | null
           delivery_start_time?: string | null
+          delivery_time_frames?: Json | null
           id?: string
           is_premium?: boolean | null
           logo_url?: string | null
@@ -158,6 +163,7 @@ export type Database = {
           operating_hours?: Json | null
           pickup_only_days?: string[] | null
           premium_since?: string | null
+          same_day_enabled?: boolean | null
           setup_completed_at?: string | null
           setup_progress?: number | null
           social_links?: Json | null

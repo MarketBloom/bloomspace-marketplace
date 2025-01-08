@@ -45,6 +45,12 @@ const BecomeFlorist = () => {
       friday: "14:00",
       saturday: "14:00",
       sunday: "14:00"
+    },
+    sameDayEnabled: false,
+    timeFrames: {
+      morning: false,
+      midday: false,
+      afternoon: false
     }
   });
 
