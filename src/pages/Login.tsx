@@ -39,7 +39,8 @@ const Login = () => {
       const { data, error } = await signIn(email, password);
       
       if (error) {
-        throw error;
+        toast.error(getErrorMessage(error));
+        return;
       }
 
       // Get user role from metadata
