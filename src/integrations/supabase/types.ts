@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      florist_applications: {
+        Row: {
+          about_business: string | null
+          address: string | null
+          admin_notes: string | null
+          average_order_value: number | null
+          created_at: string
+          delivery_capabilities: string | null
+          email: string
+          full_name: string
+          has_physical_store: boolean | null
+          id: string
+          instagram_url: string | null
+          phone: string | null
+          portfolio_urls: string[] | null
+          specialties: string[] | null
+          status: string | null
+          store_name: string | null
+          updated_at: string
+          website_url: string | null
+          weekly_order_capacity: number | null
+          years_experience: number | null
+        }
+        Insert: {
+          about_business?: string | null
+          address?: string | null
+          admin_notes?: string | null
+          average_order_value?: number | null
+          created_at?: string
+          delivery_capabilities?: string | null
+          email: string
+          full_name: string
+          has_physical_store?: boolean | null
+          id?: string
+          instagram_url?: string | null
+          phone?: string | null
+          portfolio_urls?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          store_name?: string | null
+          updated_at?: string
+          website_url?: string | null
+          weekly_order_capacity?: number | null
+          years_experience?: number | null
+        }
+        Update: {
+          about_business?: string | null
+          address?: string | null
+          admin_notes?: string | null
+          average_order_value?: number | null
+          created_at?: string
+          delivery_capabilities?: string | null
+          email?: string
+          full_name?: string
+          has_physical_store?: boolean | null
+          id?: string
+          instagram_url?: string | null
+          phone?: string | null
+          portfolio_urls?: string[] | null
+          specialties?: string[] | null
+          status?: string | null
+          store_name?: string | null
+          updated_at?: string
+          website_url?: string | null
+          weekly_order_capacity?: number | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       florist_profiles: {
         Row: {
           about_text: string | null

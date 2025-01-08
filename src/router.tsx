@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Search from "./pages/Search";
 import ProductDetail from "./pages/ProductDetail";
 import FloristDetail from "./pages/FloristDetail";
+import FloristApplication from "./pages/FloristApplication";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/become-florist",
-    element: <BecomeFlorist />,
+    element: <FloristApplication />,
   },
   {
     path: "/florist-dashboard",
