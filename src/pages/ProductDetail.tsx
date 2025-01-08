@@ -127,7 +127,10 @@ const ProductDetail = () => {
             
             <FloristInfo floristProfile={productData.florist_profiles} />
             
-            <ProductActions onAddToCart={handleAddToCart} />
+            <ProductActions 
+              onAddToCart={handleAddToCart} 
+              productTitle={productData.title}
+            />
           </div>
         </div>
       </main>
