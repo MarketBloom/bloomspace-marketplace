@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { useToast } from "@/components/ui/use-toast";
+import { showSuccessToast } from "@/utils/notifications";
 
 interface AddToCartButtonProps {
   id: string;
@@ -21,7 +21,6 @@ export const AddToCartButton = ({
   floristName 
 }: AddToCartButtonProps) => {
   const { addItem } = useCart();
-  const { toast } = useToast();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -33,10 +32,10 @@ export const AddToCartButton = ({
       floristId,
       floristName
     });
-    toast({
-      title: "Added to cart",
-      description: "Item has been added to your cart",
-    });
+    showSuccessToast(
+      "Added to cart",
+      `${title} has been added to your cart`
+    );
   };
 
   return (

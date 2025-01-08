@@ -1,5 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 interface SendEmailParams {
   to: string[];
@@ -7,18 +6,9 @@ interface SendEmailParams {
   html: string;
 }
 
+// This will be implemented later with Resend
 export const sendEmail = async ({ to, subject, html }: SendEmailParams) => {
-  try {
-    const { data, error } = await supabase.functions.invoke('send-notification', {
-      body: { to, subject, html }
-    });
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
-  }
+  console.log('Email sending will be implemented later:', { to, subject, html });
 };
 
 export const showSuccessToast = (title: string, description?: string) => {
