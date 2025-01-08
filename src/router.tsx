@@ -13,6 +13,11 @@ import Search from "./pages/Search";
 import ProductDetail from "./pages/ProductDetail";
 import FloristDetail from "./pages/FloristDetail";
 import FloristApplication from "./pages/FloristApplication";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ApplicationReview from "./pages/admin/ApplicationReview";
+import FloristManagement from "./pages/admin/FloristManagement";
+import OrderManagement from "./pages/admin/OrderManagement";
+import CustomerManagement from "./pages/admin/CustomerManagement";
 
 export const router = createBrowserRouter([
   {
@@ -66,5 +71,25 @@ export const router = createBrowserRouter([
   {
     path: "/florist/:id",
     element: <FloristDetail />,
+  },
+  {
+    path: "/admin",
+    element: <AdminDashboard />,
+  },
+  {
+    path: "/admin/applications",
+    element: <ApplicationReview />,
+  },
+  {
+    path: "/admin/florists",
+    element: <FloristManagement />,
+  },
+  {
+    path: "/admin/orders",
+    element: <OrderManagement />,
+  },
+  {
+    path: "/admin/customers",
+    element: <CustomerManagement />,
   },
 ]);
