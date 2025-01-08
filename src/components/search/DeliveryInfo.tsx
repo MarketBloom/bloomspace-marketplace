@@ -5,10 +5,10 @@ export const DeliveryInfo = () => {
     <div className="bg-[#eed2d8] rounded-lg p-6 mb-4 border border-black space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-6xl font-bold">
-          Your City's Finest Florists
+          Your City's Best Florists
         </h2>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Discover an exclusive network of local artisan florists, carefully selected for their exceptional creativity and reliability. All in one convenient marketplace.
+          Discover our curated network of exceptional local florists, each one handpicked for their creativity and reliability. All in one convenient marketplace.
         </p>
       </div>
       
@@ -17,13 +17,13 @@ export const DeliveryInfo = () => {
           <Users className="w-6 h-6 mx-auto text-gray-700" />
           <h3 className="text-xl font-semibold">Handpicked Talent</h3>
           <p className="text-sm text-muted-foreground">
-            Every florist in our marketplace has been personally vetted for excellence.
+            Every florist in our marketplace has been personally selected for their excellence.
           </p>
         </div>
 
         <div className="space-y-2">
           <ShieldCheck className="w-6 h-6 mx-auto text-gray-700" />
-          <h3 className="text-xl font-semibold">Seamless Ordering</h3>
+          <h3 className="text-xl font-semibold">Secure Shopping</h3>
           <p className="text-sm text-muted-foreground">
             Shop with confidence knowing every order is backed by our guarantee.
           </p>
@@ -31,9 +31,9 @@ export const DeliveryInfo = () => {
 
         <div className="space-y-2">
           <Flower2 className="w-6 h-6 mx-auto text-gray-700" />
-          <h3 className="text-xl font-semibold">Local Artistry</h3>
+          <h3 className="text-xl font-semibold">Local Excellence</h3>
           <p className="text-sm text-muted-foreground">
-            Experience unique designs from the most talented florists in your area.
+            Experience stunning designs from the finest florists in your area.
           </p>
         </div>
       </div>
