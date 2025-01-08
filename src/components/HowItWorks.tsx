@@ -13,20 +13,20 @@ export const HowItWorks = () => {
     <section className="hidden md:block py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-6xl font-bold text-center mb-4">
-          Support local florists
+          Your city's best florists
         </h2>
         <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
-          Connect with talented local artisans and get fresh flowers delivered when you need them
+          Discover our handpicked selection of exceptional local florists, all in one convenient place
         </p>
         
         <div className="grid grid-cols-4 gap-4">
-          {/* Local Artisans */}
+          {/* Local Excellence */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Local Artisans</h3>
+                <h3 className="text-xl font-semibold mb-3">Local Excellence</h3>
                 <p className="text-muted-foreground">
-                  Support talented florists in your community crafting unique arrangements
+                  Support the finest florists in your community creating stunning arrangements
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -37,13 +37,13 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Crafted with Care */}
+          {/* Quality Guaranteed */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Crafted with Care</h3>
+                <h3 className="text-xl font-semibold mb-3">Quality Guaranteed</h3>
                 <p className="text-muted-foreground">
-                  Every arrangement is made with love and backed by our satisfaction guarantee
+                  Every arrangement is crafted with care and backed by our satisfaction guarantee
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -54,13 +54,13 @@ export const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Easy to Find */}
+          {/* Simple Shopping */}
           <div className="bg-[#eed2d8] rounded-2xl p-8">
             <div className="aspect-square flex flex-col">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Easy to Find</h3>
+                <h3 className="text-xl font-semibold mb-3">Simple Shopping</h3>
                 <p className="text-muted-foreground">
-                  Filter by occasion, style, and budget to find your perfect arrangement
+                  Find your perfect arrangement by occasion, style, and budget
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -77,7 +77,7 @@ export const HowItWorks = () => {
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-3">Quick Delivery</h3>
                 <p className="text-muted-foreground">
-                  Same-day delivery available for those last-minute moments
+                  Same-day delivery available for those special moments
                 </p>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm">
