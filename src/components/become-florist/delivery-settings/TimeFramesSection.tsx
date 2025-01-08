@@ -1,5 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface TimeFramesSectionProps {
   formData: {
@@ -12,14 +14,20 @@ interface TimeFramesSectionProps {
   setFormData: (data: any) => void;
 }
 
-const timeFrames = {
+const defaultTimeFrames = {
   morning: "9:00 AM - 12:00 PM",
   midday: "12:00 PM - 3:00 PM",
   afternoon: "3:00 PM - 6:00 PM",
 };
 
 export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionProps) => {
-  const handleTimeFrameToggle = (frame: keyof typeof timeFrames) => {
+  const [customTimeFrames, setCustomTimeFrames] = useState({
+    morning: defaultTimeFrames.morning,
+    midday: defaultTimeFrames.midday,
+    afternoon: defaultTimeFrames.afternoon,
+  });
+
+  const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
     setFormData({
       ...formData,
       timeFrames: {
@@ -29,26 +37,47 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
     });
   };
 
+  const handleTimeFrameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
+    setCustomTimeFrames({
+      ...customTimeFrames,
+      [frame]: value,
+    });
+  };
+
   return (
     <div className="space-y-4">
-      <Label className="text-base">Future Delivery Time Frames</Label>
-      <div className="space-y-2">
-        <Label className="text-sm">Select available time slots for future deliveries</Label>
-        {Object.entries(timeFrames).map(([key, label]) => (
-          <div key={key} className="flex items-center space-x-2">
-            <Checkbox
-              id={`timeFrame-${key}`}
-              checked={formData.timeFrames[key as keyof typeof timeFrames]}
-              onCheckedChange={() => 
-                handleTimeFrameToggle(key as keyof typeof timeFrames)
-              }
-            />
-            <label
-              htmlFor={`timeFrame-${key}`}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {label}
-            </label>
+      <Label className="text-base font-semibold">Non Same-Day Delivery Options</Label>
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Select and customize up to 3 time slots for future deliveries
+        </p>
+        {Object.entries(defaultTimeFrames).map(([key, defaultValue]) => (
+          <div key={key} className="space-y-2 border rounded-lg p-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={`timeFrame-${key}`}
+                checked={formData.timeFrames[key as keyof typeof defaultTimeFrames]}
+                onCheckedChange={() => 
+                  handleTimeFrameToggle(key as keyof typeof defaultTimeFrames)
+                }
+              />
+              <Label
+                htmlFor={`timeFrame-${key}`}
+                className="text-sm font-medium leading-none cursor-pointer"
+              >
+                Enable {key.charAt(0).toUpperCase() + key.slice(1)} Time Slot
+              </Label>
+            </div>
+            {formData.timeFrames[key as keyof typeof defaultTimeFrames] && (
+              <div className="ml-6">
+                <Input
+                  value={customTimeFrames[key as keyof typeof defaultTimeFrames]}
+                  onChange={(e) => handleTimeFrameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
+                  placeholder={defaultValue}
+                  className="mt-2"
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
