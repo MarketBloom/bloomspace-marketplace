@@ -1,16 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { DeliveryDaysSection } from "./delivery-settings/DeliveryDaysSection";
 import { TimeFramesSection } from "./delivery-settings/TimeFramesSection";
 
 interface DeliverySettingsFormProps {
   formData: {
-    aboutText: string;
     deliveryRadius: string;
     deliveryFee: string;
     minimumOrder: string;
@@ -37,15 +33,6 @@ export const DeliverySettingsForm = ({
 }: DeliverySettingsFormProps) => {
   return (
     <div className="space-y-6">
-      <div>
-        <Label htmlFor="aboutText">About Your Store</Label>
-        <Textarea
-          id="aboutText"
-          value={formData.aboutText}
-          onChange={(e) => setFormData({ ...formData, aboutText: e.target.value })}
-          required
-        />
-      </div>
       <div>
         <Label htmlFor="deliveryRadius">Delivery Radius (km)</Label>
         <Input
