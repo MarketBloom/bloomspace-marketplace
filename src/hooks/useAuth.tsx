@@ -105,13 +105,6 @@ export const useAuth = () => {
       const role = data.user?.user_metadata?.role;
       console.log("User role:", role);
       
-      // Navigate based on user role
-      if (role === "florist") {
-        navigate("/florist-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
-
       return { data, error: null };
     } catch (error: any) {
       console.error("Unexpected error during sign in:", error);

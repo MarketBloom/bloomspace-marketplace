@@ -33,8 +33,12 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!email || !password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
     
+    setLoading(true);
     try {
       const { data, error } = await signIn(email, password);
       
@@ -56,6 +60,7 @@ const Login = () => {
         navigate("/dashboard");
       }
       
+      toast.success("Welcome back!");
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(getErrorMessage(error));
