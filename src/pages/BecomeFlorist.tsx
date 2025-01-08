@@ -153,9 +153,10 @@ const BecomeFlorist = () => {
         return (
           <DeliverySettingsForm
             formData={formData}
-            setFormData={setFormData}
-            onBack={() => setStep(3)}
-            onSubmit={handleSubmit}
+            setFormData={(newData) => {
+              setFormData(newData);
+              handleSubmit();
+            }}
             loading={loading}
           />
         );
