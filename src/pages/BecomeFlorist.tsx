@@ -37,6 +37,15 @@ const BecomeFlorist = () => {
     },
     deliveryDays: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
     pickupOnlyDays: [],
+    cutoffTimes: {
+      monday: "14:00",
+      tuesday: "14:00",
+      wednesday: "14:00",
+      thursday: "14:00",
+      friday: "14:00",
+      saturday: "14:00",
+      sunday: "14:00"
+    }
   });
 
   const handleSubmit = async () => {
@@ -70,6 +79,7 @@ const BecomeFlorist = () => {
           banner_url: formData.bannerUrl,
           delivery_days: formData.deliveryDays,
           pickup_only_days: formData.pickupOnlyDays,
+          delivery_cutoff_times: formData.cutoffTimes
         });
 
       if (floristError) throw floristError;

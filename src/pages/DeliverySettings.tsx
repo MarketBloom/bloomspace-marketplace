@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { FloristProfile } from "@/integrations/supabase/types";
 
 interface OperatingHours {
   [key: string]: { open: string; close: string };
@@ -26,7 +27,7 @@ const DeliverySettings = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as FloristProfile;
     },
     enabled: !!user,
   });
