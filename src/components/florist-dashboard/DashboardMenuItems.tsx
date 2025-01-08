@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Store, Package, CreditCard } from "lucide-react";
+import { Home, LayoutDashboard, Store, Package, CreditCard, Clock } from "lucide-react";
 
 export const getDashboardMenuItems = (handleHomeClick: () => void, isHome: boolean) => [
   {
@@ -16,6 +16,11 @@ export const getDashboardMenuItems = (handleHomeClick: () => void, isHome: boole
     icon: Store,
     label: "Manage Store",
     path: "/store-management",
+  },
+  {
+    icon: Clock,
+    label: "Hours & Delivery",
+    path: "/delivery-settings",
   },
   {
     icon: Package,

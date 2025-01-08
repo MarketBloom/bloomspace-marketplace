@@ -8,6 +8,7 @@ import BecomeFlorist from "./pages/BecomeFlorist";
 import FloristDashboard from "./pages/FloristDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import StoreManagement from "./pages/StoreManagement";
+import DeliverySettings from "./pages/DeliverySettings";
 import Cart from "./pages/Cart";
 import Search from "./pages/Search";
 import ProductDetail from "./pages/ProductDetail";
@@ -56,6 +57,10 @@ export const router = createBrowserRouter([
   {
     path: "/store-management",
     element: <StoreManagement />,
+  },
+  {
+    path: "/delivery-settings",
+    element: <DeliverySettings />,
   },
   {
     path: "/cart",
