@@ -18,6 +18,7 @@ import ApplicationReview from "./pages/admin/ApplicationReview";
 import FloristManagement from "./pages/admin/FloristManagement";
 import OrderManagement from "./pages/admin/OrderManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
+import FloristOrders from "./pages/FloristOrders";
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
   {
     path: "/florist/:id",
     element: <FloristDetail />,
+  },
+  {
+    path: "/orders",
+    element: <FloristOrders />,
   },
   {
     path: "/admin",
