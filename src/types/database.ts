@@ -1,3 +1,10 @@
+import { OrderItemsTable, OrdersTable } from './order';
+import { ProductSizesTable, ProductsTable } from './product';
+import { ReviewsTable } from './review';
+import { FloristApplicationsTable } from './application';
+import { FloristProfilesTable } from './florist';
+import { ProfilesTable } from './profile';
+
 export type Json =
   | string
   | number

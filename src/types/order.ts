@@ -23,7 +23,7 @@ export interface OrdersTable {
     id: string;
     customer_id: string | null;
     florist_id: string | null;
-    status: string | null;
+    status: OrderStatus;
     total_amount: number;
     commission_amount: number;
     delivery_address: string | null;
@@ -37,7 +37,7 @@ export interface OrdersTable {
     id?: string;
     customer_id?: string | null;
     florist_id?: string | null;
-    status?: string | null;
+    status?: OrderStatus;
     total_amount: number;
     commission_amount: number;
     delivery_address?: string | null;
@@ -49,3 +49,51 @@ export interface OrdersTable {
   };
   Update: Partial<OrdersTable['Insert']>;
 }
+
+export type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'out_for_delivery' | 'delivered' | 'cancelled';
+
+interface OrderStatusConfig {
+  status: OrderStatus;
+  label: string;
+  description: string;
+  color: string;
+}
+
+export const ORDER_STATUSES: OrderStatusConfig[] = [
+  {
+    status: 'pending',
+    label: 'Order Placed',
+    description: 'Your order has been received',
+    color: 'bg-gray-500'
+  },
+  {
+    status: 'confirmed',
+    label: 'Confirmed',
+    description: 'Order confirmed by florist',
+    color: 'bg-blue-500'
+  },
+  {
+    status: 'preparing',
+    label: 'Preparing',
+    description: 'Your flowers are being prepared',
+    color: 'bg-yellow-500'
+  },
+  {
+    status: 'out_for_delivery',
+    label: 'Out for Delivery',
+    description: 'Your order is on its way',
+    color: 'bg-purple-500'
+  },
+  {
+    status: 'delivered',
+    label: 'Delivered',
+    description: 'Order has been delivered',
+    color: 'bg-green-500'
+  },
+  {
+    status: 'cancelled',
+    label: 'Cancelled',
+    description: 'Order has been cancelled',
+    color: 'bg-red-500'
+  }
+];

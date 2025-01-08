@@ -55,3 +55,27 @@ export interface ProductsTable {
   };
   Update: Partial<ProductsTable['Insert']>;
 }
+
+export interface Size {
+  id: string;
+  name: string;
+  price: string;
+  images?: string[];
+  isDefault?: boolean;
+}
+
+export interface Product {
+  id: string;
+  florist_id: string | null;
+  title: string;
+  description: string | null;
+  price: number;
+  images?: string[] | null;
+  category?: string | null;
+  occasion?: string[] | null;
+  in_stock?: boolean | null;
+  is_hidden?: boolean | null;
+  created_at: string;
+  updated_at: string;
+  product_sizes?: Size[];
+}
