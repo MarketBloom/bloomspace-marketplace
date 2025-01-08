@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  const navigate = useNavigate();
 
   const getErrorMessage = (error: AuthError) => {
     if (error instanceof AuthApiError) {
@@ -48,18 +46,6 @@ const Login = () => {
         return;
       }
 
-      // Get user role from metadata
-      const role = data?.user?.user_metadata?.role;
-      
-      // Navigate based on user role
-      if (role === "florist") {
-        navigate("/florist-dashboard");
-      } else if (role === "customer") {
-        navigate("/customer-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
-      
       toast.success("Welcome back!");
     } catch (error: any) {
       console.error("Login error:", error);
@@ -110,13 +96,12 @@ const Login = () => {
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <button
-              onClick={() => navigate("/signup")}
+            <a
+              href="/signup"
               className="text-[#C5E1A5] hover:text-[#C5E1A5]/90 font-medium"
-              disabled={loading}
             >
               Sign up
-            </button>
+            </a>
           </p>
         </div>
       </div>

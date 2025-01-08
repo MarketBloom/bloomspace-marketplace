@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Session, User } from "@supabase/supabase-js";
+import { Session, User, AuthError, AuthApiError } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -43,20 +43,13 @@ export const useAuth = () => {
         },
       });
 
-      if (authError) {
-        console.error("Auth error during signup:", authError);
-        return { data: null, error: authError };
-      }
+      if (authError) throw authError;
 
       if (!authData.user) {
-        console.error("No user data returned after signup");
-        return { data: null, error: new Error("No user data returned") };
+        throw new Error("No user data returned");
       }
 
-      console.log("User created successfully:", authData.user.id);
-
       if (role === "florist") {
-        console.log("Creating florist profile...");
         const { error: profileError } = await supabase
           .from("florist_profiles")
           .insert({
@@ -67,11 +60,7 @@ export const useAuth = () => {
             setup_progress: 0
           });
 
-        if (profileError) {
-          console.error("Error creating florist profile:", profileError);
-        } else {
-          console.log("Florist profile created successfully");
-        }
+        if (profileError) throw profileError;
       }
       
       if (role === "florist") {
@@ -82,7 +71,7 @@ export const useAuth = () => {
 
       return { data: authData, error: null };
     } catch (error: any) {
-      console.error("Unexpected error during signup:", error);
+      console.error("Signup error:", error);
       return { data: null, error };
     }
   };
@@ -96,38 +85,38 @@ export const useAuth = () => {
         password,
       });
 
-      if (error) {
-        console.error("Sign in error:", error);
-        return { data: null, error };
-      }
+      if (error) throw error;
 
-      // Get user role from metadata
       const role = data.user?.user_metadata?.role;
       console.log("User role:", role);
       
+      // Navigate based on role
+      if (role === "florist") {
+        navigate("/florist-dashboard");
+      } else if (role === "customer") {
+        navigate("/customer-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+
       return { data, error: null };
     } catch (error: any) {
-      console.error("Unexpected error during sign in:", error);
+      console.error("Sign in error:", error);
       return { data: null, error };
     }
   };
 
   const signOut = async () => {
     try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
       setUser(null);
       setSession(null);
-
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error("Error signing out:", error);
-        return { error };
-      }
-
       navigate("/");
       return { error: null };
     } catch (error: any) {
-      console.error("Unexpected error during sign out:", error);
+      console.error("Sign out error:", error);
       return { error };
     }
   };
