@@ -35,15 +35,15 @@ const DeliverySettings = () => {
       const { error } = await supabase
         .from("florist_profiles")
         .update({
-          store_name: floristProfile.store_name,
-          delivery_days: formData.deliveryDays,
-          pickup_only_days: formData.pickupOnlyDays,
           delivery_radius: formData.deliveryRadius,
           delivery_fee: formData.deliveryFee,
           minimum_order_amount: formData.minimumOrder,
+          delivery_days: formData.deliveryDays,
+          pickup_only_days: formData.pickupOnlyDays,
           delivery_cutoff_times: formData.cutoffTimes,
           delivery_time_frames: formData.timeFrames,
-          same_day_enabled: formData.sameDayEnabled,
+          same_day_enabled: true,
+          operating_hours: formData.operatingHours,
         })
         .eq("id", user.id);
 
@@ -62,21 +62,15 @@ const DeliverySettings = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-8">
-        <div className="max-w-[1600px] mx-auto">
+      <div className="p-6">
+        <div className="max-w-[1200px] mx-auto">
           <h1 className="text-3xl font-bold mb-2">Delivery Settings</h1>
           <p className="text-muted-foreground mb-8">
             Configure your delivery options, fees, and availability
           </p>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Delivery Settings</CardTitle>
-              <CardDescription>
-                Configure your delivery options, fees, and availability
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <DeliverySettingsForm
                 formData={{
                   deliveryRadius: floristProfile.delivery_radius?.toString() || "5",
@@ -85,12 +79,13 @@ const DeliverySettings = () => {
                   deliveryDays: floristProfile.delivery_days || [],
                   pickupOnlyDays: floristProfile.pickup_only_days || [],
                   cutoffTimes: floristProfile.delivery_cutoff_times || {},
-                  sameDayEnabled: floristProfile.same_day_enabled || false,
+                  sameDayEnabled: true,
                   timeFrames: floristProfile.delivery_time_frames || {
                     morning: false,
                     midday: false,
                     afternoon: false,
                   },
+                  operatingHours: floristProfile.operating_hours || {},
                 }}
                 setFormData={handleDeliverySettingsSubmit}
                 loading={loading}
