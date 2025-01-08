@@ -1,0 +1,111 @@
+import { Json } from './database';
+
+export interface FloristApplicationsTable {
+  Row: {
+    id: string;
+    full_name: string;
+    email: string;
+    phone: string | null;
+    store_name: string | null;
+    address: string | null;
+    about_business: string | null;
+    years_experience: number | null;
+    website_url: string | null;
+    instagram_url: string | null;
+    portfolio_urls: string[] | null;
+    specialties: string[] | null;
+    average_order_value: number | null;
+    weekly_order_capacity: number | null;
+    has_physical_store: boolean | null;
+    delivery_capabilities: string | null;
+    status: string | null;
+    admin_notes: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+  Insert: {
+    id?: string;
+    full_name: string;
+    email: string;
+    phone?: string | null;
+    store_name?: string | null;
+    address?: string | null;
+    about_business?: string | null;
+    years_experience?: number | null;
+    website_url?: string | null;
+    instagram_url?: string | null;
+    portfolio_urls?: string[] | null;
+    specialties?: string[] | null;
+    average_order_value?: number | null;
+    weekly_order_capacity?: number | null;
+    has_physical_store?: boolean | null;
+    delivery_capabilities?: string | null;
+    status?: string | null;
+    admin_notes?: string | null;
+    created_at?: string;
+    updated_at?: string;
+  };
+  Update: Partial<FloristApplicationsTable['Insert']>;
+}
+
+export interface FloristProfilesTable {
+  Row: {
+    id: string;
+    store_name: string;
+    address: string;
+    about_text: string | null;
+    operating_hours: Json | null;
+    delivery_cutoff: string | null;
+    is_premium: boolean | null;
+    premium_since: string | null;
+    verified: boolean | null;
+    commission_rate: number | null;
+    created_at: string;
+    updated_at: string;
+    delivery_start_time: string | null;
+    delivery_end_time: string | null;
+    delivery_slot_duration: unknown | null;
+    logo_url: string | null;
+    banner_url: string | null;
+    social_links: Json | null;
+    delivery_fee: number | null;
+    delivery_radius: number | null;
+    minimum_order_amount: number | null;
+    setup_progress: number | null;
+    store_status: string | null;
+    setup_completed_at: string | null;
+    delivery_days: string[] | null;
+    pickup_only_days: string[] | null;
+    delivery_cutoff_times: Json | null;
+  };
+  Insert: {
+    id: string;
+    store_name: string;
+    address: string;
+    about_text?: string | null;
+    operating_hours?: Json | null;
+    delivery_cutoff?: string | null;
+    is_premium?: boolean | null;
+    premium_since?: string | null;
+    verified?: boolean | null;
+    commission_rate?: number | null;
+    created_at?: string;
+    updated_at?: string;
+    delivery_start_time?: string | null;
+    delivery_end_time?: string | null;
+    delivery_slot_duration?: unknown | null;
+    logo_url?: string | null;
+    banner_url?: string | null;
+    social_links?: Json | null;
+    delivery_fee?: number | null;
+    delivery_radius?: number | null;
+    minimum_order_amount?: number | null;
+    setup_progress?: number | null;
+    store_status?: string | null;
+    setup_completed_at?: string | null;
+    delivery_days?: string[] | null;
+    pickup_only_days?: string[] | null;
+    delivery_cutoff_times?: Json | null;
+  };
+  Update: Partial<FloristProfilesTable['Insert']>;
+}

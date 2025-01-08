@@ -1,17 +1,57 @@
-export interface Size {
-  id: string;
-  name: string;
-  price: string;
-  images?: string[];
+import { Json } from './database';
+
+export interface ProductSizesTable {
+  Row: {
+    id: string;
+    product_id: string | null;
+    name: string;
+    price_adjustment: number;
+    is_default: boolean | null;
+    created_at: string;
+    updated_at: string;
+    images: string[] | null;
+  };
+  Insert: {
+    id?: string;
+    product_id?: string | null;
+    name: string;
+    price_adjustment: number;
+    is_default?: boolean | null;
+    created_at?: string;
+    updated_at?: string;
+    images?: string[] | null;
+  };
+  Update: Partial<ProductSizesTable['Insert']>;
 }
 
-export interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  product_sizes?: Size[];
-  images?: string[];
-  category?: string;
-  occasion?: string[];
+export interface ProductsTable {
+  Row: {
+    id: string;
+    florist_id: string | null;
+    title: string;
+    description: string | null;
+    price: number;
+    images: string[] | null;
+    category: string | null;
+    occasion: string[] | null;
+    in_stock: boolean | null;
+    is_hidden: boolean | null;
+    created_at: string;
+    updated_at: string;
+  };
+  Insert: {
+    id?: string;
+    florist_id?: string | null;
+    title: string;
+    description?: string | null;
+    price: number;
+    images?: string[] | null;
+    category?: string | null;
+    occasion?: string[] | null;
+    in_stock?: boolean | null;
+    is_hidden?: boolean | null;
+    created_at?: string;
+    updated_at?: string;
+  };
+  Update: Partial<ProductsTable['Insert']>;
 }
