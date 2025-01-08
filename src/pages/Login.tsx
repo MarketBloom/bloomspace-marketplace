@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
+import { AuthError, AuthApiError } from "@supabase/supabase-js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,16 +14,49 @@ const Login = () => {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
+  const getErrorMessage = (error: AuthError) => {
+    if (error instanceof AuthApiError) {
+      switch (error.status) {
+        case 400:
+          if (error.message.includes("Invalid login credentials")) {
+            return "Invalid email or password. Please check your credentials and try again.";
+          }
+          break;
+        case 422:
+          return "Invalid email format. Please enter a valid email address.";
+        case 429:
+          return "Too many login attempts. Please try again later.";
+      }
+    }
+    return "An error occurred during login. Please try again.";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
-      await signIn(email, password);
-      toast.success("Welcome back!");
-      navigate("/dashboard");
-    } catch (error) {
+      const { data, error } = await signIn(email, password);
+      
+      if (error) {
+        throw error;
+      }
+
+      // Get user role from metadata
+      const role = data?.user?.user_metadata?.role;
+      
+      // Navigate based on user role
+      if (role === "florist") {
+        navigate("/florist-dashboard");
+      } else if (role === "customer") {
+        navigate("/customer-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+      
+    } catch (error: any) {
       console.error("Login error:", error);
-      toast.error("Failed to login. Please check your credentials.");
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -46,6 +80,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="Enter your email"
+                disabled={loading}
               />
             </div>
             <div>
@@ -59,6 +94,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
+                disabled={loading}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
@@ -70,6 +106,7 @@ const Login = () => {
             <button
               onClick={() => navigate("/signup")}
               className="text-[#C5E1A5] hover:text-[#C5E1A5]/90 font-medium"
+              disabled={loading}
             >
               Sign up
             </button>
