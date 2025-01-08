@@ -27,6 +27,12 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
     afternoon: defaultTimeFrames.afternoon,
   });
 
+  const [slotNames, setSlotNames] = useState({
+    morning: "Morning Time Slot",
+    midday: "Midday Time Slot",
+    afternoon: "Afternoon Time Slot",
+  });
+
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
     setFormData({
       ...formData,
@@ -40,6 +46,13 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
   const handleTimeFrameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
     setCustomTimeFrames({
       ...customTimeFrames,
+      [frame]: value,
+    });
+  };
+
+  const handleSlotNameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
+    setSlotNames({
+      ...slotNames,
       [frame]: value,
     });
   };
@@ -64,17 +77,29 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
                 htmlFor={`timeFrame-${key}`}
                 className="text-sm font-medium leading-none cursor-pointer"
               >
-                Enable {key.charAt(0).toUpperCase() + key.slice(1)} Time Slot
+                Enable Time Slot
               </Label>
             </div>
             {formData.timeFrames[key as keyof typeof defaultTimeFrames] && (
-              <div className="ml-6 mt-2">
-                <Input
-                  value={customTimeFrames[key as keyof typeof defaultTimeFrames]}
-                  onChange={(e) => handleTimeFrameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
-                  placeholder={defaultValue}
-                  className="h-8"
-                />
+              <div className="ml-6 mt-2 space-y-2">
+                <div>
+                  <Label className="text-xs text-muted-foreground">Slot Name</Label>
+                  <Input
+                    value={slotNames[key as keyof typeof defaultTimeFrames]}
+                    onChange={(e) => handleSlotNameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
+                    placeholder="Enter slot name"
+                    className="h-8 mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Time Range</Label>
+                  <Input
+                    value={customTimeFrames[key as keyof typeof defaultTimeFrames]}
+                    onChange={(e) => handleTimeFrameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
+                    placeholder={defaultValue}
+                    className="h-8 mt-1"
+                  />
+                </div>
               </div>
             )}
           </div>

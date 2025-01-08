@@ -97,25 +97,20 @@ export const DeliverySettingsForm = ({
 
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg">Non Same-Day Delivery Options</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TimeFramesSection 
-            formData={formData}
-            setFormData={setFormData}
-          />
-        </CardContent>
-      </Card>
-
-      <Card className="border border-gray-200">
-        <CardHeader className="pb-2">
           <CardTitle className="text-lg">Delivery Availability & Cutoff Times</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <DeliveryDaysSection 
             formData={formData}
             setFormData={setFormData}
           />
+          <div className="pt-4 border-t">
+            <CardTitle className="text-base mb-4">Non Same-Day Delivery Options</CardTitle>
+            <TimeFramesSection 
+              formData={formData}
+              setFormData={setFormData}
+            />
+          </div>
         </CardContent>
       </Card>
 
