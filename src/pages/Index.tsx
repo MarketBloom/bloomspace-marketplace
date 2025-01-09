@@ -57,7 +57,12 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-background">
-      <div className="absolute inset-0 z-10">
+      <div className="relative z-10">
+        <Header />
+        <Hero />
+      </div>
+      
+      <div className="absolute inset-x-0 top-[calc(50vh+200px)] z-20 pointer-events-none">
         <PixelTrail
           pixelSize={screenSize.lessThan('md') ? 48 : 80}
           fadeDuration={200}
@@ -65,9 +70,8 @@ const Index = () => {
           pixelClassName="rounded-full bg-[#FFD700] opacity-70"
         />
       </div>
-      <div className="relative z-20">
-        <Header />
-        <Hero />
+
+      <div className="relative z-30">
         <HowItWorks />
         <Categories navigate={navigate} />
         <FeaturedProducts 
