@@ -63,7 +63,7 @@ export const Header = () => {
           </Button>
 
           <div className="hidden md:block">
-            <Dock className="items-end pb-0 bg-transparent" magnification={40} panelHeight={40} distance={75}>
+            <Dock className="items-end pb-0 bg-transparent">
               {navigationItems.map((item, idx) => (
                 <DockItem
                   key={idx}
