@@ -33,7 +33,10 @@ export const Header = () => {
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
     
-    switch (navigationTabs[index].type !== "separator" ? navigationTabs[index].title : "") {
+    const selectedTab = navigationTabs[index];
+    if (selectedTab.type === "separator") return;
+    
+    switch (selectedTab.title) {
       case "Browse":
         handleNavigate("/search");
         break;
