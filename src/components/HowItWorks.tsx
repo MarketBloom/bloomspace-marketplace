@@ -13,7 +13,7 @@ export const HowItWorks = () => {
   return (
     <section className="hidden md:block py-8">
       <div className="container mx-auto px-4">
-        <div className="h-[100px]">
+        <div className="h-[100px] mt-12 mb-2">
           <GooeyText
             texts={["Your city's best florists", "All in one place"]}
             morphTime={2}
