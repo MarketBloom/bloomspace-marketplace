@@ -3,12 +3,12 @@ import { MobileHeroImage } from "@/components/MobileHeroImage";
 
 export const MobileHero = () => {
   return (
-    <section className="relative h-[420px] flex items-end justify-center bg-[#FFFFFF] md:hidden pb-1">
+    <section className="relative h-[380px] flex items-center justify-center bg-[#FFFFFF] md:hidden">
       <MobileHeroImage />
       
-      <div className="container relative z-10 px-4 -mb-[200px]">
-        <div className="max-w-3xl mx-auto text-center mb-6">
-          <h1 className="text-3xl font-semibold mb-2 text-white tracking-tight">
+      <div className="container relative z-10 px-4">
+        <div className="max-w-3xl mx-auto text-center mb-4">
+          <h1 className="text-3xl font-semibold text-white tracking-tight">
             Fresh flowers,
             <br />
             delivered with care.
