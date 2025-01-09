@@ -24,19 +24,21 @@ export const GooeyText = ({ children, className, ...props }: GooeyTextProps) => 
           animation: "gooey 8s ease-in-out infinite"
         }}
       />
-      <style jsx>{`
-        @keyframes gooey {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
+      <style>
+        {`
+          @keyframes gooey {
+            0%, 100% {
+              transform: translate(0, 0) scale(1);
+            }
+            33% {
+              transform: translate(5px, -5px) scale(1.05);
+            }
+            66% {
+              transform: translate(-5px, 5px) scale(0.95);
+            }
           }
-          33% {
-            transform: translate(5px, -5px) scale(1.05);
-          }
-          66% {
-            transform: translate(-5px, 5px) scale(0.95);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
