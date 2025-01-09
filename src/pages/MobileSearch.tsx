@@ -134,7 +134,7 @@ const MobileSearch = () => {
 
   return (
     <div className="min-h-screen bg-[#eed2d8]">
-      <div className="absolute inset-0 pointer-events-none z-20">
+      <div className="absolute inset-0 pointer-events-none z-50">
         <PixelTrail
           pixelSize={48}
           fadeDuration={200}

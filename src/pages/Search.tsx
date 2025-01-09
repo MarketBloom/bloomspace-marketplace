@@ -141,7 +141,7 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      <div className="absolute inset-0 pointer-events-none z-20">
+      <div className="absolute inset-0 pointer-events-none z-50">
         <PixelTrail
           pixelSize={screenSize.lessThan('md') ? 48 : 80}
           fadeDuration={200}
