@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home } from "lucide-react";
+import { Home, Bell, Settings, HelpCircle, User } from "lucide-react";
+import { ExpandableTabs } from "@/components/ui/expandable-tabs";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ export const Header = () => {
   };
 
   const handleDashboardClick = () => {
-    // Get user role from metadata
     const role = user?.user_metadata?.role;
     if (role === "florist") {
       navigate("/florist-dashboard");
@@ -21,11 +21,36 @@ export const Header = () => {
     }
   };
 
+  const navigationTabs = [
+    { title: "Browse", icon: Home },
+    { title: "Notifications", icon: Bell },
+    { type: "separator" as const },
+    { title: "Settings", icon: Settings },
+    { title: "Help", icon: HelpCircle },
+  ];
+
+  const handleTabChange = (index: number | null) => {
+    if (index === null) return;
+    
+    switch (navigationTabs[index].title) {
+      case "Browse":
+        handleNavigate("/search");
+        break;
+      case "Settings":
+        handleNavigate("/settings");
+        break;
+      case "Help":
+        handleNavigate("/help");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-[60px]">
-          {/* Logo/Home */}
           <Button
             variant="ghost"
             className="font-semibold text-lg hover:bg-transparent hover:text-primary flex items-center gap-2"
@@ -35,25 +60,14 @@ export const Header = () => {
             MktBloom
           </Button>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              onClick={() => handleNavigate("/search")}
-              className="text-sm font-medium hover:text-primary"
-            >
-              Browse
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => handleNavigate("/about")}
-              className="text-sm font-medium hover:text-primary"
-            >
-              About
-            </Button>
-          </nav>
+          <div className="hidden md:block">
+            <ExpandableTabs 
+              tabs={navigationTabs} 
+              onChange={handleTabChange}
+              className="border-transparent shadow-none"
+            />
+          </div>
 
-          {/* Auth Buttons */}
           <div className="flex items-center space-x-2">
             {user ? (
               <>
