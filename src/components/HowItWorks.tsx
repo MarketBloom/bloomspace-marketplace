@@ -47,18 +47,18 @@ const cards = [
 ];
 
 const CarouselCard = ({ title, description, icon: Icon }: { title: string; description: string; icon: any }) => (
-  <div className="bg-[#eed2d8] rounded-2xl p-8 w-full h-full">
-    <div className="aspect-square flex flex-col">
+  <div className="bg-[#eed2d8] rounded-2xl p-6 w-full h-[250px]"> {/* Adjusted height and padding */}
+    <div className="flex flex-col h-full">
       <div className="flex-1">
-        <h3 className="text-xl font-semibold mb-3">{title}</h3>
-        <p className="text-muted-foreground">
+        <h3 className="text-lg font-semibold mb-2">{title}</h3> {/* Reduced text size */}
+        <p className="text-sm text-muted-foreground"> {/* Reduced text size */}
           {description}
         </p>
       </div>
-      <div className="bg-white rounded-xl p-4 shadow-sm">
-        <Icon className="w-8 h-8 text-primary mb-3" />
-        <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-        <div className="h-2 bg-muted rounded-full w-1/2" />
+      <div className="bg-white rounded-xl p-3 mt-2"> {/* Reduced padding */}
+        <Icon className="w-6 h-6 text-primary mb-2" /> {/* Reduced icon size */}
+        <div className="h-1.5 bg-muted rounded-full w-3/4 mb-1.5" /> {/* Reduced decorative elements */}
+        <div className="h-1.5 bg-muted rounded-full w-1/2" />
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@ export const HowItWorks = () => {
           Discover our handpicked selection of exceptional local florists, all in one convenient place
         </p>
         
-        <div className="h-[400px]">
+        <div className="h-[300px]">
           <ThreeDPhotoCarousel 
             cards={cards.map((card, index) => (
               <CarouselCard key={index} {...card} />
