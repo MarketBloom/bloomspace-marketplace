@@ -13,7 +13,7 @@ export const HowItWorks = () => {
   return (
     <section className="hidden md:block py-12">
       <div className="container mx-auto px-4">
-        <div className="space-y-2 mb-12">
+        <h2 className="text-6xl font-bold text-center mb-4">
           <GooeyText
             texts={[
               "Your city's best florists",
@@ -21,12 +21,12 @@ export const HowItWorks = () => {
             ]}
             morphTime={1}
             cooldownTime={0.25}
-            className="font-bold h-[80px]"
+            className="font-bold h-[120px]"
           />
-          <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto">
-            Discover our handpicked selection of exceptional local florists, all in one convenient place
-          </p>
-        </div>
+        </h2>
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
+          Discover our handpicked selection of exceptional local florists, all in one convenient place
+        </p>
         
         <div className="grid grid-cols-4 gap-4">
           {/* Local Excellence */}
