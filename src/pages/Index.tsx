@@ -22,29 +22,36 @@ const Index = () => {
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          florist_profiles (
-            store_name
-          )
-        `)
-        .eq('in_stock', true)
-        .eq('is_hidden', false)
-        .limit(6);
+      try {
+        console.log('Fetching featured products...');
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            *,
+            florist_profiles (
+              store_name
+            )
+          `)
+          .eq('in_stock', true)
+          .eq('is_hidden', false)
+          .limit(6);
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+
+        console.log('Products fetched:', data);
+        return data;
+      } catch (err) {
+        console.error('Query error:', err);
+        throw err;
       }
-
-      return data;
     },
     retry: 1,
     retryDelay: 1000,
     meta: {
-      onError: () => {
+      onError: (error: Error) => {
         console.error('Query error:', error);
         toast.error("Failed to load featured products. Please try again later.");
       }
