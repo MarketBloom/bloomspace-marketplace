@@ -12,7 +12,7 @@ import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import { PixelTrail } from "@/components/ui/pixel-trail";
-import { useScreenSize } from "@/hooks/use-screen-size";
+import { useScreenSize } from "../hooks/use-screen-size";
 
 const Search = () => {
   const isMobile = useIsMobile();

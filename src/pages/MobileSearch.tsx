@@ -10,7 +10,7 @@ import { MobileDeliveryInfo } from "@/components/search/mobile/MobileDeliveryInf
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import { PixelTrail } from "@/components/ui/pixel-trail";
-import { useScreenSize } from "@/hooks/use-screen-size";
+import { useScreenSize } from "../hooks/use-screen-size";
 
 const MobileSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
