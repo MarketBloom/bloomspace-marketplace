@@ -47,18 +47,18 @@ const cards = [
 ];
 
 const CarouselCard = ({ title, description, icon: Icon }: { title: string; description: string; icon: any }) => (
-  <div className="bg-[#eed2d8] rounded-2xl p-4 w-full h-[200px]"> {/* Reduced height and padding further */}
+  <div className="bg-[#eed2d8] rounded-2xl p-3 w-full h-[180px]"> {/* Further reduced height and padding */}
     <div className="flex flex-col h-full">
       <div className="flex-1">
-        <h3 className="text-base font-semibold mb-1.5">{title}</h3> {/* Reduced text size further */}
-        <p className="text-xs text-muted-foreground"> {/* Reduced text size further */}
+        <h3 className="text-sm font-semibold mb-1">{title}</h3> {/* Further reduced text size */}
+        <p className="text-xs text-muted-foreground leading-tight"> {/* Added leading-tight for better text fit */}
           {description}
         </p>
       </div>
-      <div className="bg-white rounded-xl p-2 mt-2"> {/* Reduced padding further */}
-        <Icon className="w-5 h-5 text-primary mb-1.5" /> {/* Reduced icon size further */}
-        <div className="h-1 bg-muted rounded-full w-3/4 mb-1" /> {/* Reduced decorative elements */}
-        <div className="h-1 bg-muted rounded-full w-1/2" />
+      <div className="bg-white rounded-xl p-1.5 mt-1"> {/* Further reduced padding and margin */}
+        <Icon className="w-4 h-4 text-primary mb-1" /> {/* Further reduced icon size */}
+        <div className="h-0.5 bg-muted rounded-full w-3/4 mb-0.5" /> {/* Reduced decorative elements */}
+        <div className="h-0.5 bg-muted rounded-full w-1/2" />
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@ export const HowItWorks = () => {
           Discover our handpicked selection of exceptional local florists, all in one convenient place
         </p>
         
-        <div className="h-[250px]"> {/* Reduced container height */}
+        <div className="h-[220px]"> {/* Further reduced container height */}
           <ThreeDPhotoCarousel 
             cards={cards.map((card, index) => (
               <CarouselCard key={index} {...card} />
