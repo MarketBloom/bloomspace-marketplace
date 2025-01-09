@@ -97,16 +97,24 @@ export default {
           "100%": { "background-position": "200%" },
         },
         shine: {
-          "0%": {
-            "background-position": "0% 0%",
-          },
-          "50%": {
-            "background-position": "100% 100%",
-          },
-          to: {
-            "background-position": "0% 0%",
-          },
+          "0%": { "background-position": "0% 0%" },
+          "50%": { "background-position": "100% 100%" },
+          to: { "background-position": "0% 0%" },
         },
+        gooey: {
+          "0%, 100%": { 
+            transform: "translate(0, 0) scale(1)",
+            filter: "blur(32px)"
+          },
+          "33%": { 
+            transform: "translate(5px, -5px) scale(1.1)",
+            filter: "blur(24px)"
+          },
+          "66%": { 
+            transform: "translate(-5px, 5px) scale(0.95)",
+            filter: "blur(40px)"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -116,6 +124,7 @@ export default {
         "fade-in-up": "fade-in-up 0.5s ease-out",
         rainbow: "rainbow var(--speed, 2s) infinite linear",
         shine: "shine var(--duration) infinite linear",
+        gooey: "gooey 8s ease-in-out infinite"
       },
     },
   },
