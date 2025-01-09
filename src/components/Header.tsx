@@ -36,7 +36,10 @@ export const Header = () => {
     const selectedTab = navigationTabs[index];
     if (selectedTab.type === "separator") return;
     
-    switch (selectedTab.title) {
+    // Now TypeScript knows this is not a separator
+    const tab = selectedTab as Exclude<TabItem, { type: "separator" }>;
+    
+    switch (tab.title) {
       case "Browse":
         handleNavigate("/search");
         break;
