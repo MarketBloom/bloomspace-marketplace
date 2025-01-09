@@ -32,7 +32,7 @@ export const Hero = () => {
               <br />
               delivered with care.
             </h1>
-            <p className="text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-8 whitespace-nowrap text-lg">
+            <p className="text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-8 text-lg">
               Order from our curated selection of local florists, delivering beautiful arrangements to your door.
             </p>
           </div>
