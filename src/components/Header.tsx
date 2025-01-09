@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, Bell, Settings, HelpCircle, Store, ShoppingBag } from "lucide-react";
+import { Home, Bell, Settings, HelpCircle, Store } from "lucide-react";
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 
 export const Header = () => {
@@ -63,7 +63,7 @@ export const Header = () => {
           </Button>
 
           <div className="hidden md:block">
-            <Dock className="items-end pb-0 bg-transparent">
+            <Dock className="items-end pb-0 bg-transparent" magnification={40} panelHeight={40} distance={75}>
               {navigationItems.map((item, idx) => (
                 <DockItem
                   key={idx}
