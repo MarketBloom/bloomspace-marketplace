@@ -11,15 +11,16 @@ import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/hooks/use-screen-size";
 
 const Search = () => {
-  // Move all hooks to the top level
   const isMobile = useIsMobile();
+  const screenSize = useScreenSize();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
 
-  // Extract common query logic
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
@@ -134,48 +135,59 @@ const Search = () => {
     setSearchParams(newParams, { replace: true });
   };
 
-  // Return mobile version after all hooks are initialized
   if (isMobile) {
     return <MobileSearch />;
   }
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      <Header />
+      <div className="absolute inset-0 pointer-events-none z-20">
+        <PixelTrail
+          pixelSize={screenSize.lessThan('md') ? 48 : 80}
+          fadeDuration={200}
+          delay={50}
+          className="h-full w-full"
+          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
+        />
+      </div>
       
-      <div className="relative">
-        <div className="relative z-10 lg:max-w-[1800px] mx-auto lg:px-4 pt-20">
-          <DeliveryInfo />
-          
-          <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
-            {/* Sidebar */}
-            <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
-              <div className="w-full">
-                <div className="bg-[#eed2d8] rounded-lg p-3 border border-black">
-                  <FilterBar 
-                    initialFulfillmentType={fulfillmentType}
-                    initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
-                    initialTime={searchParams.get('time') || null}
-                    initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
-                    initialLocation={searchParams.get('location') || ""}
-                    onFilterChange={updateSearchParams}
-                  />
+      <div className="relative z-30">
+        <Header />
+        
+        <div className="relative">
+          <div className="relative z-10 lg:max-w-[1800px] mx-auto lg:px-4 pt-20">
+            <DeliveryInfo />
+            
+            <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
+              {/* Sidebar */}
+              <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
+                <div className="w-full">
+                  <div className="bg-[#eed2d8] rounded-lg p-3 border border-black">
+                    <FilterBar 
+                      initialFulfillmentType={fulfillmentType}
+                      initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
+                      initialTime={searchParams.get('time') || null}
+                      initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
+                      initialLocation={searchParams.get('location') || ""}
+                      onFilterChange={updateSearchParams}
+                    />
+                  </div>
                 </div>
+              </aside>
+
+              <MobileFilterButton />
+
+              {/* Main Content */}
+              <div className="bg-[#eed2d8] rounded-lg lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
+                <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
+                <SearchResults 
+                  viewMode={viewMode}
+                  products={products || []}
+                  florists={florists || []}
+                  isLoadingProducts={isLoadingProducts}
+                  isLoadingFlorists={isLoadingFlorists}
+                />
               </div>
-            </aside>
-
-            <MobileFilterButton />
-
-            {/* Main Content */}
-            <div className="bg-[#eed2d8] rounded-lg lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
-              <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
-              <SearchResults 
-                viewMode={viewMode}
-                products={products || []}
-                florists={florists || []}
-                isLoadingProducts={isLoadingProducts}
-                isLoadingFlorists={isLoadingFlorists}
-              />
             </div>
           </div>
         </div>

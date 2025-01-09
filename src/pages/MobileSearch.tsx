@@ -9,11 +9,14 @@ import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { MobileDeliveryInfo } from "@/components/search/mobile/MobileDeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/hooks/use-screen-size";
 
 const MobileSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
+  const screenSize = useScreenSize();
 
   const updateSearchParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);
@@ -131,22 +134,34 @@ const MobileSearch = () => {
 
   return (
     <div className="min-h-screen bg-[#eed2d8]">
-      <Header />
+      <div className="absolute inset-0 pointer-events-none z-20">
+        <PixelTrail
+          pixelSize={48}
+          fadeDuration={200}
+          delay={50}
+          className="h-full w-full"
+          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
+        />
+      </div>
       
-      <div className="relative">
-        <div className="relative z-10 px-4 pt-[72px]">
-          <MobileDeliveryInfo />
-          <MobileFilterButton />
+      <div className="relative z-30">
+        <Header />
+        
+        <div className="relative">
+          <div className="relative z-10 px-4 pt-[72px]">
+            <MobileDeliveryInfo />
+            <MobileFilterButton />
 
-          <div className="mt-3">
-            <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
-            <MobileSearchResults 
-              viewMode={viewMode}
-              products={products || []}
-              florists={florists || []}
-              isLoadingProducts={isLoadingProducts}
-              isLoadingFlorists={isLoadingFlorists}
-            />
+            <div className="mt-3">
+              <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
+              <MobileSearchResults 
+                viewMode={viewMode}
+                products={products || []}
+                florists={florists || []}
+                isLoadingProducts={isLoadingProducts}
+                isLoadingFlorists={isLoadingFlorists}
+              />
+            </div>
           </div>
         </div>
       </div>
