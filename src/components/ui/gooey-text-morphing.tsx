@@ -14,14 +14,14 @@ interface GooeyTextProps {
 export function GooeyText({
   texts,
   morphTime = 1,
-  cooldownTime = 0.25,
+  cooldownTime = 3,
   className,
   textClassName
 }: GooeyTextProps) {
   const text1Ref = React.useRef<HTMLSpanElement>(null);
   const text2Ref = React.useRef<HTMLSpanElement>(null);
   const animationFrameRef = React.useRef<number>();
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const textIndexRef = React.useRef(0);
 
   React.useEffect(() => {
     let morph = 0;
@@ -72,7 +72,11 @@ export function GooeyText({
 
       if (cooldown <= 0) {
         if (shouldIncrementIndex) {
-          setCurrentIndex((prev) => (prev + 1) % texts.length);
+          textIndexRef.current = (textIndexRef.current + 1) % texts.length;
+          if (text1Ref.current && text2Ref.current) {
+            text1Ref.current.textContent = texts[textIndexRef.current];
+            text2Ref.current.textContent = texts[(textIndexRef.current + 1) % texts.length];
+          }
         }
         doMorph();
       } else {
@@ -84,8 +88,8 @@ export function GooeyText({
 
     // Initialize text content
     if (text1Ref.current && text2Ref.current) {
-      text1Ref.current.textContent = texts[currentIndex];
-      text2Ref.current.textContent = texts[(currentIndex + 1) % texts.length];
+      text1Ref.current.textContent = texts[textIndexRef.current];
+      text2Ref.current.textContent = texts[(textIndexRef.current + 1) % texts.length];
     }
 
     // Start animation
@@ -97,7 +101,7 @@ export function GooeyText({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [texts, morphTime, cooldownTime, currentIndex]);
+  }, [texts, morphTime, cooldownTime]);
 
   return (
     <div className={cn("relative", className)}>
