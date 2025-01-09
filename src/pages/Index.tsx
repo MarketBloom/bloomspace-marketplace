@@ -57,7 +57,7 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-background">
-      <div className="absolute inset-0 z-20">
+      <div className="absolute inset-0 z-10">
         <PixelTrail
           pixelSize={screenSize.lessThan('md') ? 48 : 80}
           fadeDuration={200}
@@ -65,7 +65,7 @@ const Index = () => {
           pixelClassName="rounded-full bg-[#FFD700] opacity-70"
         />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-20">
         <Header />
         <Hero />
         <HowItWorks />
