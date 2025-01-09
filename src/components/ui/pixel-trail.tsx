@@ -110,7 +110,7 @@ const PixelDot: React.FC<PixelDotProps> = React.memo(
       <motion.div
         id={id}
         ref={ref}
-        className={cn("cursor-pointer-none", className)}
+        className={cn("pointer-events-none", className)}
         style={{
           width: `${size}px`,
           height: `${size}px`,

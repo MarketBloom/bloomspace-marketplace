@@ -56,26 +56,28 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative">
-      <div className="absolute inset-0 pointer-events-none z-50">
+    <div className="min-h-screen bg-background">
+      <div className="absolute inset-0 pointer-events-none">
         <PixelTrail
           pixelSize={screenSize.lessThan('md') ? 48 : 80}
-          fadeDuration={0}
-          delay={1200}
-          pixelClassName="rounded-full bg-primary/10"
+          fadeDuration={200}
+          delay={0}
+          pixelClassName="rounded-full bg-primary/70 pointer-events-auto"
         />
       </div>
-      <Header />
-      <Hero />
-      <HowItWorks />
-      <Categories navigate={navigate} />
-      <FeaturedProducts 
-        products={products || []} 
-        isLoading={isLoading} 
-        navigate={navigate}
-      />
-      <TrustSection navigate={navigate} />
-      <Testimonials />
+      <div className="relative z-10">
+        <Header />
+        <Hero />
+        <HowItWorks />
+        <Categories navigate={navigate} />
+        <FeaturedProducts 
+          products={products || []} 
+          isLoading={isLoading} 
+          navigate={navigate}
+        />
+        <TrustSection navigate={navigate} />
+        <Testimonials />
+      </div>
     </div>
   );
 };
