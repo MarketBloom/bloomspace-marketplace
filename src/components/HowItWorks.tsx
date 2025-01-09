@@ -11,9 +11,9 @@ export const HowItWorks = () => {
   }
 
   return (
-    <section className="hidden md:block py-12">
+    <section className="hidden md:block py-8">
       <div className="container mx-auto px-4">
-        <div className="h-[120px] mb-4">
+        <div className="h-[100px]">
           <GooeyText
             texts={["Your city's best florists", "All in one place"]}
             morphTime={2}
@@ -22,77 +22,49 @@ export const HowItWorks = () => {
             textClassName="text-6xl"
           />
         </div>
-        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-8">
           Discover our handpicked selection of exceptional local florists, all in one convenient place
         </p>
-        
-        <div className="grid grid-cols-4 gap-4">
-          {/* Local Excellence */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Local Excellence</h3>
-                <p className="text-muted-foreground">
-                  Support the finest florists in your community creating stunning arrangements
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Flower className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+
+        <div className="grid grid-cols-4 gap-8">
+          <div className="text-center">
+            <div className="bg-[#eed2d8] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Filter className="w-8 h-8" />
             </div>
+            <h3 className="text-xl font-semibold mb-2">Browse & Filter</h3>
+            <p className="text-muted-foreground">
+              Find the perfect arrangement with our easy-to-use filters
+            </p>
           </div>
 
-          {/* Seamless Selection */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Seamless Selection</h3>
-                <p className="text-muted-foreground">
-                  Browse and filter arrangements from our florists, and complete your order in one place
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Heart className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-2/3 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Flower className="w-8 h-8" />
             </div>
+            <h3 className="text-xl font-semibold mb-2">Choose Your Florist</h3>
+            <p className="text-muted-foreground">
+              Select from our curated list of talented local florists
+            </p>
           </div>
 
-          {/* Secure Checkout */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Secure Checkout</h3>
-                <p className="text-muted-foreground">
-                  Shop with confidence using our safe and effortless payment system
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Filter className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Heart className="w-8 h-8" />
             </div>
+            <h3 className="text-xl font-semibold mb-2">Customize Your Order</h3>
+            <p className="text-muted-foreground">
+              Add your personal touch to make it extra special
+            </p>
           </div>
 
-          {/* Doorstep Delivery */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Doorstep Delivery</h3>
-                <p className="text-muted-foreground">
-                  Your beautiful arrangement delivered right to your door, same day available
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Truck className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Truck className="w-8 h-8" />
             </div>
+            <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
+            <p className="text-muted-foreground">
+              Enjoy reliable same-day delivery to your doorstep
+            </p>
           </div>
         </div>
       </div>
