@@ -7,6 +7,7 @@ import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { Button } from "./ui/button";
 import { RainbowButton } from "./ui/rainbow-button";
 import { ShoppingBag, Truck } from "lucide-react";
+import { ShineBorder } from "./ui/shine-border";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const HomeFilterBar = () => {
     });
   };
 
-  return (
+  const filterContent = (
     <div className="bg-[#eed2d8]/80 backdrop-blur-sm rounded-lg p-2 md:p-5 border border-black mt-5 md:mt-0">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 md:gap-4 mb-2 md:mb-4">
         <LocationFilter 
@@ -68,5 +69,17 @@ export const HomeFilterBar = () => {
         </Button>
       </div>
     </div>
+  );
+
+  return (
+    <ShineBorder
+      borderRadius={12}
+      borderWidth={2}
+      duration={10}
+      color={["#D73459", "#eed2d8"]}
+      className="!min-w-0 !w-full !p-0 !bg-transparent"
+    >
+      {filterContent}
+    </ShineBorder>
   );
 };
