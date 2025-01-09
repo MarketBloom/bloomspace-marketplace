@@ -46,16 +46,17 @@ const MobileIndex = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background relative">
-      <div className="absolute inset-0 z-10 pointer-events-auto">
+    <div className="min-h-screen bg-background">
+      <div className="fixed inset-0 pointer-events-none">
         <PixelTrail
           pixelSize={48}
           fadeDuration={0}
           delay={1200}
+          className="pointer-events-auto"
           pixelClassName="rounded-full bg-primary/10"
         />
       </div>
-      <div className="relative z-20">
+      <div className="relative">
         <Header />
         <MobileHero />
         <MobileHowItWorks />
