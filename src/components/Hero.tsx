@@ -5,7 +5,7 @@ export const Hero = () => {
   return (
     <>
       <MobileHero />
-      <section className="relative h-[calc(50vh-40px)] min-h-[560px] hidden md:flex items-center justify-center bg-[#FFFFFF]">
+      <section className="relative h-[calc(50vh-80px)] min-h-[520px] hidden md:flex items-center justify-center bg-[#FFFFFF]">
         <div className="absolute inset-0">
           <img 
             src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
