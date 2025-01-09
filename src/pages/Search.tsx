@@ -11,12 +11,9 @@ import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { PixelTrail } from "@/components/ui/pixel-trail";
-import { useScreenSize } from "../hooks/use-screen-size";
 
 const Search = () => {
   const isMobile = useIsMobile();
-  const screenSize = useScreenSize();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
@@ -141,16 +138,6 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      <div className="absolute inset-0 pointer-events-none z-50">
-        <PixelTrail
-          pixelSize={screenSize.lessThan('md') ? 48 : 80}
-          fadeDuration={200}
-          delay={50}
-          className="h-full w-full"
-          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
-        />
-      </div>
-      
       <div className="relative z-30">
         <Header />
         
