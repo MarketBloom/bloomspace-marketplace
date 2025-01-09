@@ -14,7 +14,7 @@ export const MobileHowItWorks = () => {
             morphTime={1}
             cooldownTime={3}
             className="text-center"
-            textClassName="text-3xl font-bold"
+            textClassName="text-4xl font-bold"
           />
         </div>
         <p className="text-lg text-muted-foreground text-center mb-8">
