@@ -47,24 +47,26 @@ const MobileIndex = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <PixelTrail
-        pixelSize={48}
-        fadeDuration={0}
-        delay={0}
-        className="fixed inset-0 z-50"
-        pixelClassName="rounded-full bg-primary"
-      />
-      <div className="relative z-40">
-        <Header />
-        <MobileHero />
-        <MobileHowItWorks />
-        <MobileCategories />
-        <MobileFeaturedProducts 
-          products={products || []} 
-          isLoading={isLoading} 
+      <div className="relative">
+        <PixelTrail
+          pixelSize={48}
+          fadeDuration={500}
+          delay={0}
+          className="absolute inset-0 pointer-events-none"
+          pixelClassName="rounded-full bg-primary opacity-30"
         />
-        <MobileTrustSection />
-        <MobileTestimonials />
+        <div className="relative">
+          <Header />
+          <MobileHero />
+          <MobileHowItWorks />
+          <MobileCategories />
+          <MobileFeaturedProducts 
+            products={products || []} 
+            isLoading={isLoading} 
+          />
+          <MobileTrustSection />
+          <MobileTestimonials />
+        </div>
       </div>
     </div>
   );
