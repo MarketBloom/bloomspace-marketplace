@@ -25,7 +25,7 @@ export const Hero = () => {
           />
         </div>
         
-        <div className="container relative z-10 px-8 flex flex-col items-center">
+        <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <h1 className="text-6xl font-semibold mb-3 text-white tracking-tight">
               Fresh flowers,
