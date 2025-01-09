@@ -1,6 +1,5 @@
 import { HomeFilterBar } from "@/components/HomeFilterBar";
 import { MobileHeroImage } from "@/components/MobileHeroImage";
-import { WordPullUp } from "@/components/ui/word-pull-up";
 
 export const MobileHero = () => {
   return (
@@ -9,10 +8,14 @@ export const MobileHero = () => {
       
       <div className="container relative z-10 px-4 -mb-[205px]">
         <div className="max-w-3xl mx-auto text-center mb-8">
-          <WordPullUp 
-            words="Fresh flowers, delivered with care"
-            className="text-4xl font-semibold text-white tracking-tight leading-tight"
-          />
+          <h1 
+            className="text-4xl font-semibold mb-2 text-white tracking-tight"
+            style={{ transform: 'translateY(9px)' }}
+          >
+            Fresh flowers,
+            <br />
+            delivered with care.
+          </h1>
         </div>
         <div className="w-full max-w-4xl px-2 -mt-[9px]">
           <HomeFilterBar />
