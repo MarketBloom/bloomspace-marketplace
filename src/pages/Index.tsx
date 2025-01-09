@@ -11,10 +11,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileIndex from "./MobileIndex";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/components/hooks/use-screen-size";
 
 const Index = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const screenSize = useScreenSize();
   
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
@@ -53,18 +56,28 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <Hero />
-      <HowItWorks />
-      <Categories navigate={navigate} />
-      <FeaturedProducts 
-        products={products || []} 
-        isLoading={isLoading} 
-        navigate={navigate}
-      />
-      <TrustSection navigate={navigate} />
-      <Testimonials />
+    <div className="relative min-h-screen bg-background">
+      <div className="absolute inset-0 z-0">
+        <PixelTrail
+          pixelSize={screenSize.lessThan('md') ? 48 : 80}
+          fadeDuration={200}
+          delay={0}
+          pixelClassName="rounded-full bg-[#ffa04f] opacity-70"
+        />
+      </div>
+      <div className="relative z-10">
+        <Header />
+        <Hero />
+        <HowItWorks />
+        <Categories navigate={navigate} />
+        <FeaturedProducts 
+          products={products || []} 
+          isLoading={isLoading} 
+          navigate={navigate}
+        />
+        <TrustSection navigate={navigate} />
+        <Testimonials />
+      </div>
     </div>
   );
 };
