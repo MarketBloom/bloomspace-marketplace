@@ -58,14 +58,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="relative">
-        <PixelTrail
-          pixelSize={screenSize.lessThan('md') ? 48 : 80}
-          fadeDuration={200}
-          delay={0}
-          className="absolute inset-0 pointer-events-none"
-          pixelClassName="rounded-full bg-primary opacity-70"
-        />
-        <div className="relative">
+        <div className="absolute inset-0 pointer-events-auto">
+          <PixelTrail
+            pixelSize={screenSize.lessThan('md') ? 48 : 80}
+            fadeDuration={200}
+            delay={0}
+            pixelClassName="rounded-full bg-primary opacity-70"
+          />
+        </div>
+        <div className="relative pointer-events-auto">
           <Header />
           <Hero />
           <HowItWorks />
