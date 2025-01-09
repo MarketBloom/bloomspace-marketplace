@@ -29,7 +29,7 @@ export const Hero = () => {
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <WordPullUp
-              words="Fresh flowers,\ndelivered with care."
+              words="Fresh flowers, delivered with care."
               className="text-6xl font-semibold mb-3 text-white tracking-tight"
             />
           </div>
