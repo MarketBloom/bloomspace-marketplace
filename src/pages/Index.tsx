@@ -10,14 +10,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useScreenSize } from "@/components/hooks/use-screen-size";
-import { PixelTrail } from "@/components/ui/pixel-trail";
 import MobileIndex from "./MobileIndex";
 
 const Index = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const screenSize = useScreenSize();
   
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
@@ -57,27 +54,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="absolute inset-0 pointer-events-none">
-        <PixelTrail
-          pixelSize={screenSize.lessThan('md') ? 48 : 80}
-          fadeDuration={200}
-          delay={0}
-          pixelClassName="rounded-full bg-primary/70 pointer-events-auto"
-        />
-      </div>
-      <div className="relative z-10">
-        <Header />
-        <Hero />
-        <HowItWorks />
-        <Categories navigate={navigate} />
-        <FeaturedProducts 
-          products={products || []} 
-          isLoading={isLoading} 
-          navigate={navigate}
-        />
-        <TrustSection navigate={navigate} />
-        <Testimonials />
-      </div>
+      <Header />
+      <Hero />
+      <HowItWorks />
+      <Categories navigate={navigate} />
+      <FeaturedProducts 
+        products={products || []} 
+        isLoading={isLoading} 
+        navigate={navigate}
+      />
+      <TrustSection navigate={navigate} />
+      <Testimonials />
     </div>
   );
 };
