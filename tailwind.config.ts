@@ -96,11 +96,6 @@ export default {
           "0%": { "background-position": "0%" },
           "100%": { "background-position": "200%" },
         },
-        shine: {
-          "0%": { "background-position": "0% 0%" },
-          "50%": { "background-position": "100% 100%" },
-          to: { "background-position": "0% 0%" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -109,7 +104,6 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "fade-in-up": "fade-in-up 0.5s ease-out",
         rainbow: "rainbow var(--speed, 2s) infinite linear",
-        shine: "shine var(--duration) infinite linear",
       },
     },
   },
