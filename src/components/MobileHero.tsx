@@ -7,7 +7,7 @@ export const MobileHero = () => {
       <MobileHeroImage />
       
       <div className="container relative z-10 px-4 -mb-[205px]">
-        <div className="max-w-3xl mx-auto text-center mb-6">
+        <div className="max-w-3xl mx-auto text-center mb-4">
           <h1 className="text-4xl font-semibold mb-2 text-white tracking-tight">
             Fresh flowers,
             <br />
