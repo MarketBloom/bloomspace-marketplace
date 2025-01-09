@@ -1,16 +1,11 @@
 import { ShieldCheck, Flower2, Users } from "lucide-react";
-import { GooeyText } from "@/components/ui/gooey-text";
 
 export const DeliveryInfo = () => {
   return (
     <div className="bg-[#eed2d8] rounded-lg p-6 mb-4 border border-black space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-6xl font-bold">
-          <GooeyText>
-            Your City's Best Florists
-            <br />
-            All in One Place
-          </GooeyText>
+          Your City's Best Florists
         </h2>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
           Discover our curated network of exceptional local florists, each one handpicked for their creativity and reliability. All in one convenient marketplace.
