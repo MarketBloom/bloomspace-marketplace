@@ -34,14 +34,18 @@ type DockProps = {
   magnification?: number;
   spring?: SpringOptions;
 };
+
 type DockItemProps = {
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void; // Added onClick handler
 };
+
 type DockLabelProps = {
   className?: string;
   children: React.ReactNode;
 };
+
 type DockIconProps = {
   className?: string;
   children: React.ReactNode;
@@ -123,11 +127,9 @@ function Dock({
   );
 }
 
-function DockItem({ children, className }: DockItemProps) {
+function DockItem({ children, className, onClick }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
-
   const { distance, magnification, mouseX, spring } = useDock();
-
   const isHovered = useMotionValue(0);
 
   const mouseDistance = useTransform(mouseX, (val) => {
@@ -151,8 +153,9 @@ function DockItem({ children, className }: DockItemProps) {
       onHoverEnd={() => isHovered.set(0)}
       onFocus={() => isHovered.set(1)}
       onBlur={() => isHovered.set(0)}
+      onClick={onClick}
       className={cn(
-        'relative inline-flex items-center justify-center',
+        'relative inline-flex items-center justify-center cursor-pointer',
         className
       )}
       tabIndex={0}
