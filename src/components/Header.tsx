@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, Bell, Settings, HelpCircle, User } from "lucide-react";
+import { Home, Bell, Settings, HelpCircle } from "lucide-react";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
+import type { TabItem } from "@/components/ui/expandable-tabs";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const Header = () => {
     }
   };
 
-  const navigationTabs = [
+  const navigationTabs: TabItem[] = [
     { title: "Browse", icon: Home },
     { title: "Notifications", icon: Bell },
     { type: "separator" as const },
@@ -32,7 +33,7 @@ export const Header = () => {
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
     
-    switch (navigationTabs[index].title) {
+    switch (navigationTabs[index].type !== "separator" ? navigationTabs[index].title : "") {
       case "Browse":
         handleNavigate("/search");
         break;
