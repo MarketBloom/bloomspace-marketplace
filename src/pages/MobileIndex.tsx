@@ -8,11 +8,8 @@ import { MobileTestimonials } from "@/components/mobile/MobileTestimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useScreenSize } from "@/components/hooks/use-screen-size";
-import { PixelTrail } from "@/components/ui/pixel-trail";
 
 const MobileIndex = () => {
-  const screenSize = useScreenSize();
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
@@ -47,28 +44,16 @@ const MobileIndex = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="relative">
-        <div className="absolute inset-0 pointer-events-auto">
-          <PixelTrail
-            pixelSize={48}
-            fadeDuration={200}
-            delay={0}
-            pixelClassName="rounded-full bg-primary opacity-70"
-          />
-        </div>
-        <div className="relative pointer-events-auto">
-          <Header />
-          <MobileHero />
-          <MobileHowItWorks />
-          <MobileCategories />
-          <MobileFeaturedProducts 
-            products={products || []} 
-            isLoading={isLoading} 
-          />
-          <MobileTrustSection />
-          <MobileTestimonials />
-        </div>
-      </div>
+      <Header />
+      <MobileHero />
+      <MobileHowItWorks />
+      <MobileCategories />
+      <MobileFeaturedProducts 
+        products={products || []} 
+        isLoading={isLoading} 
+      />
+      <MobileTrustSection />
+      <MobileTestimonials />
     </div>
   );
 };
