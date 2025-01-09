@@ -19,7 +19,7 @@ const DeliverySettings = () => {
         .from("florist_profiles")
         .select("*")
         .eq("id", user?.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data as FloristProfile;
@@ -35,13 +35,12 @@ const DeliverySettings = () => {
       const { error } = await supabase
         .from("florist_profiles")
         .update({
-          delivery_radius: formData.deliveryRadius,
-          delivery_fee: formData.deliveryFee,
-          minimum_order_amount: formData.minimumOrder,
+          delivery_radius: parseFloat(formData.deliveryRadius) || 5.0,
+          delivery_fee: parseFloat(formData.deliveryFee) || 0.0,
+          minimum_order_amount: parseFloat(formData.minimumOrder) || 0.0,
           delivery_days: formData.deliveryDays,
           pickup_only_days: formData.pickupOnlyDays,
           delivery_cutoff_times: formData.cutoffTimes,
-          delivery_time_frames: formData.timeFrames,
           same_day_enabled: true,
           operating_hours: formData.operatingHours,
         })
