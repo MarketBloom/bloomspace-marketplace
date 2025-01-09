@@ -37,7 +37,7 @@ export const HomeFilterBar = () => {
       borderWidth={1}
       duration={14}
       color={["#D73459", "#eed2d8"]}
-      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm p-2 md:p-5 mt-5 md:mt-0"
+      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm py-7 px-2 md:p-5 mt-5 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 md:gap-4 mb-2 md:mb-4">
         <LocationFilter 
