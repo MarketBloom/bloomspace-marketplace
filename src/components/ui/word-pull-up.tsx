@@ -28,6 +28,8 @@ function WordPullUp({
   },
   className,
 }: WordPullUpProps) {
+  const wordsArray = words.split(" ");
+  
   return (
     <motion.h1
       variants={wrapperFramerProps}
@@ -38,11 +40,11 @@ function WordPullUp({
         className,
       )}
     >
-      {words.split(/[\s\n]+/).map((word, i) => (
+      {wordsArray.map((word, i) => (
         <motion.span
           key={i}
           variants={framerProps}
-          style={{ display: "inline-block", paddingRight: "8px" }}
+          style={{ display: "inline-block", marginRight: "0.3em" }}
         >
           {word}
           {word.includes(",") && <br />}
