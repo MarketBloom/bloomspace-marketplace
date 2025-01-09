@@ -1,16 +1,11 @@
 import { ThreeDPhotoCarousel } from "@/components/ui/3d-carousel"
 
 export function ThreeDPhotoCarouselDemo() {
-  const demoCards = [
-    "https://picsum.photos/200/300?night",
-    "https://picsum.photos/200/300?city",
-    "https://picsum.photos/200/300?sky",
-    "https://picsum.photos/200/300?sunset",
-    "https://picsum.photos/200/300?sunrise",
-    "https://picsum.photos/200/300?winter",
-    "https://picsum.photos/200/300?skyscraper",
-    "https://picsum.photos/200/300?building",
-  ]
+  const demoCards = Array(8).fill(null).map((_, i) => (
+    <div key={i} className="bg-slate-800 rounded-lg p-8 w-[300px] h-[400px] flex items-center justify-center">
+      <h3 className="text-white text-2xl">Card {i + 1}</h3>
+    </div>
+  ));
 
   return (
     <div className="w-full max-w-4xl">
@@ -20,5 +15,5 @@ export function ThreeDPhotoCarouselDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }

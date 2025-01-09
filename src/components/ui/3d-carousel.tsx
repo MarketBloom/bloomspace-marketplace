@@ -62,110 +62,105 @@ const duration = 0.15
 const transition = { duration, ease: [0.32, 0.72, 0, 1] }
 const transitionOverlay = { duration: 0.5, ease: [0.32, 0.72, 0, 1] }
 
-const Carousel = memo(
-  ({
-    handleClick,
-    controls,
-    cards,
-    isCarouselActive,
-  }: {
-    handleClick: (card: React.ReactNode, index: number) => void
-    controls: any
-    cards: React.ReactNode[]
-    isCarouselActive: boolean
-  }) => {
-    const isScreenSizeSm = useMediaQuery("(max-width: 640px)")
-    const cylinderWidth = isScreenSizeSm ? 1100 : 1800
-    const faceCount = cards.length
-    const faceWidth = cylinderWidth / faceCount
-    const radius = cylinderWidth / (2 * Math.PI)
-    const rotation = useMotionValue(0)
-    const transform = useTransform(
-      rotation,
-      (value) => `rotate3d(0, 1, 0, ${value}deg)`
-    )
+interface CarouselProps {
+  handleClick: (index: number) => void
+  controls: any
+  cards: React.ReactNode[]
+  isCarouselActive: boolean
+}
 
-    return (
-      <div
-        className="flex h-full items-center justify-center"
+const Carousel = memo(({ handleClick, controls, cards, isCarouselActive }: CarouselProps) => {
+  const isScreenSizeSm = useMediaQuery("(max-width: 640px)")
+  const cylinderWidth = isScreenSizeSm ? 1100 : 1800
+  const faceCount = cards.length
+  const faceWidth = cylinderWidth / faceCount
+  const radius = cylinderWidth / (2 * Math.PI)
+  const rotation = useMotionValue(0)
+  const transform = useTransform(
+    rotation,
+    (value) => `rotate3d(0, 1, 0, ${value}deg)`
+  )
+
+  return (
+    <div
+      className="flex h-full items-center justify-center"
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
+        willChange: "transform",
+      }}
+    >
+      <motion.div
+        drag={isCarouselActive ? "x" : false}
+        className="relative flex h-full origin-center cursor-grab justify-center active:cursor-grabbing"
         style={{
-          perspective: "1000px",
+          transform,
+          rotateY: rotation,
+          width: cylinderWidth,
           transformStyle: "preserve-3d",
-          willChange: "transform",
         }}
+        onDrag={(_, info) =>
+          isCarouselActive &&
+          rotation.set(rotation.get() + info.offset.x * 0.05)
+        }
+        onDragEnd={(_, info) =>
+          isCarouselActive &&
+          controls.start({
+            rotateY: rotation.get() + info.velocity.x * 0.05,
+            transition: {
+              type: "spring",
+              stiffness: 100,
+              damping: 30,
+              mass: 0.1,
+            },
+          })
+        }
+        animate={controls}
       >
-        <motion.div
-          drag={isCarouselActive ? "x" : false}
-          className="relative flex h-full origin-center cursor-grab justify-center active:cursor-grabbing"
-          style={{
-            transform,
-            rotateY: rotation,
-            width: cylinderWidth,
-            transformStyle: "preserve-3d",
-          }}
-          onDrag={(_, info) =>
-            isCarouselActive &&
-            rotation.set(rotation.get() + info.offset.x * 0.05)
-          }
-          onDragEnd={(_, info) =>
-            isCarouselActive &&
-            controls.start({
-              rotateY: rotation.get() + info.velocity.x * 0.05,
-              transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 30,
-                mass: 0.1,
-              },
-            })
-          }
-          animate={controls}
-        >
-          {cards.map((card, i) => (
-            <motion.div
-              key={i}
-              className="absolute flex h-full origin-center items-center justify-center p-2"
-              style={{
-                width: `${faceWidth}px`,
-                transform: `rotateY(${
-                  i * (360 / faceCount)
-                }deg) translateZ(${radius}px)`,
-              }}
-              onClick={() => handleClick(card, i)}
-            >
-              {card}
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    )
-  }
-)
+        {cards.map((card, i) => (
+          <motion.div
+            key={i}
+            className="absolute flex h-full origin-center items-center justify-center"
+            style={{
+              width: `${faceWidth}px`,
+              transform: `rotateY(${
+                i * (360 / faceCount)
+              }deg) translateZ(${radius}px)`,
+            }}
+            onClick={() => handleClick(i)}
+          >
+            {card}
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  )
+})
 
 interface ThreeDPhotoCarouselProps {
   cards: React.ReactNode[]
 }
 
-function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
-  const [activeCard, setActiveCard] = useState<React.ReactNode | null>(null)
+export function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [isCarouselActive, setIsCarouselActive] = useState(true)
   const controls = useAnimation()
 
-  const handleClick = (card: React.ReactNode) => {
-    setActiveCard(card)
+  const handleClick = (index: number) => {
+    setActiveIndex(index)
     setIsCarouselActive(false)
     controls.stop()
   }
 
   const handleClose = () => {
-    setActiveCard(null)
+    setActiveIndex(null)
     setIsCarouselActive(true)
   }
 
   return (
     <motion.div layout className="relative">
       <AnimatePresence mode="sync">
-        {activeCard && (
+        {activeIndex !== null && (
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -189,12 +184,12 @@ function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
                 willChange: "transform",
               }}
             >
-              {activeCard}
+              {cards[activeIndex]}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="relative h-full w-full overflow-hidden">
+      <div className="relative h-[400px] w-full overflow-hidden">
         <Carousel
           handleClick={handleClick}
           controls={controls}
@@ -205,5 +200,3 @@ function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
     </motion.div>
   )
 }
-
-export { ThreeDPhotoCarousel }
