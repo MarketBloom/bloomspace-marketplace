@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, Bell, Settings, HelpCircle, Store } from "lucide-react";
-import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
+import { Home, Bell, Settings, HelpCircle } from "lucide-react";
+import { ExpandableTabs } from "@/components/ui/expandable-tabs";
+import type { TabItem } from "@/components/ui/expandable-tabs";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -21,33 +22,37 @@ export const Header = () => {
     }
   };
 
-  const navigationItems = [
-    {
-      title: "Home",
-      icon: <Home className="h-full w-full text-neutral-600 dark:text-neutral-300" />,
-      path: "/"
-    },
-    {
-      title: "Browse",
-      icon: <Store className="h-full w-full text-neutral-600 dark:text-neutral-300" />,
-      path: "/search"
-    },
-    {
-      title: "Notifications",
-      icon: <Bell className="h-full w-full text-neutral-600 dark:text-neutral-300" />,
-      path: "#"
-    },
-    {
-      title: "Settings",
-      icon: <Settings className="h-full w-full text-neutral-600 dark:text-neutral-300" />,
-      path: "/settings"
-    },
-    {
-      title: "Help",
-      icon: <HelpCircle className="h-full w-full text-neutral-600 dark:text-neutral-300" />,
-      path: "/help"
-    }
+  const navigationTabs: TabItem[] = [
+    { title: "Browse", icon: Home },
+    { title: "Notifications", icon: Bell },
+    { type: "separator" as const },
+    { title: "Settings", icon: Settings },
+    { title: "Help", icon: HelpCircle },
   ];
+
+  const handleTabChange = (index: number | null) => {
+    if (index === null) return;
+    
+    const selectedTab = navigationTabs[index];
+    if (selectedTab.type === "separator") return;
+    
+    // Now TypeScript knows this is not a separator
+    const tab = selectedTab as Exclude<TabItem, { type: "separator" }>;
+    
+    switch (tab.title) {
+      case "Browse":
+        handleNavigate("/search");
+        break;
+      case "Settings":
+        handleNavigate("/settings");
+        break;
+      case "Help":
+        handleNavigate("/help");
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border">
@@ -63,18 +68,11 @@ export const Header = () => {
           </Button>
 
           <div className="hidden md:block">
-            <Dock className="items-end pb-0 bg-transparent">
-              {navigationItems.map((item, idx) => (
-                <DockItem
-                  key={idx}
-                  className="aspect-square rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                  onClick={() => handleNavigate(item.path)}
-                >
-                  <DockLabel>{item.title}</DockLabel>
-                  <DockIcon>{item.icon}</DockIcon>
-                </DockItem>
-              ))}
-            </Dock>
+            <ExpandableTabs 
+              tabs={navigationTabs} 
+              onChange={handleTabChange}
+              className="border-transparent shadow-none"
+            />
           </div>
 
           <div className="flex items-center space-x-2">
