@@ -1,12 +1,22 @@
 import { Flower, Heart, Filter, Truck } from "lucide-react";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const MobileHowItWorks = () => {
   return (
     <section className="py-8 mt-[208px] md:hidden">
       <div className="container px-4">
-        <h2 className="text-4xl font-bold text-center mb-4">
-          Your city's best florists
-        </h2>
+        <div className="h-[40px] mb-4">
+          <GooeyText
+            texts={[
+              "Your city's best florists",
+              "Local artisans near you",
+              "Handpicked flower shops",
+              "Expert florists nearby"
+            ]}
+            className="text-center"
+            textClassName="text-2xl font-bold"
+          />
+        </div>
         <p className="text-lg text-muted-foreground text-center mb-8">
           Discover our handpicked selection of exceptional local florists
         </p>
