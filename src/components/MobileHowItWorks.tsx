@@ -5,7 +5,7 @@ export const MobileHowItWorks = () => {
   return (
     <section className="py-8 mt-[208px] md:hidden">
       <div className="container px-4">
-        <div className="h-[40px] mb-4 mt-[50px]">
+        <div className="h-[40px] mb-4 mt-[60px]">
           <GooeyText
             texts={[
               "Your city's best florists",
@@ -17,7 +17,7 @@ export const MobileHowItWorks = () => {
             textClassName="text-6xl font-bold"
           />
         </div>
-        <p className="text-lg text-muted-foreground text-center mb-8 mt-[20px]">
+        <p className="text-lg text-muted-foreground text-center mb-8 mt-[35px]">
           Discover our handpicked selection of exceptional local florists
         </p>
         
