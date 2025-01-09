@@ -1,7 +1,7 @@
 import { Flower, Heart, Filter, Truck } from "lucide-react";
 import { MobileHowItWorks } from "./MobileHowItWorks";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { GooeyText } from "@/components/ui/gooey-text";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const HowItWorks = () => {
   const isMobile = useIsMobile();
@@ -14,11 +14,15 @@ export const HowItWorks = () => {
     <section className="hidden md:block py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-6xl font-bold text-center mb-4">
-          <GooeyText>
-            Your city's best florists
-            <br />
-            All in One Place
-          </GooeyText>
+          <GooeyText
+            texts={[
+              "Your city's best florists",
+              "All in One Place"
+            ]}
+            morphTime={1}
+            cooldownTime={0.25}
+            className="font-bold h-[120px]"
+          />
         </h2>
         <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
           Discover our handpicked selection of exceptional local florists, all in one convenient place
