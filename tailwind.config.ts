@@ -28,6 +28,11 @@ export default {
         ring: "hsl(var(--ring))",
         background: "#FFFFFF",
         foreground: "#1D1D1F",
+        "color-1": "hsl(var(--color-1))",
+        "color-2": "hsl(var(--color-2))",
+        "color-3": "hsl(var(--color-3))",
+        "color-4": "hsl(var(--color-4))",
+        "color-5": "hsl(var(--color-5))",
         primary: {
           DEFAULT: "#D73459",
           foreground: "#FFFFFF",
@@ -87,6 +92,10 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        rainbow: {
+          "0%": { "background-position": "0%" },
+          "100%": { "background-position": "200%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -94,6 +103,7 @@ export default {
         float: "float 6s ease-in-out infinite",
         "fade-in": "fade-in 0.3s ease-out",
         "fade-in-up": "fade-in-up 0.5s ease-out",
+        rainbow: "rainbow var(--speed, 2s) infinite linear",
       },
     },
   },

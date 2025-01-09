@@ -5,6 +5,7 @@ import { DateFilter } from "./home-filters/DateFilter";
 import { TimeFilter } from "./home-filters/TimeFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { Button } from "./ui/button";
+import { RainbowButton } from "./ui/rainbow-button";
 import { ShoppingBag, Truck } from "lucide-react";
 
 export const HomeFilterBar = () => {
@@ -51,13 +52,13 @@ export const HomeFilterBar = () => {
       </div>
       
       <div className="grid grid-cols-2 gap-1.5 md:gap-4">
-        <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
+        <RainbowButton 
           onClick={() => handleSearch("delivery")}
+          className="w-full"
         >
           <Truck className="w-4 h-4 mr-2" />
           Search Delivery
-        </Button>
+        </RainbowButton>
         <Button 
           className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
           onClick={() => handleSearch("pickup")}
