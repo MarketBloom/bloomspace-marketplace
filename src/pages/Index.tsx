@@ -41,6 +41,10 @@ const Index = () => {
           throw error;
         }
 
+        if (!data) {
+          throw new Error('No data returned from Supabase');
+        }
+
         console.log('Products fetched:', data);
         return data;
       } catch (err) {
@@ -48,8 +52,9 @@ const Index = () => {
         throw err;
       }
     },
-    retry: 1,
+    retry: 2,
     retryDelay: 1000,
+    staleTime: 1000 * 60 * 5, // 5 minutes
     meta: {
       onError: (error: Error) => {
         console.error('Query error:', error);
