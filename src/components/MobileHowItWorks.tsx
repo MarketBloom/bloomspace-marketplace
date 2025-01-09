@@ -9,12 +9,12 @@ export const MobileHowItWorks = () => {
           <GooeyText
             texts={[
               "Your city's best florists",
-              "Local artisans near you",
-              "Handpicked flower shops",
-              "Expert florists nearby"
+              "All in One Place"
             ]}
+            morphTime={1}
+            cooldownTime={3}
             className="text-center"
-            textClassName="text-2xl font-bold"
+            textClassName="text-3xl font-bold"
           />
         </div>
         <p className="text-lg text-muted-foreground text-center mb-8">
