@@ -71,7 +71,7 @@ interface CarouselProps {
 
 const Carousel = memo(({ handleClick, controls, cards, isCarouselActive }: CarouselProps) => {
   const isScreenSizeSm = useMediaQuery("(max-width: 640px)")
-  const cylinderWidth = isScreenSizeSm ? 1100 : 1800
+  const cylinderWidth = isScreenSizeSm ? 1100 : 2400 // Increased width for better horizontal spread
   const faceCount = cards.length
   const faceWidth = cylinderWidth / faceCount
   const radius = cylinderWidth / (2 * Math.PI)
@@ -83,7 +83,7 @@ const Carousel = memo(({ handleClick, controls, cards, isCarouselActive }: Carou
 
   return (
     <div
-      className="flex h-full items-center justify-center"
+      className="flex h-full items-center justify-center w-full"
       style={{
         perspective: "1000px",
         transformStyle: "preserve-3d",
@@ -158,7 +158,7 @@ export function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
   }
 
   return (
-    <motion.div layout className="relative">
+    <motion.div layout className="relative w-full">
       <AnimatePresence mode="sync">
         {activeIndex !== null && (
           <motion.div
@@ -189,7 +189,7 @@ export function ThreeDPhotoCarousel({ cards }: ThreeDPhotoCarouselProps) {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="relative h-[400px] w-full overflow-hidden">
+      <div className="relative h-[300px] w-full overflow-hidden"> {/* Reduced height */}
         <Carousel
           handleClick={handleClick}
           controls={controls}
