@@ -10,14 +10,14 @@ export const MobileHero = () => {
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 
             className="text-4xl font-semibold mb-2 text-white tracking-tight"
-            style={{ transform: 'translateY(4px)' }}
+            style={{ transform: 'translateY(3px)' }}
           >
             Fresh flowers,
             <br />
             delivered with care.
           </h1>
         </div>
-        <div className="w-full max-w-4xl px-2 -mt-1">
+        <div className="w-full max-w-4xl px-2 -mt-[3px]">
           <HomeFilterBar />
         </div>
       </div>
