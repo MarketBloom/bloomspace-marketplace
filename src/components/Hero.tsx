@@ -1,5 +1,7 @@
 import { HomeFilterBar } from "@/components/HomeFilterBar";
 import { MobileHero } from "@/components/MobileHero";
+import { LampContainer } from "@/components/ui/lamp";
+import { motion } from "framer-motion";
 
 export const Hero = () => {
   return (
@@ -27,11 +29,22 @@ export const Hero = () => {
         
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8">
-            <h1 className="text-6xl font-semibold mb-3 text-white tracking-tight">
-              Fresh flowers,
-              <br />
-              delivered with care.
-            </h1>
+            <LampContainer className="h-[300px] min-h-0">
+              <motion.h1
+                initial={{ opacity: 0.5, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.3,
+                  duration: 0.8,
+                  ease: "easeInOut",
+                }}
+                className="text-6xl font-semibold mb-3 text-white tracking-tight"
+              >
+                Fresh flowers,
+                <br />
+                delivered with care.
+              </motion.h1>
+            </LampContainer>
           </div>
           <div className="w-full max-w-4xl">
             <HomeFilterBar />
