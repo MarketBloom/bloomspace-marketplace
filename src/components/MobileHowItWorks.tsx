@@ -5,7 +5,7 @@ export const MobileHowItWorks = () => {
   return (
     <section className="py-8 mt-[208px] md:hidden">
       <div className="container px-4">
-        <div className="h-[40px] mb-4">
+        <div className="h-[40px] mb-4 mt-[10px]">
           <GooeyText
             texts={[
               "Your city's best florists",
