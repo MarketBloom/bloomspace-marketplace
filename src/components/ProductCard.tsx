@@ -12,6 +12,8 @@ interface ProductCardProps {
   title: string;
   price: number;
   floristName?: string;
+  floristId?: string;  // Added this
+  description?: string;  // Added this
   displaySize?: string | null;
   displayTitle?: string;
   displayPrice?: number;
@@ -28,6 +30,8 @@ export const ProductCard = ({
   title,
   price,
   floristName,
+  floristId,  // Added this
+  description,  // Added this
   displaySize,
   displayTitle = title,
   displayPrice = price,
