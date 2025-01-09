@@ -11,9 +11,9 @@ export const HowItWorks = () => {
   }
 
   return (
-    <section className="hidden md:block py-12">
+    <section className="hidden md:block py-24">
       <div className="container mx-auto px-4">
-        <div className="h-[120px] mb-4">
+        <div className="text-center mb-16">
           <GooeyText
             texts={["Your city's best florists", "All in one place"]}
             morphTime={2}
@@ -21,78 +21,50 @@ export const HowItWorks = () => {
             className="font-bold"
             textClassName="text-6xl"
           />
+          <p className="text-lg text-muted-foreground max-w-[800px] mx-auto mt-4">
+            Discover our handpicked selection of exceptional local florists, all in one convenient place
+          </p>
         </div>
-        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-12">
-          Discover our handpicked selection of exceptional local florists, all in one convenient place
-        </p>
         
-        <div className="grid grid-cols-4 gap-4">
-          {/* Local Excellence */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Local Excellence</h3>
-                <p className="text-muted-foreground">
-                  Support the finest florists in your community creating stunning arrangements
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Flower className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+        <div className="grid grid-cols-4 gap-8">
+          <div className="text-center">
+            <div className="bg-[#eed2d8] rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <Flower className="w-10 h-10 text-primary" />
             </div>
+            <h3 className="text-xl font-semibold mb-3">Local Excellence</h3>
+            <p className="text-muted-foreground">
+              Support the finest florists in your community creating stunning arrangements
+            </p>
           </div>
 
-          {/* Seamless Selection */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Seamless Selection</h3>
-                <p className="text-muted-foreground">
-                  Browse and filter arrangements from our florists, and complete your order in one place
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Heart className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-2/3 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <Heart className="w-10 h-10 text-primary" />
             </div>
+            <h3 className="text-xl font-semibold mb-3">Seamless Selection</h3>
+            <p className="text-muted-foreground">
+              Browse and filter arrangements from our florists, and complete your order in one place
+            </p>
           </div>
 
-          {/* Secure Checkout */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Secure Checkout</h3>
-                <p className="text-muted-foreground">
-                  Shop with confidence using our safe and effortless payment system
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Filter className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <Filter className="w-10 h-10 text-primary" />
             </div>
+            <h3 className="text-xl font-semibold mb-3">Secure Checkout</h3>
+            <p className="text-muted-foreground">
+              Shop with confidence using our safe and effortless payment system
+            </p>
           </div>
 
-          {/* Doorstep Delivery */}
-          <div className="bg-[#eed2d8] rounded-2xl p-8">
-            <div className="aspect-square flex flex-col">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Doorstep Delivery</h3>
-                <p className="text-muted-foreground">
-                  Your beautiful arrangement delivered right to your door, same day available
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <Truck className="w-8 h-8 text-primary mb-3" />
-                <div className="h-2 bg-muted rounded-full w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded-full w-1/2" />
-              </div>
+          <div className="text-center">
+            <div className="bg-[#eed2d8] rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <Truck className="w-10 h-10 text-primary" />
             </div>
+            <h3 className="text-xl font-semibold mb-3">Doorstep Delivery</h3>
+            <p className="text-muted-foreground">
+              Your beautiful arrangement delivered right to your door, same day available
+            </p>
           </div>
         </div>
       </div>
