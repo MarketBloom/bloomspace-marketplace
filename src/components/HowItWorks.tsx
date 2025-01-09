@@ -24,7 +24,7 @@ export const HowItWorks = () => {
             className="font-bold h-[120px]"
           />
         </h2>
-        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-4 -mt-4">
+        <p className="text-lg text-muted-foreground text-center max-w-[800px] mx-auto mb-4 -mt-14">
           Discover our handpicked selection of exceptional local florists, all in one convenient place
         </p>
         
