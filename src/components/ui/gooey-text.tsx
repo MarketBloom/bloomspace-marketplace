@@ -18,7 +18,7 @@ export const GooeyText = ({ children, className, ...props }: GooeyTextProps) => 
         {children}
       </div>
       <div 
-        className="absolute inset-0 blur-lg opacity-50 bg-pink-200 dark:bg-pink-800"
+        className="absolute inset-0 blur-[32px] opacity-70 bg-gradient-to-r from-pink-200 via-pink-100 to-pink-200"
         style={{
           transform: "translate(0, 0)",
           animation: "gooey 8s ease-in-out infinite"
@@ -29,12 +29,15 @@ export const GooeyText = ({ children, className, ...props }: GooeyTextProps) => 
           @keyframes gooey {
             0%, 100% {
               transform: translate(0, 0) scale(1);
+              filter: blur(32px);
             }
             33% {
-              transform: translate(5px, -5px) scale(1.05);
+              transform: translate(5px, -5px) scale(1.1);
+              filter: blur(24px);
             }
             66% {
               transform: translate(-5px, 5px) scale(0.95);
+              filter: blur(40px);
             }
           }
         `}
