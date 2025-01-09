@@ -19,7 +19,7 @@ export const HowItWorks = () => {
               "Your city's best florists",
               "All in One Place"
             ]}
-            morphTime={2}
+            morphTime={1}
             cooldownTime={3}
             className="font-bold h-[120px]"
           />

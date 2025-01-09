@@ -20,12 +20,13 @@ export function GooeyText({
 }: GooeyTextProps) {
   const text1Ref = React.useRef<HTMLSpanElement>(null);
   const text2Ref = React.useRef<HTMLSpanElement>(null);
+  const animationFrameRef = React.useRef<number>();
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
-    let textIndex = texts.length - 1;
-    let time = new Date();
     let morph = 0;
     let cooldown = cooldownTime;
+    let lastTime = Date.now();
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
@@ -61,35 +62,42 @@ export function GooeyText({
       setMorph(fraction);
     };
 
-    function animate() {
-      requestAnimationFrame(animate);
-      const newTime = new Date();
-      const shouldIncrementIndex = cooldown > 0;
-      const dt = (newTime.getTime() - time.getTime()) / 1000;
-      time = newTime;
+    const animate = () => {
+      const now = Date.now();
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
 
+      let shouldIncrementIndex = cooldown > 0;
       cooldown -= dt;
 
       if (cooldown <= 0) {
         if (shouldIncrementIndex) {
-          textIndex = (textIndex + 1) % texts.length;
-          if (text1Ref.current && text2Ref.current) {
-            text1Ref.current.textContent = texts[textIndex % texts.length];
-            text2Ref.current.textContent = texts[(textIndex + 1) % texts.length];
-          }
+          setCurrentIndex((prev) => (prev + 1) % texts.length);
         }
         doMorph();
       } else {
         doCooldown();
       }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    // Initialize text content
+    if (text1Ref.current && text2Ref.current) {
+      text1Ref.current.textContent = texts[currentIndex];
+      text2Ref.current.textContent = texts[(currentIndex + 1) % texts.length];
     }
 
-    animate();
+    // Start animation
+    animationFrameRef.current = requestAnimationFrame(animate);
 
+    // Cleanup
     return () => {
-      // Cleanup function if needed
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
-  }, [texts, morphTime, cooldownTime]);
+  }, [texts, morphTime, cooldownTime, currentIndex]);
 
   return (
     <div className={cn("relative", className)}>
