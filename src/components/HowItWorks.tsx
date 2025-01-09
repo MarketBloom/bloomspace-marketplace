@@ -13,7 +13,7 @@ export const HowItWorks = () => {
   return (
     <section className="hidden md:block py-12">
       <div className="container mx-auto px-4">
-        <h2 className="text-6xl font-bold text-center mb-4 translate-y-[20px]">
+        <h2 className="text-6xl font-bold text-center mb-4 translate-y-[10px]">
           <GooeyText
             texts={[
               "Your city's best florists",
