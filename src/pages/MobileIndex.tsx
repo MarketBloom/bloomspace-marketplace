@@ -50,10 +50,10 @@ const MobileIndex = () => {
       <div className="relative">
         <PixelTrail
           pixelSize={48}
-          fadeDuration={500}
+          fadeDuration={200}
           delay={0}
           className="absolute inset-0 pointer-events-none"
-          pixelClassName="rounded-full bg-primary opacity-30"
+          pixelClassName="rounded-full bg-primary opacity-70"
         />
         <div className="relative">
           <Header />
