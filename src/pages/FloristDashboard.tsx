@@ -4,6 +4,7 @@ import { SetupProgress } from "@/components/florist-dashboard/SetupProgress";
 import { StoreVisibility } from "@/components/florist-dashboard/StoreVisibility";
 import { DashboardStats } from "@/components/florist-dashboard/DashboardStats";
 import { RecentOrders } from "@/components/florist-dashboard/RecentOrders";
+import { Feature } from "@/components/ui/feature-section-with-bento-grid";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -31,6 +32,8 @@ const FloristDashboard = () => {
     <DashboardLayout>
       <div className="p-8">
         <div className="max-w-[1600px] mx-auto space-y-8">
+          <Feature />
+          
           {/* Header Section */}
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="space-y-6">
