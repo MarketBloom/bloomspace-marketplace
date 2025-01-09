@@ -30,8 +30,6 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName: string, role: "customer" | "florist" = "customer") => {
     try {
-      console.log("Starting signup process...");
-      
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -78,19 +76,17 @@ export const useAuth = () => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      console.log("Attempting sign in for email:", email);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       const role = data.user?.user_metadata?.role;
-      console.log("User role:", role);
       
-      // Navigate based on role
       if (role === "florist") {
         navigate("/florist-dashboard");
       } else if (role === "customer") {
