@@ -13,7 +13,7 @@ export const MobileHero = () => {
             <br />
             delivered with care.
           </h1>
-          <p className="text-base text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-6">
+          <p className="text-base text-white/90 font-light max-w-xl mx-auto leading-relaxed mb-6 line-clamp-2">
             Order from our curated selection of local florists, delivering beautiful arrangements to your door.
           </p>
         </div>
