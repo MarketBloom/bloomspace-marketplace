@@ -62,7 +62,7 @@ const Index = () => {
           pixelSize={screenSize.lessThan('md') ? 48 : 80}
           fadeDuration={200}
           delay={0}
-          pixelClassName="rounded-full bg-[#ffa04f] opacity-70"
+          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
         />
       </div>
       <div className="relative z-10">
