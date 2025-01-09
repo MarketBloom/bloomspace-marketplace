@@ -54,9 +54,9 @@ export const HomeFilterBar = () => {
       <div className="grid grid-cols-2 gap-1.5 md:gap-4">
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
-          className="w-full text-xs md:text-sm h-11"
+          className="w-full text-[0.7rem] md:text-sm h-11"
         >
-          <Truck className="w-4 h-4 mr-2" />
+          <Truck className="w-4 h-4 mr-1 md:mr-2" />
           Search Delivery
         </RainbowButton>
         <Button 
