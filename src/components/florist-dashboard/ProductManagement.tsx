@@ -1,5 +1,6 @@
 import { AddProductForm } from "./AddProductForm";
 import { ProductList } from "./ProductList";
+import { BulkProductOperations } from "./product-form/BulkProductOperations";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -8,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Plus, Package } from "lucide-react";
+import { Plus, Package, Upload } from "lucide-react";
 
 interface ProductManagementProps {
   floristId: string;
@@ -49,6 +50,21 @@ export const ProductManagement = ({ floristId }: ProductManagementProps) => {
   return (
     <div className="space-y-6">
       <Accordion type="single" collapsible defaultValue="current-products">
+        <AccordionItem value="bulk-operations">
+          <AccordionTrigger className="flex items-center gap-2">
+            <Upload className="h-5 w-5" />
+            <span>Bulk Operations</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-4">
+              <BulkProductOperations 
+                floristId={floristId} 
+                onProductsUploaded={refetch} 
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="add-product">
           <AccordionTrigger className="flex items-center gap-2">
             <Plus className="h-5 w-5" />
