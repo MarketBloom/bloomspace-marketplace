@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Download, Upload } from "lucide-react";
+import { AlertCircle, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Papa from "papaparse";
 import { toast } from "sonner";
@@ -112,9 +112,25 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
       <CardContent className="space-y-4">
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Prepare your CSV file with the following columns: title, description, base_price, category, occasions, size_names, size_prices. 
-            Make sure to follow the correct format for each column.
+          <AlertDescription className="space-y-4">
+            <div>
+              <p className="font-medium mb-2">CSV File Format Instructions:</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li><span className="font-medium">title</span>: Product name (required)</li>
+                <li><span className="font-medium">description</span>: Product description</li>
+                <li><span className="font-medium">base_price</span>: Base price in numbers (e.g., 29.99)</li>
+                <li><span className="font-medium">category</span>: Single category (e.g., "Bouquets")</li>
+                <li><span className="font-medium">occasions</span>: Comma-separated list (e.g., "Birthday,Anniversary")</li>
+                <li><span className="font-medium">size_names</span>: Comma-separated list (e.g., "Small,Medium,Large")</li>
+                <li><span className="font-medium">size_prices</span>: Comma-separated prices matching sizes (e.g., "29.99,39.99,49.99")</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium mb-2">Example Row:</p>
+              <code className="bg-muted p-2 block rounded-md text-sm">
+                "Red Roses","Beautiful red roses",29.99,"Bouquets","Birthday,Anniversary","Small,Medium,Large","29.99,39.99,49.99"
+              </code>
+            </div>
           </AlertDescription>
         </Alert>
 
