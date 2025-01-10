@@ -17,7 +17,7 @@ export const MobileHero = () => {
             delivered with care.
           </h1>
         </div>
-        <div className="w-full max-w-4xl px-2 -mt-[9px]">
+        <div className="w-full max-w-4xl px-2 mt-[51px]">
           <HomeFilterBar />
         </div>
       </div>
