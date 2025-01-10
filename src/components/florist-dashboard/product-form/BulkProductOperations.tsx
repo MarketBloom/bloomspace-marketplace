@@ -12,6 +12,16 @@ interface BulkProductOperationsProps {
   onProductsUploaded: () => void;
 }
 
+interface ProductCSVData {
+  title: string;
+  description: string;
+  base_price: string;
+  category: string;
+  occasions: string;
+  size_names: string;
+  size_prices: string;
+}
+
 export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -57,7 +67,10 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
       Papa.parse(file, {
         header: true,
         complete: async (results) => {
-          const products = results.data.filter((row: any) => row.title && row.base_price);
+          const products = results.data
+            .filter((row): row is ProductCSVData => 
+              Boolean(row && typeof row === 'object' && 'title' in row && 'base_price' in row)
+            );
           
           for (const product of products) {
             try {
