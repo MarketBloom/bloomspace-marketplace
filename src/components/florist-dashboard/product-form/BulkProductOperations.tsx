@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Upload } from "lucide-react";
+import { AlertCircle, Download, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Papa from "papaparse";
 import { toast } from "sonner";
@@ -101,6 +101,26 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
     }
   };
 
+  const downloadTemplate = () => {
+    const headers = ["title", "description", "base_price", "category", "occasions", "size_names", "size_prices"];
+    const exampleRow = ["Red Roses", "Beautiful red roses", "29.99", "Bouquets", "Birthday,Anniversary", "Small,Medium,Large", "29.99,39.99,49.99"];
+    
+    const csvContent = [
+      headers.join(","),
+      exampleRow.map(field => `"${field}"`).join(",")
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "product_template.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -134,24 +154,35 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
           </AlertDescription>
         </Alert>
 
-        <div className="relative w-full">
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="csv-upload"
-            disabled={isUploading}
-          />
+        <div className="flex gap-2">
           <Button
-            variant="default"
-            onClick={() => document.getElementById("csv-upload")?.click()}
-            disabled={isUploading}
-            className="w-full"
+            variant="outline"
+            onClick={downloadTemplate}
+            className="flex-1"
           >
-            <Upload className="mr-2 h-4 w-4" />
-            {isUploading ? "Uploading..." : "Upload CSV"}
+            <Download className="mr-2 h-4 w-4" />
+            Download Template
           </Button>
+
+          <div className="relative flex-1">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="csv-upload"
+              disabled={isUploading}
+            />
+            <Button
+              variant="default"
+              onClick={() => document.getElementById("csv-upload")?.click()}
+              disabled={isUploading}
+              className="w-full"
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {isUploading ? "Uploading..." : "Upload CSV"}
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
