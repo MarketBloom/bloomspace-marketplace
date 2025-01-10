@@ -9,7 +9,7 @@ export const MobileHero = () => {
       <div className="container relative z-10 px-4 -mb-[205px]">
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 
-            className="text-4xl font-semibold mb-2 text-white tracking-tight"
+            className="text-5xl font-semibold mb-2 text-white tracking-tight"
             style={{ transform: 'translateY(9px)' }}
           >
             Fresh flowers,
