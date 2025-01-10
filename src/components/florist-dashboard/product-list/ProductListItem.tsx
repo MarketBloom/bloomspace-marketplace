@@ -12,7 +12,7 @@ interface ProductListItemProps {
   isExpanded: boolean;
   onToggle: () => void;
   onDelete: (productId: string) => void;
-  onEdit: (product: Product) => void;
+  onEdit: (product: Product) => Promise<void>;
 }
 
 export const ProductListItem = ({
@@ -24,8 +24,8 @@ export const ProductListItem = ({
 }: ProductListItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleSave = (updatedProduct: Product) => {
-    onEdit(updatedProduct);
+  const handleSave = async (updatedProduct: Product) => {
+    await onEdit(updatedProduct);
     setIsEditing(false);
   };
 
