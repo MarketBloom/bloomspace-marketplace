@@ -20,7 +20,7 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
       {products.map((product, index) => (
         <div 
           key={`${product.id}-${product.sizeId || 'default'}`}
-          className={`product-card-animate ${products.length >= 7 ? 'opacity-0' : ''}`}
+          className="product-card-animate"
         >
           <ProductCard {...product} />
         </div>
