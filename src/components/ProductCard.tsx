@@ -41,10 +41,7 @@ export const ProductCard = ({
   const isMobile = useIsMobile();
   const displayTitle = displaySize ? `${title}` : title;
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  const handleClick = () => {
     const url = sizeId ? `/product/${id}?size=${sizeId}` : `/product/${id}`;
     navigate(url);
   };
@@ -54,8 +51,14 @@ export const ProductCard = ({
       <Card 
         className="group relative overflow-hidden cursor-pointer bg-white border border-black shadow-apple hover:shadow-apple-hover active:shadow-apple-hover transition-all duration-300 h-full rounded-lg md:rounded-xl touch-manipulation"
         onClick={handleClick}
-        role="link"
+        role="button"
         tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <div className="h-[70%] md:h-[80%] relative">
           <ProductImage src={images?.[0]} alt={displayTitle} />
