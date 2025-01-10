@@ -22,7 +22,8 @@ interface ProductCSVData {
   size_prices: string;
 }
 
-const GOOGLE_SHEETS_TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1Qy5oEYF9q4O5O5O5O5O5O5O5O5O5O5O5/copy";
+// Updated template with instructions and example data
+const GOOGLE_SHEETS_TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1YPK3sxcZhCe9TvyZFRqwxg8bQJdqV9A-aWxwJXeP-dY/copy";
 
 export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -112,14 +113,22 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
       <CardHeader>
         <CardTitle>Bulk Product Operations</CardTitle>
         <CardDescription>
-          Import multiple products at once using a CSV file
+          Import multiple products at once using our template
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Use our Google Sheets template to prepare your product data. Once ready, download as CSV and upload here.
+          <AlertDescription className="space-y-2">
+            <p>Follow these steps to bulk upload products:</p>
+            <ol className="list-decimal list-inside space-y-1 ml-2">
+              <li>Click &quot;Open Template&quot; to access our Google Sheets template</li>
+              <li>Make a copy of the template (File → Make a copy)</li>
+              <li>Follow the instructions in the template&apos;s first sheet</li>
+              <li>Enter your product data in the second sheet</li>
+              <li>Download as CSV (File → Download → CSV)</li>
+              <li>Upload the CSV file here</li>
+            </ol>
           </AlertDescription>
         </Alert>
 
