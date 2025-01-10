@@ -22,15 +22,8 @@ interface ProductCSVData {
   size_prices: string;
 }
 
-// Updated template with instructions and example data
-const GOOGLE_SHEETS_TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1YPK3sxcZhCe9TvyZFRqwxg8bQJdqV9A-aWxwJXeP-dY/copy";
-
 export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
   const [isUploading, setIsUploading] = useState(false);
-
-  const downloadTemplate = () => {
-    window.open(GOOGLE_SHEETS_TEMPLATE_URL, '_blank');
-  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -113,54 +106,36 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
       <CardHeader>
         <CardTitle>Bulk Product Operations</CardTitle>
         <CardDescription>
-          Import multiple products at once using our template
+          Import multiple products at once using a CSV file
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="space-y-2">
-            <p>Follow these steps to bulk upload products:</p>
-            <ol className="list-decimal list-inside space-y-1 ml-2">
-              <li>Click &quot;Open Template&quot; to access our Google Sheets template</li>
-              <li>Make a copy of the template (File → Make a copy)</li>
-              <li>Follow the instructions in the template&apos;s first sheet</li>
-              <li>Enter your product data in the second sheet</li>
-              <li>Download as CSV (File → Download → CSV)</li>
-              <li>Upload the CSV file here</li>
-            </ol>
+          <AlertDescription>
+            Prepare your CSV file with the following columns: title, description, base_price, category, occasions, size_names, size_prices. 
+            Make sure to follow the correct format for each column.
           </AlertDescription>
         </Alert>
 
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="relative w-full">
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="csv-upload"
+            disabled={isUploading}
+          />
           <Button
-            variant="outline"
-            onClick={downloadTemplate}
-            className="w-full sm:w-auto"
+            variant="default"
+            onClick={() => document.getElementById("csv-upload")?.click()}
+            disabled={isUploading}
+            className="w-full"
           >
-            <Download className="mr-2 h-4 w-4" />
-            Open Template
+            <Upload className="mr-2 h-4 w-4" />
+            {isUploading ? "Uploading..." : "Upload CSV"}
           </Button>
-
-          <div className="relative w-full sm:w-auto">
-            <input
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="csv-upload"
-              disabled={isUploading}
-            />
-            <Button
-              variant="default"
-              onClick={() => document.getElementById("csv-upload")?.click()}
-              disabled={isUploading}
-              className="w-full sm:w-auto"
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              {isUploading ? "Uploading..." : "Upload CSV"}
-            </Button>
-          </div>
         </div>
       </CardContent>
     </Card>
