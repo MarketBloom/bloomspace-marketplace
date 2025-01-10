@@ -6,7 +6,7 @@ export const MobileHero = () => {
     <section className="relative h-[420px] flex items-end justify-center bg-[#FFFFFF] md:hidden pb-6">
       <MobileHeroImage />
       
-      <div className="container relative z-10 px-4 -mb-[205px]">
+      <div className="container relative z-10 px-4">
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 
             className="text-5xl font-semibold mb-2 text-white tracking-tight"
