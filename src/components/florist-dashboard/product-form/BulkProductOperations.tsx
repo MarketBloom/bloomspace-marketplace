@@ -22,39 +22,13 @@ interface ProductCSVData {
   size_prices: string;
 }
 
+const GOOGLE_SHEETS_TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1Qy5oEYF9q4O5O5O5O5O5O5O5O5O5O5O5/copy";
+
 export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const downloadTemplate = () => {
-    const csvData = [
-      [
-        "title",
-        "description",
-        "base_price",
-        "category",
-        "occasions",
-        "size_names",
-        "size_prices",
-      ],
-      [
-        "Red Rose Bouquet",
-        "Beautiful arrangement of red roses",
-        "89.99",
-        "Bouquets",
-        "Anniversary,Valentine's Day",
-        "Standard,Deluxe,Premium",
-        "89.99,119.99,149.99",
-      ],
-    ];
-
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "product_template.csv";
-    a.click();
-    window.URL.revokeObjectURL(url);
+    window.open(GOOGLE_SHEETS_TEMPLATE_URL, '_blank');
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,7 +119,7 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Download the template first to see the required format. Make sure to follow the same structure when creating your CSV file.
+            Use our Google Sheets template to prepare your product data. Once ready, download as CSV and upload here.
           </AlertDescription>
         </Alert>
 
@@ -156,7 +130,7 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
             className="w-full sm:w-auto"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download Template
+            Open Template
           </Button>
 
           <div className="relative w-full sm:w-auto">
