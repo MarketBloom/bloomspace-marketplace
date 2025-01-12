@@ -45,7 +45,7 @@ const MobileIndex = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-[60px]">
+      <main className="pt-[60px]">
         <MobileHero />
         <MobileHowItWorks />
         <MobileCategories />
@@ -55,7 +55,7 @@ const MobileIndex = () => {
         />
         <MobileTrustSection />
         <MobileTestimonials />
-      </div>
+      </main>
     </div>
   );
 };
