@@ -45,15 +45,17 @@ const MobileIndex = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <MobileHero />
-      <MobileHowItWorks />
-      <MobileCategories />
-      <MobileFeaturedProducts 
-        products={products || []} 
-        isLoading={isLoading} 
-      />
-      <MobileTrustSection />
-      <MobileTestimonials />
+      <div className="pt-[60px]">
+        <MobileHero />
+        <MobileHowItWorks />
+        <MobileCategories />
+        <MobileFeaturedProducts 
+          products={products || []} 
+          isLoading={isLoading} 
+        />
+        <MobileTrustSection />
+        <MobileTestimonials />
+      </div>
     </div>
   );
 };

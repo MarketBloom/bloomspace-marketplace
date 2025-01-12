@@ -3,19 +3,17 @@ import { MobileHeroImage } from "@/components/MobileHeroImage";
 
 export const MobileHero = () => {
   return (
-    <section className="relative h-[360px] flex items-end justify-center bg-[#FFFFFF] md:hidden">
+    <section className="relative h-[360px] flex items-center justify-center bg-[#FFFFFF] md:hidden">
       <MobileHeroImage />
       
-      <div className="container relative z-10 px-4 pb-6">
-        <div className="max-w-3xl mx-auto text-center mb-8">
-          <h1 
-            className="text-5xl font-semibold mb-2 text-white tracking-tight mt-[60px]"
-          >
+      <div className="container relative z-10 px-4">
+        <div className="max-w-3xl mx-auto text-center mb-6">
+          <h1 className="text-5xl font-semibold mb-2 text-white tracking-tight">
             Fresh flowers,
             <br />
             delivered with care.
           </h1>
-          <p className="text-white/80 mt-[35px]">
+          <p className="text-white/80 mt-4">
             Discover our handpicked selection of exceptional local florists
           </p>
         </div>

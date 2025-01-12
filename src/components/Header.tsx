@@ -55,7 +55,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-background border-b border-border md:fixed md:top-0 md:left-0 md:right-0 md:z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-[60px]">
           <Button
