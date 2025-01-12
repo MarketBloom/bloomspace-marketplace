@@ -3,7 +3,7 @@ import { MobileHeroImage } from "@/components/MobileHeroImage";
 
 export const MobileHero = () => {
   return (
-    <section className="relative h-[420px] flex items-end justify-center bg-[#FFFFFF] md:hidden">
+    <section className="relative h-[360px] flex items-end justify-center bg-[#FFFFFF] md:hidden">
       <MobileHeroImage />
       
       <div className="container relative z-10 px-4 pb-6">
