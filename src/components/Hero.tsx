@@ -30,8 +30,8 @@ export const Hero = () => {
           <div className="max-w-3xl mx-auto text-center mb-8">
             <GooeyText
               texts={[
-                "Fresh Flowers,",
-                "Delivered with Care"
+                "Your City's Best Florists",
+                "All in One Place"
               ]}
               className="h-[72px]"
               textClassName="text-6xl font-semibold tracking-tight text-white"

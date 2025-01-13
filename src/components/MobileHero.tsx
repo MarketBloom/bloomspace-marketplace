@@ -13,8 +13,8 @@ export const MobileHero = () => {
         <div className="max-w-3xl mx-auto text-center mb-6">
           <GooeyText
             texts={[
-              "Fresh Flowers,",
-              "Delivered with Care"
+              "Your City's Best Florists",
+              "All in One Place"
             ]}
             className="h-[48px]"
             textClassName="text-4xl font-semibold tracking-tight text-white"
