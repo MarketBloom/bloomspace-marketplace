@@ -27,7 +27,7 @@ export const Hero = () => {
         </div>
         
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
-          <div className="max-w-3xl mx-auto text-center mb-8">
+          <div className="max-w-3xl mx-auto text-center mb-8 mt-5">
             <GooeyText
               texts={[
                 "Your City's Best Florists",
@@ -39,7 +39,7 @@ export const Hero = () => {
               cooldownTime={3}
             />
           </div>
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-4xl -mt-5">
             <HomeFilterBar />
           </div>
         </div>

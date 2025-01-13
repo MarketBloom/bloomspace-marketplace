@@ -10,7 +10,7 @@ export const MobileHero = () => {
       </div>
       
       <div className="container relative z-10 px-4 pb-5">
-        <div className="max-w-3xl mx-auto text-center mb-6">
+        <div className="max-w-3xl mx-auto text-center mb-6 mt-5">
           <GooeyText
             texts={[
               "Your City's Best Florists",
@@ -22,7 +22,7 @@ export const MobileHero = () => {
             cooldownTime={3}
           />
         </div>
-        <div className="w-full max-w-4xl px-2">
+        <div className="w-full max-w-4xl px-2 -mt-5">
           <HomeFilterBar />
         </div>
       </div>
