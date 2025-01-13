@@ -28,15 +28,17 @@ export const Hero = () => {
         
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8">
-            <GooeyText
-              texts={[
-                "Fresh flowers,",
-                "delivered with care."
-              ]}
-              morphTime={1}
-              cooldownTime={3}
-              className="text-6xl font-semibold tracking-tight"
-            />
+            <h1>
+              <GooeyText
+                texts={[
+                  "Fresh flowers,",
+                  "delivered with care."
+                ]}
+                morphTime={1}
+                cooldownTime={3}
+                className="text-6xl font-semibold tracking-tight"
+              />
+            </h1>
           </div>
           <div className="w-full max-w-4xl">
             <HomeFilterBar />
