@@ -27,7 +27,10 @@ export const OrderManagement = ({ floristId }: OrderManagementProps) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data.map(order => ({
+        ...order,
+        status: order.status as OrderStatus // Type assertion here
+      }));
     },
     enabled: !!floristId,
   });
