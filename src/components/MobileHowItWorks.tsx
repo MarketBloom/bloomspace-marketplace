@@ -3,7 +3,7 @@ import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const MobileHowItWorks = () => {
   return (
-    <section className="py-8 mt-[208px] md:hidden">
+    <section className="py-8 mt-0 md:hidden">
       <div className="container px-4">
         <div className="h-[40px] mb-4 mt-[60px]">
           <GooeyText
