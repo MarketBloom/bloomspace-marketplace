@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Clock, Star } from "lucide-react";
+import { ShoppingBag, Clock, Star, Heart } from "lucide-react";
 import { OrderStatusTracker } from "@/components/order/OrderStatusTracker";
 import { OrderStatus } from "@/types/order";
+import { FloristCard } from "@/components/FloristCard";
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
@@ -22,6 +23,34 @@ const CustomerDashboard = () => {
           order_items (
             *,
             products (title, price)
+          )
+        `)
+        .eq("customer_id", user?.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const { data: favorites, isLoading: favoritesLoading } = useQuery({
+    queryKey: ["favorites", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("favorite_florists")
+        .select(`
+          *,
+          florist_profiles:florist_id (
+            id,
+            store_name,
+            address,
+            about_text,
+            delivery_fee,
+            delivery_radius,
+            minimum_order_amount,
+            banner_url,
+            logo_url
           )
         `)
         .eq("customer_id", user?.id)
@@ -66,13 +95,47 @@ const CustomerDashboard = () => {
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Reviews Given</CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Favorite Florists</CardTitle>
+              <Heart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{favorites?.length || 0}</div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Favorite Florists Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">Favorite Florists</h2>
+          {favoritesLoading ? (
+            <div>Loading favorites...</div>
+          ) : favorites?.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-center text-muted-foreground">
+                <p>You haven't saved any florists as favorites yet.</p>
+                <Button className="mt-4" onClick={() => window.location.href = "/search"}>
+                  Browse Florists
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favorites?.map((favorite) => (
+                <FloristCard
+                  key={favorite.florist_id}
+                  id={favorite.florist_profiles.id}
+                  storeName={favorite.florist_profiles.store_name}
+                  address={favorite.florist_profiles.address}
+                  aboutText={favorite.florist_profiles.about_text}
+                  bannerUrl={favorite.florist_profiles.banner_url}
+                  logoUrl={favorite.florist_profiles.logo_url}
+                  deliveryFee={favorite.florist_profiles.delivery_fee}
+                  deliveryRadius={favorite.florist_profiles.delivery_radius}
+                  minimumOrderAmount={favorite.florist_profiles.minimum_order_amount}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">
