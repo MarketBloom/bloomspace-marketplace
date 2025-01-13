@@ -1,139 +1,181 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { FloristBanner } from "./florist-card/FloristBanner";
-import { FloristInfo } from "./florist-card/FloristInfo";
-import { DeliveryInfo } from "./florist-card/DeliveryInfo";
-import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
-import { Heart } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { Heart } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 interface FloristCardProps {
   id: string;
   storeName: string;
   address: string;
-  aboutText?: string;
-  logoUrl?: string;
-  bannerUrl?: string;
-  deliveryFee?: number;
-  deliveryRadius?: number;
-  minimumOrderAmount?: number;
+  aboutText?: string | null;
+  bannerUrl?: string | null;
+  logoUrl?: string | null;
+  deliveryFee?: number | null;
+  deliveryRadius?: number | null;
+  minimumOrderAmount?: number | null;
 }
 
-export const FloristCard = ({ 
-  id, 
-  storeName, 
-  address, 
+export const FloristCard = ({
+  id,
+  storeName,
+  address,
   aboutText,
-  logoUrl,
   bannerUrl,
+  logoUrl,
   deliveryFee,
   deliveryRadius,
-  minimumOrderAmount
+  minimumOrderAmount,
 }: FloristCardProps) => {
-  const navigate = useNavigate();
   const { user } = useAuth();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Query to check if florist is favorited
-  const { data: isFavorited, refetch: refetchFavorite } = useQuery({
-    queryKey: ['favorite', id, user?.id],
+  // Check if this florist is favorited by the current user
+  const { data: favorite, isLoading: checkingFavorite } = useQuery({
+    queryKey: ["favorite", user?.id, id],
     queryFn: async () => {
-      if (!user) return false;
-      const { data } = await supabase
-        .from('favorite_florists')
-        .select('id')
-        .eq('customer_id', user.id)
-        .eq('florist_id', id)
-        .single();
-      return !!data;
+      const { data, error } = await supabase
+        .from("favorite_florists")
+        .select("id")
+        .eq("customer_id", user?.id)
+        .eq("florist_id", id)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
     },
     enabled: !!user,
   });
 
-  const toggleFavorite = async () => {
+  const addFavoriteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("favorite_florists")
+        .insert({
+          customer_id: user?.id,
+          florist_id: id,
+        });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, id] });
+      queryClient.invalidateQueries({ queryKey: ["favorites", user?.id] });
+      toast({
+        title: "Added to favorites",
+        description: `${storeName} has been added to your favorites`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to add to favorites. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const removeFavoriteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("favorite_florists")
+        .delete()
+        .eq("customer_id", user?.id)
+        .eq("florist_id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, id] });
+      queryClient.invalidateQueries({ queryKey: ["favorites", user?.id] });
+      toast({
+        title: "Removed from favorites",
+        description: `${storeName} has been removed from your favorites`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to remove from favorites. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleToggleFavorite = () => {
     if (!user) {
-      toast.error("Please sign in to save favorites");
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to save favorites",
+        variant: "destructive",
+      });
       return;
     }
 
-    setIsUpdating(true);
-    try {
-      if (isFavorited) {
-        // Remove from favorites
-        const { error } = await supabase
-          .from('favorite_florists')
-          .delete()
-          .eq('customer_id', user.id)
-          .eq('florist_id', id);
-
-        if (error) throw error;
-        toast.success("Removed from favorites");
-      } else {
-        // Add to favorites
-        const { error } = await supabase
-          .from('favorite_florists')
-          .insert({
-            customer_id: user.id,
-            florist_id: id
-          });
-
-        if (error) throw error;
-        toast.success("Added to favorites");
-      }
-      refetchFavorite();
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-      toast.error("Failed to update favorites");
-    } finally {
-      setIsUpdating(false);
+    if (favorite) {
+      removeFavoriteMutation.mutate();
+    } else {
+      addFavoriteMutation.mutate();
     }
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-apple-hover shadow-apple border-0 bg-white">
-      <FloristBanner 
-        bannerUrl={bannerUrl}
-        logoUrl={logoUrl}
-        storeName={storeName}
-      />
-
-      <CardContent className="pt-12 pb-4 px-4 space-y-4">
-        <FloristInfo 
-          storeName={storeName}
-          address={address}
-          aboutText={aboutText}
-        />
-
-        <DeliveryInfo 
-          deliveryFee={deliveryFee}
-          deliveryRadius={deliveryRadius}
-          minimumOrderAmount={minimumOrderAmount}
-        />
-
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate(`/florist/${id}`)}
-            className="flex-1 text-sm h-10 font-mono"
-          >
-            View Products
-          </Button>
-          <Button
-            variant="outline"
-            onClick={toggleFavorite}
-            disabled={isUpdating}
-            className="w-10 h-10 p-0"
-          >
-            <Heart 
-              className={`h-5 w-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
+    <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="relative h-48">
+        {bannerUrl ? (
+          <img
+            src={bannerUrl}
+            alt={`${storeName} banner`}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-400">No banner image</span>
+          </div>
+        )}
+        {logoUrl && (
+          <div className="absolute -bottom-8 left-4">
+            <img
+              src={logoUrl}
+              alt={`${storeName} logo`}
+              className="w-16 h-16 rounded-full border-4 border-white object-cover bg-white"
             />
-          </Button>
+          </div>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "absolute top-4 right-4 bg-white/80 hover:bg-white",
+            favorite && "text-red-500 hover:text-red-600"
+          )}
+          onClick={handleToggleFavorite}
+          disabled={checkingFavorite}
+        >
+          <Heart className={cn("h-5 w-5", favorite && "fill-current")} />
+        </Button>
+      </div>
+
+      <div className="p-4 pt-10">
+        <h3 className="text-lg font-semibold mb-2">{storeName}</h3>
+        <p className="text-sm text-gray-600 mb-4">{address}</p>
+        {aboutText && (
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
+        )}
+        <div className="text-sm text-gray-600">
+          {deliveryFee !== null && (
+            <p>Delivery Fee: ${deliveryFee?.toFixed(2)}</p>
+          )}
+          {deliveryRadius !== null && (
+            <p>Delivery Radius: {deliveryRadius} km</p>
+          )}
+          {minimumOrderAmount !== null && (
+            <p>Minimum Order: ${minimumOrderAmount?.toFixed(2)}</p>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
