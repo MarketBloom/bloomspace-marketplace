@@ -1,5 +1,6 @@
 import { HomeFilterBar } from "@/components/HomeFilterBar";
 import { MobileHeroImage } from "@/components/MobileHeroImage";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const MobileHero = () => {
   return (
@@ -10,11 +11,15 @@ export const MobileHero = () => {
       
       <div className="container relative z-10 px-4 pb-5">
         <div className="max-w-3xl mx-auto text-center mb-6">
-          <h2 className="text-4xl font-semibold mb-2 text-foreground tracking-tight">
-            Fresh flowers,
-            <br />
-            delivered with care.
-          </h2>
+          <GooeyText
+            texts={[
+              "Fresh flowers,",
+              "delivered with care."
+            ]}
+            morphTime={1}
+            cooldownTime={3}
+            className="text-4xl font-semibold tracking-tight"
+          />
         </div>
         <div className="w-full max-w-4xl px-2">
           <HomeFilterBar />
