@@ -15,9 +15,6 @@ export const MobileHero = () => {
             <br />
             delivered with care.
           </h1>
-          <p className="text-white/80 mt-4">
-            Discover our handpicked selection of exceptional local florists
-          </p>
         </div>
         <div className="w-full max-w-4xl px-2">
           <HomeFilterBar />
