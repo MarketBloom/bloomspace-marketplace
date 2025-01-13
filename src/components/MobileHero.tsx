@@ -11,15 +11,15 @@ export const MobileHero = () => {
       
       <div className="container relative z-10 px-4 pb-5">
         <div className="max-w-3xl mx-auto text-center mb-6">
-          <h1 className="text-4xl font-semibold mb-2 text-white tracking-tight">
-            Fresh flowers,<br />delivered with care.
-          </h1>
           <GooeyText 
-            className="text-lg font-medium text-white/90"
+            className="text-4xl font-semibold mb-2 text-white tracking-tight"
             texts={[
-              "Same day delivery available"
+              "Your City's Best Florists\nAll in One Place"
             ]}
           />
+          <h1 className="text-lg font-medium text-white/90">
+            Fresh flowers, delivered with care.
+          </h1>
         </div>
         <div className="w-full max-w-4xl px-2">
           <HomeFilterBar />
