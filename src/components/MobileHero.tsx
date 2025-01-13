@@ -14,7 +14,7 @@ export const MobileHero = () => {
           <GooeyText
             texts={[
               "Your City's\nBest Florists",
-              "All in\nOne Place"
+              "All in One Place"
             ]}
             className="h-[96px]"
             textClassName="text-5xl font-semibold tracking-tight text-white whitespace-pre-line"
