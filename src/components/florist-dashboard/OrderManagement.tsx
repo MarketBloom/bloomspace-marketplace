@@ -133,11 +133,27 @@ export const OrderManagement = ({ floristId }: OrderManagementProps) => {
                     </Button>
                   )}
                   {order.status === "out_for_delivery" && (
+                    <>
+                      <Button 
+                        variant="outline"
+                        onClick={() => updateOrderStatus(order.id, "delivered")}
+                      >
+                        Mark as Delivered
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => updateOrderStatus(order.id, "delayed")}
+                      >
+                        Mark as Delayed
+                      </Button>
+                    </>
+                  )}
+                  {order.status === "delayed" && (
                     <Button 
                       variant="outline"
-                      onClick={() => updateOrderStatus(order.id, "delivered")}
+                      onClick={() => updateOrderStatus(order.id, "out_for_delivery")}
                     >
-                      Mark as Delivered
+                      Resume Delivery
                     </Button>
                   )}
                   <Button 

@@ -50,7 +50,7 @@ export interface OrdersTable {
   Update: Partial<OrdersTable['Insert']>;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'out_for_delivery' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'out_for_delivery' | 'delivered' | 'cancelled' | 'delayed';
 
 interface OrderStatusConfig {
   status: OrderStatus;
@@ -83,6 +83,12 @@ export const ORDER_STATUSES: OrderStatusConfig[] = [
     label: 'Out for Delivery',
     description: 'Your order is on its way',
     color: 'bg-purple-500'
+  },
+  {
+    status: 'delayed',
+    label: 'Delayed',
+    description: 'Delivery is experiencing delays',
+    color: 'bg-orange-500'
   },
   {
     status: 'delivered',
