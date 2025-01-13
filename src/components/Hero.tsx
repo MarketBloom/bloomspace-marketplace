@@ -35,7 +35,7 @@ export const Hero = () => {
               ]}
             />
             <h1 className="text-xl font-medium text-white/90">
-              Fresh flowers, delivered with care.
+              Same day delivery available
             </h1>
           </div>
           <div className="w-full max-w-4xl">
