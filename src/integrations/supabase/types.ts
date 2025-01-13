@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      favorite_florists: {
+        Row: {
+          created_at: string
+          customer_id: string
+          florist_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          florist_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          florist_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_florists_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorite_florists_florist_id_fkey"
+            columns: ["florist_id"]
+            isOneToOne: false
+            referencedRelation: "florist_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       florist_applications: {
         Row: {
           about_business: string | null
