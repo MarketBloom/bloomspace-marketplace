@@ -31,11 +31,11 @@ export const Hero = () => {
             <GooeyText 
               className="text-6xl font-semibold mb-3 text-white tracking-tight"
               texts={[
-                "Your City's Best Florists\nAll in One Place"
+                "Fresh flowers,\ndelivered with care."
               ]}
             />
             <h1 className="text-xl font-medium text-white/90">
-              Same day delivery available
+              Your City's Best Florists All in One Place
             </h1>
           </div>
           <div className="w-full max-w-4xl">
