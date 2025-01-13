@@ -16,7 +16,7 @@ export const MobileHero = () => {
               "Your City's Best Florists",
               "All in One Place"
             ]}
-            className="h-[96px]"
+            className="h-[48px]"
             textClassName="text-4xl font-semibold tracking-tight text-white"
             morphTime={1}
             cooldownTime={3}
