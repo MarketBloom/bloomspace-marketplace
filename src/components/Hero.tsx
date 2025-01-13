@@ -1,6 +1,6 @@
 import { HomeFilterBar } from "@/components/HomeFilterBar";
 import { MobileHero } from "@/components/MobileHero";
-import { GooeyTextMorphing } from "@/components/ui/gooey-text-morphing";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const Hero = () => {
   return (
@@ -28,7 +28,7 @@ export const Hero = () => {
         
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8">
-            <GooeyTextMorphing 
+            <GooeyText 
               className="text-6xl font-semibold mb-3 text-white tracking-tight"
               texts={[
                 "Fresh flowers,\ndelivered with care."
