@@ -11,7 +11,7 @@ export const MobileHero = () => {
       <div className="container relative z-10 px-4 pb-5">
         <div className="max-w-3xl mx-auto text-center mb-6">
           <h1 className="text-4xl font-semibold tracking-tight">
-            Fresh flowers, delivered with care.
+            Fresh Flowers, Delivered with Care
           </h1>
         </div>
         <div className="w-full max-w-4xl px-2">
