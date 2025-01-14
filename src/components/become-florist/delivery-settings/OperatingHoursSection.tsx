@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
 interface OperatingHours {
@@ -31,6 +31,28 @@ const daysOfWeek = [
 const DEFAULT_OPEN = "09:00";
 const DEFAULT_CLOSE = "17:00";
 
+// Generate time options in 30-minute intervals
+const generateTimeOptions = () => {
+  const times = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute of ['00', '30']) {
+      const timeString = `${hour.toString().padStart(2, '0')}:${minute}`;
+      times.push(timeString);
+    }
+  }
+  return times;
+};
+
+const timeOptions = generateTimeOptions();
+
+const formatTimeForDisplay = (time: string) => {
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${minutes} ${ampm}`;
+};
+
 export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursSectionProps) => {
   const handleTimeChange = (day: string, type: 'open' | 'close', time: string) => {
     setFormData({
@@ -40,7 +62,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
         [day]: {
           ...(formData.operatingHours[day] || { open: DEFAULT_OPEN, close: DEFAULT_CLOSE }),
           [type]: time,
-          isClosed: false, // Explicitly set to false when time is changed
+          isClosed: false,
         },
       },
     });
@@ -90,11 +112,11 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
   });
 
   return (
-    <div className="space-y-2">
-      <div className="text-sm text-muted-foreground mb-2">
+    <div className="space-y-4">
+      <div className="text-sm text-muted-foreground">
         Set your store's operating hours for pickup orders
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-4">
         {daysOfWeek.map((day) => {
           const dayData = formData.operatingHours[day] || { 
             open: DEFAULT_OPEN, 
@@ -104,36 +126,56 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
           const isClosed = dayData.isClosed;
 
           return (
-            <div key={day} className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <div className="flex items-center gap-2">
-                <Label className="capitalize text-sm">{day}</Label>
-                <Switch
-                  checked={!isClosed}
-                  onCheckedChange={() => toggleDayStatus(day)}
-                />
+            <div key={day} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div className="w-32">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={!isClosed}
+                    onCheckedChange={() => toggleDayStatus(day)}
+                  />
+                  <Label className="capitalize font-medium">{day}</Label>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {!isClosed && (
-                  <>
-                    <Input
-                      type="time"
-                      value={dayData.open || DEFAULT_OPEN}
-                      onChange={(e) => handleTimeChange(day, 'open', e.target.value)}
-                      className="w-32 h-8"
-                    />
-                    <span className="text-sm">to</span>
-                    <Input
-                      type="time"
-                      value={dayData.close || DEFAULT_CLOSE}
-                      onChange={(e) => handleTimeChange(day, 'close', e.target.value)}
-                      className="w-32 h-8"
-                    />
-                  </>
-                )}
-                {isClosed && (
-                  <span className="text-muted-foreground italic">Closed</span>
-                )}
-              </div>
+              
+              {!isClosed ? (
+                <div className="flex-1 flex items-center gap-3">
+                  <Select
+                    value={dayData.open}
+                    onValueChange={(value) => handleTimeChange(day, 'open', value)}
+                  >
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue>{formatTimeForDisplay(dayData.open)}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeOptions.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {formatTimeForDisplay(time)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <span className="text-muted-foreground">to</span>
+
+                  <Select
+                    value={dayData.close}
+                    onValueChange={(value) => handleTimeChange(day, 'close', value)}
+                  >
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue>{formatTimeForDisplay(dayData.close)}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeOptions.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {formatTimeForDisplay(time)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <span className="text-muted-foreground italic">Closed</span>
+              )}
             </div>
           );
         })}
