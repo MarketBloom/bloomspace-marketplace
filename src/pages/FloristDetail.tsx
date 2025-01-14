@@ -10,16 +10,35 @@ import { useState } from "react";
 
 // Helper function to format operating hours
 const formatOperatingHours = (hours: any): string => {
-  if (!hours) return "Not specified";
-  
-  try {
-    if (typeof hours === 'object') {
-      return JSON.stringify(hours);
-    }
-    return String(hours);
-  } catch (e) {
-    return "Not specified";
+  if (!hours || typeof hours !== 'object') {
+    console.log("Operating hours data:", hours);
+    return "Hours not specified";
   }
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+  
+  console.log("Checking hours for:", today, shortToday);
+  console.log("Available operating hours:", hours);
+
+  // Check all possible formats
+  const possibleFormats = [
+    today,                    // lowercase long (monday)
+    shortToday,              // lowercase short (mon)
+    today.toUpperCase(),     // uppercase long (MONDAY)
+    shortToday.toUpperCase(),// uppercase short (MON)
+    today.charAt(0).toUpperCase() + today.slice(1), // Capitalized long (Monday)
+    shortToday.charAt(0).toUpperCase() + shortToday.slice(1), // Capitalized short (Mon)
+  ];
+
+  for (const format of possibleFormats) {
+    const dayHours = hours[format];
+    if (dayHours?.open && dayHours?.close) {
+      return `${dayHours.open} - ${dayHours.close}`;
+    }
+  }
+
+  return "Closed today";
 };
 
 const FloristDetail = () => {
@@ -170,12 +189,10 @@ const FloristDetail = () => {
                     <MapPin className="h-4 w-4 mr-2" />
                     <span>{florist.address}</span>
                   </div>
-                  {florist.operating_hours && (
-                    <div className="flex items-center text-muted-foreground">
-                      <Clock className="h-4 w-4 mr-2" />
-                      <span>Open: {formatOperatingHours(florist.operating_hours)}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center text-muted-foreground">
+                    <Clock className="h-4 w-4 mr-2" />
+                    <span>Open: {formatOperatingHours(florist.operating_hours)}</span>
+                  </div>
                 </div>
               </div>
             </div>
