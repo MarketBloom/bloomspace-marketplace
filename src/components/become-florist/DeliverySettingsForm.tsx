@@ -6,8 +6,18 @@ import { DeliveryDaysSection } from "./delivery-settings/DeliveryDaysSection";
 import { TimeFramesSection } from "./delivery-settings/TimeFramesSection";
 import { OperatingHoursSection } from "./delivery-settings/OperatingHoursSection";
 import { toast } from "sonner";
-import { Loader2, Check } from "lucide-react";
+import { Loader2, Check, Save } from "lucide-react";
 import { useState, useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface DeliverySettingsFormProps {
   formData: {
@@ -41,9 +51,10 @@ export const DeliverySettingsForm = ({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [draftData, setDraftData] = useState(initialFormData);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showExitDialog, setShowExitDialog] = useState(false);
+  const [attemptedPath, setAttemptedPath] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set up beforeunload event handler
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
@@ -52,8 +63,23 @@ export const DeliverySettingsForm = ({
       }
     };
 
+    const handleLocationChange = (e: PopStateEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        setShowExitDialog(true);
+        setAttemptedPath(window.location.pathname);
+        // Push the current path back to maintain the correct history state
+        window.history.pushState(null, '', window.location.pathname);
+      }
+    };
+
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
   }, [hasUnsavedChanges]);
 
   const handleSave = async () => {
@@ -85,12 +111,39 @@ export const DeliverySettingsForm = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative pb-20">
       {hasUnsavedChanges && (
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-4">
           You have unsaved changes. Don't forget to save before leaving!
         </div>
       )}
+
+      <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Are you sure you want to leave? Your changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowExitDialog(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setHasUnsavedChanges(false);
+                setShowExitDialog(false);
+                if (attemptedPath) {
+                  window.location.href = attemptedPath;
+                }
+              }}
+            >
+              Leave Without Saving
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
@@ -169,31 +222,37 @@ export const DeliverySettingsForm = ({
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button 
-          onClick={handleSave} 
-          disabled={loading || !hasUnsavedChanges}
-          className={`min-w-[120px] transition-all duration-300 ${
-            saveSuccess 
-              ? "bg-green-500 hover:bg-green-600" 
-              : ""
-          }`}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : saveSuccess ? (
-            <>
-              <Check className="mr-2 h-4 w-4" />
-              Saved!
-            </>
-          ) : (
-            'Save Changes'
-          )}
-        </Button>
-      </div>
+      {hasUnsavedChanges && (
+        <div className="fixed bottom-6 right-6 z-50 flex gap-2 items-center bg-white shadow-lg rounded-full px-4 py-2 border border-gray-200">
+          <span className="text-sm text-gray-600">You have unsaved changes</span>
+          <Button 
+            onClick={handleSave} 
+            disabled={loading || !hasUnsavedChanges}
+            className={`transition-all duration-300 ${
+              saveSuccess 
+                ? "bg-green-500 hover:bg-green-600" 
+                : ""
+            }`}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : saveSuccess ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Saved!
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Save Changes
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
