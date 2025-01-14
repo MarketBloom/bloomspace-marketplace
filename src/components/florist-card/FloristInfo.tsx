@@ -20,18 +20,37 @@ export const FloristInfo = ({
   minimumOrderAmount,
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
-    if (!operatingHours) return "Hours not specified";
+    console.log("Operating hours received:", operatingHours);
+    
+    if (!operatingHours) {
+      console.log("No operating hours provided");
+      return "Hours not specified";
+    }
     
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const dayHours = operatingHours[today];
+    console.log("Today (long format):", today);
+    console.log("Available days:", Object.keys(operatingHours));
+    
+    // First try with long format
+    let dayHours = operatingHours[today];
     
     if (!dayHours) {
-      // Try with short day name if long name doesn't work
+      // Try with short format
       const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-      const shortDayHours = operatingHours[shortToday];
+      console.log("Today (short format):", shortToday);
+      dayHours = operatingHours[shortToday];
       
-      if (!shortDayHours) return "Closed today";
-      return `Today: ${shortDayHours.open} - ${shortDayHours.close}`;
+      if (!dayHours) {
+        // Try with capitalized format
+        const capitalizedToday = today.charAt(0).toUpperCase() + today.slice(1);
+        console.log("Today (capitalized):", capitalizedToday);
+        dayHours = operatingHours[capitalizedToday];
+        
+        if (!dayHours) {
+          console.log("No hours found for today");
+          return "Closed today";
+        }
+      }
     }
     
     return `Today: ${dayHours.open} - ${dayHours.close}`;
