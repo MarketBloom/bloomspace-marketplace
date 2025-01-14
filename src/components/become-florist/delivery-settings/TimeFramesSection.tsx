@@ -34,11 +34,15 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
   });
 
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
+    console.log('Toggling time frame:', frame);
+    console.log('Current time frames:', formData.timeFrames);
+    
     const updatedTimeFrames = {
       ...formData.timeFrames,
       [frame]: !formData.timeFrames[frame],
     };
     
+    console.log('Updated time frames:', updatedTimeFrames);
     setFormData({
       timeFrames: updatedTimeFrames,
     });

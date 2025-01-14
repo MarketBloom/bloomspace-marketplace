@@ -62,6 +62,7 @@ export const DeliverySettingsForm = ({
       ...formData,
       ...newData,
     };
+    console.log('Updating form data:', updatedData);
     setFormData(updatedData);
   };
 
