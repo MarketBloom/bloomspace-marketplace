@@ -101,7 +101,10 @@ const Search = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('florist_profiles')
-        .select('*')
+        .select(`
+          *,
+          operating_hours
+        `)
         .eq('store_status', 'published');
 
       if (error) {

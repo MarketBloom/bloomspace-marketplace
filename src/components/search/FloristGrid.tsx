@@ -27,6 +27,7 @@ export const FloristGrid = ({ florists }: FloristGridProps) => {
             aboutText={florist.about_text}
             logoUrl={florist.logo_url}
             bannerUrl={florist.banner_url}
+            operatingHours={florist.operating_hours}
             deliveryFee={florist.delivery_fee}
             deliveryRadius={florist.delivery_radius}
             minimumOrderAmount={florist.minimum_order_amount}

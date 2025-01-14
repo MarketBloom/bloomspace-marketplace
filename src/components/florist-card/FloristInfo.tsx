@@ -22,8 +22,8 @@ export const FloristInfo = ({
   const formatOperatingHours = () => {
     console.log("Operating hours received:", operatingHours);
     
-    if (!operatingHours) {
-      console.log("No operating hours provided");
+    if (!operatingHours || typeof operatingHours !== 'object') {
+      console.log("No operating hours provided or invalid format");
       return "Hours not specified";
     }
     
@@ -31,29 +31,24 @@ export const FloristInfo = ({
     console.log("Today (long format):", today);
     console.log("Available days:", Object.keys(operatingHours));
     
-    // First try with long format
-    let dayHours = operatingHours[today];
-    
-    if (!dayHours) {
-      // Try with short format
-      const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-      console.log("Today (short format):", shortToday);
-      dayHours = operatingHours[shortToday];
-      
-      if (!dayHours) {
-        // Try with capitalized format
-        const capitalizedToday = today.charAt(0).toUpperCase() + today.slice(1);
-        console.log("Today (capitalized):", capitalizedToday);
-        dayHours = operatingHours[capitalizedToday];
-        
-        if (!dayHours) {
-          console.log("No hours found for today");
-          return "Closed today";
-        }
+    // Try different formats of the day name
+    const formats = [
+      today, // lowercase full name
+      today.charAt(0).toUpperCase() + today.slice(1), // Capitalized full name
+      new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase(), // lowercase short name
+      new Date().toLocaleDateString('en-US', { weekday: 'short' }), // original case short name
+    ];
+
+    for (const format of formats) {
+      console.log("Trying format:", format);
+      const dayHours = operatingHours[format];
+      if (dayHours?.open && dayHours?.close) {
+        return `Today: ${dayHours.open} - ${dayHours.close}`;
       }
     }
     
-    return `Today: ${dayHours.open} - ${dayHours.close}`;
+    console.log("No matching hours found for today");
+    return "Closed today";
   };
 
   return (
