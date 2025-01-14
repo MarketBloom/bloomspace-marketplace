@@ -1,7 +1,6 @@
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface TimeFramesSectionProps {
   formData: {
@@ -15,28 +14,22 @@ interface TimeFramesSectionProps {
 }
 
 const defaultTimeFrames = {
-  morning: "9:00 AM - 12:00 PM",
-  midday: "12:00 PM - 3:00 PM",
-  afternoon: "3:00 PM - 6:00 PM",
+  morning: {
+    label: "Morning",
+    defaultTime: "09:00-12:00",
+  },
+  midday: {
+    label: "Midday",
+    defaultTime: "12:00-15:00",
+  },
+  afternoon: {
+    label: "Afternoon",
+    defaultTime: "15:00-18:00",
+  },
 };
 
 export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionProps) => {
-  const [customTimeFrames, setCustomTimeFrames] = useState({
-    morning: defaultTimeFrames.morning,
-    midday: defaultTimeFrames.midday,
-    afternoon: defaultTimeFrames.afternoon,
-  });
-
-  const [slotNames, setSlotNames] = useState({
-    morning: "Morning Time Slot",
-    midday: "Midday Time Slot",
-    afternoon: "Afternoon Time Slot",
-  });
-
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
-    console.log('Toggling time frame:', frame);
-    console.log('Current time frames:', formData.timeFrames);
-    
     const updatedTimeFrames = {
       ...formData.timeFrames,
       [frame]: !formData.timeFrames[frame],
@@ -49,68 +42,22 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
     }));
   };
 
-  const handleTimeFrameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
-    setCustomTimeFrames(prev => ({
-      ...prev,
-      [frame]: value,
-    }));
-  };
-
-  const handleSlotNameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
-    setSlotNames(prev => ({
-      ...prev,
-      [frame]: value,
-    }));
-  };
-
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Select and customize up to 3 time slots for future deliveries
-      </p>
-      <div className="space-y-3">
-        {Object.entries(defaultTimeFrames).map(([key, defaultValue]) => (
-          <div key={key} className="border rounded-lg p-3">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`timeFrame-${key}`}
-                checked={formData.timeFrames[key as keyof typeof defaultTimeFrames]}
-                onCheckedChange={() => 
-                  handleTimeFrameToggle(key as keyof typeof defaultTimeFrames)
-                }
-              />
-              <Label
-                htmlFor={`timeFrame-${key}`}
-                className="text-sm font-medium leading-none cursor-pointer"
-              >
-                Enable Time Slot
-              </Label>
-            </div>
-            {formData.timeFrames[key as keyof typeof defaultTimeFrames] && (
-              <div className="ml-6 mt-2 space-y-2">
-                <div>
-                  <Label className="text-xs text-muted-foreground">Slot Name</Label>
-                  <Input
-                    value={slotNames[key as keyof typeof defaultTimeFrames]}
-                    onChange={(e) => handleSlotNameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
-                    placeholder="Enter slot name"
-                    className="h-8 mt-1"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Time Range</Label>
-                  <Input
-                    value={customTimeFrames[key as keyof typeof defaultTimeFrames]}
-                    onChange={(e) => handleTimeFrameChange(key as keyof typeof defaultTimeFrames, e.target.value)}
-                    placeholder={defaultValue}
-                    className="h-8 mt-1"
-                  />
-                </div>
-              </div>
-            )}
+    <div className="space-y-4">
+      {(Object.keys(defaultTimeFrames) as Array<keyof typeof defaultTimeFrames>).map((frame) => (
+        <div key={frame} className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Switch
+              checked={formData.timeFrames[frame]}
+              onCheckedChange={() => handleTimeFrameToggle(frame)}
+            />
+            <Label>{defaultTimeFrames[frame].label}</Label>
           </div>
-        ))}
-      </div>
+          <span className="text-sm text-muted-foreground">
+            {defaultTimeFrames[frame].defaultTime}
+          </span>
+        </div>
+      ))}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { TimeFramesSection } from "./delivery-settings/TimeFramesSection";
 import { OperatingHoursSection } from "./delivery-settings/OperatingHoursSection";
 import { toast } from "sonner";
 import { Loader2, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DeliverySettingsFormProps {
   formData: {
@@ -34,15 +34,31 @@ interface DeliverySettingsFormProps {
 }
 
 export const DeliverySettingsForm = ({
-  formData,
-  setFormData,
+  formData: initialFormData,
+  setFormData: saveFormData,
   loading,
 }: DeliverySettingsFormProps) => {
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [draftData, setDraftData] = useState(initialFormData);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  useEffect(() => {
+    // Set up beforeunload event handler
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const handleSave = async () => {
     const promise = new Promise((resolve, reject) => {
-      setFormData(formData);
+      saveFormData(draftData);
       setTimeout(resolve, 1000);
     });
 
@@ -50,6 +66,7 @@ export const DeliverySettingsForm = ({
       loading: 'Saving changes...',
       success: () => {
         setSaveSuccess(true);
+        setHasUnsavedChanges(false);
         setTimeout(() => setSaveSuccess(false), 2000);
         return 'Delivery settings updated successfully';
       },
@@ -57,17 +74,24 @@ export const DeliverySettingsForm = ({
     });
   };
 
-  const updateFormData = (newData: Partial<DeliverySettingsFormProps['formData']>) => {
+  const updateDraftData = (newData: Partial<DeliverySettingsFormProps['formData']>) => {
     const updatedData = {
-      ...formData,
+      ...draftData,
       ...newData,
     };
-    console.log('Updating form data:', updatedData);
-    setFormData(updatedData);
+    console.log('Updating draft data:', updatedData);
+    setDraftData(updatedData);
+    setHasUnsavedChanges(true);
   };
 
   return (
     <div className="space-y-4">
+      {hasUnsavedChanges && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-4">
+          You have unsaved changes. Don't forget to save before leaving!
+        </div>
+      )}
+
       <Card className="border border-gray-200">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg">Basic Delivery Settings</CardTitle>
@@ -79,8 +103,8 @@ export const DeliverySettingsForm = ({
               id="deliveryRadius"
               type="number"
               min="0"
-              value={formData.deliveryRadius}
-              onChange={(e) => updateFormData({ deliveryRadius: e.target.value })}
+              value={draftData.deliveryRadius}
+              onChange={(e) => updateDraftData({ deliveryRadius: e.target.value })}
               required
               className="h-8"
             />
@@ -92,8 +116,8 @@ export const DeliverySettingsForm = ({
               type="number"
               min="0"
               step="0.01"
-              value={formData.deliveryFee}
-              onChange={(e) => updateFormData({ deliveryFee: e.target.value })}
+              value={draftData.deliveryFee}
+              onChange={(e) => updateDraftData({ deliveryFee: e.target.value })}
               required
               className="h-8"
             />
@@ -105,8 +129,8 @@ export const DeliverySettingsForm = ({
               type="number"
               min="0"
               step="0.01"
-              value={formData.minimumOrder}
-              onChange={(e) => updateFormData({ minimumOrder: e.target.value })}
+              value={draftData.minimumOrder}
+              onChange={(e) => updateDraftData({ minimumOrder: e.target.value })}
               required
               className="h-8"
             />
@@ -120,8 +144,8 @@ export const DeliverySettingsForm = ({
         </CardHeader>
         <CardContent>
           <OperatingHoursSection 
-            formData={formData}
-            setFormData={updateFormData}
+            formData={draftData}
+            setFormData={updateDraftData}
           />
         </CardContent>
       </Card>
@@ -132,14 +156,14 @@ export const DeliverySettingsForm = ({
         </CardHeader>
         <CardContent className="space-y-6">
           <DeliveryDaysSection 
-            formData={formData}
-            setFormData={updateFormData}
+            formData={draftData}
+            setFormData={updateDraftData}
           />
           <div className="pt-4 border-t">
             <CardTitle className="text-base mb-4">Non Same-Day Delivery Options</CardTitle>
             <TimeFramesSection 
-              formData={formData}
-              setFormData={updateFormData}
+              formData={draftData}
+              setFormData={updateDraftData}
             />
           </div>
         </CardContent>
@@ -148,7 +172,7 @@ export const DeliverySettingsForm = ({
       <div className="flex justify-end">
         <Button 
           onClick={handleSave} 
-          disabled={loading}
+          disabled={loading || !hasUnsavedChanges}
           className={`min-w-[120px] transition-all duration-300 ${
             saveSuccess 
               ? "bg-green-500 hover:bg-green-600" 
