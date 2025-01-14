@@ -112,11 +112,11 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
   });
 
   return (
-    <div className="space-y-4">
-      <div className="text-sm text-muted-foreground">
+    <div className="space-y-2">
+      <div className="text-sm text-muted-foreground mb-2">
         Set your store's operating hours for pickup orders
       </div>
-      <div className="grid gap-4">
+      <div className="grid gap-2">
         {daysOfWeek.map((day) => {
           const dayData = formData.operatingHours[day] || { 
             open: DEFAULT_OPEN, 
@@ -126,7 +126,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
           const isClosed = dayData.isClosed;
 
           return (
-            <div key={day} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div key={day} className="flex items-center gap-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
               <div className="w-32">
                 <div className="flex items-center gap-2">
                   <Switch
@@ -138,12 +138,12 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
               </div>
               
               {!isClosed ? (
-                <div className="flex-1 flex items-center gap-3">
+                <div className="flex-1 flex items-center gap-2">
                   <Select
                     value={dayData.open}
                     onValueChange={(value) => handleTimeChange(day, 'open', value)}
                   >
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-[120px] h-8">
                       <SelectValue>{formatTimeForDisplay(dayData.open)}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -161,7 +161,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
                     value={dayData.close}
                     onValueChange={(value) => handleTimeChange(day, 'close', value)}
                   >
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-[120px] h-8">
                       <SelectValue>{formatTimeForDisplay(dayData.close)}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>

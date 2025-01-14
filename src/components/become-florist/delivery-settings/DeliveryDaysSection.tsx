@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Clock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface DeliveryDaysSectionProps {
   formData: {
@@ -23,6 +23,28 @@ const daysOfWeek = [
   "saturday",
   "sunday",
 ];
+
+// Generate time options in 30-minute intervals
+const generateTimeOptions = () => {
+  const times = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute of ['00', '30']) {
+      const timeString = `${hour.toString().padStart(2, '0')}:${minute}`;
+      times.push(timeString);
+    }
+  }
+  return times;
+};
+
+const timeOptions = generateTimeOptions();
+
+const formatTimeForDisplay = (time: string) => {
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${minutes} ${ampm}`;
+};
 
 export const DeliveryDaysSection = ({ formData, setFormData }: DeliveryDaysSectionProps) => {
   const handleDeliveryDayToggle = (day: string) => {
@@ -119,12 +141,21 @@ export const DeliveryDaysSection = ({ formData, setFormData }: DeliveryDaysSecti
                 {formData.cutoffTimes[day] !== undefined && (
                   <div className="flex items-center space-x-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="time"
+                    <Select
                       value={formData.cutoffTimes[day] || "14:00"}
-                      onChange={(e) => handleCutoffTimeChange(day, e.target.value)}
-                      className="w-32 h-8"
-                    />
+                      onValueChange={(value) => handleCutoffTimeChange(day, value)}
+                    >
+                      <SelectTrigger className="w-[120px] h-8">
+                        <SelectValue>{formatTimeForDisplay(formData.cutoffTimes[day] || "14:00")}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((time) => (
+                          <SelectItem key={time} value={time}>
+                            {formatTimeForDisplay(time)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <span className="text-sm text-muted-foreground">cutoff</span>
                   </div>
                 )}
