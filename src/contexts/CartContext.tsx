@@ -29,13 +29,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addItem = (newItem: Omit<CartItem, "quantity">) => {
     setItems(currentItems => {
-      // Find existing item with same id and size
       const existingItemIndex = currentItems.findIndex(
         item => item.id === newItem.id && item.sizeId === newItem.sizeId
       );
 
       if (existingItemIndex > -1) {
-        // Update quantity of existing item
         return currentItems.map((item, index) =>
           index === existingItemIndex
             ? { ...item, quantity: item.quantity + 1 }
@@ -43,7 +41,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
       }
 
-      // Add new item with quantity 1
       return [...currentItems, { ...newItem, quantity: 1 }];
     });
   };

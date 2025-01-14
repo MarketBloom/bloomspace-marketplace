@@ -31,7 +31,6 @@ const Cart = () => {
   }
 
   const handleCheckout = () => {
-    // Pass gift details through navigation state
     navigate("/checkout", {
       state: {
         isGift,
