@@ -43,9 +43,10 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
     };
     
     console.log('Updated time frames:', updatedTimeFrames);
-    setFormData({
+    setFormData((prev: any) => ({
+      ...prev,
       timeFrames: updatedTimeFrames,
-    });
+    }));
   };
 
   const handleTimeFrameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
