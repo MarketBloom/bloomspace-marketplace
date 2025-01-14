@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { useNavigate } from "react-router-dom";
 
 interface FloristCardProps {
   id: string;
@@ -39,6 +40,7 @@ export const FloristCard = ({
   operatingHours,
   socialLinks,
 }: FloristCardProps) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -131,14 +133,26 @@ export const FloristCard = ({
 
   const formatOperatingHours = () => {
     if (!operatingHours) return "Hours not specified";
-    const today = new Date().toLocaleLowerCase();
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'lowercase' });
     const dayHours = operatingHours[today];
     if (!dayHours) return "Closed today";
     return `Today: ${dayHours.open} - ${dayHours.close}`;
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if clicking on social links or favorite button
+    const target = e.target as HTMLElement;
+    if (target.closest('a') || target.closest('button')) {
+      return;
+    }
+    navigate(`/florist/${id}`);
+  };
+
   return (
-    <div className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div 
+      className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="relative h-48">
         {bannerUrl ? (
           <img
