@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeliveryDaysSection } from "./delivery-settings/DeliveryDaysSection";
 import { TimeFramesSection } from "./delivery-settings/TimeFramesSection";
 import { OperatingHoursSection } from "./delivery-settings/OperatingHoursSection";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface DeliverySettingsFormProps {
   formData: {
@@ -35,6 +37,20 @@ export const DeliverySettingsForm = ({
   setFormData,
   loading,
 }: DeliverySettingsFormProps) => {
+  const handleSave = async () => {
+    const promise = new Promise((resolve) => {
+      setFormData(formData);
+      // Simulate network delay for better UX
+      setTimeout(resolve, 1000);
+    });
+
+    toast.promise(promise, {
+      loading: 'Saving changes...',
+      success: 'Delivery settings updated successfully',
+      error: 'Failed to save changes',
+    });
+  };
+
   return (
     <div className="space-y-4">
       <Card className="border border-gray-200">
@@ -115,8 +131,19 @@ export const DeliverySettingsForm = ({
       </Card>
 
       <div className="flex justify-end">
-        <Button onClick={() => setFormData(formData)} disabled={loading}>
-          {loading ? "Saving..." : "Save Changes"}
+        <Button 
+          onClick={handleSave} 
+          disabled={loading}
+          className="min-w-[120px]"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            'Save Changes'
+          )}
         </Button>
       </div>
     </div>

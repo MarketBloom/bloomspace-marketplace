@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface StoreSettingsFormProps {
   initialData: any;
@@ -26,22 +27,29 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      const { error } = await supabase
-        .from("florist_profiles")
-        .update(formData)
-        .eq("id", initialData.id);
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+        const { error } = await supabase
+          .from("florist_profiles")
+          .update(formData)
+          .eq("id", initialData.id);
 
-      if (error) throw error;
+        if (error) throw error;
+        onUpdate();
+        resolve(true);
+      } catch (error) {
+        console.error("Error updating store settings:", error);
+        reject(error);
+      } finally {
+        setIsLoading(false);
+      }
+    });
 
-      toast.success("Store settings updated successfully");
-      onUpdate();
-    } catch (error) {
-      console.error("Error updating store settings:", error);
-      toast.error("Failed to update store settings");
-    } finally {
-      setIsLoading(false);
-    }
+    toast.promise(promise, {
+      loading: 'Saving store settings...',
+      success: 'Store settings updated successfully',
+      error: 'Failed to update store settings',
+    });
   };
 
   return (
@@ -127,7 +135,14 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Saving..." : "Save Changes"}
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Saving...
+          </>
+        ) : (
+          'Save Changes'
+        )}
       </Button>
     </form>
   );

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 interface StoreVisibilityProps {
   storeId: string;
@@ -18,33 +18,32 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
     setLoading(true);
     const newStatus = status === "private" ? "published" : "private";
 
-    try {
-      const { error } = await supabase
-        .from('florist_profiles')
-        .update({ 
-          store_status: newStatus,
-        })
-        .eq('id', storeId);
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+        const { error } = await supabase
+          .from('florist_profiles')
+          .update({ 
+            store_status: newStatus,
+          })
+          .eq('id', storeId);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      setStatus(newStatus);
-      onStatusChange(newStatus);
-      toast.success(
-        `Store ${newStatus === "published" ? "Published" : "Unpublished"}`,
-        {
-          description: `Your store is now ${
-            newStatus === "published" ? "visible to customers" : "private"
-          }`,
-        }
-      );
-    } catch (error) {
-      toast.error("Error updating store visibility", {
-        description: "Please try again later",
-      });
-    } finally {
-      setLoading(false);
-    }
+        setStatus(newStatus);
+        onStatusChange(newStatus);
+        resolve(newStatus);
+      } catch (error) {
+        reject(error);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    toast.promise(promise, {
+      loading: 'Updating store visibility...',
+      success: (status) => `Store ${status === "published" ? "published" : "unpublished"} successfully`,
+      error: 'Failed to update store visibility',
+    });
   };
 
   return (
@@ -66,7 +65,10 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
           className="min-w-[100px]"
         >
           {loading ? (
-            "Updating..."
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Updating...
+            </>
           ) : status === "private" ? (
             <>
               <Eye className="h-4 w-4 mr-2" />
