@@ -2,10 +2,16 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
+interface OperatingHours {
+  open: string;
+  close: string;
+  isClosed?: boolean;
+}
+
 interface OperatingHoursSectionProps {
   formData: {
     operatingHours: {
-      [key: string]: { open: string; close: string; isClosed?: boolean };
+      [key: string]: OperatingHours;
     };
   };
   setFormData: (data: any) => void;
@@ -28,7 +34,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
       operatingHours: {
         ...formData.operatingHours,
         [day]: {
-          ...formData.operatingHours[day],
+          ...(formData.operatingHours[day] || {}),
           [type]: time,
         },
       },
@@ -36,7 +42,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
   };
 
   const toggleDayStatus = (day: string) => {
-    const currentDay = formData.operatingHours[day] || {};
+    const currentDay = formData.operatingHours[day] || { open: "09:00", close: "17:00" };
     const isClosed = !currentDay.isClosed;
     
     setFormData({
@@ -59,7 +65,7 @@ export const OperatingHoursSection = ({ formData, setFormData }: OperatingHoursS
       </div>
       <div className="grid gap-2">
         {daysOfWeek.map((day) => {
-          const dayData = formData.operatingHours[day] || {};
+          const dayData = formData.operatingHours[day] || { open: "09:00", close: "17:00", isClosed: false };
           const isClosed = dayData.isClosed;
 
           return (
