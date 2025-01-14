@@ -268,6 +268,8 @@ export type Database = {
           delivery_address: string | null
           delivery_time: string | null
           florist_id: string | null
+          gift_message: string | null
+          gift_recipient_name: string | null
           id: string
           is_delivery: boolean | null
           status: string | null
@@ -282,6 +284,8 @@ export type Database = {
           delivery_address?: string | null
           delivery_time?: string | null
           florist_id?: string | null
+          gift_message?: string | null
+          gift_recipient_name?: string | null
           id?: string
           is_delivery?: boolean | null
           status?: string | null
@@ -296,6 +300,8 @@ export type Database = {
           delivery_address?: string | null
           delivery_time?: string | null
           florist_id?: string | null
+          gift_message?: string | null
+          gift_recipient_name?: string | null
           id?: string
           is_delivery?: boolean | null
           status?: string | null

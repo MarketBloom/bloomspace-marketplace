@@ -3,10 +3,15 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { GiftMessageForm } from "@/components/cart/GiftMessageForm";
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const navigate = useNavigate();
+  const [isGift, setIsGift] = useState(false);
+  const [recipientName, setRecipientName] = useState("");
+  const [giftMessage, setGiftMessage] = useState("");
 
   if (items.length === 0) {
     return (
@@ -24,6 +29,17 @@ const Cart = () => {
       </div>
     );
   }
+
+  const handleCheckout = () => {
+    // Pass gift details through navigation state
+    navigate("/checkout", {
+      state: {
+        isGift,
+        recipientName: isGift ? recipientName : null,
+        giftMessage: isGift ? giftMessage : null,
+      },
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -80,6 +96,17 @@ const Cart = () => {
                 </div>
               </div>
             ))}
+
+            <div className="mt-6">
+              <GiftMessageForm
+                isGift={isGift}
+                recipientName={recipientName}
+                giftMessage={giftMessage}
+                onIsGiftChange={setIsGift}
+                onRecipientNameChange={setRecipientName}
+                onGiftMessageChange={setGiftMessage}
+              />
+            </div>
           </div>
           
           <div className="lg:col-span-1">
@@ -102,7 +129,7 @@ const Cart = () => {
                 </div>
                 <Button 
                   className="w-full"
-                  onClick={() => navigate("/checkout")}
+                  onClick={handleCheckout}
                 >
                   Proceed to Checkout
                 </Button>
