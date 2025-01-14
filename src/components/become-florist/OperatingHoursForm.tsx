@@ -32,6 +32,9 @@ const daysOfWeek = [
   "sunday",
 ];
 
+const DEFAULT_OPEN = "09:00";
+const DEFAULT_CLOSE = "17:00";
+
 export const OperatingHoursForm = ({
   formData,
   setFormData,
@@ -48,15 +51,16 @@ export const OperatingHoursForm = ({
       operatingHours: {
         ...formData.operatingHours,
         [day]: {
-          ...(formData.operatingHours[day] || {}),
+          ...(formData.operatingHours[day] || { open: DEFAULT_OPEN, close: DEFAULT_CLOSE }),
           [type]: value,
+          isClosed: false, // Explicitly set to false when time is changed
         },
       },
     });
   };
 
   const toggleDayStatus = (day: string) => {
-    const currentDay = formData.operatingHours[day] || { open: "09:00", close: "17:00" };
+    const currentDay = formData.operatingHours[day] || { open: DEFAULT_OPEN, close: DEFAULT_CLOSE };
     const isClosed = !currentDay.isClosed;
     
     setFormData({
@@ -64,13 +68,39 @@ export const OperatingHoursForm = ({
       operatingHours: {
         ...formData.operatingHours,
         [day]: {
-          open: isClosed ? "" : (currentDay.open || "09:00"),
-          close: isClosed ? "" : (currentDay.close || "17:00"),
+          open: currentDay.open || DEFAULT_OPEN,
+          close: currentDay.close || DEFAULT_CLOSE,
           isClosed,
         },
       },
     });
   };
+
+  // Initialize days with default values if not set
+  const initializeDefaultHours = () => {
+    const updatedHours = { ...formData.operatingHours };
+    daysOfWeek.forEach(day => {
+      if (!updatedHours[day]) {
+        updatedHours[day] = {
+          open: DEFAULT_OPEN,
+          close: DEFAULT_CLOSE,
+          isClosed: false
+        };
+      }
+    });
+    return updatedHours;
+  };
+
+  // Ensure all days have default values
+  useState(() => {
+    const initializedHours = initializeDefaultHours();
+    if (Object.keys(initializedHours).length !== Object.keys(formData.operatingHours).length) {
+      setFormData({
+        ...formData,
+        operatingHours: initializedHours,
+      });
+    }
+  });
 
   return (
     <div className="space-y-6">
@@ -81,7 +111,11 @@ export const OperatingHoursForm = ({
 
       <div className="grid gap-4">
         {daysOfWeek.map((day) => {
-          const dayData = formData.operatingHours[day] || { open: "09:00", close: "17:00", isClosed: false };
+          const dayData = formData.operatingHours[day] || { 
+            open: DEFAULT_OPEN, 
+            close: DEFAULT_CLOSE, 
+            isClosed: false 
+          };
           const isClosed = dayData.isClosed;
 
           return (
@@ -99,7 +133,7 @@ export const OperatingHoursForm = ({
                     <div className="flex-1">
                       <Input
                         type="time"
-                        value={dayData.open || "09:00"}
+                        value={dayData.open || DEFAULT_OPEN}
                         onChange={(e) => handleTimeChange(day, "open", e.target.value)}
                         className="w-full"
                       />
@@ -108,7 +142,7 @@ export const OperatingHoursForm = ({
                     <div className="flex-1">
                       <Input
                         type="time"
-                        value={dayData.close || "17:00"}
+                        value={dayData.close || DEFAULT_CLOSE}
                         onChange={(e) => handleTimeChange(day, "close", e.target.value)}
                         className="w-full"
                       />
