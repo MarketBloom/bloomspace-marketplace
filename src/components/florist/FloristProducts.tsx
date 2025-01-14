@@ -1,4 +1,5 @@
 import { ProductCard } from "@/components/ProductCard";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Product {
   id: string;
@@ -31,6 +32,15 @@ export const FloristProducts = ({
   floristId, 
   filters 
 }: FloristProductsProps) => {
+  const isMobile = useIsMobile();
+
+  const getGridClassName = () => {
+    if (!isMobile) {
+      return "grid grid-cols-3 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 gap-3";
+    }
+    return "grid grid-cols-2 gap-3";
+  };
+
   const filteredProducts = products.filter(product => {
     // Filter by budget
     if (filters.budget && filters.budget.length > 0) {
@@ -61,12 +71,12 @@ export const FloristProducts = ({
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Our Products</h2>
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={getGridClassName()}>
           {filteredProducts.map((product) => (
             <ProductCard
               key={`${product.id}-${product.sizeId || 'default'}`}
               {...product}
-              displayPrice={product.displayPrice || product.price} // Ensure displayPrice is always provided
+              displayPrice={product.displayPrice || product.price}
               floristName={floristName}
               floristId={floristId}
             />
