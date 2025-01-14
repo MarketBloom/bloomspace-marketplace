@@ -4,7 +4,7 @@ interface FloristInfoProps {
   storeName: string;
   address: string;
   aboutText?: string | null;
-  operatingHours?: Record<string, { open: string; close: string }> | null;
+  operatingHours?: Record<string, { open?: string; close?: string }> | null;
   deliveryFee?: number | null;
   deliveryRadius?: number | null;
   minimumOrderAmount?: number | null;
@@ -20,7 +20,6 @@ export const FloristInfo = ({
   minimumOrderAmount,
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
-    // If operatingHours is null, undefined, or an empty object, return null
     if (!operatingHours || Object.keys(operatingHours).length === 0) {
       return null;
     }
@@ -32,11 +31,14 @@ export const FloristInfo = ({
       const hours = operatingHours[day];
       const isToday = day === today;
 
+      // If we have at least a close time, show it
+      const timeDisplay = hours?.close ? 
+        (hours.open ? `${hours.open} - ${hours.close}` : `Closes at ${hours.close}`) : 
+        'Closed';
+
       return {
         day: day.charAt(0).toUpperCase() + day.slice(1),
-        hours: hours && typeof hours === 'object' && 'open' in hours && 'close' in hours 
-          ? `${hours.open} - ${hours.close}` 
-          : 'Closed',
+        hours: timeDisplay,
         isToday
       };
     });
