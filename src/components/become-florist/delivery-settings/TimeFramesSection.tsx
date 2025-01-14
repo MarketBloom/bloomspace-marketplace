@@ -34,31 +34,28 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
   });
 
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
-    // Create a new timeFrames object with the updated value
     const updatedTimeFrames = {
       ...formData.timeFrames,
       [frame]: !formData.timeFrames[frame],
     };
     
-    // Call the parent's setFormData with the complete updated form data
-    setFormData((prevData: any) => ({
-      ...prevData,
+    setFormData({
       timeFrames: updatedTimeFrames,
-    }));
+    });
   };
 
   const handleTimeFrameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
-    setCustomTimeFrames({
-      ...customTimeFrames,
+    setCustomTimeFrames(prev => ({
+      ...prev,
       [frame]: value,
-    });
+    }));
   };
 
   const handleSlotNameChange = (frame: keyof typeof defaultTimeFrames, value: string) => {
-    setSlotNames({
-      ...slotNames,
+    setSlotNames(prev => ({
+      ...prev,
       [frame]: value,
-    });
+    }));
   };
 
   return (

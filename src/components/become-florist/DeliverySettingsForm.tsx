@@ -58,10 +58,11 @@ export const DeliverySettingsForm = ({
   };
 
   const updateFormData = (newData: Partial<DeliverySettingsFormProps['formData']>) => {
-    setFormData({
+    const updatedData = {
       ...formData,
       ...newData,
-    });
+    };
+    setFormData(updatedData);
   };
 
   return (
