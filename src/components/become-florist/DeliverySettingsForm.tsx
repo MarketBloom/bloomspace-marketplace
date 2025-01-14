@@ -6,7 +6,8 @@ import { DeliveryDaysSection } from "./delivery-settings/DeliveryDaysSection";
 import { TimeFramesSection } from "./delivery-settings/TimeFramesSection";
 import { OperatingHoursSection } from "./delivery-settings/OperatingHoursSection";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
+import { useState } from "react";
 
 interface DeliverySettingsFormProps {
   formData: {
@@ -37,8 +38,10 @@ export const DeliverySettingsForm = ({
   setFormData,
   loading,
 }: DeliverySettingsFormProps) => {
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
   const handleSave = async () => {
-    const promise = new Promise((resolve) => {
+    const promise = new Promise((resolve, reject) => {
       setFormData(formData);
       // Simulate network delay for better UX
       setTimeout(resolve, 1000);
@@ -46,7 +49,11 @@ export const DeliverySettingsForm = ({
 
     toast.promise(promise, {
       loading: 'Saving changes...',
-      success: 'Delivery settings updated successfully',
+      success: () => {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2000); // Reset after 2 seconds
+        return 'Delivery settings updated successfully';
+      },
       error: 'Failed to save changes',
     });
   };
@@ -134,12 +141,21 @@ export const DeliverySettingsForm = ({
         <Button 
           onClick={handleSave} 
           disabled={loading}
-          className="min-w-[120px]"
+          className={`min-w-[120px] transition-all duration-300 ${
+            saveSuccess 
+              ? "bg-green-500 hover:bg-green-600" 
+              : ""
+          }`}
         >
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Saving...
+            </>
+          ) : saveSuccess ? (
+            <>
+              <Check className="mr-2 h-4 w-4" />
+              Saved!
             </>
           ) : (
             'Save Changes'
