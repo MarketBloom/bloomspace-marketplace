@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 interface OperatingHoursFormProps {
   formData: {
     operatingHours: {
-      [key: string]: { open: string; close: string };
+      [key: string]: { open: string; close: string; isClosed?: boolean };
     };
   };
   setFormData: (data: any) => void;
@@ -48,6 +49,23 @@ export const OperatingHoursForm = ({
     });
   };
 
+  const toggleDayStatus = (day: string) => {
+    const currentDay = formData.operatingHours[day] || {};
+    const isClosed = !currentDay.isClosed;
+    
+    setFormData({
+      ...formData,
+      operatingHours: {
+        ...formData.operatingHours,
+        [day]: {
+          open: isClosed ? "" : (currentDay.open || "09:00"),
+          close: isClosed ? "" : (currentDay.close || "17:00"),
+          isClosed,
+        },
+      },
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
@@ -56,28 +74,48 @@ export const OperatingHoursForm = ({
       </div>
 
       <div className="grid gap-4">
-        {daysOfWeek.map((day) => (
-          <div key={day} className="grid grid-cols-2 gap-4 items-center">
-            <Label className="capitalize">{day}</Label>
-            <div className="flex gap-2">
-              <div className="flex-1">
-                <Input
-                  type="time"
-                  value={formData.operatingHours[day]?.open || "09:00"}
-                  onChange={(e) => handleTimeChange(day, "open", e.target.value)}
+        {daysOfWeek.map((day) => {
+          const dayData = formData.operatingHours[day] || {};
+          const isClosed = dayData.isClosed;
+
+          return (
+            <div key={day} className="grid grid-cols-[120px_1fr] gap-4 items-center">
+              <div className="flex items-center gap-2">
+                <Label className="capitalize">{day}</Label>
+                <Switch
+                  checked={!isClosed}
+                  onCheckedChange={() => toggleDayStatus(day)}
                 />
               </div>
-              <span className="text-gray-500">to</span>
-              <div className="flex-1">
-                <Input
-                  type="time"
-                  value={formData.operatingHours[day]?.close || "17:00"}
-                  onChange={(e) => handleTimeChange(day, "close", e.target.value)}
-                />
+              <div className="flex gap-2 items-center">
+                {!isClosed && (
+                  <>
+                    <div className="flex-1">
+                      <Input
+                        type="time"
+                        value={dayData.open || "09:00"}
+                        onChange={(e) => handleTimeChange(day, "open", e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <span className="text-gray-500">to</span>
+                    <div className="flex-1">
+                      <Input
+                        type="time"
+                        value={dayData.close || "17:00"}
+                        onChange={(e) => handleTimeChange(day, "close", e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                  </>
+                )}
+                {isClosed && (
+                  <span className="text-muted-foreground italic">Closed</span>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex justify-between pt-4">

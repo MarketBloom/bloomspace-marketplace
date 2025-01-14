@@ -4,7 +4,7 @@ interface FloristInfoProps {
   storeName: string;
   address: string;
   aboutText?: string | null;
-  operatingHours?: Record<string, { open?: string; close?: string }> | null;
+  operatingHours?: Record<string, { open?: string; close?: string; isClosed?: boolean }> | null;
   deliveryFee?: number | null;
   deliveryRadius?: number | null;
   minimumOrderAmount?: number | null;
@@ -31,10 +31,10 @@ export const FloristInfo = ({
       const hours = operatingHours[day];
       const isToday = day === today;
 
-      // Only show as open if we have both opening and closing times
-      const timeDisplay = hours?.open && hours?.close
-        ? `${hours.open} - ${hours.close}`
-        : 'Closed';
+      let timeDisplay = 'Closed';
+      if (hours && !hours.isClosed && hours.open && hours.close) {
+        timeDisplay = `${hours.open} - ${hours.close}`;
+      }
 
       return {
         day: day.charAt(0).toUpperCase() + day.slice(1),
