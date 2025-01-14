@@ -9,10 +9,10 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
   const isMobile = useIsMobile();
 
   const getGridClassName = () => {
-    if (!isMobile) {
-      return "grid grid-cols-2 2xl:grid-cols-2 xl:grid-cols-2 lg:grid-cols-2 gap-3";
+    if (isMobile) {
+      return "grid grid-cols-2 gap-3";
     }
-    return "grid grid-cols-1 gap-3";
+    return "grid grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 gap-3";
   };
 
   return (
