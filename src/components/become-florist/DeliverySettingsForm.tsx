@@ -43,7 +43,6 @@ export const DeliverySettingsForm = ({
   const handleSave = async () => {
     const promise = new Promise((resolve, reject) => {
       setFormData(formData);
-      // Simulate network delay for better UX
       setTimeout(resolve, 1000);
     });
 
@@ -51,10 +50,17 @@ export const DeliverySettingsForm = ({
       loading: 'Saving changes...',
       success: () => {
         setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000); // Reset after 2 seconds
+        setTimeout(() => setSaveSuccess(false), 2000);
         return 'Delivery settings updated successfully';
       },
       error: 'Failed to save changes',
+    });
+  };
+
+  const updateFormData = (newData: Partial<DeliverySettingsFormProps['formData']>) => {
+    setFormData({
+      ...formData,
+      ...newData,
     });
   };
 
@@ -72,7 +78,7 @@ export const DeliverySettingsForm = ({
               type="number"
               min="0"
               value={formData.deliveryRadius}
-              onChange={(e) => setFormData({ ...formData, deliveryRadius: e.target.value })}
+              onChange={(e) => updateFormData({ deliveryRadius: e.target.value })}
               required
               className="h-8"
             />
@@ -85,7 +91,7 @@ export const DeliverySettingsForm = ({
               min="0"
               step="0.01"
               value={formData.deliveryFee}
-              onChange={(e) => setFormData({ ...formData, deliveryFee: e.target.value })}
+              onChange={(e) => updateFormData({ deliveryFee: e.target.value })}
               required
               className="h-8"
             />
@@ -98,7 +104,7 @@ export const DeliverySettingsForm = ({
               min="0"
               step="0.01"
               value={formData.minimumOrder}
-              onChange={(e) => setFormData({ ...formData, minimumOrder: e.target.value })}
+              onChange={(e) => updateFormData({ minimumOrder: e.target.value })}
               required
               className="h-8"
             />
@@ -113,7 +119,7 @@ export const DeliverySettingsForm = ({
         <CardContent>
           <OperatingHoursSection 
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormData}
           />
         </CardContent>
       </Card>
@@ -125,13 +131,13 @@ export const DeliverySettingsForm = ({
         <CardContent className="space-y-6">
           <DeliveryDaysSection 
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormData}
           />
           <div className="pt-4 border-t">
             <CardTitle className="text-base mb-4">Non Same-Day Delivery Options</CardTitle>
             <TimeFramesSection 
               formData={formData}
-              setFormData={setFormData}
+              setFormData={updateFormData}
             />
           </div>
         </CardContent>
