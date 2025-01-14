@@ -8,6 +8,7 @@ import { ShoppingBag, Clock, Star, Heart } from "lucide-react";
 import { OrderStatusTracker } from "@/components/order/OrderStatusTracker";
 import { OrderStatus } from "@/types/order";
 import { FloristCard } from "@/components/FloristCard";
+import { LoyaltyCard } from "@/components/loyalty/LoyaltyCard";
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
@@ -68,7 +69,7 @@ const CustomerDashboard = () => {
       <main className="container mx-auto px-4 pt-24">
         <h1 className="text-3xl font-bold mb-8">My Dashboard</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
@@ -102,6 +103,8 @@ const CustomerDashboard = () => {
               <div className="text-2xl font-bold">{favorites?.length || 0}</div>
             </CardContent>
           </Card>
+
+          <LoyaltyCard />
         </div>
 
         {/* Favorite Florists Section */}
