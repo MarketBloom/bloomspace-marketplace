@@ -31,10 +31,10 @@ export const FloristInfo = ({
       const hours = operatingHours[day];
       const isToday = day === today;
 
-      // If we have at least a close time, show it
-      const timeDisplay = hours?.close ? 
-        (hours.open ? `${hours.open} - ${hours.close}` : `Closes at ${hours.close}`) : 
-        'Closed';
+      // Only show as open if we have both opening and closing times
+      const timeDisplay = hours?.open && hours?.close
+        ? `${hours.open} - ${hours.close}`
+        : 'Closed';
 
       return {
         day: day.charAt(0).toUpperCase() + day.slice(1),
