@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, Clock, MapPin, Globe, Instagram, Facebook } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { useNavigate } from "react-router-dom";
+import { FloristBanner } from "./florist-card/FloristBanner";
+import { FloristInfo } from "./florist-card/FloristInfo";
+import { SocialLinks } from "./florist-card/SocialLinks";
 
 interface FloristCardProps {
   id: string;
@@ -131,16 +129,7 @@ export const FloristCard = ({
     }
   };
 
-  const formatOperatingHours = () => {
-    if (!operatingHours) return "Hours not specified";
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'lowercase' });
-    const dayHours = operatingHours[today];
-    if (!dayHours) return "Closed today";
-    return `Today: ${dayHours.open} - ${dayHours.close}`;
-  };
-
   const handleCardClick = (e: React.MouseEvent) => {
-    // Prevent navigation if clicking on social links or favorite button
     const target = e.target as HTMLElement;
     if (target.closest('a') || target.closest('button')) {
       return;
@@ -153,130 +142,24 @@ export const FloristCard = ({
       className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       onClick={handleCardClick}
     >
-      <div className="relative h-48">
-        {bannerUrl ? (
-          <img
-            src={bannerUrl}
-            alt={`${storeName} banner`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-400">No banner image</span>
-          </div>
-        )}
-        {logoUrl && (
-          <div className="absolute -bottom-8 left-4">
-            <img
-              src={logoUrl}
-              alt={`${storeName} logo`}
-              className="w-16 h-16 rounded-full border-4 border-white object-cover bg-white"
-            />
-          </div>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className={cn(
-            "absolute top-4 right-4 bg-white/80 hover:bg-white",
-            favorite && "text-red-500 hover:text-red-600"
-          )}
-          onClick={handleToggleFavorite}
-          disabled={checkingFavorite}
-        >
-          <Heart className={cn("h-5 w-5", favorite && "fill-current")} />
-        </Button>
-      </div>
-
-      <div className="p-4 pt-10">
-        <h3 className="text-lg font-semibold mb-2">{storeName}</h3>
-        
-        <div className="flex items-center text-sm text-gray-600 mb-2">
-          <MapPin className="h-4 w-4 mr-1" />
-          <p>{address}</p>
-        </div>
-
-        <div className="flex items-center text-sm text-gray-600 mb-4">
-          <Clock className="h-4 w-4 mr-1" />
-          <p>{formatOperatingHours()}</p>
-        </div>
-
-        {aboutText && (
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
-        )}
-
-        <div className="text-sm text-gray-600 space-y-1 mb-4">
-          {deliveryFee !== null && (
-            <p>Delivery Fee: ${deliveryFee?.toFixed(2)}</p>
-          )}
-          {deliveryRadius !== null && (
-            <p>Delivery Radius: {deliveryRadius} km</p>
-          )}
-          {minimumOrderAmount !== null && (
-            <p>Minimum Order: ${minimumOrderAmount?.toFixed(2)}</p>
-          )}
-        </div>
-
-        {socialLinks && (
-          <div className="flex gap-2 mt-4 pt-4 border-t">
-            <TooltipProvider>
-              {socialLinks.website && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={socialLinks.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-gray-900"
-                    >
-                      <Globe className="h-4 w-4" />
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Visit website</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-              
-              {socialLinks.instagram && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={socialLinks.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-pink-600"
-                    >
-                      <Instagram className="h-4 w-4" />
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow on Instagram</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-
-              {socialLinks.facebook && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href={socialLinks.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-blue-600"
-                    >
-                      <Facebook className="h-4 w-4" />
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow on Facebook</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </TooltipProvider>
-          </div>
-        )}
-      </div>
+      <FloristBanner
+        bannerUrl={bannerUrl}
+        logoUrl={logoUrl}
+        storeName={storeName}
+        isFavorite={!!favorite}
+        isCheckingFavorite={checkingFavorite}
+        onToggleFavorite={handleToggleFavorite}
+      />
+      <FloristInfo
+        storeName={storeName}
+        address={address}
+        aboutText={aboutText}
+        operatingHours={operatingHours}
+        deliveryFee={deliveryFee}
+        deliveryRadius={deliveryRadius}
+        minimumOrderAmount={minimumOrderAmount}
+      />
+      <SocialLinks links={socialLinks} />
     </div>
   );
 };
