@@ -24,6 +24,9 @@ export const GiftCardPurchaseForm = () => {
       // Generate a unique code (simple implementation - in production use a more secure method)
       const code = Math.random().toString(36).substring(2, 15);
       
+      // Set expiry date to 1 year from now and format as ISO string
+      const expiryDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+      
       const { error } = await supabase
         .from('gift_cards')
         .insert({
@@ -34,7 +37,7 @@ export const GiftCardPurchaseForm = () => {
           recipient_email: recipientEmail,
           recipient_name: recipientName,
           message,
-          expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year expiry
+          expires_at: expiryDate,
         });
 
       if (error) throw error;
