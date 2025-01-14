@@ -21,9 +21,19 @@ export const FloristInfo = ({
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
     if (!operatingHours) return "Hours not specified";
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+    
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     const dayHours = operatingHours[today];
-    if (!dayHours) return "Closed today";
+    
+    if (!dayHours) {
+      // Try with short day name if long name doesn't work
+      const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+      const shortDayHours = operatingHours[shortToday];
+      
+      if (!shortDayHours) return "Closed today";
+      return `Today: ${shortDayHours.open} - ${shortDayHours.close}`;
+    }
+    
     return `Today: ${dayHours.open} - ${dayHours.close}`;
   };
 
