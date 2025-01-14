@@ -18,7 +18,7 @@ const FloristDashboard = () => {
         .from("florist_profiles")
         .select("*")
         .eq("id", user?.id)
-        .single();
+        .maybeSingle();  // Changed from .single() to .maybeSingle()
 
       if (error) throw error;
       return data;
@@ -48,11 +48,13 @@ const FloristDashboard = () => {
               
               <SetupProgress progress={floristProfile?.setup_progress || 0} />
               
-              <StoreVisibility
-                storeId={user?.id}
-                initialStatus={floristProfile?.store_status as "private" | "published"}
-                onStatusChange={() => {}}
-              />
+              {floristProfile && (
+                <StoreVisibility
+                  storeId={user?.id}
+                  initialStatus={floristProfile?.store_status as "private" | "published"}
+                  onStatusChange={() => {}}
+                />
+              )}
             </div>
           </div>
 
