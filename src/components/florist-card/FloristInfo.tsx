@@ -20,12 +20,10 @@ export const FloristInfo = ({
   minimumOrderAmount,
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
-    if (!operatingHours) {
-      console.log("No operating hours provided");
+    // If operatingHours is null, undefined, or an empty object, return null
+    if (!operatingHours || Object.keys(operatingHours).length === 0) {
       return null;
     }
-
-    console.log("Raw operating hours:", operatingHours);
 
     const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
@@ -34,12 +32,11 @@ export const FloristInfo = ({
       const hours = operatingHours[day];
       const isToday = day === today;
 
-      // Add debug logging
-      console.log(`Processing ${day}:`, hours);
-
       return {
         day: day.charAt(0).toUpperCase() + day.slice(1),
-        hours: hours && hours.open && hours.close ? `${hours.open} - ${hours.close}` : 'Closed',
+        hours: hours && typeof hours === 'object' && 'open' in hours && 'close' in hours 
+          ? `${hours.open} - ${hours.close}` 
+          : 'Closed',
         isToday
       };
     });
