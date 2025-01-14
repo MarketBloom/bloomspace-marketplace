@@ -20,22 +20,26 @@ export const FloristInfo = ({
   minimumOrderAmount,
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
-    if (!operatingHours || typeof operatingHours !== 'object') {
-      console.log("Operating hours data:", operatingHours);
+    if (!operatingHours) {
+      console.log("No operating hours provided");
       return null;
     }
 
-    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    console.log("Raw operating hours:", operatingHours);
+
+    const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
 
     return daysOrder.map(day => {
-      const dayKey = day.toLowerCase();
-      const hours = operatingHours[dayKey];
+      const hours = operatingHours[day];
       const isToday = day === today;
 
+      // Add debug logging
+      console.log(`Processing ${day}:`, hours);
+
       return {
-        day,
-        hours: hours?.open && hours?.close ? `${hours.open} - ${hours.close}` : 'Closed',
+        day: day.charAt(0).toUpperCase() + day.slice(1),
+        hours: hours && hours.open && hours.close ? `${hours.open} - ${hours.close}` : 'Closed',
         isToday
       };
     });
@@ -62,7 +66,7 @@ export const FloristInfo = ({
             {hoursData.map(({ day, hours, isToday }) => (
               <div key={day} className="col-span-2 grid grid-cols-2">
                 <span className={`${isToday ? 'font-medium' : ''}`}>
-                  {day}{isToday && ' (Today)'}:
+                  {day}{isToday ? ' (Today)' : ''}:
                 </span>
                 <span className={`${isToday ? 'font-medium' : ''}`}>{hours}</span>
               </div>
