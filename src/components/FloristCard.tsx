@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart } from "lucide-react";
+import { Heart, Clock, MapPin, Globe, Instagram, Facebook } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 interface FloristCardProps {
   id: string;
@@ -17,6 +18,12 @@ interface FloristCardProps {
   deliveryFee?: number | null;
   deliveryRadius?: number | null;
   minimumOrderAmount?: number | null;
+  operatingHours?: Record<string, { open: string; close: string }> | null;
+  socialLinks?: {
+    website?: string;
+    instagram?: string;
+    facebook?: string;
+  } | null;
 }
 
 export const FloristCard = ({
@@ -29,12 +36,13 @@ export const FloristCard = ({
   deliveryFee,
   deliveryRadius,
   minimumOrderAmount,
+  operatingHours,
+  socialLinks,
 }: FloristCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Check if this florist is favorited by the current user
   const { data: favorite, isLoading: checkingFavorite } = useQuery({
     queryKey: ["favorite", user?.id, id],
     queryFn: async () => {
@@ -121,8 +129,16 @@ export const FloristCard = ({
     }
   };
 
+  const formatOperatingHours = () => {
+    if (!operatingHours) return "Hours not specified";
+    const today = new Date().toLocaleLowerCase();
+    const dayHours = operatingHours[today];
+    if (!dayHours) return "Closed today";
+    return `Today: ${dayHours.open} - ${dayHours.close}`;
+  };
+
   return (
-    <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48">
         {bannerUrl ? (
           <img
@@ -160,11 +176,22 @@ export const FloristCard = ({
 
       <div className="p-4 pt-10">
         <h3 className="text-lg font-semibold mb-2">{storeName}</h3>
-        <p className="text-sm text-gray-600 mb-4">{address}</p>
+        
+        <div className="flex items-center text-sm text-gray-600 mb-2">
+          <MapPin className="h-4 w-4 mr-1" />
+          <p>{address}</p>
+        </div>
+
+        <div className="flex items-center text-sm text-gray-600 mb-4">
+          <Clock className="h-4 w-4 mr-1" />
+          <p>{formatOperatingHours()}</p>
+        </div>
+
         {aboutText && (
           <p className="text-sm text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
         )}
-        <div className="text-sm text-gray-600">
+
+        <div className="text-sm text-gray-600 space-y-1 mb-4">
           {deliveryFee !== null && (
             <p>Delivery Fee: ${deliveryFee?.toFixed(2)}</p>
           )}
@@ -175,6 +202,66 @@ export const FloristCard = ({
             <p>Minimum Order: ${minimumOrderAmount?.toFixed(2)}</p>
           )}
         </div>
+
+        {socialLinks && (
+          <div className="flex gap-2 mt-4 pt-4 border-t">
+            <TooltipProvider>
+              {socialLinks.website && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={socialLinks.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <Globe className="h-4 w-4" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Visit website</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              
+              {socialLinks.instagram && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-pink-600"
+                    >
+                      <Instagram className="h-4 w-4" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Follow on Instagram</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+
+              {socialLinks.facebook && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={socialLinks.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-blue-600"
+                    >
+                      <Facebook className="h-4 w-4" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Follow on Facebook</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </TooltipProvider>
+          </div>
+        )}
       </div>
     </div>
   );
