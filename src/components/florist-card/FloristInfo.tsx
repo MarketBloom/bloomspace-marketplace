@@ -22,34 +22,26 @@ export const FloristInfo = ({
   const formatOperatingHours = () => {
     if (!operatingHours || typeof operatingHours !== 'object') {
       console.log("Operating hours data:", operatingHours);
-      return "Hours not specified";
+      return null;
     }
 
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-    
-    console.log("Checking hours for:", today, shortToday);
-    console.log("Available operating hours:", operatingHours);
+    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
 
-    // Check all possible formats
-    const possibleFormats = [
-      today,                    // lowercase long (monday)
-      shortToday,              // lowercase short (mon)
-      today.toUpperCase(),     // uppercase long (MONDAY)
-      shortToday.toUpperCase(),// uppercase short (MON)
-      today.charAt(0).toUpperCase() + today.slice(1), // Capitalized long (Monday)
-      shortToday.charAt(0).toUpperCase() + shortToday.slice(1), // Capitalized short (Mon)
-    ];
+    return daysOrder.map(day => {
+      const dayKey = day.toLowerCase();
+      const hours = operatingHours[dayKey];
+      const isToday = day === today;
 
-    for (const format of possibleFormats) {
-      const hours = operatingHours[format];
-      if (hours?.open && hours?.close) {
-        return `Today: ${hours.open} - ${hours.close}`;
-      }
-    }
-
-    return "Closed today";
+      return {
+        day,
+        hours: hours?.open && hours?.close ? `${hours.open} - ${hours.close}` : 'Closed',
+        isToday
+      };
+    });
   };
+
+  const hoursData = formatOperatingHours();
 
   return (
     <div className="p-4 pt-10">
@@ -60,9 +52,25 @@ export const FloristInfo = ({
         <p>{address}</p>
       </div>
 
-      <div className="flex items-center text-sm text-gray-600 mb-4">
-        <Clock className="h-4 w-4 mr-1" />
-        <p>{formatOperatingHours()}</p>
+      <div className="text-sm text-gray-600 mb-4">
+        <div className="flex items-center mb-2">
+          <Clock className="h-4 w-4 mr-1" />
+          <p className="font-medium">Operating Hours</p>
+        </div>
+        {hoursData ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 ml-5">
+            {hoursData.map(({ day, hours, isToday }) => (
+              <div key={day} className="col-span-2 grid grid-cols-2">
+                <span className={`${isToday ? 'font-medium' : ''}`}>
+                  {day}{isToday && ' (Today)'}:
+                </span>
+                <span className={`${isToday ? 'font-medium' : ''}`}>{hours}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="ml-5">Hours not specified</p>
+        )}
       </div>
 
       {aboutText && (
