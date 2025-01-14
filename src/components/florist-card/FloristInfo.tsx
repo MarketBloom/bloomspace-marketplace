@@ -32,8 +32,16 @@ export const FloristInfo = ({
       const isToday = day === today;
 
       let timeDisplay = 'Closed';
-      if (hours && !hours.isClosed && hours.open && hours.close) {
-        timeDisplay = `${hours.open} - ${hours.close}`;
+      if (hours) {
+        if (hours.isClosed) {
+          timeDisplay = 'Closed';
+        } else if (hours.open && hours.close) {
+          timeDisplay = `${hours.open} - ${hours.close}`;
+        } else if (hours.close) {
+          timeDisplay = `Closes at ${hours.close}`;
+        } else if (hours.open) {
+          timeDisplay = `Opens at ${hours.open}`;
+        }
       }
 
       return {
