@@ -102,8 +102,18 @@ const Search = () => {
       const { data, error } = await supabase
         .from('florist_profiles')
         .select(`
-          *,
-          operating_hours
+          id,
+          store_name,
+          address,
+          about_text,
+          operating_hours,
+          delivery_fee,
+          delivery_radius,
+          minimum_order_amount,
+          logo_url,
+          banner_url,
+          social_links,
+          store_status
         `)
         .eq('store_status', 'published');
 
@@ -112,6 +122,7 @@ const Search = () => {
         throw error;
       }
 
+      console.log('Fetched florists data:', data);
       return data || [];
     },
   });

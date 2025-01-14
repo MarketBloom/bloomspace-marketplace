@@ -20,34 +20,34 @@ export const FloristInfo = ({
   minimumOrderAmount,
 }: FloristInfoProps) => {
   const formatOperatingHours = () => {
-    console.log("Operating hours received:", operatingHours);
-    
     if (!operatingHours || typeof operatingHours !== 'object') {
-      console.log("No operating hours provided or invalid format");
+      console.log("Operating hours data:", operatingHours);
       return "Hours not specified";
     }
-    
+
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    console.log("Today (long format):", today);
-    console.log("Available days:", Object.keys(operatingHours));
+    const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
     
-    // Try different formats of the day name
-    const formats = [
-      today, // lowercase full name
-      today.charAt(0).toUpperCase() + today.slice(1), // Capitalized full name
-      new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase(), // lowercase short name
-      new Date().toLocaleDateString('en-US', { weekday: 'short' }), // original case short name
+    console.log("Checking hours for:", today, shortToday);
+    console.log("Available operating hours:", operatingHours);
+
+    // Check all possible formats
+    const possibleFormats = [
+      today,                    // lowercase long (monday)
+      shortToday,              // lowercase short (mon)
+      today.toUpperCase(),     // uppercase long (MONDAY)
+      shortToday.toUpperCase(),// uppercase short (MON)
+      today.charAt(0).toUpperCase() + today.slice(1), // Capitalized long (Monday)
+      shortToday.charAt(0).toUpperCase() + shortToday.slice(1), // Capitalized short (Mon)
     ];
 
-    for (const format of formats) {
-      console.log("Trying format:", format);
-      const dayHours = operatingHours[format];
-      if (dayHours?.open && dayHours?.close) {
-        return `Today: ${dayHours.open} - ${dayHours.close}`;
+    for (const format of possibleFormats) {
+      const hours = operatingHours[format];
+      if (hours?.open && hours?.close) {
+        return `Today: ${hours.open} - ${hours.close}`;
       }
     }
-    
-    console.log("No matching hours found for today");
+
     return "Closed today";
   };
 
@@ -69,7 +69,7 @@ export const FloristInfo = ({
         <p className="text-sm text-gray-600 mb-4 line-clamp-2">{aboutText}</p>
       )}
 
-      <div className="text-sm text-gray-600 space-y-1 mb-4">
+      <div className="text-sm text-gray-600 space-y-1">
         {deliveryFee !== null && (
           <p>Delivery Fee: ${deliveryFee?.toFixed(2)}</p>
         )}

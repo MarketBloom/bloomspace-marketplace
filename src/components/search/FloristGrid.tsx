@@ -31,6 +31,7 @@ export const FloristGrid = ({ florists }: FloristGridProps) => {
             deliveryFee={florist.delivery_fee}
             deliveryRadius={florist.delivery_radius}
             minimumOrderAmount={florist.minimum_order_amount}
+            socialLinks={florist.social_links}
           />
         </div>
       ))}
