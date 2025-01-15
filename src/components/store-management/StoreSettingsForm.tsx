@@ -49,7 +49,10 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
         try {
           const place = autocompleteRef.current.getPlace();
           if (place && place.formatted_address) {
-            setFormData(prev => ({ ...prev, address: place.formatted_address }));
+            setFormData(prev => ({ 
+              ...prev, 
+              address: place.formatted_address 
+            }));
           }
         } catch (error) {
           console.error("Error handling place selection:", error);
@@ -68,15 +71,41 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
     };
   }, [isManualAddress]);
 
+  const geocodeAddress = async (address: string) => {
+    const geocoder = new google.maps.Geocoder();
+    
+    return new Promise((resolve, reject) => {
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === 'OK' && results && results[0]) {
+          const { lat, lng } = results[0].geometry.location;
+          resolve({
+            coordinates: `POINT(${lng()} ${lat()})`,
+            geocoded_address: results[0].toJSON()
+          });
+        } else {
+          reject(new Error('Geocoding failed'));
+        }
+      });
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     const promise = new Promise(async (resolve, reject) => {
       try {
+        // Geocode the address
+        const geocodeResult = await geocodeAddress(formData.address);
+        const { coordinates, geocoded_address } = geocodeResult as any;
+
         const { error } = await supabase
           .from("florist_profiles")
-          .update(formData)
+          .update({
+            ...formData,
+            coordinates,
+            geocoded_address
+          })
           .eq("id", initialData.id);
 
         if (error) throw error;
