@@ -65,7 +65,6 @@ const StoreSettingsForm = ({ user }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Form fields for store settings */}
       <input
         type="text"
         value={storeName}
