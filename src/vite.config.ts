@@ -22,18 +22,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   define: {
-    'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
-  },
-  optimizeDeps: {
-    include: ['@react-google-maps/api'],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'google-maps': ['@react-google-maps/api'],
-        },
-      },
-    },
+    '%GOOGLE_MAPS_API_KEY%': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
   },
 }));

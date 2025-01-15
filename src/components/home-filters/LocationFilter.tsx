@@ -1,9 +1,6 @@
-import { useCallback, useState } from "react";
-import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-
-const libraries: ("places")[] = ["places"];
 
 interface LocationFilterProps {
   location: string;
@@ -11,88 +8,42 @@ interface LocationFilterProps {
 }
 
 export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
-  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+  const [inputValue, setInputValue] = useState(location);
 
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "",
-    libraries,
-  });
+  // Initialize Google Places Autocomplete
+  const initPlacesAutocomplete = (input: HTMLInputElement) => {
+    if (!input || !window.google) return;
 
-  const onLoad = useCallback((autocomplete: google.maps.places.Autocomplete) => {
-    console.log("Autocomplete loaded successfully");
-    setAutocomplete(autocomplete);
-  }, []);
+    const autocomplete = new window.google.maps.places.Autocomplete(input, {
+      componentRestrictions: { country: "au" },
+      types: ["(cities)"],
+    });
 
-  const onPlaceChanged = useCallback(() => {
-    if (autocomplete) {
+    autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
-      
-      if (!place.geometry) {
-        console.warn("Place selected has no geometry");
-        return;
+      if (place.formatted_address) {
+        setLocation(place.formatted_address);
+        setInputValue(place.formatted_address);
       }
-
-      const address = place.formatted_address || place.name || '';
-      setLocation(address);
-    }
-  }, [autocomplete, setLocation]);
-
-  if (loadError) {
-    console.error("Places API failed to load:", loadError);
-    return (
-      <div className="space-y-1.5">
-        <label className="text-foreground text-xs font-medium">Location</label>
-        <div className="relative">
-          <Input
-            type="text"
-            placeholder="Enter location..."
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          />
-          <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!isLoaded) {
-    return (
-      <div className="space-y-1.5">
-        <label className="text-foreground text-xs font-medium">Location</label>
-        <div className="relative">
-          <Input
-            type="text"
-            placeholder="Loading..."
-            disabled
-            className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          />
-          <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-        </div>
-      </div>
-    );
-  }
+    });
+  };
 
   return (
     <div className="space-y-1.5">
       <label className="text-foreground text-xs font-medium">Location</label>
       <div className="relative">
-        <Autocomplete
-          onLoad={onLoad}
-          onPlaceChanged={onPlaceChanged}
-          restrictions={{ country: "au" }}
-          options={{
-            types: ["(cities)"],
-            componentRestrictions: { country: "au" }
+        <Input
+          type="text"
+          placeholder="Enter location..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
+          ref={(input) => {
+            if (input) {
+              initPlacesAutocomplete(input);
+            }
           }}
-        >
-          <Input
-            type="text"
-            placeholder="Enter location..."
-            defaultValue={location}
-            className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          />
-        </Autocomplete>
+        />
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
     </div>
