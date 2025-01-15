@@ -15,7 +15,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!window.google || !inputRef.current) return;
+    // Only initialize if window.google exists and input is mounted
+    if (!window.google?.maps?.places || !inputRef.current) return;
 
     try {
       // Clear any existing autocomplete

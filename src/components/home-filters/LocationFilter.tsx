@@ -24,7 +24,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         // Check if script already exists
         const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
         if (existingScript) {
-          existingScript.remove();
+          return; // If script exists, don't load it again
         }
         
         // Fetch API key from our Edge Function
@@ -56,6 +56,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       } catch (error) {
         console.error("Error loading Google Maps:", error);
         toast.error("Error loading location search. Please try again.");
+      } finally {
         setIsLoading(false);
       }
     };
@@ -93,24 +94,23 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
             toast.error("Error selecting location. Please try again.");
           }
         });
-
-        setIsLoading(false);
       } catch (error) {
         console.error("Error initializing Places Autocomplete:", error);
         toast.error("Error initializing location search. Please try again.");
-        setIsLoading(false);
       }
     };
 
-    loadGoogleMaps();
+    // Only load if Google Maps isn't already loaded
+    if (!window.google?.maps) {
+      loadGoogleMaps();
+    } else {
+      initAutocomplete();
+    }
 
     // Cleanup function
     return () => {
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-      if (scriptRef.current) {
-        scriptRef.current.remove();
       }
       // Clean up the global callback
       delete window.initGoogleMaps;
