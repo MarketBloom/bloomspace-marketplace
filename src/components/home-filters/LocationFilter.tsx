@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import { useState, useCallback } from "react";
 
-const libraries = ["places"];
+const libraries: ["places"] = ["places"];
 
 interface LocationFilterProps {
   location: string;
@@ -15,7 +15,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "",
-    libraries: libraries as ["places"],
+    libraries: libraries,
   });
 
   const onLoad = useCallback((autocomplete: google.maps.places.Autocomplete) => {
@@ -27,8 +27,11 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     if (autocomplete) {
       const place = autocomplete.getPlace();
       console.log("Selected place:", place);
-      const formattedAddress = place.formatted_address || "";
-      setLocation(formattedAddress);
+      if (place.formatted_address) {
+        setLocation(place.formatted_address);
+      } else if (place.name) {
+        setLocation(place.name);
+      }
     }
   };
 
