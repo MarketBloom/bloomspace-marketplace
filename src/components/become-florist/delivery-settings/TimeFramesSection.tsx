@@ -1,5 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface TimeFramesSectionProps {
@@ -8,6 +9,16 @@ interface TimeFramesSectionProps {
       morning: boolean;
       midday: boolean;
       afternoon: boolean;
+    };
+    timeFrameNames?: {
+      morning?: string;
+      midday?: string;
+      afternoon?: string;
+    };
+    timeFrameHours?: {
+      morning?: { start: string; end: string };
+      midday?: { start: string; end: string };
+      afternoon?: { start: string; end: string };
     };
   };
   setFormData: (data: any) => void;
@@ -28,34 +39,118 @@ const defaultTimeFrames = {
   },
 };
 
+const timeOptions = Array.from({ length: 24 }, (_, i) => {
+  const hour = i.toString().padStart(2, '0');
+  return `${hour}:00`;
+});
+
 export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionProps) => {
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
-    const updatedTimeFrames = {
-      ...formData.timeFrames,
-      [frame]: !formData.timeFrames[frame],
-    };
-    
-    console.log('Updated time frames:', updatedTimeFrames);
     setFormData((prev: any) => ({
       ...prev,
-      timeFrames: updatedTimeFrames,
+      timeFrames: {
+        ...prev.timeFrames,
+        [frame]: !prev.timeFrames[frame],
+      },
+    }));
+  };
+
+  const handleNameChange = (frame: keyof typeof defaultTimeFrames, name: string) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      timeFrameNames: {
+        ...prev.timeFrameNames,
+        [frame]: name,
+      },
+    }));
+  };
+
+  const handleTimeChange = (
+    frame: keyof typeof defaultTimeFrames,
+    type: 'start' | 'end',
+    time: string
+  ) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      timeFrameHours: {
+        ...prev.timeFrameHours,
+        [frame]: {
+          ...(prev.timeFrameHours?.[frame] || {}),
+          [type]: time,
+        },
+      },
     }));
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {(Object.keys(defaultTimeFrames) as Array<keyof typeof defaultTimeFrames>).map((frame) => (
-        <div key={frame} className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Switch
-              checked={formData.timeFrames[frame]}
-              onCheckedChange={() => handleTimeFrameToggle(frame)}
-            />
-            <Label>{defaultTimeFrames[frame].label}</Label>
+        <div key={frame} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Switch
+                checked={formData.timeFrames[frame]}
+                onCheckedChange={() => handleTimeFrameToggle(frame)}
+              />
+              <Label>{defaultTimeFrames[frame].label}</Label>
+            </div>
           </div>
-          <span className="text-sm text-muted-foreground">
-            {defaultTimeFrames[frame].defaultTime}
-          </span>
+
+          {formData.timeFrames[frame] && (
+            <div className="ml-8 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">
+                  Custom Name (optional)
+                </Label>
+                <Input
+                  placeholder={`e.g., Early ${defaultTimeFrames[frame].label}`}
+                  value={formData.timeFrameNames?.[frame] || ''}
+                  onChange={(e) => handleNameChange(frame, e.target.value)}
+                  className="max-w-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 max-w-xs">
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">Start Time</Label>
+                  <Select
+                    value={formData.timeFrameHours?.[frame]?.start || ''}
+                    onValueChange={(value) => handleTimeChange(frame, 'start', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeOptions.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm text-muted-foreground">End Time</Label>
+                  <Select
+                    value={formData.timeFrameHours?.[frame]?.end || ''}
+                    onValueChange={(value) => handleTimeChange(frame, 'end', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeOptions.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ))}
     </div>

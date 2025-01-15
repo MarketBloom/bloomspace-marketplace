@@ -35,6 +35,16 @@ interface DeliverySettingsFormProps {
       midday: boolean;
       afternoon: boolean;
     };
+    timeFrameNames?: {
+      morning?: string;
+      midday?: string;
+      afternoon?: string;
+    };
+    timeFrameHours?: {
+      morning?: { start: string; end: string };
+      midday?: { start: string; end: string };
+      afternoon?: { start: string; end: string };
+    };
     operatingHours: {
       [key: string]: { open: string; close: string };
     };
