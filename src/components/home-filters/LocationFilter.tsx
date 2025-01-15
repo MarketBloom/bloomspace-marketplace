@@ -16,6 +16,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
   const isMounted = useRef(true);
+  const scriptLoadedRef = useRef(false);
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -55,24 +56,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   };
 
   useEffect(() => {
-    return () => {
-      isMounted.current = false;
-      // Cleanup existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-      // Remove script if it exists
-      if (scriptRef.current) {
-        scriptRef.current.remove();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-
     const loadGoogleMaps = async () => {
-      if (window.google?.maps?.places) {
+      if (scriptLoadedRef.current) {
         initAutocomplete();
         return;
       }
@@ -80,7 +65,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       try {
         setIsLoading(true);
         
-        // Fetch API key from our Edge Function
+        // Fetch API key from Edge Function
         const { data, error } = await supabase.functions.invoke('get-maps-key');
         
         if (error || !data?.apiKey) {
@@ -97,33 +82,34 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         script.async = true;
         script.defer = true;
 
-        // Return a promise that resolves when the script loads
-        await new Promise<void>((resolve, reject) => {
-          script.onload = () => {
-            if (isMounted) {
-              scriptRef.current = script;
-              resolve();
-            }
-          };
-          script.onerror = () => {
-            reject(new Error('Failed to load Google Maps script'));
-          };
-          document.head.appendChild(script);
-        });
+        script.onload = () => {
+          if (isMounted.current) {
+            scriptRef.current = script;
+            scriptLoadedRef.current = true;
+            // Add a small delay to ensure Google Maps is fully initialized
+            setTimeout(() => {
+              if (isMounted.current) {
+                initAutocomplete();
+                setIsLoading(false);
+              }
+            }, 100);
+          }
+        };
 
-        // Wait a bit to ensure Google Maps is fully initialized
-        await new Promise(resolve => setTimeout(resolve, 100));
+        script.onerror = () => {
+          console.error('Failed to load Google Maps script');
+          if (isMounted.current) {
+            toast.error("Error loading location search. Please try again.");
+            setIsLoading(false);
+          }
+        };
 
-        if (isMounted) {
-          initAutocomplete();
-        }
+        document.head.appendChild(script);
+
       } catch (error) {
         console.error("Error loading Google Maps:", error);
-        if (isMounted) {
+        if (isMounted.current) {
           toast.error("Error loading location search. Please try again.");
-        }
-      } finally {
-        if (isMounted) {
           setIsLoading(false);
         }
       }
@@ -132,7 +118,14 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     loadGoogleMaps();
 
     return () => {
-      isMounted = false;
+      isMounted.current = false;
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+      if (scriptRef.current) {
+        scriptRef.current.remove();
+      }
+      scriptLoadedRef.current = false;
     };
   }, []);
 
