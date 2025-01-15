@@ -22,6 +22,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   define: {
-    '%GOOGLE_MAPS_API_KEY%': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
+    'MAPS_API_KEY': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
   }
 }));
