@@ -17,12 +17,14 @@ const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
+  const [userCoordinates, setUserCoordinates] = useState<[number, number] | null>(null);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
+      const location = searchParams.get('location');
 
       const { data: productsData, error } = await supabase
         .from('products')
@@ -34,7 +36,9 @@ const Search = () => {
             delivery_cutoff,
             delivery_start_time,
             delivery_end_time,
-            operating_hours
+            operating_hours,
+            coordinates,
+            delivery_radius
           ),
           product_sizes (
             id,
@@ -52,6 +56,21 @@ const Search = () => {
       const currentTime = format(now, 'HH:mm:ss');
 
       const productsWithVariants = productsData.flatMap(product => {
+        // Skip products from florists outside delivery radius if location is specified
+        if (location && userCoordinates && product.florist_profiles?.coordinates) {
+          const floristCoords = JSON.parse(product.florist_profiles.coordinates);
+          const distance = window.calculate_distance(
+            userCoordinates[0],
+            userCoordinates[1],
+            floristCoords[0],
+            floristCoords[1]
+          );
+          
+          if (distance > (product.florist_profiles.delivery_radius || 0)) {
+            return [];
+          }
+        }
+
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
             ...product,
@@ -97,9 +116,10 @@ const Search = () => {
   });
 
   const { data: florists, isLoading: isLoadingFlorists } = useQuery({
-    queryKey: ['florists'],
+    queryKey: ['florists', searchParams.toString()],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const location = searchParams.get('location');
+      let query = supabase
         .from('florist_profiles')
         .select(`
           id,
@@ -113,17 +133,36 @@ const Search = () => {
           logo_url,
           banner_url,
           social_links,
-          store_status
+          store_status,
+          coordinates
         `)
         .eq('store_status', 'published');
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching florists:', error);
         throw error;
       }
 
-      console.log('Fetched florists data:', data);
-      return data || [];
+      // Filter florists based on location and delivery radius if location is specified
+      if (location && userCoordinates) {
+        return data.filter(florist => {
+          if (!florist.coordinates) return false;
+          
+          const floristCoords = JSON.parse(florist.coordinates);
+          const distance = window.calculate_distance(
+            userCoordinates[0],
+            userCoordinates[1],
+            floristCoords[0],
+            floristCoords[1]
+          );
+          
+          return distance <= (florist.delivery_radius || 0);
+        });
+      }
+
+      return data;
     },
   });
 
@@ -131,6 +170,20 @@ const Search = () => {
     const fulfillment = searchParams.get('fulfillment');
     if (fulfillment === 'pickup' || fulfillment === 'delivery') {
       setFulfillmentType(fulfillment);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const location = searchParams.get('location');
+    if (location) {
+      // Geocode the location
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address: location }, (results, status) => {
+        if (status === 'OK' && results && results[0]) {
+          const { lat, lng } = results[0].geometry.location;
+          setUserCoordinates([lat(), lng()]);
+        }
+      });
     }
   }, [searchParams]);
 
