@@ -46,23 +46,45 @@ const timeOptions = Array.from({ length: 24 }, (_, i) => {
 
 export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionProps) => {
   const handleTimeFrameToggle = (frame: keyof typeof defaultTimeFrames) => {
-    setFormData((prev: any) => ({
-      ...prev,
-      timeFrames: {
-        ...prev.timeFrames,
-        [frame]: !prev.timeFrames[frame],
-      },
-    }));
+    const newTimeFrames = {
+      ...formData.timeFrames,
+      [frame]: !formData.timeFrames[frame],
+    };
+
+    // Initialize default values when toggling on
+    let newTimeFrameNames = { ...formData.timeFrameNames };
+    let newTimeFrameHours = { ...formData.timeFrameHours };
+
+    if (newTimeFrames[frame]) {
+      // Set default values when enabling a time frame
+      newTimeFrameNames = {
+        ...newTimeFrameNames,
+        [frame]: defaultTimeFrames[frame].label,
+      };
+      
+      const [defaultStart, defaultEnd] = defaultTimeFrames[frame].defaultTime.split('-');
+      newTimeFrameHours = {
+        ...newTimeFrameHours,
+        [frame]: { start: defaultStart, end: defaultEnd },
+      };
+    }
+
+    setFormData({
+      ...formData,
+      timeFrames: newTimeFrames,
+      timeFrameNames: newTimeFrameNames,
+      timeFrameHours: newTimeFrameHours,
+    });
   };
 
   const handleNameChange = (frame: keyof typeof defaultTimeFrames, name: string) => {
-    setFormData((prev: any) => ({
-      ...prev,
+    setFormData({
+      ...formData,
       timeFrameNames: {
-        ...prev.timeFrameNames,
+        ...formData.timeFrameNames,
         [frame]: name,
       },
-    }));
+    });
   };
 
   const handleTimeChange = (
@@ -70,16 +92,16 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
     type: 'start' | 'end',
     time: string
   ) => {
-    setFormData((prev: any) => ({
-      ...prev,
+    setFormData({
+      ...formData,
       timeFrameHours: {
-        ...prev.timeFrameHours,
+        ...formData.timeFrameHours,
         [frame]: {
-          ...(prev.timeFrameHours?.[frame] || {}),
+          ...(formData.timeFrameHours?.[frame] || {}),
           [type]: time,
         },
       },
-    }));
+    });
   };
 
   return (
@@ -91,8 +113,9 @@ export const TimeFramesSection = ({ formData, setFormData }: TimeFramesSectionPr
               <Switch
                 checked={formData.timeFrames[frame]}
                 onCheckedChange={() => handleTimeFrameToggle(frame)}
+                id={`timeframe-${frame}`}
               />
-              <Label>{defaultTimeFrames[frame].label}</Label>
+              <Label htmlFor={`timeframe-${frame}`}>{defaultTimeFrames[frame].label}</Label>
             </div>
           </div>
 
