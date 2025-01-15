@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 
@@ -9,23 +9,54 @@ interface LocationFilterProps {
 
 export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
+  const [isLoading, setIsLoading] = useState(false);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Initialize Google Places Autocomplete
-  const initPlacesAutocomplete = (input: HTMLInputElement) => {
-    if (!input || !window.google) return;
+  useEffect(() => {
+    if (!inputRef.current || !window.google) return;
 
-    const autocomplete = new window.google.maps.places.Autocomplete(input, {
-      componentRestrictions: { country: "au" },
-      types: ["(cities)"],
-    });
-
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      if (place.formatted_address) {
-        setLocation(place.formatted_address);
-        setInputValue(place.formatted_address);
+    try {
+      // Clear any existing autocomplete
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
-    });
+
+      // Initialize new autocomplete instance
+      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+        componentRestrictions: { country: "au" },
+        types: ["(cities)"],
+        fields: ["formatted_address", "geometry", "name"],
+      });
+
+      // Add place_changed listener
+      autocompleteRef.current.addListener("place_changed", () => {
+        if (!autocompleteRef.current) return;
+
+        const place = autocompleteRef.current.getPlace();
+        if (place.name) {
+          setLocation(place.name);
+          setInputValue(place.name);
+        }
+      });
+    } catch (error) {
+      console.error("Error initializing Places Autocomplete:", error);
+    }
+
+    // Cleanup
+    return () => {
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+    };
+  }, [setLocation]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    if (!value) {
+      setLocation("");
+    }
   };
 
   return (
@@ -36,13 +67,10 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           type="text"
           placeholder="Enter location..."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={handleInputChange}
           className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          ref={(input) => {
-            if (input) {
-              initPlacesAutocomplete(input);
-            }
-          }}
+          ref={inputRef}
+          disabled={isLoading}
         />
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
