@@ -80,7 +80,7 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
           const { lat, lng } = results[0].geometry.location;
           resolve({
             coordinates: `POINT(${lng()} ${lat()})`,
-            geocoded_address: results[0].toJSON()
+            geocoded_address: results[0]
           });
         } else {
           reject(new Error('Geocoding failed'));
