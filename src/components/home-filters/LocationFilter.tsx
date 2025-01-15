@@ -14,25 +14,45 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
       try {
         setIsLoading(true);
+
+        // Check if script already exists
+        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+        if (existingScript) {
+          existingScript.remove();
+        }
         
         // Fetch API key from our Edge Function
-        const { data: { apiKey }, error } = await supabase.functions.invoke('get-maps-key');
+        const { data, error } = await supabase.functions.invoke('get-maps-key');
         
-        if (error) {
-          throw error;
+        if (error || !data?.apiKey) {
+          throw new Error(error?.message || 'Failed to fetch API key');
         }
 
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        script.onload = initAutocomplete;
-        document.head.appendChild(script);
+        return new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          scriptRef.current = script;
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places&callback=initGoogleMaps`;
+          script.async = true;
+          script.defer = true;
+          
+          // Define the callback function globally
+          window.initGoogleMaps = () => {
+            initAutocomplete();
+            resolve();
+          };
+          
+          script.onerror = () => {
+            reject(new Error('Failed to load Google Maps script'));
+          };
+          
+          document.head.appendChild(script);
+        });
       } catch (error) {
         console.error("Error loading Google Maps:", error);
         toast.error("Error loading location search. Please try again.");
@@ -84,15 +104,16 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
     loadGoogleMaps();
 
+    // Cleanup function
     return () => {
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
-      // Remove the script tag when component unmounts
-      const script = document.querySelector('script[src*="maps.googleapis.com"]');
-      if (script) {
-        script.remove();
+      if (scriptRef.current) {
+        scriptRef.current.remove();
       }
+      // Clean up the global callback
+      delete window.initGoogleMaps;
     };
   }, [setLocation]);
 
