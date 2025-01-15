@@ -14,12 +14,11 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const scriptLoadedRef = useRef(false);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const isMounted = useRef(true);
 
   const initAutocomplete = () => {
-    if (!inputRef.current || !window.google?.maps?.places) {
-      return;
-    }
+    if (!inputRef.current || !window.google?.maps?.places) return;
 
     try {
       // Clear any existing autocomplete
@@ -36,7 +35,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
       // Add place_changed listener
       autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current) return;
+        if (!autocompleteRef.current || !isMounted.current) return;
 
         try {
           const place = autocompleteRef.current.getPlace();
@@ -56,10 +55,24 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   };
 
   useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      // Cleanup existing autocomplete
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+      // Remove script if it exists
+      if (scriptRef.current) {
+        scriptRef.current.remove();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
 
     const loadGoogleMaps = async () => {
-      if (scriptLoadedRef.current || window.google?.maps?.places) {
+      if (window.google?.maps?.places) {
         initAutocomplete();
         return;
       }
@@ -88,7 +101,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         await new Promise<void>((resolve, reject) => {
           script.onload = () => {
             if (isMounted) {
-              scriptLoadedRef.current = true;
+              scriptRef.current = script;
               resolve();
             }
           };
@@ -120,9 +133,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
     return () => {
       isMounted = false;
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
     };
   }, []);
 

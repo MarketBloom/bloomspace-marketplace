@@ -13,59 +13,65 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    // Wait for Google Maps to be fully loaded
-    if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
-      return;
-    }
-
-    const initAutocomplete = () => {
-      if (!inputRef.current) return;
-
-      try {
-        // Clear any existing autocomplete
-        if (autocompleteRef.current) {
-          google.maps.event.clearInstanceListeners(autocompleteRef.current);
-        }
-
-        // Initialize new autocomplete instance
-        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-          componentRestrictions: { country: "au" },
-          types: ["(cities)"],
-          fields: ["formatted_address", "geometry", "name"],
-        });
-
-        // Add place_changed listener
-        autocompleteRef.current.addListener("place_changed", () => {
-          if (!autocompleteRef.current) return;
-
-          try {
-            const place = autocompleteRef.current.getPlace();
-            if (place && place.formatted_address) {
-              setLocation(place.formatted_address);
-              setInputValue(place.formatted_address);
-            }
-          } catch (error) {
-            console.error("Error handling place selection:", error);
-            toast.error("Error selecting location. Please try again.");
-          }
-        });
-      } catch (error) {
-        console.error("Error initializing Places Autocomplete:", error);
-        toast.error("Error initializing location search. Please try again.");
-      }
-    };
-
-    // Initialize autocomplete when Google Maps is ready
-    initAutocomplete();
-
-    // Cleanup function
     return () => {
+      isMounted.current = false;
+      // Cleanup existing autocomplete
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
+      // Remove script if it exists
+      if (scriptRef.current) {
+        scriptRef.current.remove();
+      }
     };
+  }, []);
+
+  useEffect(() => {
+    const initializeAutocomplete = async () => {
+      if (!inputRef.current) return;
+
+      // Check if Google Maps is already loaded
+      if (window.google?.maps?.places) {
+        try {
+          // Clear any existing autocomplete
+          if (autocompleteRef.current) {
+            google.maps.event.clearInstanceListeners(autocompleteRef.current);
+          }
+
+          // Initialize new autocomplete instance
+          autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+            componentRestrictions: { country: "au" },
+            types: ["(cities)"],
+            fields: ["formatted_address", "geometry", "name"],
+          });
+
+          // Add place_changed listener
+          autocompleteRef.current.addListener("place_changed", () => {
+            if (!autocompleteRef.current || !isMounted.current) return;
+
+            try {
+              const place = autocompleteRef.current.getPlace();
+              if (place && place.formatted_address) {
+                setLocation(place.formatted_address);
+                setInputValue(place.formatted_address);
+              }
+            } catch (error) {
+              console.error("Error handling place selection:", error);
+              toast.error("Error selecting location. Please try again.");
+            }
+          });
+        } catch (error) {
+          console.error("Error initializing Places Autocomplete:", error);
+          toast.error("Error initializing location search. Please try again.");
+        }
+      }
+    };
+
+    initializeAutocomplete();
   }, [setLocation]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
