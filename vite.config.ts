@@ -21,7 +21,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    MAPS_API_KEY: JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
-  }
 }));

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { MAPS_API_KEY } from "@/config/maps";
 
 interface LocationFilterProps {
   location: string;
