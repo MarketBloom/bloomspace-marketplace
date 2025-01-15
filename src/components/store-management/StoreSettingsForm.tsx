@@ -28,16 +28,8 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
   });
 
   useEffect(() => {
-    // Only initialize if manual address is not enabled
-    if (isManualAddress || !addressInputRef.current) return;
+    if (isManualAddress || !addressInputRef.current || !window.google) return;
 
-    // Check if Google Maps is already loaded
-    if (window.google && window.google.maps) {
-      initializeAutocomplete();
-    }
-  }, [isManualAddress]);
-
-  const initializeAutocomplete = () => {
     try {
       // Clear any existing autocomplete
       if (autocompleteRef.current) {
@@ -45,7 +37,7 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
       }
 
       // Initialize new autocomplete instance
-      autocompleteRef.current = new google.maps.places.Autocomplete(addressInputRef.current!, {
+      autocompleteRef.current = new google.maps.places.Autocomplete(addressInputRef.current, {
         componentRestrictions: { country: "au" },
         fields: ["formatted_address", "geometry", "name"],
       });
@@ -68,16 +60,13 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
       console.error("Error initializing Places Autocomplete:", error);
       toast.error("Error initializing address search. Please try again.");
     }
-  };
 
-  // Cleanup function
-  useEffect(() => {
     return () => {
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, []);
+  }, [isManualAddress]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
