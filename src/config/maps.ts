@@ -1,2 +1,2 @@
-// This should be replaced with your actual Google Maps API key
-export const MAPS_API_KEY = 'YOUR_ACTUAL_API_KEY';
+// Import API key from environment
+export const MAPS_API_KEY = window.MAPS_API_KEY;
