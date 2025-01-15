@@ -14,9 +14,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
   const isMounted = useRef(true);
-  const scriptLoadedRef = useRef(false);
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -57,7 +55,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
-      if (scriptLoadedRef.current) {
+      // Check if Google Maps is already loaded
+      if (window.google?.maps?.places) {
         initAutocomplete();
         return;
       }
@@ -84,9 +83,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
         script.onload = () => {
           if (isMounted.current) {
-            scriptRef.current = script;
-            scriptLoadedRef.current = true;
-            // Add a small delay to ensure Google Maps is fully initialized
+            // Wait for Google Maps to be fully initialized
             setTimeout(() => {
               if (isMounted.current) {
                 initAutocomplete();
@@ -122,10 +119,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
-      if (scriptRef.current) {
-        scriptRef.current.remove();
-      }
-      scriptLoadedRef.current = false;
     };
   }, []);
 
