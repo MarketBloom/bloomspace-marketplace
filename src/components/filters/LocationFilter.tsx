@@ -15,41 +15,50 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    // Only initialize if window.google exists and input is mounted
-    if (!window.google?.maps?.places || !inputRef.current) return;
-
-    try {
-      // Clear any existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-
-      // Initialize new autocomplete instance
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "au" },
-        types: ["(cities)"],
-        fields: ["formatted_address", "geometry", "name"],
-      });
-
-      // Add place_changed listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current) return;
-
-        try {
-          const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
-            setLocation(place.formatted_address);
-            setInputValue(place.formatted_address);
-          }
-        } catch (error) {
-          console.error("Error handling place selection:", error);
-          toast.error("Error selecting location. Please try again.");
-        }
-      });
-    } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
-      toast.error("Error initializing location search. Please try again.");
+    // Wait for Google Maps to be fully loaded
+    if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+      return;
     }
+
+    const initAutocomplete = () => {
+      if (!inputRef.current) return;
+
+      try {
+        // Clear any existing autocomplete
+        if (autocompleteRef.current) {
+          google.maps.event.clearInstanceListeners(autocompleteRef.current);
+        }
+
+        // Initialize new autocomplete instance
+        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+          componentRestrictions: { country: "au" },
+          types: ["(cities)"],
+          fields: ["formatted_address", "geometry", "name"],
+        });
+
+        // Add place_changed listener
+        autocompleteRef.current.addListener("place_changed", () => {
+          if (!autocompleteRef.current) return;
+
+          try {
+            const place = autocompleteRef.current.getPlace();
+            if (place && place.formatted_address) {
+              setLocation(place.formatted_address);
+              setInputValue(place.formatted_address);
+            }
+          } catch (error) {
+            console.error("Error handling place selection:", error);
+            toast.error("Error selecting location. Please try again.");
+          }
+        });
+      } catch (error) {
+        console.error("Error initializing Places Autocomplete:", error);
+        toast.error("Error initializing location search. Please try again.");
+      }
+    };
+
+    // Initialize autocomplete when Google Maps is ready
+    initAutocomplete();
 
     // Cleanup function
     return () => {

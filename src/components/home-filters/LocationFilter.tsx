@@ -14,18 +14,15 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
+      if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+        return; // API already loaded
+      }
+
       try {
         setIsLoading(true);
-
-        // Check if script already exists
-        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-        if (existingScript) {
-          return; // If script exists, don't load it again
-        }
         
         // Fetch API key from our Edge Function
         const { data, error } = await supabase.functions.invoke('get-maps-key');
@@ -35,17 +32,16 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         }
 
         return new Promise<void>((resolve, reject) => {
-          const script = document.createElement('script');
-          scriptRef.current = script;
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places&callback=initGoogleMaps`;
-          script.async = true;
-          script.defer = true;
-          
           // Define the callback function globally
           window.initGoogleMaps = () => {
             initAutocomplete();
             resolve();
           };
+
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places&callback=initGoogleMaps`;
+          script.async = true;
+          script.defer = true;
           
           script.onerror = () => {
             reject(new Error('Failed to load Google Maps script'));
@@ -62,7 +58,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     };
 
     const initAutocomplete = () => {
-      if (!inputRef.current || !window.google) {
+      if (!inputRef.current || !window.google?.maps?.places) {
         return;
       }
 
@@ -101,7 +97,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     };
 
     // Only load if Google Maps isn't already loaded
-    if (!window.google?.maps) {
+    if (!window.google?.maps?.places) {
       loadGoogleMaps();
     } else {
       initAutocomplete();
