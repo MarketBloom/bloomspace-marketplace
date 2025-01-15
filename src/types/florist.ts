@@ -32,6 +32,8 @@ export interface FloristProfile {
     midday: boolean;
     afternoon: boolean;
   } | null;
+  coordinates: string | null;
+  geocoded_address: Record<string, any> | null;
 }
 
 export interface FloristProfilesTable {

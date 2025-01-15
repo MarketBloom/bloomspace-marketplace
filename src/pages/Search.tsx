@@ -11,6 +11,7 @@ import { MobileFilterButton } from "@/components/search/MobileFilterButton";
 import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const Search = () => {
   const isMobile = useIsMobile();
@@ -18,6 +19,7 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
   const [userCoordinates, setUserCoordinates] = useState<[number, number] | null>(null);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', fulfillmentType, searchParams.toString()],
@@ -58,7 +60,7 @@ const Search = () => {
       const productsWithVariants = productsData.flatMap(product => {
         // Skip products from florists outside delivery radius if location is specified
         if (location && userCoordinates && product.florist_profiles?.coordinates) {
-          const floristCoords = JSON.parse(product.florist_profiles.coordinates);
+          const floristCoords = JSON.parse(String(product.florist_profiles.coordinates));
           const distance = window.calculate_distance(
             userCoordinates[0],
             userCoordinates[1],
@@ -100,7 +102,7 @@ const Search = () => {
             currentTime < product.florist_profiles.delivery_cutoff,
           isPickupAvailable: fulfillmentType === "pickup" && 
             product.florist_profiles?.operating_hours && 
-            currentTime < product.florist_profiles.delivery_end_time,
+            currentTime < product.florist_profiles?.delivery_end_time,
           deliveryCutoff: product.florist_profiles?.delivery_cutoff,
           pickupCutoff: product.florist_profiles?.delivery_end_time,
           images: size.images?.length ? size.images : product.images
@@ -146,11 +148,11 @@ const Search = () => {
       }
 
       // Filter florists based on location and delivery radius if location is specified
-      if (location && userCoordinates) {
+      if (location && userCoordinates && data) {
         return data.filter(florist => {
           if (!florist.coordinates) return false;
           
-          const floristCoords = JSON.parse(florist.coordinates);
+          const floristCoords = JSON.parse(String(florist.coordinates));
           const distance = window.calculate_distance(
             userCoordinates[0],
             userCoordinates[1],
@@ -162,21 +164,61 @@ const Search = () => {
         });
       }
 
-      return data;
+      return data || [];
     },
   });
 
+  // Load Google Maps script
   useEffect(() => {
-    const fulfillment = searchParams.get('fulfillment');
-    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
-      setFulfillmentType(fulfillment);
-    }
-  }, [searchParams]);
+    const loadGoogleMaps = async () => {
+      try {
+        // Check if script already exists
+        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+        if (existingScript) {
+          existingScript.remove();
+        }
+        
+        // Fetch API key from Edge Function
+        const { data, error } = await supabase.functions.invoke('get-maps-key');
+        
+        if (error || !data?.apiKey) {
+          throw new Error(error?.message || 'Failed to fetch API key');
+        }
 
+        return new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
+          script.async = true;
+          script.defer = true;
+          script.onload = () => {
+            setIsGoogleMapsLoaded(true);
+            resolve();
+          };
+          script.onerror = () => {
+            reject(new Error('Failed to load Google Maps script'));
+          };
+          document.head.appendChild(script);
+        });
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
+        toast.error("Error loading location services. Please try again.");
+      }
+    };
+
+    loadGoogleMaps();
+
+    return () => {
+      const script = document.querySelector('script[src*="maps.googleapis.com"]');
+      if (script) {
+        script.remove();
+      }
+    };
+  }, []);
+
+  // Handle location changes
   useEffect(() => {
     const location = searchParams.get('location');
-    if (location) {
-      // Geocode the location
+    if (location && isGoogleMapsLoaded && window.google) {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ address: location }, (results, status) => {
         if (status === 'OK' && results && results[0]) {
@@ -184,6 +226,13 @@ const Search = () => {
           setUserCoordinates([lat(), lng()]);
         }
       });
+    }
+  }, [searchParams, isGoogleMapsLoaded]);
+
+  useEffect(() => {
+    const fulfillment = searchParams.get('fulfillment');
+    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
+      setFulfillmentType(fulfillment);
     }
   }, [searchParams]);
 
