@@ -16,10 +16,53 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
   const scriptLoadedRef = useRef(false);
 
+  const initAutocomplete = () => {
+    if (!inputRef.current || !window.google?.maps?.places) {
+      return;
+    }
+
+    try {
+      // Clear any existing autocomplete
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+
+      // Initialize new autocomplete instance
+      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+        componentRestrictions: { country: "au" },
+        types: ["(cities)"],
+        fields: ["formatted_address", "geometry", "name"],
+      });
+
+      // Add place_changed listener
+      autocompleteRef.current.addListener("place_changed", () => {
+        if (!autocompleteRef.current) return;
+
+        try {
+          const place = autocompleteRef.current.getPlace();
+          if (place && place.formatted_address) {
+            setLocation(place.formatted_address);
+            setInputValue(place.formatted_address);
+          }
+        } catch (error) {
+          console.error("Error handling place selection:", error);
+          toast.error("Error selecting location. Please try again.");
+        }
+      });
+    } catch (error) {
+      console.error("Error initializing Places Autocomplete:", error);
+      toast.error("Error initializing location search. Please try again.");
+    }
+  };
+
   useEffect(() => {
+    let isMounted = true;
+
     const loadGoogleMaps = async () => {
-      // Prevent multiple script loads
-      if (scriptLoadedRef.current) return;
+      if (scriptLoadedRef.current || window.google?.maps?.places) {
+        initAutocomplete();
+        return;
+      }
 
       try {
         setIsLoading(true);
@@ -32,10 +75,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         }
 
         // Remove any existing Google Maps scripts
-        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-        if (existingScript) {
-          existingScript.remove();
-        }
+        const existingScripts = document.querySelectorAll('script[src*="maps.googleapis.com"]');
+        existingScripts.forEach(script => script.remove());
 
         // Create and load the script
         const script = document.createElement('script');
@@ -46,8 +87,10 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         // Return a promise that resolves when the script loads
         await new Promise<void>((resolve, reject) => {
           script.onload = () => {
-            scriptLoadedRef.current = true;
-            resolve();
+            if (isMounted) {
+              scriptLoadedRef.current = true;
+              resolve();
+            }
           };
           script.onerror = () => {
             reject(new Error('Failed to load Google Maps script'));
@@ -55,71 +98,33 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           document.head.appendChild(script);
         });
 
-        // Initialize autocomplete after script loads
-        if (inputRef.current) {
+        // Wait a bit to ensure Google Maps is fully initialized
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (isMounted) {
           initAutocomplete();
         }
       } catch (error) {
         console.error("Error loading Google Maps:", error);
-        toast.error("Error loading location search. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    const initAutocomplete = () => {
-      if (!inputRef.current || !window.google?.maps?.places) {
-        return;
-      }
-
-      try {
-        // Clear any existing autocomplete
-        if (autocompleteRef.current) {
-          google.maps.event.clearInstanceListeners(autocompleteRef.current);
+        if (isMounted) {
+          toast.error("Error loading location search. Please try again.");
         }
-
-        // Initialize new autocomplete instance
-        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-          componentRestrictions: { country: "au" },
-          types: ["(cities)"],
-          fields: ["formatted_address", "geometry", "name"],
-        });
-
-        // Add place_changed listener
-        autocompleteRef.current.addListener("place_changed", () => {
-          if (!autocompleteRef.current) return;
-
-          try {
-            const place = autocompleteRef.current.getPlace();
-            if (place && place.formatted_address) {
-              setLocation(place.formatted_address);
-              setInputValue(place.formatted_address);
-            }
-          } catch (error) {
-            console.error("Error handling place selection:", error);
-            toast.error("Error selecting location. Please try again.");
-          }
-        });
-      } catch (error) {
-        console.error("Error initializing Places Autocomplete:", error);
-        toast.error("Error initializing location search. Please try again.");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    // Load Google Maps if not already loaded
-    if (!window.google?.maps?.places) {
-      loadGoogleMaps();
-    } else {
-      initAutocomplete();
-    }
+    loadGoogleMaps();
 
-    // Cleanup function
     return () => {
+      isMounted = false;
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, [setLocation]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
