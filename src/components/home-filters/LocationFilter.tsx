@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 interface LocationFilterProps {
   location: string;
@@ -14,34 +15,51 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!inputRef.current || !window.google) return;
-
-    try {
-      // Clear any existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+    const initAutocomplete = () => {
+      if (!inputRef.current || !window.google) {
+        return;
       }
 
-      // Initialize new autocomplete instance
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "au" },
-        types: ["(cities)"],
-        fields: ["formatted_address", "geometry", "name"],
-      });
-
-      // Add place_changed listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current) return;
-
-        const place = autocompleteRef.current.getPlace();
-        if (place.name) {
-          setLocation(place.name);
-          setInputValue(place.name);
+      try {
+        setIsLoading(true);
+        
+        // Clear any existing autocomplete
+        if (autocompleteRef.current) {
+          google.maps.event.clearInstanceListeners(autocompleteRef.current);
         }
-      });
-    } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
-    }
+
+        // Initialize new autocomplete instance
+        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+          componentRestrictions: { country: "au" },
+          types: ["(cities)"],
+          fields: ["formatted_address", "geometry", "name"],
+        });
+
+        // Add place_changed listener
+        autocompleteRef.current.addListener("place_changed", () => {
+          if (!autocompleteRef.current) return;
+
+          try {
+            const place = autocompleteRef.current.getPlace();
+            if (place && place.formatted_address) {
+              setLocation(place.formatted_address);
+              setInputValue(place.formatted_address);
+            }
+          } catch (error) {
+            console.error("Error handling place selection:", error);
+            toast.error("Error selecting location. Please try again.");
+          }
+        });
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error initializing Places Autocomplete:", error);
+        toast.error("Error initializing location search. Please try again.");
+        setIsLoading(false);
+      }
+    };
+
+    initAutocomplete();
 
     // Cleanup
     return () => {
@@ -60,8 +78,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   };
 
   return (
-    <div className="space-y-1.5">
-      <label className="text-foreground text-xs font-medium">Location</label>
+    <div className="relative">
       <div className="relative">
         <Input
           type="text"
