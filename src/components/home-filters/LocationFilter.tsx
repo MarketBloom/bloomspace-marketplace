@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LocationFilterProps {
   location: string;
@@ -15,13 +16,28 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    const loadGoogleMaps = () => {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initAutocomplete;
-      document.head.appendChild(script);
+    const loadGoogleMaps = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Fetch API key from our Edge Function
+        const { data: { apiKey }, error } = await supabase.functions.invoke('get-maps-key');
+        
+        if (error) {
+          throw error;
+        }
+
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        script.onload = initAutocomplete;
+        document.head.appendChild(script);
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
+        toast.error("Error loading location search. Please try again.");
+        setIsLoading(false);
+      }
     };
 
     const initAutocomplete = () => {
@@ -30,8 +46,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       }
 
       try {
-        setIsLoading(true);
-        
         // Clear any existing autocomplete
         if (autocompleteRef.current) {
           google.maps.event.clearInstanceListeners(autocompleteRef.current);
