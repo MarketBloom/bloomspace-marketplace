@@ -15,11 +15,11 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "",
-    libraries: libraries,
+    libraries,
   });
 
   const onLoad = useCallback((autocomplete: google.maps.places.Autocomplete) => {
-    console.log("Autocomplete loaded:", autocomplete);
+    console.log("Autocomplete loaded successfully");
     setAutocomplete(autocomplete);
   }, []);
 
@@ -27,6 +27,12 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     if (autocomplete) {
       const place = autocomplete.getPlace();
       console.log("Selected place:", place);
+      
+      if (!place.geometry) {
+        console.warn("Place selected has no geometry");
+        return;
+      }
+
       if (place.formatted_address) {
         setLocation(place.formatted_address);
       } else if (place.name) {
@@ -81,7 +87,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           onPlaceChanged={onPlaceChanged}
           restrictions={{ country: "au" }}
           options={{
-            types: ["(regions)"],
+            types: ["(cities)"],
             componentRestrictions: { country: "au" }
           }}
         >
