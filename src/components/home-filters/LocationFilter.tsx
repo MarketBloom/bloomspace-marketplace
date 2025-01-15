@@ -17,8 +17,10 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
-      if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        return; // API already loaded
+      // If API is already loaded, initialize autocomplete directly
+      if (window.google?.maps?.places) {
+        initAutocomplete();
+        return;
       }
 
       try {
@@ -31,17 +33,23 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           throw new Error(error?.message || 'Failed to fetch API key');
         }
 
-        return new Promise<void>((resolve, reject) => {
-          // Define the callback function globally
-          window.initGoogleMaps = () => {
+        // Create a promise to wait for Google Maps to load
+        await new Promise<void>((resolve, reject) => {
+          // Remove any existing Google Maps scripts
+          const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+          if (existingScript) {
+            existingScript.remove();
+          }
+
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
+          script.async = true;
+          script.defer = true;
+          
+          script.onload = () => {
             initAutocomplete();
             resolve();
           };
-
-          const script = document.createElement('script');
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places&callback=initGoogleMaps`;
-          script.async = true;
-          script.defer = true;
           
           script.onerror = () => {
             reject(new Error('Failed to load Google Maps script'));
@@ -96,20 +104,14 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       }
     };
 
-    // Only load if Google Maps isn't already loaded
-    if (!window.google?.maps?.places) {
-      loadGoogleMaps();
-    } else {
-      initAutocomplete();
-    }
+    // Load Google Maps
+    loadGoogleMaps();
 
     // Cleanup function
     return () => {
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
-      // Clean up the global callback
-      delete window.initGoogleMaps;
     };
   }, [setLocation]);
 
