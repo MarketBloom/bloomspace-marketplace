@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,10 @@ interface StoreSettingsFormProps {
 
 export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isManualAddress, setIsManualAddress] = useState(false);
+  const addressInputRef = useRef<HTMLInputElement | null>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  
   const [formData, setFormData] = useState({
     store_name: initialData?.store_name || "",
     address: initialData?.address || "",
@@ -22,6 +26,48 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
     delivery_radius: initialData?.delivery_radius || 5,
     minimum_order_amount: initialData?.minimum_order_amount || 0,
   });
+
+  useEffect(() => {
+    if (!window.google || !addressInputRef.current || isManualAddress) return;
+
+    try {
+      // Clear any existing autocomplete
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+
+      // Initialize new autocomplete instance
+      autocompleteRef.current = new google.maps.places.Autocomplete(addressInputRef.current, {
+        componentRestrictions: { country: "au" },
+        fields: ["formatted_address", "geometry", "name"],
+      });
+
+      // Add place_changed listener
+      autocompleteRef.current.addListener("place_changed", () => {
+        if (!autocompleteRef.current) return;
+
+        try {
+          const place = autocompleteRef.current.getPlace();
+          if (place && place.formatted_address) {
+            setFormData(prev => ({ ...prev, address: place.formatted_address }));
+          }
+        } catch (error) {
+          console.error("Error handling place selection:", error);
+          toast.error("Error selecting address. Please try again.");
+        }
+      });
+    } catch (error) {
+      console.error("Error initializing Places Autocomplete:", error);
+      toast.error("Error initializing address search. Please try again.");
+    }
+
+    // Cleanup function
+    return () => {
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+    };
+  }, [isManualAddress]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,12 +111,24 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
+        <div className="flex justify-between items-center">
+          <Label htmlFor="address">Address</Label>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsManualAddress(!isManualAddress)}
+          >
+            {isManualAddress ? "Use Autocomplete" : "Enter Manually"}
+          </Button>
+        </div>
         <Input
           id="address"
+          ref={addressInputRef}
           value={formData.address}
           onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
           required
+          placeholder={isManualAddress ? "Enter address manually" : "Start typing to search for an address"}
         />
       </div>
 
