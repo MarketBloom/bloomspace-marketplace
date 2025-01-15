@@ -15,6 +15,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
+  const scriptLoadedRef = useRef(false);
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -55,8 +56,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
-      // Check if Google Maps is already loaded
-      if (window.google?.maps?.places) {
+      // Check if Google Maps is already loaded and initialized
+      if (window.google?.maps?.places && scriptLoadedRef.current) {
         initAutocomplete();
         return;
       }
@@ -83,13 +84,14 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
         script.onload = () => {
           if (isMounted.current) {
+            scriptLoadedRef.current = true;
             // Wait for Google Maps to be fully initialized
             setTimeout(() => {
               if (isMounted.current) {
                 initAutocomplete();
                 setIsLoading(false);
               }
-            }, 100);
+            }, 1000);
           }
         };
 
