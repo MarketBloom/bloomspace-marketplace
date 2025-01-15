@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { MAPS_API_KEY } from "@/config/maps";
 
 interface LocationFilterProps {
   location: string;
@@ -16,6 +15,15 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    const loadGoogleMaps = () => {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = initAutocomplete;
+      document.head.appendChild(script);
+    };
+
     const initAutocomplete = () => {
       if (!inputRef.current || !window.google) {
         return;
@@ -60,12 +68,16 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       }
     };
 
-    initAutocomplete();
+    loadGoogleMaps();
 
-    // Cleanup
     return () => {
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+      // Remove the script tag when component unmounts
+      const script = document.querySelector('script[src*="maps.googleapis.com"]');
+      if (script) {
+        script.remove();
       }
     };
   }, [setLocation]);
