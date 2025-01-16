@@ -10,7 +10,7 @@ export const MobileHero = () => {
       </div>
       
       <div className="container relative z-10 px-8 flex flex-col items-center">
-        <div className="max-w-3xl mx-auto text-center mb-8">
+        <div className="max-w-3xl mx-auto text-center mb-8 mt-20">
           <GooeyText
             texts={[
               ["Your Cities", "Best Florists"],
