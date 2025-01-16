@@ -22,7 +22,7 @@ export const MobileHero = () => {
             cooldownTime={3}
           />
         </div>
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl -mt-[30px]">
           <HomeFilterBar />
         </div>
       </div>
