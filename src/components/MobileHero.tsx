@@ -17,7 +17,7 @@ export const MobileHero = () => {
               "All in One Place"
             ]}
             className="h-[72px]"
-            textClassName="text-4xl font-semibold tracking-tight text-white"
+            textClassName="text-4xl font-semibold tracking-tight text-white whitespace-nowrap"
             morphTime={1}
             cooldownTime={3}
           />
