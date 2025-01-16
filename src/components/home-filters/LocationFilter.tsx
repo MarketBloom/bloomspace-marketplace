@@ -9,13 +9,54 @@ interface LocationFilterProps {
   setLocation: (location: string) => void;
 }
 
+// Global script loading state
+let googleMapsLoaded = false;
+let loadingPromise: Promise<void> | null = null;
+
+const loadGoogleMapsScript = async () => {
+  if (googleMapsLoaded) return;
+  
+  if (loadingPromise) {
+    return loadingPromise;
+  }
+
+  loadingPromise = new Promise(async (resolve, reject) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-maps-key');
+      
+      if (error || !data?.apiKey) {
+        throw new Error(error?.message || 'Failed to fetch API key');
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+
+      script.onload = () => {
+        googleMapsLoaded = true;
+        resolve();
+      };
+
+      script.onerror = (error) => {
+        reject(error);
+      };
+
+      document.head.appendChild(script);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  return loadingPromise;
+};
+
 export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
-  const scriptLoadedRef = useRef(false);
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -55,56 +96,15 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   };
 
   useEffect(() => {
-    const loadGoogleMaps = async () => {
+    const setupAutocomplete = async () => {
       try {
-        // Check if Google Maps is already loaded and initialized
-        if (window.google?.maps?.places && scriptLoadedRef.current) {
-          initAutocomplete();
-          return;
-        }
-
         setIsLoading(true);
+        await loadGoogleMapsScript();
         
-        // Fetch API key from Edge Function
-        const { data, error } = await supabase.functions.invoke('get-maps-key');
-        
-        if (error || !data?.apiKey) {
-          throw new Error(error?.message || 'Failed to fetch API key');
+        if (isMounted.current) {
+          initAutocomplete();
+          setIsLoading(false);
         }
-
-        // Remove any existing Google Maps scripts
-        const existingScripts = document.querySelectorAll('script[src*="maps.googleapis.com"]');
-        existingScripts.forEach(script => script.remove());
-
-        // Create and load the script
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-
-        script.onload = () => {
-          if (isMounted.current) {
-            scriptLoadedRef.current = true;
-            // Wait for Google Maps to be fully initialized
-            setTimeout(() => {
-              if (isMounted.current) {
-                initAutocomplete();
-                setIsLoading(false);
-              }
-            }, 2000); // Increased delay to ensure full initialization
-          }
-        };
-
-        script.onerror = () => {
-          console.error('Failed to load Google Maps script');
-          if (isMounted.current) {
-            toast.error("Error loading location search. Please try again.");
-            setIsLoading(false);
-          }
-        };
-
-        document.head.appendChild(script);
-
       } catch (error) {
         console.error("Error loading Google Maps:", error);
         if (isMounted.current) {
@@ -114,7 +114,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       }
     };
 
-    loadGoogleMaps();
+    setupAutocomplete();
 
     return () => {
       isMounted.current = false;
