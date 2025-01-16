@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 interface GooeyTextProps {
-  texts: string[];
+  texts: (string | string[])[];
   morphTime?: number;
   cooldownTime?: number;
   className?: string;
@@ -74,8 +74,10 @@ export function GooeyText({
         if (shouldIncrementIndex) {
           textIndexRef.current = (textIndexRef.current + 1) % texts.length;
           if (text1Ref.current && text2Ref.current) {
-            text1Ref.current.textContent = texts[textIndexRef.current];
-            text2Ref.current.textContent = texts[(textIndexRef.current + 1) % texts.length];
+            const currentText = texts[textIndexRef.current];
+            const nextText = texts[(textIndexRef.current + 1) % texts.length];
+            text1Ref.current.innerHTML = Array.isArray(currentText) ? currentText.join('<br/>') : currentText;
+            text2Ref.current.innerHTML = Array.isArray(nextText) ? nextText.join('<br/>') : nextText;
           }
         }
         doMorph();
@@ -88,8 +90,10 @@ export function GooeyText({
 
     // Initialize text content
     if (text1Ref.current && text2Ref.current) {
-      text1Ref.current.textContent = texts[textIndexRef.current];
-      text2Ref.current.textContent = texts[(textIndexRef.current + 1) % texts.length];
+      const currentText = texts[textIndexRef.current];
+      const nextText = texts[(textIndexRef.current + 1) % texts.length];
+      text1Ref.current.innerHTML = Array.isArray(currentText) ? currentText.join('<br/>') : currentText;
+      text2Ref.current.innerHTML = Array.isArray(nextText) ? nextText.join('<br/>') : nextText;
     }
 
     // Start animation
