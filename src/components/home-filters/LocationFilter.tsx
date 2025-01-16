@@ -56,13 +56,13 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
   useEffect(() => {
     const loadGoogleMaps = async () => {
-      // Check if Google Maps is already loaded and initialized
-      if (window.google?.maps?.places && scriptLoadedRef.current) {
-        initAutocomplete();
-        return;
-      }
-
       try {
+        // Check if Google Maps is already loaded and initialized
+        if (window.google?.maps?.places && scriptLoadedRef.current) {
+          initAutocomplete();
+          return;
+        }
+
         setIsLoading(true);
         
         // Fetch API key from Edge Function
@@ -91,7 +91,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
                 initAutocomplete();
                 setIsLoading(false);
               }
-            }, 1000);
+            }, 2000); // Increased delay to ensure full initialization
           }
         };
 
