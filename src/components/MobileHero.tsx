@@ -4,7 +4,7 @@ import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export const MobileHero = () => {
   return (
-    <section className="relative h-[calc(80vh-130px)] flex items-center justify-center bg-[#FFFFFF] md:hidden mt-[50px]">
+    <section className="relative h-[calc(80vh-80px)] flex items-center justify-center bg-[#FFFFFF] md:hidden mt-[50px]">
       <div className="absolute inset-0">
         <MobileHeroImage />
       </div>
