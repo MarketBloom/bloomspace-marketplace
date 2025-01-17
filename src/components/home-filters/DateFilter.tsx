@@ -13,8 +13,7 @@ interface DateFilterProps {
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
   const handleSelect = (date: Date | undefined) => {
     setDate(date);
-    const popoverTrigger = document.activeElement as HTMLElement;
-    popoverTrigger?.blur();
+    // No need to manually blur - let Radix UI handle the popover state
   };
 
   return (

@@ -22,8 +22,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
 
   const handleSelect = (value: string | null) => {
     setTime(value);
-    const popoverTrigger = document.activeElement as HTMLElement;
-    popoverTrigger?.blur();
+    // No need to manually blur - let Radix UI handle the popover state
   };
 
   return (
