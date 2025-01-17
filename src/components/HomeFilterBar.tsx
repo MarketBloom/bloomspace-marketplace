@@ -37,45 +37,40 @@ export const HomeFilterBar = () => {
       borderWidth={1}
       duration={14}
       color={["#D73459", "#eed2d8"]}
-      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5"
+      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5 mt-0 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
-        <div>
+        <div className="space-y-1.5">
+          <label className="text-foreground text-xs font-medium">Location</label>
           <LocationFilter 
             location={location}
             setLocation={setLocation}
           />
         </div>
-        <div className="w-full md:w-1/4">
-          <DateFilter 
-            date={date} 
-            setDate={setDate} 
-          />
-        </div>
-        <div className="w-full md:w-1/4">
-          <TimeFilter 
-            time={time} 
-            setTime={setTime} 
-          />
-        </div>
-        <div className="w-full md:w-1/4">
-          <BudgetFilter 
-            budget={budget} 
-            setBudget={setBudget} 
-          />
-        </div>
+        <DateFilter 
+          date={date} 
+          setDate={setDate} 
+        />
+        <TimeFilter 
+          time={time} 
+          setTime={setTime} 
+        />
+        <BudgetFilter 
+          budget={budget} 
+          setBudget={setBudget} 
+        />
       </div>
       
-      <div className="grid grid-cols-2 gap-3 mt-3 md:mt-4">
+      <div className="grid grid-cols-2 gap-2 md:gap-4 mt-3 md:mt-4">
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
-          className="w-full text-xs md:text-sm h-11 px-2 md:px-8"
+          className="w-full text-xs md:text-sm h-[42px] px-2 md:px-8"
         >
           <Truck className="w-4 h-4 mr-1 md:mr-2" />
           Search Delivery
         </RainbowButton>
         <Button 
-          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-11 px-4 w-full rounded-lg border border-black"
+          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-[42px] px-4 w-full rounded-lg border border-black"
           onClick={() => handleSearch("pickup")}
         >
           <ShoppingBag className="w-4 h-4 mr-2" />
