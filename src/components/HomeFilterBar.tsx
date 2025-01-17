@@ -39,8 +39,8 @@ export const HomeFilterBar = () => {
       color={["#D73459", "#eed2d8"]}
       className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5"
     >
-      <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-        <div className="w-full md:w-1/4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
+        <div>
           <LocationFilter 
             location={location}
             setLocation={setLocation}
