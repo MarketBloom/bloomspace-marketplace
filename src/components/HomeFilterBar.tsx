@@ -37,28 +37,36 @@ export const HomeFilterBar = () => {
       borderWidth={1}
       duration={14}
       color={["#D73459", "#eed2d8"]}
-      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm py-7 px-2 md:p-5 mt-0 md:mt-0"
+      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5"
     >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 md:gap-4 mb-2 md:mb-4">
-        <LocationFilter 
-          location={location}
-          setLocation={setLocation}
-        />
-        <DateFilter 
-          date={date} 
-          setDate={setDate} 
-        />
-        <TimeFilter 
-          time={time} 
-          setTime={setTime} 
-        />
-        <BudgetFilter 
-          budget={budget} 
-          setBudget={setBudget} 
-        />
+      <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+        <div className="w-full md:w-1/4">
+          <LocationFilter 
+            location={location}
+            setLocation={setLocation}
+          />
+        </div>
+        <div className="w-full md:w-1/4">
+          <DateFilter 
+            date={date} 
+            setDate={setDate} 
+          />
+        </div>
+        <div className="w-full md:w-1/4">
+          <TimeFilter 
+            time={time} 
+            setTime={setTime} 
+          />
+        </div>
+        <div className="w-full md:w-1/4">
+          <BudgetFilter 
+            budget={budget} 
+            setBudget={setBudget} 
+          />
+        </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-1.5 md:gap-4">
+      <div className="grid grid-cols-2 gap-3 mt-3 md:mt-4">
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
           className="w-full text-xs md:text-sm h-11 px-2 md:px-8"
