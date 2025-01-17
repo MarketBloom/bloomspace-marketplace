@@ -39,7 +39,7 @@ export const Hero = () => {
               cooldownTime={3}
             />
           </div>
-          <div className="w-full max-w-4xl -mt-5">
+          <div className="w-full max-w-4xl mt-0">
             <HomeFilterBar />
           </div>
         </div>
