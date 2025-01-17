@@ -40,13 +40,10 @@ export const HomeFilterBar = () => {
       className="w-full bg-[#eed2d8]/80 backdrop-blur-sm py-7 px-2 md:p-5 mt-0 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 md:gap-4 mb-2 md:mb-4">
-        <div className="space-y-1.5">
-          <label className="text-foreground text-xs font-medium">Location</label>
-          <LocationFilter 
-            location={location}
-            setLocation={setLocation}
-          />
-        </div>
+        <LocationFilter 
+          location={location}
+          setLocation={setLocation}
+        />
         <DateFilter 
           date={date} 
           setDate={setDate} 
