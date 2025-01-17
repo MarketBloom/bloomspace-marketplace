@@ -61,7 +61,7 @@ export const HomeFilterBar = () => {
         />
       </div>
       
-      <div className="grid grid-cols-2 gap-2 md:gap-4 mt-3 md:mt-0">
+      <div className="grid grid-cols-2 gap-2 md:gap-4 mt-3 md:mt-4">
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
           className="w-full text-xs md:text-sm h-[42px] px-2 md:px-8"
