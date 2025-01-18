@@ -11,11 +11,6 @@ interface DateFilterProps {
 }
 
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
-  const handleSelect = (date: Date | undefined) => {
-    setDate(date);
-    // No need to manually blur - let Radix UI handle the popover state
-  };
-
   return (
     <div className="space-y-1.5">
       <label className="text-black text-xs font-medium">Pickup or Delivered by</label>
@@ -36,7 +31,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Calendar
             mode="single"
             selected={date}
-            onSelect={handleSelect}
+            onSelect={setDate}
             initialFocus
             className="rounded-lg border border-black"
           />

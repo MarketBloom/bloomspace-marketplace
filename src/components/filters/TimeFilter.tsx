@@ -20,11 +20,6 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
     }).flat()
   ];
 
-  const handleSelect = (value: string | null) => {
-    setTime(value);
-    // No need to manually blur - let Radix UI handle the popover state
-  };
-
   return (
     <div className="space-y-1.5">
       <label className="text-black text-xs font-medium">Time</label>
@@ -51,7 +46,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                   "w-full justify-start font-normal text-xs h-8",
                   time === slot.value ? "bg-black/5" : ""
                 )}
-                onClick={() => handleSelect(slot.value)}
+                onClick={() => setTime(slot.value)}
               >
                 {slot.label}
               </Button>
