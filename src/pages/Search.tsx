@@ -75,7 +75,6 @@ const Search = () => {
                     <FilterBar 
                       initialFulfillmentType={fulfillmentType}
                       initialDate={searchParams.get('date') ? new Date(searchParams.get('date')!) : undefined}
-                      initialTime={searchParams.get('time') || null}
                       initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
                       initialLocation={searchParams.get('location') || ""}
                       onFilterChange={updateSearchParams}

@@ -11,7 +11,6 @@ export const MobileFilterButton = () => {
   // Get initial values from URL parameters
   const initialFulfillmentType = (searchParams.get('fulfillment') as "pickup" | "delivery") || "delivery";
   const initialDate = searchParams.get('date') ? new Date(searchParams.get('date')!) : new Date();
-  const initialTime = searchParams.get('time') || null;
   const initialBudget = searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500];
   const initialLocation = searchParams.get('location') || "";
 
@@ -34,7 +33,6 @@ export const MobileFilterButton = () => {
               <FilterBar 
                 initialFulfillmentType={initialFulfillmentType}
                 initialDate={initialDate}
-                initialTime={initialTime}
                 initialBudget={initialBudget}
                 initialLocation={initialLocation}
               />
