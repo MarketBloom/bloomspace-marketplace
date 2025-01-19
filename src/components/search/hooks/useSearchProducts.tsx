@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { format } from "date-fns";
+import { format, isToday, parseISO } from "date-fns";
 
 interface UseSearchProductsProps {
   fulfillmentType: "pickup" | "delivery";
@@ -15,6 +15,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
       const location = searchParams.get('location');
+      const dateStr = searchParams.get('date');
 
       const { data: productsData, error } = await supabase
         .from('products')
@@ -28,7 +29,8 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             delivery_end_time,
             operating_hours,
             coordinates,
-            delivery_radius
+            delivery_radius,
+            delivery_days
           ),
           product_sizes (
             id,
@@ -44,6 +46,8 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
 
       const now = new Date();
       const currentTime = format(now, 'HH:mm:ss');
+      const searchDate = dateStr ? parseISO(dateStr) : null;
+      const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
       const productsWithVariants = productsData.flatMap(product => {
         // Skip products from florists outside delivery radius if location is specified
@@ -61,6 +65,21 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
           }
         }
 
+        // Check if florist delivers on the selected day
+        if (dayOfWeek && fulfillmentType === "delivery" && 
+            product.florist_profiles?.delivery_days && 
+            !product.florist_profiles.delivery_days.includes(dayOfWeek)) {
+          return [];
+        }
+
+        // For same-day delivery, check cutoff time
+        const isSameDay = searchDate && isToday(searchDate);
+        const cutoffTime = product.florist_profiles?.delivery_cutoff;
+        
+        if (isSameDay && cutoffTime && currentTime > cutoffTime) {
+          return [];
+        }
+
         if (!product.product_sizes || product.product_sizes.length === 0) {
           return [{
             ...product,
@@ -69,8 +88,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             sizeId: null,
             floristName: product.florist_profiles?.store_name,
             isDeliveryAvailable: fulfillmentType === "delivery" && 
-              product.florist_profiles?.delivery_cutoff && 
-              currentTime < product.florist_profiles.delivery_cutoff,
+              (!isSameDay || (cutoffTime && currentTime < cutoffTime)),
             isPickupAvailable: fulfillmentType === "pickup" && 
               product.florist_profiles?.operating_hours && 
               currentTime < product.florist_profiles?.delivery_end_time,
@@ -86,8 +104,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
           sizeId: size.id,
           floristName: product.florist_profiles?.store_name,
           isDeliveryAvailable: fulfillmentType === "delivery" && 
-            product.florist_profiles?.delivery_cutoff && 
-            currentTime < product.florist_profiles.delivery_cutoff,
+            (!isSameDay || (cutoffTime && currentTime < cutoffTime)),
           isPickupAvailable: fulfillmentType === "pickup" && 
             product.florist_profiles?.operating_hours && 
             currentTime < product.florist_profiles?.delivery_end_time,
