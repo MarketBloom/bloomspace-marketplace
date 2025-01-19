@@ -3,7 +3,6 @@ import { Search, ShoppingBag, Truck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { LocationFilter } from "./filters/LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
-import { TimeFilter } from "./filters/TimeFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
 import { CategoryFilter } from "./filters/CategoryFilter";
 import { OccasionFilter } from "./filters/OccasionFilter";
@@ -11,7 +10,6 @@ import { OccasionFilter } from "./filters/OccasionFilter";
 interface FilterBarProps {
   initialFulfillmentType?: "pickup" | "delivery";
   initialDate?: Date;
-  initialTime?: string | null;
   initialBudget?: number[];
   initialLocation?: string;
   onFilterChange?: (updates: Record<string, string>) => void;
@@ -20,14 +18,12 @@ interface FilterBarProps {
 export const FilterBar = ({ 
   initialFulfillmentType = "delivery",
   initialDate = undefined,
-  initialTime = null,
   initialBudget = [500],
   initialLocation = "",
   onFilterChange
 }: FilterBarProps) => {
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
-  const [time, setTime] = useState<string | null>(initialTime);
   const [location, setLocation] = useState<string>(initialLocation);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -42,11 +38,10 @@ export const FilterBar = ({
       
       if (location) updates.location = location;
       if (date) updates.date = date.toISOString();
-      if (time) updates.time = time;
       
       onFilterChange(updates);
     }
-  }, [fulfillmentType, location, date, time, budget, onFilterChange]);
+  }, [fulfillmentType, location, date, budget, onFilterChange]);
 
   return (
     <div className="space-y-3">
@@ -88,11 +83,6 @@ export const FilterBar = ({
       <DateFilter 
         date={date}
         setDate={setDate}
-      />
-      
-      <TimeFilter 
-        time={time}
-        setTime={setTime}
       />
       
       <BudgetFilter 
