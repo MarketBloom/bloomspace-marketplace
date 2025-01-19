@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface TimeFilterProps {
   time: string | null;
@@ -9,6 +10,8 @@ interface TimeFilterProps {
 }
 
 export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
+  const [open, setOpen] = useState(false);
+
   const timeSlots = [
     { label: "Any Time", value: null },
     ...Array.from({ length: 24 }, (_, i) => {
@@ -23,7 +26,7 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
   return (
     <div className="space-y-1.5">
       <label className="text-black text-xs font-medium">Time</label>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -46,7 +49,10 @@ export const TimeFilter = ({ time, setTime }: TimeFilterProps) => {
                   "w-full justify-start font-normal text-xs h-8",
                   time === slot.value ? "bg-black/5" : ""
                 )}
-                onClick={() => setTime(slot.value)}
+                onClick={() => {
+                  setTime(slot.value);
+                  setOpen(false);
+                }}
               >
                 {slot.label}
               </Button>
