@@ -4,7 +4,6 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 interface DateFilterProps {
   date: Date | undefined;
@@ -12,12 +11,10 @@ interface DateFilterProps {
 }
 
 export const DateFilter = ({ date, setDate }: DateFilterProps) => {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="space-y-1.5">
       <label className="text-black text-xs font-medium">Pickup or Delivered by</label>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -34,10 +31,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Calendar
             mode="single"
             selected={date}
-            onSelect={(newDate) => {
-              setDate(newDate);
-              setOpen(false);
-            }}
+            onSelect={setDate}
             initialFocus
             className="rounded-lg border border-black"
           />
