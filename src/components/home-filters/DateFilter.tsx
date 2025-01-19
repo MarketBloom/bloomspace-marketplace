@@ -19,7 +19,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal bg-white border border-black h-11 text-xs rounded-lg",
+              "w-full justify-start text-left font-normal bg-white border border-black h-11 text-xs rounded-lg relative z-[100]",
               !date && "text-muted-foreground"
             )}
           >
@@ -27,7 +27,7 @@ export const DateFilter = ({ date, setDate }: DateFilterProps) => {
             {date ? format(date, "PPP") : "Any Date"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-auto p-0">
+        <PopoverContent align="start" className="w-auto p-0 z-[101]">
           <Calendar
             mode="single"
             selected={date}
