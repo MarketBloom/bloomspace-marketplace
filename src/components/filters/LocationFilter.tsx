@@ -87,7 +87,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           if (place && place.formatted_address) {
             // Only update if the address has changed
             if (lastGeocoded.current !== place.formatted_address) {
-              console.debug('Geocoding new location:', place.formatted_address);
               lastGeocoded.current = place.formatted_address;
               setLocation(place.formatted_address);
               setInputValue(place.formatted_address);
