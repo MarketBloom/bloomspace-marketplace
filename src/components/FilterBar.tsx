@@ -28,6 +28,8 @@ export const FilterBar = ({
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
+  const [hasInteractedWithOccasions, setHasInteractedWithOccasions] = useState(false);
+  const [hasInteractedWithCategories, setHasInteractedWithCategories] = useState(false);
 
   useEffect(() => {
     if (onFilterChange) {
@@ -39,9 +41,37 @@ export const FilterBar = ({
       if (location) updates.location = location;
       if (date) updates.date = date.toISOString();
       
+      // Only include occasions and categories if they've been interacted with
+      if (hasInteractedWithOccasions && selectedOccasions.length > 0) {
+        updates.occasions = selectedOccasions.join(',');
+      }
+      if (hasInteractedWithCategories && selectedCategories.length > 0) {
+        updates.categories = selectedCategories.join(',');
+      }
+      
       onFilterChange(updates);
     }
-  }, [fulfillmentType, location, date, budget, onFilterChange]);
+  }, [
+    fulfillmentType, 
+    location, 
+    date, 
+    budget, 
+    selectedOccasions,
+    selectedCategories,
+    hasInteractedWithOccasions,
+    hasInteractedWithCategories,
+    onFilterChange
+  ]);
+
+  const handleOccasionsChange = (occasions: string[]) => {
+    setHasInteractedWithOccasions(true);
+    setSelectedOccasions(occasions);
+  };
+
+  const handleCategoriesChange = (categories: string[]) => {
+    setHasInteractedWithCategories(true);
+    setSelectedCategories(categories);
+  };
 
   return (
     <div className="space-y-3">
@@ -92,12 +122,12 @@ export const FilterBar = ({
       
       <CategoryFilter 
         selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
+        setSelectedCategories={handleCategoriesChange}
       />
       
       <OccasionFilter 
         selectedOccasions={selectedOccasions}
-        setSelectedOccasions={setSelectedOccasions}
+        setSelectedOccasions={handleOccasionsChange}
       />
     </div>
   );
