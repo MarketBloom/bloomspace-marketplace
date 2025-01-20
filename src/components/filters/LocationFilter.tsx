@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useDebouncedCallback } from "use-hooks-ts";
 
 interface LocationFilterProps {
   location: string;
@@ -57,6 +58,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
+  const lastGeocoded = useRef<string>("");
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -81,8 +83,13 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
         try {
           const place = autocompleteRef.current.getPlace();
           if (place && place.formatted_address) {
-            setLocation(place.formatted_address);
-            setInputValue(place.formatted_address);
+            // Only update if the address has changed
+            if (lastGeocoded.current !== place.formatted_address) {
+              console.debug('Geocoding new location:', place.formatted_address);
+              lastGeocoded.current = place.formatted_address;
+              setLocation(place.formatted_address);
+              setInputValue(place.formatted_address);
+            }
           }
         } catch (error) {
           console.error("Error handling place selection:", error);
@@ -94,6 +101,17 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       toast.error("Error initializing location search. Please try again.");
     }
   };
+
+  // Debounced input handler
+  const debouncedInputChange = useDebouncedCallback(
+    (value: string) => {
+      if (!value) {
+        setLocation("");
+      }
+      setInputValue(value);
+    },
+    500 // 500ms delay
+  );
 
   useEffect(() => {
     const setupAutocomplete = async () => {
@@ -125,11 +143,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (!value) {
-      setLocation("");
-    }
+    debouncedInputChange(e.target.value);
   };
 
   return (
