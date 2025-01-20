@@ -63,7 +63,10 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         dayOfWeek
       });
 
-      let filteredProducts = productsData.flatMap(product => {
+      // First filter by location if specified
+      let filteredProducts: any[] = [];
+      
+      productsData.forEach(product => {
         // Skip products from florists outside delivery radius if location is specified
         if (location && userCoordinates && product.florist_profiles?.coordinates) {
           try {
@@ -95,52 +98,84 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
                 isWithinRadius: distance <= deliveryRadius
               });
               
-              if (distance > deliveryRadius) {
-                console.log(`${product.florist_profiles.store_name} excluded - outside delivery radius`);
-                return [];
+              // Only add products if within delivery radius
+              if (distance <= deliveryRadius) {
+                if (!product.product_sizes || product.product_sizes.length === 0) {
+                  filteredProducts.push({
+                    ...product,
+                    displaySize: null,
+                    displayPrice: product.price,
+                    sizeId: null,
+                    floristName: product.florist_profiles?.store_name,
+                    isDeliveryAvailable: fulfillmentType === "delivery" && 
+                      product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
+                    isPickupAvailable: fulfillmentType === "pickup" && 
+                      product.florist_profiles?.operating_hours && 
+                      currentTime < product.florist_profiles?.delivery_end_time,
+                    deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+                    pickupCutoff: product.florist_profiles?.delivery_end_time
+                  });
+                } else {
+                  product.product_sizes.forEach(size => {
+                    filteredProducts.push({
+                      ...product,
+                      displaySize: size.name,
+                      displayPrice: product.price + (size.price_adjustment || 0),
+                      sizeId: size.id,
+                      floristName: product.florist_profiles?.store_name,
+                      isDeliveryAvailable: fulfillmentType === "delivery" && 
+                        product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
+                      isPickupAvailable: fulfillmentType === "pickup" && 
+                        product.florist_profiles?.operating_hours && 
+                        currentTime < product.florist_profiles?.delivery_end_time,
+                      deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+                      pickupCutoff: product.florist_profiles?.delivery_end_time,
+                      images: size.images?.length ? size.images : product.images
+                    });
+                  });
+                }
               }
-            } else {
-              console.error('Invalid coordinate format:', coordStr);
-              return [];
             }
           } catch (e) {
             console.error('Error parsing coordinates for', product.florist_profiles.store_name, e);
-            return [];
+          }
+        } else {
+          // If no location filtering, add all products
+          if (!product.product_sizes || product.product_sizes.length === 0) {
+            filteredProducts.push({
+              ...product,
+              displaySize: null,
+              displayPrice: product.price,
+              sizeId: null,
+              floristName: product.florist_profiles?.store_name,
+              isDeliveryAvailable: fulfillmentType === "delivery" && 
+                product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
+              isPickupAvailable: fulfillmentType === "pickup" && 
+                product.florist_profiles?.operating_hours && 
+                currentTime < product.florist_profiles?.delivery_end_time,
+              deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+              pickupCutoff: product.florist_profiles?.delivery_end_time
+            });
+          } else {
+            product.product_sizes.forEach(size => {
+              filteredProducts.push({
+                ...product,
+                displaySize: size.name,
+                displayPrice: product.price + (size.price_adjustment || 0),
+                sizeId: size.id,
+                floristName: product.florist_profiles?.store_name,
+                isDeliveryAvailable: fulfillmentType === "delivery" && 
+                  product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
+                isPickupAvailable: fulfillmentType === "pickup" && 
+                  product.florist_profiles?.operating_hours && 
+                  currentTime < product.florist_profiles?.delivery_end_time,
+                deliveryCutoff: product.florist_profiles?.delivery_cutoff,
+                pickupCutoff: product.florist_profiles?.delivery_end_time,
+                images: size.images?.length ? size.images : product.images
+              });
+            });
           }
         }
-
-        if (!product.product_sizes || product.product_sizes.length === 0) {
-          return [{
-            ...product,
-            displaySize: null,
-            displayPrice: product.price,
-            sizeId: null,
-            floristName: product.florist_profiles?.store_name,
-            isDeliveryAvailable: fulfillmentType === "delivery" && 
-              product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
-            isPickupAvailable: fulfillmentType === "pickup" && 
-              product.florist_profiles?.operating_hours && 
-              currentTime < product.florist_profiles?.delivery_end_time,
-            deliveryCutoff: product.florist_profiles?.delivery_cutoff,
-            pickupCutoff: product.florist_profiles?.delivery_end_time
-          }];
-        }
-
-        return product.product_sizes.map(size => ({
-          ...product,
-          displaySize: size.name,
-          displayPrice: product.price + (size.price_adjustment || 0),
-          sizeId: size.id,
-          floristName: product.florist_profiles?.store_name,
-          isDeliveryAvailable: fulfillmentType === "delivery" && 
-            product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
-          isPickupAvailable: fulfillmentType === "pickup" && 
-            product.florist_profiles?.operating_hours && 
-            currentTime < product.florist_profiles?.delivery_end_time,
-          deliveryCutoff: product.florist_profiles?.delivery_cutoff,
-          pickupCutoff: product.florist_profiles?.delivery_end_time,
-          images: size.images?.length ? size.images : product.images
-        }));
       });
 
       // Apply budget filter after location filtering
