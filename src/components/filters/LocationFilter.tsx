@@ -3,12 +3,7 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useDebouncedCallback } from "use-hooks-ts";
-
-interface LocationFilterProps {
-  location: string;
-  setLocation: (location: string) => void;
-}
+import { useDebounce } from "usehooks-ts";
 
 // Global script loading state
 let googleMapsLoaded = false;
@@ -51,6 +46,11 @@ const loadGoogleMapsScript = async () => {
 
   return loadingPromise;
 };
+
+interface LocationFilterProps {
+  location: string;
+  setLocation: (location: string) => void;
+}
 
 export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
@@ -102,16 +102,13 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     }
   };
 
-  // Debounced input handler
-  const debouncedInputChange = useDebouncedCallback(
-    (value: string) => {
-      if (!value) {
-        setLocation("");
-      }
-      setInputValue(value);
-    },
-    500 // 500ms delay
-  );
+  // Use debounce instead of debouncedCallback
+  const debouncedSetValue = useDebounce((value: string) => {
+    if (!value) {
+      setLocation("");
+    }
+    setInputValue(value);
+  }, 500);
 
   useEffect(() => {
     const setupAutocomplete = async () => {
@@ -143,7 +140,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedInputChange(e.target.value);
+    debouncedSetValue(e.target.value);
   };
 
   return (
