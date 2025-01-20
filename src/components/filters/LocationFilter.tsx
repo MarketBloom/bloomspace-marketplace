@@ -59,9 +59,9 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
   const lastGeocoded = useRef<string>("");
-
   const [debouncedValue] = useDebounceValue(inputValue, 500);
 
+  // Initialize autocomplete when Google Maps is loaded
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
@@ -93,16 +93,15 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
             }
           }
         } catch (error) {
-          console.error("Error handling place selection:", error);
           toast.error("Error selecting location. Please try again.");
         }
       });
     } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
       toast.error("Error initializing location search. Please try again.");
     }
   };
 
+  // Update location when debounced value changes
   useEffect(() => {
     if (!debouncedValue) {
       setLocation("");
@@ -111,6 +110,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     }
   }, [debouncedValue, setLocation]);
 
+  // Load Google Maps and initialize autocomplete
   useEffect(() => {
     const setupAutocomplete = async () => {
       try {
@@ -122,7 +122,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           setIsLoading(false);
         }
       } catch (error) {
-        console.error("Error loading Google Maps:", error);
         if (isMounted.current) {
           toast.error("Error loading location search. Please try again.");
           setIsLoading(false);
