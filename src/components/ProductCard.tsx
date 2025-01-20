@@ -34,7 +34,7 @@ export const ProductCard = ({
   deliveryCutoff,
   pickupCutoff,
   displaySize,
-  displayPrice,
+  displayPrice = 0, // Add default value
   sizeId
 }: ProductCardProps) => {
   const navigate = useNavigate();

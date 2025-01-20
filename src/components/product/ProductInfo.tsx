@@ -7,7 +7,12 @@ interface ProductInfoProps {
   displaySize?: string | null;
 }
 
-export const ProductInfo = ({ title, price, floristName, displaySize }: ProductInfoProps) => {
+export const ProductInfo = ({ 
+  title, 
+  price = 0, // Add default value
+  floristName, 
+  displaySize 
+}: ProductInfoProps) => {
   const isMobile = useIsMobile();
   
   return (
@@ -26,7 +31,7 @@ export const ProductInfo = ({ title, price, floristName, displaySize }: ProductI
             {displaySize || "Standard"}
           </p>
           <p className="text-[10px] md:text-[12px] font-medium text-foreground whitespace-nowrap pl-1">
-            ${price.toFixed(2)}
+            ${(price || 0).toFixed(2)}
           </p>
         </div>
       </div>
