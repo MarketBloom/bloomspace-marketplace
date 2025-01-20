@@ -1103,6 +1103,27 @@ export type Database = {
         }
         Returns: boolean
       }
+      filter_florists_by_distance: {
+        Args: {
+          user_lat: number
+          user_lng: number
+        }
+        Returns: {
+          id: string
+          store_name: string
+          address: string
+          about_text: string
+          operating_hours: Json
+          delivery_fee: number
+          delivery_radius: number
+          minimum_order_amount: number
+          logo_url: string
+          banner_url: string
+          social_links: Json
+          store_status: string
+          coordinates: unknown
+        }[]
+      }
       geography:
         | {
             Args: {

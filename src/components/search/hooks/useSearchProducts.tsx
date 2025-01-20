@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, isToday, parseISO } from "date-fns";
+import { FloristProfile } from "@/types/florist";
 
 interface UseSearchProductsProps {
   fulfillmentType: "pickup" | "delivery";
@@ -45,7 +46,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
 
       // Filter florists based on location and delivery radius if coordinates are available
       if (location && userCoordinates && allFlorists) {
-        const { data: filteredFlorists, error: rpcError } = await supabase.rpc<any>(
+        const { data: filteredFlorists, error: rpcError } = await supabase.rpc<FloristProfile[], { user_lat: number; user_lng: number }>(
           'filter_florists_by_distance',
           {
             user_lat: userCoordinates[0],
