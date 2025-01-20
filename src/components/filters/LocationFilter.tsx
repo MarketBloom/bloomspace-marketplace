@@ -3,7 +3,12 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useDebounceValue } from "usehooks-ts";
+
+interface LocationFilterProps {
+  location: string;
+  setLocation: (location: string) => void;
+  onCoordsChange?: (coords: [number, number] | null) => void;
+}
 
 // Global script loading state
 let googleMapsLoaded = false;
@@ -47,21 +52,13 @@ const loadGoogleMapsScript = async () => {
   return loadingPromise;
 };
 
-interface LocationFilterProps {
-  location: string;
-  setLocation: (location: string) => void;
-}
-
-export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
+export const LocationFilter = ({ location, setLocation, onCoordsChange }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
-  const lastGeocoded = useRef<string>("");
-  const [debouncedValue] = useDebounceValue(inputValue, 500);
 
-  // Initialize autocomplete when Google Maps is loaded
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
@@ -84,33 +81,36 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
         try {
           const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
-            // Only update if the address has changed
-            if (lastGeocoded.current !== place.formatted_address) {
-              lastGeocoded.current = place.formatted_address;
-              setLocation(place.formatted_address);
-              setInputValue(place.formatted_address);
+          if (place && place.formatted_address && place.geometry?.location) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            
+            setLocation(place.formatted_address);
+            setInputValue(place.formatted_address);
+            
+            if (onCoordsChange) {
+              onCoordsChange([lat, lng]);
+            }
+          } else {
+            // If no geometry, clear coordinates
+            if (onCoordsChange) {
+              onCoordsChange(null);
             }
           }
         } catch (error) {
+          console.error("Error handling place selection:", error);
           toast.error("Error selecting location. Please try again.");
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
         }
       });
     } catch (error) {
+      console.error("Error initializing Places Autocomplete:", error);
       toast.error("Error initializing location search. Please try again.");
     }
   };
 
-  // Update location when debounced value changes
-  useEffect(() => {
-    if (!debouncedValue) {
-      setLocation("");
-    } else {
-      setLocation(debouncedValue);
-    }
-  }, [debouncedValue, setLocation]);
-
-  // Load Google Maps and initialize autocomplete
   useEffect(() => {
     const setupAutocomplete = async () => {
       try {
@@ -122,6 +122,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           setIsLoading(false);
         }
       } catch (error) {
+        console.error("Error loading Google Maps:", error);
         if (isMounted.current) {
           toast.error("Error loading location search. Please try again.");
           setIsLoading(false);
@@ -140,23 +141,29 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+    if (!value) {
+      setLocation("");
+      if (onCoordsChange) {
+        onCoordsChange(null);
+      }
+    }
   };
 
   return (
-    <div className="space-y-1.5">
-      <label className="text-foreground text-xs font-medium">Location</label>
+    <div className="relative">
       <div className="relative">
-        <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-        <Input 
-          type="text" 
-          placeholder="Enter city or postcode"
+        <Input
+          type="text"
+          placeholder="Enter location..."
           value={inputValue}
           onChange={handleInputChange}
           className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
           ref={inputRef}
           disabled={isLoading}
         />
+        <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
     </div>
   );

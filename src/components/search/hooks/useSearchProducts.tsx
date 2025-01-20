@@ -10,8 +10,14 @@ interface UseSearchProductsProps {
 
 export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinates }: UseSearchProductsProps) => {
   return useQuery({
-    queryKey: ['products', fulfillmentType, searchParams.toString()],
+    queryKey: ['products', fulfillmentType, searchParams.toString(), userCoordinates],
     queryFn: async () => {
+      console.log('Fetching products with params:', {
+        fulfillmentType,
+        searchParams: Object.fromEntries(searchParams.entries()),
+        userCoordinates
+      });
+
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
       const location = searchParams.get('location');
@@ -49,9 +55,12 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const searchDate = dateStr ? parseISO(dateStr) : null;
       const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
-      const productsWithVariants = productsData.flatMap(product => {
-        // Skip products from florists outside delivery radius if location is specified
-        if (location && userCoordinates && product.florist_profiles?.coordinates) {
+      // First filter by location if coordinates are provided
+      let filteredProducts = productsData;
+      if (location && userCoordinates) {
+        filteredProducts = productsData.filter(product => {
+          if (!product.florist_profiles?.coordinates) return false;
+          
           const floristCoords = JSON.parse(String(product.florist_profiles.coordinates));
           const distance = window.calculate_distance(
             userCoordinates[0],
@@ -60,11 +69,12 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             floristCoords[1]
           );
           
-          if (distance > (product.florist_profiles.delivery_radius || 0)) {
-            return [];
-          }
-        }
+          return distance <= (product.florist_profiles.delivery_radius || 5);
+        });
+      }
 
+      // Then create product variants and apply other filters
+      const productsWithVariants = filteredProducts.flatMap(product => {
         // Check if florist delivers on the selected day
         if (dayOfWeek && fulfillmentType === "delivery" && 
             product.florist_profiles?.delivery_days && 
@@ -114,6 +124,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         }));
       });
 
+      // Finally apply budget filter
       if (maxBudget) {
         return productsWithVariants.filter(product => product.displayPrice <= maxBudget);
       }

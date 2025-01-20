@@ -14,11 +14,17 @@ export const HomeFilterBar = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [budget, setBudget] = useState<number[]>([500]);
   const [location, setLocation] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
 
   const handleSearch = (fulfillmentType: "pickup" | "delivery") => {
     const searchParams = new URLSearchParams();
     
-    if (location) searchParams.append("location", location);
+    // Only include location params if we have both location text and coordinates
+    if (location && coordinates) {
+      searchParams.append("location", location);
+      searchParams.append("lat", coordinates[0].toString());
+      searchParams.append("lng", coordinates[1].toString());
+    }
     
     // If date is today, also include the current time to filter by cutoff
     if (date) {
@@ -57,6 +63,7 @@ export const HomeFilterBar = () => {
           <LocationFilter 
             location={location}
             setLocation={setLocation}
+            onCoordsChange={setCoordinates}
           />
         </div>
         <DateFilter 
@@ -73,6 +80,7 @@ export const HomeFilterBar = () => {
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
           className="w-full text-xs md:text-sm h-[42px] px-2 md:px-8"
+          disabled={!!(location && !coordinates)} // Disable if location entered but no coordinates
         >
           <Truck className="w-4 h-4 mr-1 md:mr-2" />
           Search Delivery
@@ -80,6 +88,7 @@ export const HomeFilterBar = () => {
         <Button 
           className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-[42px] px-4 w-full rounded-lg border border-black"
           onClick={() => handleSearch("pickup")}
+          disabled={!!(location && !coordinates)} // Disable if location entered but no coordinates
         >
           <ShoppingBag className="w-4 h-4 mr-2" />
           Search Pickup
