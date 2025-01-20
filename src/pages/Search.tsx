@@ -21,10 +21,16 @@ const Search = () => {
 
   const { isGoogleMapsLoaded } = useGoogleMaps({ 
     searchParams, 
-    onCoordsChange: setUserCoordinates 
+    onCoordsChange: (coords) => {
+      if (JSON.stringify(coords) !== JSON.stringify(userCoordinates)) {
+        setUserCoordinates(coords);
+        // Only log coordinates when they actually change
+        if (coords) {
+          console.debug('User coordinates updated:', coords);
+        }
+      }
+    }
   });
-
-  console.log('Search page user coordinates:', userCoordinates);
 
   const { data: products, isLoading: isLoadingProducts } = useSearchProducts({
     fulfillmentType,
