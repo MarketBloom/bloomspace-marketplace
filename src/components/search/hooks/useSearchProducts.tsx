@@ -17,6 +17,14 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const location = searchParams.get('location');
       const dateStr = searchParams.get('date');
 
+      console.log('Search params:', {
+        budgetStr,
+        maxBudget,
+        location,
+        dateStr,
+        userCoordinates
+      });
+
       const { data: productsData, error } = await supabase
         .from('products')
         .select(`
@@ -49,28 +57,54 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const searchDate = dateStr ? parseISO(dateStr) : null;
       const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
+      console.log('Time context:', {
+        currentTime,
+        searchDate,
+        dayOfWeek
+      });
+
       const productsWithVariants = productsData.flatMap(product => {
         // Skip products from florists outside delivery radius if location is specified
         if (location && userCoordinates && product.florist_profiles?.coordinates) {
           try {
             // Parse the PostGIS POINT format: "POINT(longitude latitude)"
             const coordStr = String(product.florist_profiles.coordinates);
+            console.log(`Raw florist coordinates for ${product.florist_profiles.store_name}:`, coordStr);
+
             const matches = coordStr.match(/POINT\(([-\d.]+) ([-\d.]+)\)/);
             if (matches) {
               const [_, lon, lat] = matches;
+              console.log('Parsed coordinates:', {
+                floristLat: parseFloat(lat),
+                floristLon: parseFloat(lon),
+                userLat: userCoordinates[0],
+                userLon: userCoordinates[1]
+              });
+
               const distance = window.calculate_distance(
-                userCoordinates[0],
-                userCoordinates[1],
-                parseFloat(lat),
-                parseFloat(lon)
+                userCoordinates[0], // user latitude
+                userCoordinates[1], // user longitude
+                parseFloat(lat),    // florist latitude
+                parseFloat(lon)     // florist longitude
               );
+
+              const deliveryRadius = product.florist_profiles.delivery_radius || 0;
+              console.log('Distance calculation:', {
+                distance: distance.toFixed(2) + ' km',
+                deliveryRadius: deliveryRadius + ' km',
+                isWithinRadius: distance <= deliveryRadius
+              });
               
-              if (distance > (product.florist_profiles.delivery_radius || 0)) {
+              if (distance > deliveryRadius) {
+                console.log(`${product.florist_profiles.store_name} excluded - outside delivery radius`);
                 return [];
               }
+            } else {
+              console.error('Invalid coordinate format:', coordStr);
+              return [];
             }
           } catch (e) {
-            console.error('Error parsing coordinates:', e);
+            console.error('Error parsing coordinates for', product.florist_profiles.store_name, e);
             return [];
           }
         }
