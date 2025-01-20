@@ -1,104 +1,84 @@
-import { Button } from "@/components/ui/button";
-import { Search, ShoppingBag, Truck } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LocationFilter } from "./filters/LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
-import { CategoryFilter } from "./filters/CategoryFilter";
-import { OccasionFilter } from "./filters/OccasionFilter";
+import { Button } from "./ui/button";
+import { RainbowButton } from "./ui/rainbow-button";
+import { ShoppingBag, Truck } from "lucide-react";
 
 interface FilterBarProps {
-  initialFulfillmentType?: "pickup" | "delivery";
+  initialFulfillmentType: "pickup" | "delivery";
   initialDate?: Date;
-  initialBudget?: number[];
-  initialLocation?: string;
-  onFilterChange?: (updates: Record<string, string>) => void;
+  initialBudget: number[];
+  initialLocation: string;
+  onFilterChange: (updates: Record<string, string>) => void;
+  onCoordinatesChange?: (lat: number, lng: number) => void;
 }
 
-export const FilterBar = ({ 
-  initialFulfillmentType = "delivery",
-  initialDate = undefined,
-  initialBudget = [500],
-  initialLocation = "",
-  onFilterChange
+export const FilterBar = ({
+  initialFulfillmentType,
+  initialDate,
+  initialBudget,
+  initialLocation,
+  onFilterChange,
+  onCoordinatesChange
 }: FilterBarProps) => {
-  const [budget, setBudget] = useState<number[]>(initialBudget);
+  const [fulfillmentType, setFulfillmentType] = useState(initialFulfillmentType);
   const [date, setDate] = useState<Date | undefined>(initialDate);
+  const [budget, setBudget] = useState<number[]>(initialBudget);
   const [location, setLocation] = useState<string>(initialLocation);
-  const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
 
-  useEffect(() => {
-    if (onFilterChange) {
-      const updates: Record<string, string> = {
-        fulfillment: fulfillmentType,
-        budget: budget[0].toString()
-      };
-      
-      if (location) updates.location = location;
-      if (date) updates.date = date.toISOString();
-      
-      onFilterChange(updates);
+  const handleSearch = () => {
+    const searchParams: Record<string, string> = {
+      fulfillment: fulfillmentType,
+      budget: budget[0].toString(),
+      location,
+    };
+
+    if (date) {
+      searchParams.date = date.toISOString();
     }
-  }, [fulfillmentType, location, date, budget, onFilterChange]);
+
+    onFilterChange(searchParams);
+  };
 
   return (
-    <div className="space-y-3">
-      <div className="space-y-1.5">
-        <label className="text-foreground text-xs font-medium">Fulfillment Method</label>
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant={fulfillmentType === "delivery" ? "default" : "outline"}
-            onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
-              fulfillmentType === "delivery" 
-                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-                : ''
-            }`}
-          >
-            <Truck className="w-3.5 h-3.5 mr-2" />
-            Delivery
-          </Button>
-          <Button
-            variant={fulfillmentType === "pickup" ? "default" : "outline"}
-            onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
-              fulfillmentType === "pickup" 
-                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-                : ''
-            }`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 mr-2" />
-            Pickup
-          </Button>
-        </div>
-      </div>
-      
-      <LocationFilter 
+    <div className="space-y-4">
+      <LocationFilter
         location={location}
-        setLocation={setLocation}
+        setLocation={(loc) => {
+          setLocation(loc);
+          if (onCoordinatesChange) {
+            onCoordinatesChange(0, 0); // Reset coordinates on location change
+          }
+        }}
+        onCoordinatesChange={onCoordinatesChange}
       />
-      
-      <DateFilter 
-        date={date}
-        setDate={setDate}
-      />
-      
-      <BudgetFilter 
-        budget={budget}
-        setBudget={setBudget}
-      />
-      
-      <CategoryFilter 
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-      />
-      
-      <OccasionFilter 
-        selectedOccasions={selectedOccasions}
-        setSelectedOccasions={setSelectedOccasions}
-      />
+      <DateFilter date={date} setDate={setDate} />
+      <BudgetFilter budget={budget} setBudget={setBudget} />
+
+      <div className="grid grid-cols-2 gap-2 md:gap-4 mt-3 md:mt-4">
+        <RainbowButton
+          onClick={() => {
+            setFulfillmentType("delivery");
+            handleSearch();
+          }}
+          className="w-full text-xs md:text-sm h-[42px] px-2 md:px-8"
+        >
+          <Truck className="w-4 h-4 mr-1 md:mr-2" />
+          Search Delivery
+        </RainbowButton>
+        <Button
+          className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-[42px] px-4 w-full rounded-lg border border-black"
+          onClick={() => {
+            setFulfillmentType("pickup");
+            handleSearch();
+          }}
+        >
+          <ShoppingBag className="w-4 h-4 mr-2" />
+          Search Pickup
+        </Button>
+      </div>
     </div>
   );
 };

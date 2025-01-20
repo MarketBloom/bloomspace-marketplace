@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { useSearchProducts } from "@/components/search/hooks/useSearchProducts";
 import { useSearchFlorists } from "@/components/search/hooks/useSearchFlorists";
 import { useGoogleMaps } from "@/components/search/hooks/useGoogleMaps";
+import { useScreenSize } from "../hooks/use-screen-size";
 
 const Search = () => {
   const isMobile = useIsMobile();
@@ -18,37 +19,7 @@ const Search = () => {
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
   const [userCoordinates, setUserCoordinates] = useState<[number, number] | null>(null);
-
-  const { isGoogleMapsLoaded } = useGoogleMaps({ 
-    searchParams, 
-    onCoordsChange: (coords) => {
-      if (JSON.stringify(coords) !== JSON.stringify(userCoordinates)) {
-        setUserCoordinates(coords);
-        // Only log coordinates when they actually change
-        if (coords) {
-          console.debug('User coordinates updated:', coords);
-        }
-      }
-    }
-  });
-
-  const { data: products, isLoading: isLoadingProducts } = useSearchProducts({
-    fulfillmentType,
-    searchParams,
-    userCoordinates
-  });
-
-  const { data: florists, isLoading: isLoadingFlorists } = useSearchFlorists({
-    searchParams,
-    userCoordinates
-  });
-
-  useEffect(() => {
-    const fulfillment = searchParams.get('fulfillment');
-    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
-      setFulfillmentType(fulfillment);
-    }
-  }, [searchParams]);
+  const screenSize = useScreenSize();
 
   const updateSearchParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);
@@ -61,6 +32,32 @@ const Search = () => {
     });
     setSearchParams(newParams, { replace: true });
   };
+
+  useEffect(() => {
+    const fulfillment = searchParams.get('fulfillment');
+    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
+      setFulfillmentType(fulfillment);
+    }
+  }, [searchParams]);
+
+  const handleCoordinatesChange = (lat: number, lng: number) => {
+    if (lat === 0 && lng === 0) {
+      setUserCoordinates(null);
+    } else {
+      setUserCoordinates([lat, lng]);
+    }
+  };
+
+  const { data: products, isLoading: isLoadingProducts } = useSearchProducts({
+    fulfillmentType,
+    searchParams,
+    userCoordinates
+  });
+
+  const { data: florists, isLoading: isLoadingFlorists } = useSearchFlorists({
+    searchParams,
+    userCoordinates
+  });
 
   if (isMobile) {
     return <MobileSearch />;
@@ -76,7 +73,6 @@ const Search = () => {
             <DeliveryInfo />
             
             <div className="lg:grid lg:grid-cols-[260px_1fr] gap-4">
-              {/* Sidebar */}
               <aside className="hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
                 <div className="w-full">
                   <div className="bg-[#eed2d8] rounded-lg p-3 border border-black">
@@ -86,6 +82,7 @@ const Search = () => {
                       initialBudget={searchParams.get('budget') ? [parseInt(searchParams.get('budget')!)] : [500]}
                       initialLocation={searchParams.get('location') || ""}
                       onFilterChange={updateSearchParams}
+                      onCoordinatesChange={handleCoordinatesChange}
                     />
                   </div>
                 </div>
@@ -93,7 +90,6 @@ const Search = () => {
 
               <MobileFilterButton />
 
-              {/* Main Content */}
               <div className="bg-[#eed2d8] rounded-lg lg:p-6 px-4 mt-4 lg:mt-0 border border-black">
                 <SearchHeader viewMode={viewMode} setViewMode={setViewMode} />
                 <SearchResults 
