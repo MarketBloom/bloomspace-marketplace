@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useDebounce } from "usehooks-ts";
+import { useDebounceValue } from "usehooks-ts";
 
 // Global script loading state
 let googleMapsLoaded = false;
@@ -102,13 +102,16 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     }
   };
 
-  // Use debounce instead of debouncedCallback
-  const debouncedSetValue = useDebounce((value: string) => {
-    if (!value) {
+  // Use debounce for input value
+  const [debouncedValue] = useDebounceValue(inputValue, 500);
+
+  useEffect(() => {
+    if (!debouncedValue) {
       setLocation("");
+    } else {
+      setLocation(debouncedValue);
     }
-    setInputValue(value);
-  }, 500);
+  }, [debouncedValue, setLocation]);
 
   useEffect(() => {
     const setupAutocomplete = async () => {
@@ -140,7 +143,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSetValue(e.target.value);
+    setInputValue(e.target.value);
   };
 
   return (
