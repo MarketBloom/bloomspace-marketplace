@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { LocationFilter } from "./filters/LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
-import { TimeFilter } from "./filters/TimeFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
 import { Button } from "./ui/button";
 import { RainbowButton } from "./ui/rainbow-button";
@@ -26,7 +25,6 @@ export const FilterBar = ({
 }: FilterBarProps) => {
   const [fulfillmentType, setFulfillmentType] = useState(initialFulfillmentType);
   const [date, setDate] = useState<Date | undefined>(initialDate);
-  const [time, setTime] = useState<string | null>(null);
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [location, setLocation] = useState<string>(initialLocation);
 
@@ -39,10 +37,6 @@ export const FilterBar = ({
 
     if (date) {
       searchParams.date = date.toISOString();
-    }
-
-    if (time) {
-      searchParams.time = time;
     }
 
     onFilterChange(searchParams);
@@ -60,12 +54,7 @@ export const FilterBar = ({
         }}
         onCoordinatesChange={onCoordinatesChange}
       />
-
-      <div className="grid grid-cols-2 gap-2">
-        <DateFilter date={date} setDate={setDate} />
-        <TimeFilter time={time} setTime={setTime} />
-      </div>
-
+      <DateFilter date={date} setDate={setDate} />
       <BudgetFilter budget={budget} setBudget={setBudget} />
 
       <div className="grid grid-cols-2 gap-2 md:gap-4 mt-3 md:mt-4">

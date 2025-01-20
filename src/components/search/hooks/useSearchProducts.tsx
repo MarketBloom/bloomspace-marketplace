@@ -1,7 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { format, parseISO, isToday } from "date-fns";
-
 interface UseSearchProductsProps {
   fulfillmentType: "pickup" | "delivery";
   searchParams: URLSearchParams;
