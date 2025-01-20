@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format, isToday, parseISO } from "date-fns";
+
 interface UseSearchProductsProps {
   fulfillmentType: "pickup" | "delivery";
   searchParams: URLSearchParams;
@@ -6,7 +10,7 @@ interface UseSearchProductsProps {
 
 export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinates }: UseSearchProductsProps) => {
   return useQuery({
-    queryKey: ['products', fulfillmentType, searchParams.toString(), userCoordinates],
+    queryKey: ['products', fulfillmentType, searchParams.toString()],
     queryFn: async () => {
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
@@ -25,7 +29,8 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             delivery_end_time,
             operating_hours,
             coordinates,
-            delivery_radius
+            delivery_radius,
+            delivery_days
           ),
           product_sizes (
             id,

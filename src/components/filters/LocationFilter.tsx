@@ -50,10 +50,9 @@ const loadGoogleMapsScript = async () => {
 interface LocationFilterProps {
   location: string;
   setLocation: (location: string) => void;
-  onCoordinatesChange?: (lat: number, lng: number) => void;
 }
 
-export const LocationFilter = ({ location, setLocation, onCoordinatesChange }: LocationFilterProps) => {
+export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -62,37 +61,35 @@ export const LocationFilter = ({ location, setLocation, onCoordinatesChange }: L
   const lastGeocoded = useRef<string>("");
   const [debouncedValue] = useDebounceValue(inputValue, 500);
 
+  // Initialize autocomplete when Google Maps is loaded
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
     try {
+      // Clear any existing autocomplete
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
 
+      // Initialize new autocomplete instance
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
         componentRestrictions: { country: "au" },
         types: ["(cities)"],
         fields: ["formatted_address", "geometry", "name"],
       });
 
+      // Add place_changed listener
       autocompleteRef.current.addListener("place_changed", () => {
         if (!autocompleteRef.current || !isMounted.current) return;
 
         try {
           const place = autocompleteRef.current.getPlace();
-          if (place?.geometry?.location && place.formatted_address) {
+          if (place && place.formatted_address) {
+            // Only update if the address has changed
             if (lastGeocoded.current !== place.formatted_address) {
               lastGeocoded.current = place.formatted_address;
               setLocation(place.formatted_address);
               setInputValue(place.formatted_address);
-              
-              if (onCoordinatesChange) {
-                onCoordinatesChange(
-                  place.geometry.location.lat(),
-                  place.geometry.location.lng()
-                );
-              }
             }
           }
         } catch (error) {
@@ -104,15 +101,16 @@ export const LocationFilter = ({ location, setLocation, onCoordinatesChange }: L
     }
   };
 
+  // Update location when debounced value changes
   useEffect(() => {
     if (!debouncedValue) {
       setLocation("");
-      if (onCoordinatesChange) {
-        onCoordinatesChange(0, 0);
-      }
+    } else {
+      setLocation(debouncedValue);
     }
-  }, [debouncedValue, setLocation, onCoordinatesChange]);
+  }, [debouncedValue, setLocation]);
 
+  // Load Google Maps and initialize autocomplete
   useEffect(() => {
     const setupAutocomplete = async () => {
       try {
@@ -146,17 +144,20 @@ export const LocationFilter = ({ location, setLocation, onCoordinatesChange }: L
   };
 
   return (
-    <div className="relative">
-      <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-      <Input 
-        type="text" 
-        placeholder="Enter city or postcode"
-        value={inputValue}
-        onChange={handleInputChange}
-        className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-        ref={inputRef}
-        disabled={isLoading}
-      />
+    <div className="space-y-1.5">
+      <label className="text-foreground text-xs font-medium">Location</label>
+      <div className="relative">
+        <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
+        <Input 
+          type="text" 
+          placeholder="Enter city or postcode"
+          value={inputValue}
+          onChange={handleInputChange}
+          className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
+          ref={inputRef}
+          disabled={isLoading}
+        />
+      </div>
     </div>
   );
 };
