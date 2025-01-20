@@ -52,32 +52,27 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const productsWithVariants = productsData.flatMap(product => {
         // Skip products from florists outside delivery radius if location is specified
         if (location && userCoordinates && product.florist_profiles?.coordinates) {
-          const floristCoords = JSON.parse(String(product.florist_profiles.coordinates));
-          const distance = window.calculate_distance(
-            userCoordinates[0],
-            userCoordinates[1],
-            floristCoords[0],
-            floristCoords[1]
-          );
-          
-          if (distance > (product.florist_profiles.delivery_radius || 0)) {
+          try {
+            // Parse the PostGIS POINT format: "POINT(longitude latitude)"
+            const coordStr = String(product.florist_profiles.coordinates);
+            const matches = coordStr.match(/POINT\(([-\d.]+) ([-\d.]+)\)/);
+            if (matches) {
+              const [_, lon, lat] = matches;
+              const distance = window.calculate_distance(
+                userCoordinates[0],
+                userCoordinates[1],
+                parseFloat(lat),
+                parseFloat(lon)
+              );
+              
+              if (distance > (product.florist_profiles.delivery_radius || 0)) {
+                return [];
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing coordinates:', e);
             return [];
           }
-        }
-
-        // Check if florist delivers on the selected day
-        if (dayOfWeek && fulfillmentType === "delivery" && 
-            product.florist_profiles?.delivery_days && 
-            !product.florist_profiles.delivery_days.includes(dayOfWeek)) {
-          return [];
-        }
-
-        // For same-day delivery, check cutoff time
-        const isSameDay = searchDate && isToday(searchDate);
-        const cutoffTime = product.florist_profiles?.delivery_cutoff;
-        
-        if (isSameDay && cutoffTime && currentTime > cutoffTime) {
-          return [];
         }
 
         if (!product.product_sizes || product.product_sizes.length === 0) {
@@ -88,7 +83,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             sizeId: null,
             floristName: product.florist_profiles?.store_name,
             isDeliveryAvailable: fulfillmentType === "delivery" && 
-              (!isSameDay || (cutoffTime && currentTime < cutoffTime)),
+              product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
             isPickupAvailable: fulfillmentType === "pickup" && 
               product.florist_profiles?.operating_hours && 
               currentTime < product.florist_profiles?.delivery_end_time,
@@ -104,7 +99,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
           sizeId: size.id,
           floristName: product.florist_profiles?.store_name,
           isDeliveryAvailable: fulfillmentType === "delivery" && 
-            (!isSameDay || (cutoffTime && currentTime < cutoffTime)),
+            product.florist_profiles?.delivery_days?.includes(dayOfWeek || ''),
           isPickupAvailable: fulfillmentType === "pickup" && 
             product.florist_profiles?.operating_hours && 
             currentTime < product.florist_profiles?.delivery_end_time,
