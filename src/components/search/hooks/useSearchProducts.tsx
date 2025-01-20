@@ -45,7 +45,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
 
       // Filter florists based on location and delivery radius if coordinates are available
       if (location && userCoordinates && allFlorists) {
-        const { data: filteredFlorists, error: rpcError } = await supabase.rpc(
+        const { data: filteredFlorists, error: rpcError } = await supabase.rpc<any>(
           'filter_florists_by_distance',
           {
             user_lat: userCoordinates[0],
