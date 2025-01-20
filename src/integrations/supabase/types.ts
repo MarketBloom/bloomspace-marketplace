@@ -1530,6 +1530,15 @@ export type Database = {
         }
         Returns: unknown
       }
+      is_within_delivery_radius: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          florist_coordinates: unknown
+          delivery_radius: number
+        }
+        Returns: boolean
+      }
       json: {
         Args: {
           "": unknown
