@@ -10,7 +10,7 @@ interface UseSearchProductsProps {
 
 export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinates }: UseSearchProductsProps) => {
   return useQuery({
-    queryKey: ['products', fulfillmentType, searchParams.toString()],
+    queryKey: ['products', fulfillmentType, searchParams.toString(), userCoordinates?.toString()],
     queryFn: async () => {
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
@@ -63,7 +63,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         dayOfWeek
       });
 
-      const productsWithVariants = productsData.flatMap(product => {
+      let filteredProducts = productsData.flatMap(product => {
         // Skip products from florists outside delivery radius if location is specified
         if (location && userCoordinates && product.florist_profiles?.coordinates) {
           try {
@@ -143,11 +143,12 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         }));
       });
 
+      // Apply budget filter after location filtering
       if (maxBudget) {
-        return productsWithVariants.filter(product => product.displayPrice <= maxBudget);
+        filteredProducts = filteredProducts.filter(product => product.displayPrice <= maxBudget);
       }
 
-      return productsWithVariants;
+      return filteredProducts;
     },
   });
 };
