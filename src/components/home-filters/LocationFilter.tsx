@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface LocationFilterProps {
   location: string;
   setLocation: (location: string) => void;
+  onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
 // Global script loading state
@@ -51,7 +52,7 @@ const loadGoogleMapsScript = async () => {
   return loadingPromise;
 };
 
-export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
+export const LocationFilter = ({ location, setLocation, onCoordsChange }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -80,13 +81,28 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
         try {
           const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
+          if (place && place.formatted_address && place.geometry?.location) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            
             setLocation(place.formatted_address);
             setInputValue(place.formatted_address);
+            
+            if (onCoordsChange) {
+              onCoordsChange([lat, lng]);
+            }
+          } else {
+            // If no geometry, clear coordinates
+            if (onCoordsChange) {
+              onCoordsChange(null);
+            }
           }
         } catch (error) {
           console.error("Error handling place selection:", error);
           toast.error("Error selecting location. Please try again.");
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
         }
       });
     } catch (error) {
@@ -129,6 +145,9 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     setInputValue(value);
     if (!value) {
       setLocation("");
+      if (onCoordsChange) {
+        onCoordsChange(null);
+      }
     }
   };
 
