@@ -13,14 +13,18 @@ export const useGoogleMaps = ({ searchParams, onCoordsChange }: UseGoogleMapsPro
     const location = searchParams.get('location');
     if (!location || !isGoogleMapsLoaded) return;
 
+    console.log('Geocoding location:', location);
+    
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address: location }, (results, status) => {
       if (status === 'OK' && results && results[0]) {
         const { lat, lng } = results[0].geometry.location;
-        onCoordsChange([lat(), lng()]);
+        const coordinates: [number, number] = [lat(), lng()];
+        console.log('Geocoded coordinates:', coordinates);
+        onCoordsChange(coordinates);
       } else {
-        onCoordsChange(null);
         console.error('Geocoding failed:', status);
+        onCoordsChange(null);
       }
     });
   }, [searchParams, isGoogleMapsLoaded, onCoordsChange]);

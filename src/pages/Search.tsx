@@ -24,6 +24,8 @@ const Search = () => {
     onCoordsChange: setUserCoordinates 
   });
 
+  console.log('Search page user coordinates:', userCoordinates);
+
   const { data: products, isLoading: isLoadingProducts } = useSearchProducts({
     fulfillmentType,
     searchParams,

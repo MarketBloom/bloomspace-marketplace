@@ -11,6 +11,8 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
     queryKey: ['florists', searchParams.toString()],
     queryFn: async () => {
       const location = searchParams.get('location');
+      console.log('User coordinates:', userCoordinates);
+      
       let query = supabase
         .from('florist_profiles')
         .select(`
@@ -37,21 +39,34 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
         throw error;
       }
 
-      // Filter florists based on location and delivery radius if location is specified
+      // Filter florists based on location and delivery radius if coordinates are available
       if (location && userCoordinates && data) {
-        return data.filter(florist => {
-          if (!florist.coordinates) return false;
+        console.log('Filtering florists by delivery radius...');
+        
+        const filteredData = await Promise.all(data.map(async (florist) => {
+          if (!florist.coordinates) {
+            console.log(`${florist.store_name} has no coordinates`);
+            return null;
+          }
           
-          const floristCoords = JSON.parse(String(florist.coordinates));
-          const distance = window.calculate_distance(
-            userCoordinates[0],
-            userCoordinates[1],
-            floristCoords[0],
-            floristCoords[1]
-          );
-          
-          return distance <= (florist.delivery_radius || 0);
-        });
+          const { data: isWithinRadius } = await supabase
+            .rpc('is_within_delivery_radius', {
+              user_lat: userCoordinates[0],
+              user_lng: userCoordinates[1],
+              florist_coordinates: florist.coordinates,
+              delivery_radius: florist.delivery_radius || 0
+            });
+
+          console.log(`${florist.store_name} delivery check:`, {
+            coordinates: florist.coordinates,
+            delivery_radius: florist.delivery_radius,
+            isWithinRadius
+          });
+
+          return isWithinRadius ? florist : null;
+        }));
+
+        return filteredData.filter(Boolean);
       }
 
       return data || [];
