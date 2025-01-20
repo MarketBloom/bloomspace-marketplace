@@ -10,14 +10,12 @@ interface UseSearchProductsProps {
 
 export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinates }: UseSearchProductsProps) => {
   return useQuery({
-    queryKey: ['products', fulfillmentType, searchParams.toString()],
+    queryKey: ['products', fulfillmentType, searchParams.toString(), userCoordinates?.join(',')],
     queryFn: async () => {
       const budgetStr = searchParams.get('budget');
       const maxBudget = budgetStr ? parseInt(budgetStr) : undefined;
       const location = searchParams.get('location');
       const dateStr = searchParams.get('date');
-      
-      console.log('User coordinates:', userCoordinates);
       
       let query = supabase
         .from('florist_profiles')
@@ -47,42 +45,25 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
 
       // Filter florists based on location and delivery radius if coordinates are available
       if (location && userCoordinates && allFlorists) {
-        console.log('Filtering florists by delivery radius...');
-        
-        const filteredData = await Promise.all(allFlorists.map(async (florist) => {
-          if (!florist.coordinates) {
-            console.log(`${florist.store_name} has no coordinates`);
-            return null;
+        const { data: filteredFlorists, error: rpcError } = await supabase.rpc(
+          'filter_florists_by_distance',
+          {
+            user_lat: userCoordinates[0],
+            user_lng: userCoordinates[1]
           }
+        );
 
-          const { data: isWithinRadius, error } = await supabase.rpc(
-            'is_within_delivery_radius',
-            {
-              user_lat: userCoordinates[0],
-              user_lng: userCoordinates[1],
-              florist_coordinates: florist.coordinates,
-              delivery_radius: florist.delivery_radius || 0
-            }
-          );
+        if (rpcError) {
+          console.error('Error filtering florists:', rpcError);
+          return [];
+        }
 
-          if (error) {
-            console.error('Error checking delivery radius:', error);
-            return null;
-          }
-
-          console.log(`${florist.store_name} delivery check:`, {
-            coordinates: florist.coordinates,
-            delivery_radius: florist.delivery_radius,
-            isWithinRadius
-          });
-
-          return isWithinRadius ? florist : null;
-        }));
-
-        return filteredData.filter(Boolean);
+        return filteredFlorists || [];
       }
 
       return allFlorists || [];
     },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    refetchOnWindowFocus: false,
   });
 };

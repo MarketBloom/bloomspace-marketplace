@@ -24,6 +24,13 @@ const loadGoogleMapsScript = async () => {
         throw new Error(error?.message || 'Failed to fetch API key');
       }
 
+      // Check if script is already loaded
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        googleMapsLoaded = true;
+        resolve();
+        return;
+      }
+
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
       script.async = true;
@@ -105,24 +112,28 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   useEffect(() => {
     if (!debouncedValue) {
       setLocation("");
-    } else {
+    } else if (debouncedValue !== lastGeocoded.current) {
       setLocation(debouncedValue);
     }
   }, [debouncedValue, setLocation]);
 
   // Load Google Maps and initialize autocomplete
   useEffect(() => {
+    let mounted = true;
+
     const setupAutocomplete = async () => {
       try {
-        setIsLoading(true);
-        await loadGoogleMapsScript();
-        
-        if (isMounted.current) {
-          initAutocomplete();
-          setIsLoading(false);
+        if (!isLoading) {
+          setIsLoading(true);
+          await loadGoogleMapsScript();
+          
+          if (mounted && isMounted.current) {
+            initAutocomplete();
+            setIsLoading(false);
+          }
         }
       } catch (error) {
-        if (isMounted.current) {
+        if (mounted && isMounted.current) {
           toast.error("Error loading location search. Please try again.");
           setIsLoading(false);
         }
@@ -132,6 +143,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
     setupAutocomplete();
 
     return () => {
+      mounted = false;
       isMounted.current = false;
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
