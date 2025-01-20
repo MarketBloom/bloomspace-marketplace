@@ -78,5 +78,10 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
 
       return allFlorists || [];
     },
+    meta: {
+      onError: (error: Error) => {
+        console.error('Query error:', error);
+      }
+    }
   });
 };
