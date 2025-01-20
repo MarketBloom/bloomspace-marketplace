@@ -50,9 +50,14 @@ const loadGoogleMapsScript = async () => {
 interface LocationFilterProps {
   location: string;
   setLocation: (location: string) => void;
+  onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-export const LocationFilter = ({ location, setLocation }: LocationFilterProps) => {
+export const LocationFilter = ({ 
+  location, 
+  setLocation,
+  onCoordsChange 
+}: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -84,19 +89,31 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
 
         try {
           const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
+          if (place && place.formatted_address && place.geometry?.location) {
             // Only update if the address has changed
             if (lastGeocoded.current !== place.formatted_address) {
               lastGeocoded.current = place.formatted_address;
               setLocation(place.formatted_address);
               setInputValue(place.formatted_address);
+              
+              // Update coordinates
+              const lat = place.geometry.location.lat();
+              const lng = place.geometry.location.lng();
+              onCoordsChange?.([lat, lng]);
+              
+              console.log('Location updated:', {
+                address: place.formatted_address,
+                coordinates: [lat, lng]
+              });
             }
           }
         } catch (error) {
+          console.error('Error handling place selection:', error);
           toast.error("Error selecting location. Please try again.");
         }
       });
     } catch (error) {
+      console.error('Error initializing Places Autocomplete:', error);
       toast.error("Error initializing location search. Please try again.");
     }
   };
@@ -105,10 +122,11 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   useEffect(() => {
     if (!debouncedValue) {
       setLocation("");
+      onCoordsChange?.(null);
     } else {
       setLocation(debouncedValue);
     }
-  }, [debouncedValue, setLocation]);
+  }, [debouncedValue, setLocation, onCoordsChange]);
 
   // Load Google Maps and initialize autocomplete
   useEffect(() => {
@@ -122,6 +140,7 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
           setIsLoading(false);
         }
       } catch (error) {
+        console.error('Error loading Google Maps:', error);
         if (isMounted.current) {
           toast.error("Error loading location search. Please try again.");
           setIsLoading(false);
@@ -140,7 +159,11 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+    if (!value) {
+      onCoordsChange?.(null);
+    }
   };
 
   return (
