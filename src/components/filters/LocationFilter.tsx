@@ -60,6 +60,8 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
   const isMounted = useRef(true);
   const lastGeocoded = useRef<string>("");
 
+  const [debouncedValue] = useDebounceValue(inputValue, 500);
+
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
@@ -101,9 +103,6 @@ export const LocationFilter = ({ location, setLocation }: LocationFilterProps) =
       toast.error("Error initializing location search. Please try again.");
     }
   };
-
-  // Use debounce for input value
-  const [debouncedValue] = useDebounceValue(inputValue, 500);
 
   useEffect(() => {
     if (!debouncedValue) {
