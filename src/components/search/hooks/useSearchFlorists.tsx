@@ -32,7 +32,7 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
         `)
         .eq('store_status', 'published');
 
-      const { data, error } = await query;
+      const { data: allFlorists, error } = await query;
 
       if (error) {
         console.error('Error fetching florists:', error);
@@ -40,22 +40,29 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
       }
 
       // Filter florists based on location and delivery radius if coordinates are available
-      if (location && userCoordinates && data) {
+      if (location && userCoordinates && allFlorists) {
         console.log('Filtering florists by delivery radius...');
         
-        const filteredData = await Promise.all(data.map(async (florist) => {
+        const filteredData = await Promise.all(allFlorists.map(async (florist) => {
           if (!florist.coordinates) {
             console.log(`${florist.store_name} has no coordinates`);
             return null;
           }
-          
-          const { data: isWithinRadius } = await supabase
-            .rpc('is_within_delivery_radius', {
+
+          const { data: isWithinRadius, error } = await supabase.rpc(
+            'is_within_delivery_radius',
+            {
               user_lat: userCoordinates[0],
               user_lng: userCoordinates[1],
               florist_coordinates: florist.coordinates,
               delivery_radius: florist.delivery_radius || 0
-            });
+            }
+          );
+
+          if (error) {
+            console.error('Error checking delivery radius:', error);
+            return null;
+          }
 
           console.log(`${florist.store_name} delivery check:`, {
             coordinates: florist.coordinates,
@@ -69,7 +76,7 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
         return filteredData.filter(Boolean);
       }
 
-      return data || [];
+      return allFlorists || [];
     },
   });
 };
