@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface LocationFilterProps {
   location: string;
@@ -15,6 +16,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
   const debouncedValue = useDebounce(inputValue, 300);
+  const { toast } = useToast();
 
   const formatDisplayName = (address: any): string => {
     const components = address.address;
@@ -48,41 +50,44 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
-        // Debug log for API key fetch
-        console.log('Fetching HERE API key...');
-        
         const { data: secretData, error: secretError } = await supabase
           .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
         if (secretError) {
           console.error('Error fetching API key:', secretError);
-          throw new Error('Failed to get API key');
+          toast({
+            title: "Error",
+            description: "Failed to load location search. Please try again.",
+            variant: "destructive"
+          });
+          return;
         }
         
         if (!secretData || !secretData[0]?.secret) {
           console.error('API key not found in response:', secretData);
-          throw new Error('API key not found');
+          toast({
+            title: "Configuration Error",
+            description: "Location search is not properly configured.",
+            variant: "destructive"
+          });
+          return;
         }
 
-        console.log('Successfully retrieved API key');
-
         const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`;
-        
-        // Debug log for API request
-        console.log('Making HERE API request...');
         
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-          console.error('HERE API response not OK:', response.status, response.statusText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const searchData = await response.json();
         
-        // Debug log for API response
-        console.log('HERE API response received:', searchData.items?.length || 0, 'results');
-        
+        if (!searchData.items || !Array.isArray(searchData.items)) {
+          console.error('Unexpected API response format:', searchData);
+          return;
+        }
+
         const formattedResults = searchData.items.map((item: any) => ({
           display_name: formatDisplayName(item),
           lat: item.position.lat,
@@ -93,6 +98,11 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
 
       } catch (error) {
         console.error("Error fetching suggestions:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch location suggestions. Please try again.",
+          variant: "destructive"
+        });
         setSuggestions([]);
       } finally {
         setIsLoading(false);
@@ -100,7 +110,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
     };
 
     fetchSuggestions();
-  }, [debouncedValue, setLocation, onCoordsChange]);
+  }, [debouncedValue, setLocation, onCoordsChange, toast]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
