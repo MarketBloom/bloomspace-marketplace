@@ -43,7 +43,7 @@ export const OccasionFilter = ({
   return (
     <div className="space-y-1.5">
       <label className="text-foreground text-xs font-medium">Occasions</label>
-      <div className="space-y-2 bg-white/90 border border-white/20 rounded-md p-2">
+      <div className="space-y-2 bg-white/90 border border-black rounded-md p-2">
         {occasions.map((occasion) => (
           <div key={occasion} className="flex items-center space-x-2">
             <Checkbox 
