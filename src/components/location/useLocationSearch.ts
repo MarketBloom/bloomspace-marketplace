@@ -24,17 +24,16 @@ export const useLocationSearch = (
     if (!item || !item.address) return item.title || "";
     
     const address = item.address;
-    const city = address.city || address.district || address.county || "";
-    const state = address.state || address.stateCode || "";
-    const postalCode = address.postalCode || "";
+    const suburb = address.district || address.city || address.county;
+    const state = address.state || address.stateCode;
+    const postcode = address.postalCode;
 
-    // Format: "City, State Postcode" or "City, State"
-    if (city && state && postalCode) {
-      return `${city}, ${state} ${postalCode}`;
-    } else if (city && state) {
-      return `${city}, ${state}`;
+    if (suburb && state && postcode) {
+      return `${suburb}, ${state} ${postcode}`;
+    } else if (suburb && state) {
+      return `${suburb}, ${state}`;
     }
-    return item.title || "";
+    return item.label || "";
   };
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export const useLocationSearch = (
       try {
         setIsLoading(true);
         
-        console.log('Starting API key fetch from Supabase...');
         const { data: secretData, error: secretError } = await supabase
           .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
@@ -68,55 +66,36 @@ export const useLocationSearch = (
         }
         
         if (!secretData || !secretData[0]?.secret) {
-          console.error('API key response:', secretData);
+          console.error('API key not found in response:', secretData);
           toast({
             title: "Configuration Error",
-            description: "Location search is not properly configured. API key is missing.",
+            description: "Location search is not properly configured.",
             variant: "destructive"
           });
           return;
         }
 
-        const apiKey = secretData[0].secret;
-        console.log('API key retrieved successfully, length:', apiKey.length);
-        
-        // Using the Geocoding API endpoint as per documentation
-        const query = encodeURIComponent(debouncedValue);
-        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode` + 
-          `?q=${query}` +
-          `&in=countryCode:AUS` + // Restrict to Australia
-          `&limit=5` +
-          `&lang=en-AU` +
-          `&apiKey=${apiKey}`;
-        
-        console.log('Making HERE API request to:', apiUrl.replace(apiKey, '[REDACTED]'));
+        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`;
         
         const response = await fetch(apiUrl);
-        console.log('HERE API response status:', response.status);
-        
+
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error('HERE API error response:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const searchData = await response.json();
-        console.log('HERE API raw response:', searchData);
         
         if (!searchData.items || !Array.isArray(searchData.items)) {
           console.error('Unexpected API response format:', searchData);
           return;
         }
 
-        const formattedResults = searchData.items
-          .filter((item: any) => item.position) // Ensure item has coordinates
-          .map((item: any) => ({
-            display_name: formatDisplayName(item),
-            lat: item.position.lat,
-            lon: item.position.lng
-          }));
+        const formattedResults = searchData.items.map((item: any) => ({
+          display_name: formatDisplayName(item),
+          lat: item.position.lat,
+          lon: item.position.lng
+        }));
 
-        console.log('Formatted results:', formattedResults);
         setSuggestions(formattedResults);
 
       } catch (error) {
