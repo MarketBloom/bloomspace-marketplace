@@ -21,6 +21,13 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
   const isMobile = useIsMobile();
 
   const handleApplyFilters = () => {
+    // Debug logs
+    console.log("Current filter state:", {
+      budget,
+      selectedCategories,
+      selectedOccasions
+    });
+
     onFilterChange({
       budget,
       categories: selectedCategories.length > 0 ? selectedCategories : undefined,
