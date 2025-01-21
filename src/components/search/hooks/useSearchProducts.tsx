@@ -23,11 +23,11 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const location = searchParams.get('location');
       const dateStr = searchParams.get('date');
 
-      const { data: productsData, error } = await supabase
+      let query = supabase
         .from('products')
         .select(`
           *,
-          florist_profiles (
+          florist_profiles!inner (
             store_name,
             address,
             delivery_cutoff,
@@ -48,6 +48,57 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         .eq('in_stock', true)
         .eq('is_hidden', false);
 
+      // Filter by location if coordinates are provided
+      if (location && userCoordinates) {
+        // Get all florists first
+        const { data: florists, error: floristError } = await supabase
+          .from('florist_profiles')
+          .select('id, coordinates, delivery_radius');
+
+        if (floristError) throw floristError;
+
+        // Filter florists by delivery radius
+        const floristsInRange = florists.filter(florist => {
+          if (!florist.coordinates) return false;
+          
+          let coordinates;
+          try {
+            // Handle both string and array formats
+            coordinates = typeof florist.coordinates === 'string' 
+              ? JSON.parse(florist.coordinates) 
+              : florist.coordinates;
+
+            const distance = window.calculate_distance(
+              userCoordinates[0],
+              userCoordinates[1],
+              coordinates[0],
+              coordinates[1]
+            );
+            
+            return distance <= (florist.delivery_radius || 5);
+          } catch (e) {
+            console.error('Error parsing coordinates for florist:', florist.id, e);
+            return false;
+          }
+        });
+
+        // Get products only from florists in range
+        const floristIds = floristsInRange.map(f => f.id);
+        if (floristIds.length > 0) {
+          query = query.in('florist_id', floristIds);
+        } else {
+          // If no florists in range, return empty array
+          return [];
+        }
+      }
+
+      // Apply budget filter if specified
+      if (maxBudget) {
+        query = query.lte('price', maxBudget);
+      }
+
+      const { data: productsData, error } = await query;
+
       if (error) throw error;
 
       const now = new Date();
@@ -55,26 +106,8 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const searchDate = dateStr ? parseISO(dateStr) : null;
       const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
-      // First filter by location if coordinates are provided
-      let filteredProducts = productsData;
-      if (location && userCoordinates) {
-        filteredProducts = productsData.filter(product => {
-          if (!product.florist_profiles?.coordinates) return false;
-          
-          const floristCoords = JSON.parse(String(product.florist_profiles.coordinates));
-          const distance = window.calculate_distance(
-            userCoordinates[0],
-            userCoordinates[1],
-            floristCoords[0],
-            floristCoords[1]
-          );
-          
-          return distance <= (product.florist_profiles.delivery_radius || 5);
-        });
-      }
-
-      // Then create product variants and apply other filters
-      const productsWithVariants = filteredProducts.flatMap(product => {
+      // Create product variants and apply other filters
+      const productsWithVariants = productsData.flatMap(product => {
         // Check if florist delivers on the selected day
         if (dayOfWeek && fulfillmentType === "delivery" && 
             product.florist_profiles?.delivery_days && 
@@ -123,11 +156,6 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
           images: size.images?.length ? size.images : product.images
         }));
       });
-
-      // Finally apply budget filter
-      if (maxBudget) {
-        return productsWithVariants.filter(product => product.displayPrice <= maxBudget);
-      }
 
       return productsWithVariants;
     },
