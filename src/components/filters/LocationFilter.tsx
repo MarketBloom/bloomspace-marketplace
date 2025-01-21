@@ -11,7 +11,7 @@ interface LocationFilterProps {
   onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-// Global script loading state and promise to prevent multiple loads
+// Global script loading state
 let googleMapsLoaded = false;
 let loadingPromise: Promise<void> | null = null;
 
@@ -60,12 +60,13 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
 
-  // Debounced geocoding function with longer delay
+  // Debounced geocoding function
   const debouncedGeocode = useCallback(
     debounce((place: google.maps.places.PlaceResult) => {
       if (!place || !place.formatted_address || !place.geometry?.location || !isMounted.current) return;
       
       try {
+        console.log('Geocoding result:', place);
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         
@@ -82,7 +83,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           onCoordsChange(null);
         }
       }
-    }, 1000), // Increased debounce delay to 1 second
+    }, 500),
     [setLocation, onCoordsChange]
   );
 
