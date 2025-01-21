@@ -48,9 +48,25 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=au&limit=5`
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}, Australia&countrycodes=au&limit=5`,
+          {
+            headers: {
+              'Accept': 'application/json',
+              'User-Agent': 'Lovable Florist Marketplace'
+            },
+            signal: controller.signal
+          }
         );
+        
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const data = await response.json();
         
@@ -61,8 +77,14 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         })));
 
       } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        toast.error("Error fetching location suggestions. Please try again.");
+        if (error instanceof Error) {
+          if (error.name === 'AbortError') {
+            toast.error("Request timed out. Please try again.");
+          } else {
+            console.error("Error fetching suggestions:", error);
+            toast.error("Error fetching location suggestions. Please try again.");
+          }
+        }
       } finally {
         setIsLoading(false);
       }
