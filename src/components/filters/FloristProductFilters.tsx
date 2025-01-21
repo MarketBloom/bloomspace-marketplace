@@ -65,7 +65,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
         </Tabs>
         <Button 
           onClick={handleApplyFilters}
-          className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
+          className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black font-semibold text-lg h-12"
         >
           Apply Filters
         </Button>
@@ -92,7 +92,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
 
       <Button 
         onClick={handleApplyFilters}
-        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
+        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black font-semibold text-lg h-12"
       >
         Apply Filters
       </Button>
