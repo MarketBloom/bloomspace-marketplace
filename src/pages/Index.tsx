@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { FeaturedFlorists } from "@/components/FeaturedFlorists.tsx";
-import { FeaturedProducts } from "@/components/FeaturedProducts.tsx";
+import { FeaturedFlorists } from "@/components/FeaturedFlorists";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { useGoogleMaps } from "@/hooks/use-google-maps";
 import { useToast } from "@/hooks/use-toast";
 
