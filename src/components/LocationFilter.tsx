@@ -48,21 +48,40 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
+        // Debug log for API key fetch
+        console.log('Fetching HERE API key...');
+        
         const { data: secretData, error: secretError } = await supabase
           .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
-        if (secretError) throw new Error('Failed to get API key');
-        if (!secretData || !secretData[0]?.secret) throw new Error('API key not found');
+        if (secretError) {
+          console.error('Error fetching API key:', secretError);
+          throw new Error('Failed to get API key');
+        }
+        
+        if (!secretData || !secretData[0]?.secret) {
+          console.error('API key not found in response:', secretData);
+          throw new Error('API key not found');
+        }
 
-        const response = await fetch(
-          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`
-        );
+        console.log('Successfully retrieved API key');
+
+        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`;
+        
+        // Debug log for API request
+        console.log('Making HERE API request...');
+        
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
+          console.error('HERE API response not OK:', response.status, response.statusText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const searchData = await response.json();
+        
+        // Debug log for API response
+        console.log('HERE API response received:', searchData.items?.length || 0, 'results');
         
         const formattedResults = searchData.items.map((item: any) => ({
           display_name: formatDisplayName(item),
