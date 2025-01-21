@@ -20,10 +20,10 @@ export function useGoogleMaps() {
 
     try {
       const geocoder = new window.google.maps.Geocoder();
-      const result = await geocoder.geocode({ address });
+      const response = await geocoder.geocode({ address: address });
       
-      if (result.results[0]) {
-        const { lat, lng } = result.results[0].geometry.location;
+      if (response && response.results && response.results[0]) {
+        const { lat, lng } = response.results[0].geometry.location;
         return [lat(), lng()];
       }
       
