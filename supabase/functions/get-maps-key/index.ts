@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.fresh.run/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,30 +8,19 @@ const corsHeaders = {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
     const apiKey = Deno.env.get('GOOGLE_MAPS_API_KEY')
-    
     if (!apiKey) {
-      console.error('GOOGLE_MAPS_API_KEY not found in environment variables')
-      return new Response(
-        JSON.stringify({ 
-          error: 'API key not configured',
-          details: 'The Google Maps API key is not set in the environment variables'
-        }),
-        { 
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+      throw new Error('Missing Google Maps API key')
     }
 
-    console.log('Successfully retrieved Google Maps API key')
+    const data = { apiKey }
     
     return new Response(
-      JSON.stringify({ apiKey }),
+      JSON.stringify(data),
       { 
         headers: {
           ...corsHeaders,
@@ -40,16 +29,15 @@ serve(async (req) => {
       },
     )
   } catch (error) {
-    console.error('Error in get-maps-key function:', error.message)
     return new Response(
-      JSON.stringify({ 
-        error: error.message,
-        details: 'An error occurred while retrieving the Google Maps API key'
-      }),
+      JSON.stringify({ error: error.message }),
       { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+      },
     )
   }
 })
