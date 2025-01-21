@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LocationSearchInputProps {
   inputValue: string;
@@ -17,37 +18,44 @@ export const LocationSearchInput = ({
 }: LocationSearchInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!inputRef.current) return;
-
-    // Function to initialize autocomplete
-    const initializeAutocomplete = () => {
+    const initAutocomplete = () => {
       if (!window.google || !inputRef.current) return;
 
-      // Initialize the autocomplete object with Australian addresses only
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "au" },
-        fields: ["address_components", "geometry", "formatted_address"],
-        types: ["geocode"]
-      });
+      try {
+        // Initialize the autocomplete object
+        autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
+          componentRestrictions: { country: "au" },
+          fields: ["address_components", "geometry", "formatted_address"],
+          types: ["geocode"]
+        });
 
-      // Add the place_changed event listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        const place = autocompleteRef.current?.getPlace();
-        if (place) {
-          onPlaceSelected(place);
-        }
-      });
+        // Add the place_changed event listener
+        autocompleteRef.current.addListener("place_changed", () => {
+          const place = autocompleteRef.current?.getPlace();
+          if (place) {
+            onPlaceSelected(place);
+          }
+        });
+      } catch (error) {
+        console.error("Error initializing Google Places Autocomplete:", error);
+        toast({
+          title: "Error",
+          description: "Failed to initialize location search",
+          variant: "destructive"
+        });
+      }
     };
 
     // If Google Maps is already loaded, initialize immediately
-    if (window.google && window.google.maps) {
-      initializeAutocomplete();
+    if (window.google?.maps) {
+      initAutocomplete();
     } else {
       // Otherwise wait for the script to load
       const handleGoogleMapsLoaded = () => {
-        initializeAutocomplete();
+        initAutocomplete();
       };
       window.addEventListener('google-maps-loaded', handleGoogleMapsLoaded);
       return () => {
@@ -61,7 +69,7 @@ export const LocationSearchInput = ({
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, [onPlaceSelected]);
+  }, [onPlaceSelected, toast]);
 
   return (
     <div className="relative">

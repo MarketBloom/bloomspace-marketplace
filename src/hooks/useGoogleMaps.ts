@@ -17,28 +17,8 @@ export const useGoogleMaps = (
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handlePlaceSelected = useCallback((place: google.maps.places.PlaceResult) => {
-    if (!place.geometry?.location) {
-      toast({
-        title: "Error",
-        description: "Could not find location coordinates",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
-    const formattedAddress = place.formatted_address || '';
-
-    if (onLocationSelect) {
-      onLocationSelect(formattedAddress, [lat, lng]);
-    }
-    setInputValue(formattedAddress);
-  }, [onLocationSelect, toast]);
-
   useEffect(() => {
-    const loadScript = async () => {
+    const loadGoogleMapsScript = async () => {
       try {
         setIsLoading(true);
         
@@ -70,8 +50,28 @@ export const useGoogleMaps = (
       }
     };
 
-    loadScript();
+    loadGoogleMapsScript();
   }, [toast]);
+
+  const handlePlaceSelected = useCallback((place: google.maps.places.PlaceResult) => {
+    if (!place.geometry?.location) {
+      toast({
+        title: "Error",
+        description: "Could not find location coordinates",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+    const formattedAddress = place.formatted_address || '';
+
+    if (onLocationSelect) {
+      onLocationSelect(formattedAddress, [lat, lng]);
+    }
+    setInputValue(formattedAddress);
+  }, [onLocationSelect, toast]);
 
   return {
     inputValue,
