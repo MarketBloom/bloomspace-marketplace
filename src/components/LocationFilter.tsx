@@ -19,28 +19,19 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const { toast } = useToast();
 
   const formatDisplayName = (address: any): string => {
-    // Extract relevant address components
-    const street = address.address?.street || '';
-    const houseNumber = address.address?.houseNumber || '';
-    const suburb = address.address?.district || address.address?.city || address.address?.county || '';
-    const state = address.address?.state || address.address?.stateCode || '';
-    const postcode = address.address?.postalCode || '';
+    const components = address.address;
+    if (!components) return address.label || "";
+    
+    const suburb = components.district || components.city || components.county;
+    const state = components.state || components.stateCode;
+    const postcode = components.postalCode;
 
-    // Build display string
-    let display = '';
-    if (street && houseNumber) {
-      display += `${street} ${houseNumber}, `;
+    if (suburb && state && postcode) {
+      return `${suburb}, ${state} ${postcode}`;
+    } else if (suburb && state) {
+      return `${suburb}, ${state}`;
     }
-    if (suburb) {
-      display += `${suburb}, `;
-    }
-    if (state && postcode) {
-      display += `${state} ${postcode}`;
-    } else if (state) {
-      display += state;
-    }
-
-    return display.trim() || address.title || '';
+    return address.label || "";
   };
 
   useEffect(() => {
@@ -59,6 +50,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
+        console.log('Fetching HERE API key from Supabase...');
         const { data: secretData, error: secretError } = await supabase
           .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
@@ -73,16 +65,18 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
         
         if (!secretData || !secretData[0]?.secret) {
-          console.error('API key not found in response:', secretData);
+          console.error('API key response:', secretData);
           toast({
             title: "Configuration Error",
-            description: "Location search is not properly configured.",
+            description: "Location search is not properly configured. API key is missing.",
             variant: "destructive"
           });
           return;
         }
 
         const apiKey = secretData[0].secret;
+        console.log('Successfully retrieved HERE API key');
+        
         // Format query to match HERE API requirements
         const query = encodeURIComponent(`${debouncedValue}, Australia`);
         const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${query}&limit=4&apiKey=${apiKey}`;
@@ -90,13 +84,14 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
         
         const response = await fetch(apiUrl);
+        console.log('HERE API response status:', response.status);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const searchData = await response.json();
-        console.log('HERE API response:', searchData);
+        console.log('HERE API response data:', searchData);
         
         if (!searchData.items || !Array.isArray(searchData.items)) {
           console.error('Unexpected API response format:', searchData);
@@ -109,6 +104,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           lon: item.position.lng
         }));
 
+        console.log('Formatted results:', formattedResults);
         setSuggestions(formattedResults);
 
       } catch (error) {
