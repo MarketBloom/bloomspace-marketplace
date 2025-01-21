@@ -15,17 +15,26 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  // Handle manual input changes with debounce
+  // Format the display name to be more concise
+  const formatDisplayName = (fullName: string): string => {
+    const parts = fullName.split(', ');
+    // Take first 3 parts max (usually suburb, city, state)
+    const relevantParts = parts.slice(0, 3);
+    // Always add country as last part if it's Australia
+    if (parts[parts.length - 1] === 'Australia') {
+      relevantParts.push('Australia');
+    }
+    return relevantParts.join(', ');
+  };
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
-    // Clear existing timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    // If input is empty, clear everything
     if (!value) {
       setLocation('');
       setSuggestions([]);
@@ -35,12 +44,10 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       return;
     }
 
-    // Set new timeout for fetching suggestions
     timeoutRef.current = setTimeout(async () => {
       try {
         setIsLoading(true);
         
-        // Fetch suggestions from Nominatim
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=au&limit=5`
         );
@@ -59,16 +66,17 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       } finally {
         setIsLoading(false);
       }
-    }, 300); // 300ms debounce
+    }, 300);
   };
 
   const handleSuggestionClick = (suggestion: {display_name: string, lat: number, lon: number}) => {
-    setInputValue(suggestion.display_name);
-    setLocation(suggestion.display_name);
+    const formattedName = formatDisplayName(suggestion.display_name);
+    setInputValue(formattedName);
+    setLocation(formattedName);
     if (onCoordsChange) {
       onCoordsChange([suggestion.lat, suggestion.lon]);
     }
-    setSuggestions([]); // Clear suggestions after selection
+    setSuggestions([]);
   };
 
   return (
@@ -85,7 +93,6 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
       
-      {/* Suggestions dropdown */}
       {suggestions.length > 0 && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
           {suggestions.map((suggestion, index) => (
@@ -94,7 +101,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
               className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              {suggestion.display_name}
+              {formatDisplayName(suggestion.display_name)}
             </button>
           ))}
         </div>
