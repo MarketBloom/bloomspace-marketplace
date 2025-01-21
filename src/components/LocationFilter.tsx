@@ -1,9 +1,6 @@
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { MapPin } from "lucide-react";
-import { useDebounce } from "@/hooks/use-debounce";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { LocationSearchInput } from "./location/LocationSearchInput";
+import { LocationSuggestions } from "./location/LocationSuggestions";
+import { useLocationSearch } from "./location/useLocationSearch";
 
 interface LocationFilterProps {
   location: string;
@@ -11,136 +8,24 @@ interface LocationFilterProps {
   onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-export const LocationFilter = ({ location, setLocation, onCoordsChange }: LocationFilterProps) => {
-  const [inputValue, setInputValue] = useState(location);
-  const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
-  const debouncedValue = useDebounce(inputValue, 300);
-  const { toast } = useToast();
-
-  const formatDisplayName = (address: any): string => {
-    if (!address || !address.address) return address.title || "";
-    
-    const components = address.address;
-    const suburb = components.district || components.city || components.county;
-    const state = components.state || components.stateCode;
-    const postcode = components.postalCode;
-
-    if (suburb && state && postcode) {
-      return `${suburb}, ${state} ${postcode}`;
-    } else if (suburb && state) {
-      return `${suburb}, ${state}`;
-    }
-    return address.title || "";
-  };
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!debouncedValue || debouncedValue.length < 2) {
-        setSuggestions([]);
-        if (!debouncedValue) {
-          setLocation('');
-          if (onCoordsChange) {
-            onCoordsChange(null);
-          }
-        }
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        
-        console.log('Starting API key fetch from Supabase...');
-        const { data: secretData, error: secretError } = await supabase
-          .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
-
-        if (secretError) {
-          console.error('Error fetching API key:', secretError);
-          toast({
-            title: "Error",
-            description: "Failed to load location search. Please try again.",
-            variant: "destructive"
-          });
-          return;
-        }
-        
-        if (!secretData || !secretData[0]?.secret) {
-          console.error('API key response:', secretData);
-          toast({
-            title: "Configuration Error",
-            description: "Location search is not properly configured. API key is missing.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        const apiKey = secretData[0].secret;
-        console.log('API key retrieved successfully, length:', apiKey.length);
-        
-        const query = encodeURIComponent(debouncedValue);
-        const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete` + 
-          `?q=${query}` +
-          `&in=countryCode:AUS` +
-          `&limit=4` +
-          `&lang=en-AU` +
-          `&resultTypes=address,place` +
-          `&types=city,place,district,locality` +
-          `&politicalView=AUS` +
-          `&show=streetDetails` +
-          `&apiKey=${apiKey}`;
-        
-        console.log('Making HERE API request to:', apiUrl.replace(apiKey, '[REDACTED]'));
-        
-        const response = await fetch(apiUrl);
-        console.log('HERE API response status:', response.status);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('HERE API error response:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
-        }
-        
-        const searchData = await response.json();
-        console.log('HERE API raw response:', searchData);
-        
-        if (!searchData.items || !Array.isArray(searchData.items)) {
-          console.error('Unexpected API response format:', searchData);
-          return;
-        }
-
-        const formattedResults = searchData.items
-          .filter((item: any) => item.position) // Ensure item has coordinates
-          .map((item: any) => ({
-            display_name: formatDisplayName(item),
-            lat: item.position.lat,
-            lon: item.position.lng
-          }));
-
-        console.log('Formatted results:', formattedResults);
-        setSuggestions(formattedResults);
-
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch location suggestions. Please try again.",
-          variant: "destructive"
-        });
-        setSuggestions([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [debouncedValue, setLocation, onCoordsChange, toast]);
+export const LocationFilter = ({ 
+  location, 
+  setLocation, 
+  onCoordsChange 
+}: LocationFilterProps) => {
+  const {
+    inputValue,
+    setInputValue,
+    isLoading,
+    suggestions,
+    setSuggestions
+  } = useLocationSearch(location, setLocation, onCoordsChange);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
+    setInputValue(e.target.value);
   };
 
-  const handleSuggestionClick = (suggestion: {display_name: string, lat: number, lon: number}) => {
+  const handleSuggestionSelect = (suggestion: { display_name: string, lat: number, lon: number }) => {
     setInputValue(suggestion.display_name);
     setLocation(suggestion.display_name);
     if (onCoordsChange) {
@@ -151,30 +36,15 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
 
   return (
     <div className="relative">
-      <div className="relative">
-        <Input
-          type="text"
-          placeholder="Enter suburb or postcode..."
-          value={inputValue}
-          onChange={handleInputChange}
-          className={`w-full pl-8 h-[42px] bg-white/90 border border-black text-xs ${isLoading ? 'opacity-70' : ''}`}
-        />
-        <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-      </div>
-      
-      {suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
-          {suggestions.map((suggestion, index) => (
-            <button
-              key={index}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion.display_name}
-            </button>
-          ))}
-        </div>
-      )}
+      <LocationSearchInput
+        inputValue={inputValue}
+        isLoading={isLoading}
+        onChange={handleInputChange}
+      />
+      <LocationSuggestions
+        suggestions={suggestions}
+        onSelect={handleSuggestionSelect}
+      />
     </div>
   );
 };
