@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LocationFilterProps {
   location: string;
@@ -15,27 +16,20 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
   const debouncedValue = useDebounce(inputValue, 300);
 
-  const formatDisplayName = (fullName: string): string => {
-    const parts = fullName.split(', ');
-    let result = '';
+  const formatDisplayName = (address: any): string => {
+    const components = address.address;
+    if (!components) return address.label || "";
     
-    // Find the first part that's not "Australia" - usually the suburb
-    const suburb = parts.find(part => !part.includes('Australia'));
-    if (!suburb) return fullName;
+    const suburb = components.district || components.city || components.county;
+    const state = components.state || components.stateCode;
+    const postcode = components.postalCode;
 
-    // Find state (2-3 capital letters)
-    const state = parts.find(part => /^[A-Z]{2,3}$/.test(part));
-    
-    // Find postcode (4 digits)
-    const postcode = parts.find(part => /^\d{4}$/.test(part));
-
-    if (state && postcode) {
-      result = `${suburb}, ${state} ${postcode}`;
-    } else {
-      result = suburb;
+    if (suburb && state && postcode) {
+      return `${suburb}, ${state} ${postcode}`;
+    } else if (suburb && state) {
+      return `${suburb}, ${state}`;
     }
-
-    return result;
+    return address.label || "";
   };
 
   useEffect(() => {
@@ -54,21 +48,15 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        // Get HERE API key from Supabase
+        const { data: { secret: apiKey }, error: secretError } = await supabase
+          .rpc('get_secret', { name: 'HERE_API_KEY' });
+
+        if (secretError) throw new Error('Failed to get API key');
 
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedValue)}, Australia&countrycodes=au&limit=5`,
-          {
-            headers: {
-              'Accept': 'application/json',
-              'User-Agent': 'Lovable Florist Marketplace (https://lovable.com.au)'
-            },
-            signal: controller.signal
-          }
+          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${apiKey}`
         );
-        
-        clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,11 +64,13 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         
         const data = await response.json();
         
-        setSuggestions(data.map((item: any) => ({
-          display_name: item.display_name,
-          lat: parseFloat(item.lat),
-          lon: parseFloat(item.lon)
-        })));
+        const formattedResults = data.items.map((item: any) => ({
+          display_name: formatDisplayName(item),
+          lat: item.position.lat,
+          lon: item.position.lng
+        }));
+
+        setSuggestions(formattedResults);
 
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -99,9 +89,8 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   };
 
   const handleSuggestionClick = (suggestion: {display_name: string, lat: number, lon: number}) => {
-    const formattedName = formatDisplayName(suggestion.display_name);
-    setInputValue(formattedName);
-    setLocation(formattedName);
+    setInputValue(suggestion.display_name);
+    setLocation(suggestion.display_name);
     if (onCoordsChange) {
       onCoordsChange([suggestion.lat, suggestion.lon]);
     }
@@ -129,7 +118,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
               className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              {formatDisplayName(suggestion.display_name)}
+              {suggestion.display_name}
             </button>
           ))}
         </div>
