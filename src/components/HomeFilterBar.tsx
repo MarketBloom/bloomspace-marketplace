@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationFilter } from "./LocationFilter";
+import { LocationSearch } from "./location/LocationSearch";
 import { DateFilter } from "./home-filters/DateFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { Button } from "./ui/button";
@@ -93,10 +93,11 @@ export const HomeFilterBar = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <label className="text-foreground text-xs font-medium">Location</label>
-          <LocationFilter 
-            location={location}
-            setLocation={setLocation}
-            onCoordsChange={setCoordinates}
+          <LocationSearch 
+            onLocationSelect={(loc) => {
+              setLocation(`${loc.suburb}, ${loc.state} ${loc.postcode}`);
+              setCoordinates([loc.latitude, loc.longitude]);
+            }}
           />
         </div>
         <DateFilter 
