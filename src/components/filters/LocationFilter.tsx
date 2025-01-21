@@ -68,7 +68,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
 
-      // Initialize new autocomplete instance
+      // Initialize new autocomplete instance with EPSG:4326 (WGS84) coordinates
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
         componentRestrictions: { country: "au" },
         types: ["(cities)"],
@@ -89,10 +89,10 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
             setInputValue(place.formatted_address);
             
             if (onCoordsChange) {
+              // Use WGS84 coordinates directly
               onCoordsChange([lat, lng]);
             }
           } else {
-            // If no geometry, clear coordinates
             if (onCoordsChange) {
               onCoordsChange(null);
             }

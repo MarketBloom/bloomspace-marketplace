@@ -1535,6 +1535,18 @@ export type Database = {
         }
         Returns: string
       }
+      get_spatial_ref_sys: {
+        Args: {
+          srid_input: number
+        }
+        Returns: {
+          srid: number
+          auth_name: string
+          auth_srid: number
+          srtext: string
+          proj4text: string
+        }[]
+      }
       gettransactionid: {
         Args: Record<PropertyKey, never>
         Returns: unknown
