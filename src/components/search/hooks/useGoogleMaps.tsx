@@ -1,52 +1,46 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 
-interface UseGoogleMapsProps {
+interface UseLocationProps {
   searchParams: URLSearchParams;
   onCoordsChange: (coords: [number, number] | null) => void;
 }
 
-export const useGoogleMaps = ({ searchParams, onCoordsChange }: UseGoogleMapsProps) => {
-  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
+export const useGoogleMaps = ({ searchParams, onCoordsChange }: UseLocationProps) => {
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const location = searchParams.get('location');
-    if (!location || !isGoogleMapsLoaded) return;
+    if (!location) {
+      onCoordsChange(null);
+      return;
+    }
 
-    console.log('Geocoding location:', location);
-    
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address: location }, (results, status) => {
-      if (status === 'OK' && results && results[0]) {
-        const { lat, lng } = results[0].geometry.location;
-        const coordinates: [number, number] = [lat(), lng()];
-        console.log('Geocoded coordinates:', coordinates);
-        onCoordsChange(coordinates);
-      } else {
-        console.error('Geocoding failed:', status);
-        onCoordsChange(null);
-      }
-    });
-  }, [searchParams, isGoogleMapsLoaded, onCoordsChange]);
-
-  useEffect(() => {
-    const loadGoogleMaps = async () => {
+    const fetchCoordinates = async () => {
+      setIsLoading(true);
       try {
-        const { data, error } = await supabase.functions.invoke('get-maps-key');
-        if (error) throw error;
-
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
-        script.async = true;
-        script.onload = () => setIsGoogleMapsLoaded(true);
-        document.head.appendChild(script);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&countrycodes=au&limit=1`
+        );
+        const data = await response.json();
+        
+        if (data && data[0]) {
+          const coordinates: [number, number] = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+          console.log('Geocoded coordinates:', coordinates);
+          onCoordsChange(coordinates);
+        } else {
+          console.error('Geocoding failed: No results found');
+          onCoordsChange(null);
+        }
       } catch (error) {
-        console.error('Error loading Google Maps:', error);
+        console.error('Geocoding error:', error);
+        onCoordsChange(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    loadGoogleMaps();
-  }, []);
+    fetchCoordinates();
+  }, [searchParams, onCoordsChange]);
 
-  return { isGoogleMapsLoaded };
+  return { isLoading };
 };
