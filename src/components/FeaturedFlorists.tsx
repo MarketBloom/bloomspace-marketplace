@@ -1,24 +1,7 @@
 import { FC } from 'react';
 import { FloristCard } from './FloristCard';
 import { Skeleton } from './ui/skeleton';
-
-export interface FloristProfile {
-  id: string;
-  store_name: string;
-  address: string;
-  about_text?: string;
-  logo_url?: string;
-  banner_url?: string;
-  delivery_radius: number;
-  delivery_fee: number;
-  minimum_order_amount: number;
-  operating_hours?: Record<string, { open: string; close: string }>;
-  social_links?: {
-    website?: string;
-    instagram?: string;
-    facebook?: string;
-  };
-}
+import { FloristProfile } from '@/types/florist';
 
 interface FeaturedFloristsProps {
   florists: FloristProfile[];

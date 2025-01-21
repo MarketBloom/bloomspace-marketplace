@@ -8,6 +8,7 @@ import { FeaturedFlorists } from "@/components/FeaturedFlorists";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { useGoogleMaps } from "@/hooks/use-google-maps";
 import { useToast } from "@/hooks/use-toast";
+import { FloristProfile } from "@/types/florist";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Index = () => {
       if (error) throw error;
 
       // Filter florists by delivery radius
-      return florists.filter(florist => {
+      return (florists as FloristProfile[]).filter(florist => {
         if (!florist.coordinates || !coordinates) return false;
         
         try {
