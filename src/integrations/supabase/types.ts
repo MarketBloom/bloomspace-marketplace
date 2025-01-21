@@ -1537,7 +1537,7 @@ export type Database = {
       }
       get_secret: {
         Args: {
-          name: string
+          secret_name: string
         }
         Returns: {
           secret: string
