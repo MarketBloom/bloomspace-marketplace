@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import debounce from 'lodash/debounce';
 
 interface LocationFilterProps {
   location: string;
@@ -60,33 +59,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
 
-  // Debounced geocoding function
-  const debouncedGeocode = useCallback(
-    debounce((place: google.maps.places.PlaceResult) => {
-      if (!place || !place.formatted_address || !place.geometry?.location || !isMounted.current) return;
-      
-      try {
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-        
-        setLocation(place.formatted_address);
-        setInputValue(place.formatted_address);
-        
-        if (onCoordsChange) {
-          onCoordsChange([lat, lng]);
-        }
-      } catch (error) {
-        console.error("Error handling place selection:", error);
-        toast.error("Error selecting location. Please try again.");
-        if (onCoordsChange) {
-          onCoordsChange(null);
-        }
-      }
-    }, 500),
-    [setLocation, onCoordsChange]
-  );
-
-  const initAutocomplete = useCallback(() => {
+  const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
     try {
@@ -104,15 +77,39 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
 
       // Add place_changed listener
       autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current) return;
-        const place = autocompleteRef.current.getPlace();
-        debouncedGeocode(place);
+        if (!autocompleteRef.current || !isMounted.current) return;
+
+        try {
+          const place = autocompleteRef.current.getPlace();
+          if (place && place.formatted_address && place.geometry?.location) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            
+            setLocation(place.formatted_address);
+            setInputValue(place.formatted_address);
+            
+            if (onCoordsChange) {
+              onCoordsChange([lat, lng]);
+            }
+          } else {
+            // If no geometry, clear coordinates
+            if (onCoordsChange) {
+              onCoordsChange(null);
+            }
+          }
+        } catch (error) {
+          console.error("Error handling place selection:", error);
+          toast.error("Error selecting location. Please try again.");
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
+        }
       });
     } catch (error) {
       console.error("Error initializing Places Autocomplete:", error);
       toast.error("Error initializing location search. Please try again.");
     }
-  }, [debouncedGeocode]);
+  };
 
   useEffect(() => {
     const setupAutocomplete = async () => {
@@ -141,7 +138,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, [initAutocomplete]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
