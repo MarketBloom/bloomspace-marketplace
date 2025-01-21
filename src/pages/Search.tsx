@@ -1,5 +1,3 @@
-import { useIsMobile } from "@/hooks/use-mobile";
-import MobileSearch from "./MobileSearch";
 import { Header } from "@/components/Header";
 import { FilterBar } from "@/components/FilterBar";
 import { useState, useEffect } from "react";
@@ -10,16 +8,18 @@ import { DeliveryInfo } from "@/components/search/DeliveryInfo";
 import { useSearchParams } from "react-router-dom";
 import { useSearchProducts } from "@/components/search/hooks/useSearchProducts";
 import { useSearchFlorists } from "@/components/search/hooks/useSearchFlorists";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "../hooks/use-screen-size";
 import { useGoogleMaps } from "@/components/search/hooks/useGoogleMaps";
 
 const Search = () => {
-  const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'products' | 'florists'>('products');
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">("delivery");
   const [userCoordinates, setUserCoordinates] = useState<[number, number] | null>(null);
+  const screenSize = useScreenSize();
 
-  const { isGoogleMapsLoaded } = useGoogleMaps({ 
+  const { isLoading: isLocationLoading } = useGoogleMaps({ 
     searchParams, 
     onCoordsChange: (coords) => {
       if (JSON.stringify(coords) !== JSON.stringify(userCoordinates)) {
@@ -61,12 +61,18 @@ const Search = () => {
     setSearchParams(newParams, { replace: true });
   };
 
-  if (isMobile) {
-    return <MobileSearch />;
-  }
-
   return (
     <div className="min-h-screen bg-background font-mono">
+      <div className="absolute inset-0 pointer-events-none z-50">
+        <PixelTrail
+          pixelSize={48}
+          fadeDuration={200}
+          delay={50}
+          className="h-full w-full"
+          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
+        />
+      </div>
+      
       <div className="relative z-30">
         <Header />
         
