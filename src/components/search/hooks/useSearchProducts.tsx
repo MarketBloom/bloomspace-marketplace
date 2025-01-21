@@ -48,50 +48,6 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         .eq('in_stock', true)
         .eq('is_hidden', false);
 
-      // Filter by location if coordinates are provided
-      if (location && userCoordinates) {
-        // Get all florists first
-        const { data: florists, error: floristError } = await supabase
-          .from('florist_profiles')
-          .select('id, coordinates, delivery_radius');
-
-        if (floristError) throw floristError;
-
-        // Filter florists by delivery radius
-        const floristsInRange = florists.filter(florist => {
-          if (!florist.coordinates) return false;
-          
-          let coordinates;
-          try {
-            // Handle both string and array formats
-            coordinates = typeof florist.coordinates === 'string' 
-              ? JSON.parse(florist.coordinates) 
-              : florist.coordinates;
-
-            const distance = window.calculate_distance(
-              userCoordinates[0],
-              userCoordinates[1],
-              coordinates[0],
-              coordinates[1]
-            );
-            
-            return distance <= (florist.delivery_radius || 5);
-          } catch (e) {
-            console.error('Error parsing coordinates for florist:', florist.id, e);
-            return false;
-          }
-        });
-
-        // Get products only from florists in range
-        const floristIds = floristsInRange.map(f => f.id);
-        if (floristIds.length > 0) {
-          query = query.in('florist_id', floristIds);
-        } else {
-          // If no florists in range, return empty array
-          return [];
-        }
-      }
-
       // Apply budget filter if specified
       if (maxBudget) {
         query = query.lte('price', maxBudget);
@@ -106,8 +62,46 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const searchDate = dateStr ? parseISO(dateStr) : null;
       const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
+      // Filter products based on location and delivery radius
+      let filteredProducts = productsData;
+      
+      if (location && userCoordinates) {
+        filteredProducts = productsData.filter(product => {
+          const florist = product.florist_profiles;
+          if (!florist.coordinates) return false;
+
+          try {
+            let coordinates;
+            // Handle both string and array formats
+            coordinates = typeof florist.coordinates === 'string' 
+              ? JSON.parse(florist.coordinates) 
+              : florist.coordinates;
+
+            const distance = window.calculate_distance(
+              userCoordinates[0],
+              userCoordinates[1],
+              coordinates[0],
+              coordinates[1]
+            );
+
+            console.log('Distance calculation:', {
+              florist: florist.store_name,
+              distance,
+              deliveryRadius: florist.delivery_radius,
+              coordinates,
+              userCoordinates
+            });
+
+            return distance <= (florist.delivery_radius || 5);
+          } catch (e) {
+            console.error('Error calculating distance for florist:', florist.store_name, e);
+            return false;
+          }
+        });
+      }
+
       // Create product variants and apply other filters
-      const productsWithVariants = productsData.flatMap(product => {
+      const productsWithVariants = filteredProducts.flatMap(product => {
         // Check if florist delivers on the selected day
         if (dayOfWeek && fulfillmentType === "delivery" && 
             product.florist_profiles?.delivery_days && 

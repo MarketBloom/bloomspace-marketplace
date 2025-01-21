@@ -38,9 +38,17 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
               coordinates[1]
             );
 
+            console.log('Distance calculation for florist:', {
+              florist: florist.store_name,
+              distance,
+              deliveryRadius: florist.delivery_radius,
+              coordinates,
+              userCoordinates
+            });
+
             return distance <= (florist.delivery_radius || 5);
           } catch (e) {
-            console.error('Error parsing coordinates for florist:', florist.id, e);
+            console.error('Error calculating distance for florist:', florist.store_name, e);
             return false;
           }
         });
