@@ -11,9 +11,13 @@ interface LocationFilterProps {
   onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-// Global script loading state and promise to prevent multiple loads
+// Global script loading state and geocoding cache
 let googleMapsLoaded = false;
 let loadingPromise: Promise<void> | null = null;
+const geocodingCache = new Map<string, {
+  coords: [number, number],
+  formattedAddress: string
+}>();
 
 const loadGoogleMapsScript = async () => {
   if (googleMapsLoaded) return;
@@ -37,15 +41,18 @@ const loadGoogleMapsScript = async () => {
 
       script.onload = () => {
         googleMapsLoaded = true;
+        console.log('Google Maps script loaded successfully');
         resolve();
       };
 
       script.onerror = (error) => {
+        console.error('Failed to load Google Maps script:', error);
         reject(error);
       };
 
       document.head.appendChild(script);
     } catch (error) {
+      console.error('Error in loadGoogleMapsScript:', error);
       reject(error);
     }
   });
@@ -60,14 +67,38 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
 
-  // Debounced geocoding function with longer delay
-  const debouncedGeocode = useCallback(
+  // Debounced geocoding function that includes caching
+  const geocodeLocation = useCallback(
     debounce((place: google.maps.places.PlaceResult) => {
-      if (!place || !place.formatted_address || !place.geometry?.location || !isMounted.current) return;
+      if (!place || !place.formatted_address || !place.geometry?.location || !isMounted.current) {
+        console.log('Invalid place data or component unmounted');
+        return;
+      }
+      
+      const address = place.formatted_address;
+      
+      // Check cache first
+      if (geocodingCache.has(address)) {
+        console.log('Using cached geocoding result for:', address);
+        const cached = geocodingCache.get(address)!;
+        setLocation(cached.formattedAddress);
+        setInputValue(cached.formattedAddress);
+        if (onCoordsChange) {
+          onCoordsChange(cached.coords);
+        }
+        return;
+      }
       
       try {
+        console.log('Geocoding new address:', address);
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
+        
+        // Cache the result
+        geocodingCache.set(address, {
+          coords: [lat, lng],
+          formattedAddress: place.formatted_address
+        });
         
         setLocation(place.formatted_address);
         setInputValue(place.formatted_address);
@@ -82,12 +113,15 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           onCoordsChange(null);
         }
       }
-    }, 1000), // Increased debounce delay to 1 second
+    }, 500), // 500ms debounce
     [setLocation, onCoordsChange]
   );
 
   const initAutocomplete = useCallback(() => {
-    if (!inputRef.current || !window.google?.maps?.places) return;
+    if (!inputRef.current || !window.google?.maps?.places) {
+      console.log('Cannot initialize autocomplete - missing dependencies');
+      return;
+    }
 
     try {
       // Clear any existing autocomplete
@@ -95,24 +129,23 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
 
-      // Initialize new autocomplete instance
+      console.log('Initializing Places Autocomplete');
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
         componentRestrictions: { country: "au" },
         types: ["(cities)"],
         fields: ["formatted_address", "geometry", "name"],
       });
 
-      // Add place_changed listener
       autocompleteRef.current.addListener("place_changed", () => {
         if (!autocompleteRef.current) return;
         const place = autocompleteRef.current.getPlace();
-        debouncedGeocode(place);
+        geocodeLocation(place);
       });
     } catch (error) {
       console.error("Error initializing Places Autocomplete:", error);
       toast.error("Error initializing location search. Please try again.");
     }
-  }, [debouncedGeocode]);
+  }, [geocodeLocation]);
 
   useEffect(() => {
     const setupAutocomplete = async () => {
@@ -147,6 +180,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
     const value = e.target.value;
     setInputValue(value);
     if (!value) {
+      console.log('Clearing location');
       setLocation("");
       if (onCoordsChange) {
         onCoordsChange(null);
