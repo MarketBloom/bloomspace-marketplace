@@ -113,7 +113,7 @@ export const LocationSearch = ({
       </div>
       
       {suggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
+        <div className="absolute z-[100] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
