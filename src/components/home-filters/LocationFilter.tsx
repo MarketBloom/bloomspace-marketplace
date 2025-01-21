@@ -16,7 +16,6 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
   const debouncedValue = useDebounce(inputValue, 300);
 
-  // Format the display name to be more concise like Google format
   const formatDisplayName = (fullName: string): string => {
     const parts = fullName.split(', ');
     let suburb = parts[0];
@@ -32,22 +31,18 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       }
     }
 
-    // Return in format "Suburb, STATE POSTCODE"
-    if (state && postcode) {
-      return `${suburb}, ${state} ${postcode}`;
-    } else if (state) {
-      return `${suburb}, ${state}`;
-    }
-    return suburb;
+    return state && postcode ? `${suburb}, ${state} ${postcode}` : suburb;
   };
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!debouncedValue) {
+      if (!debouncedValue || debouncedValue.length < 2) {
         setSuggestions([]);
-        setLocation('');
-        if (onCoordsChange) {
-          onCoordsChange(null);
+        if (!debouncedValue) {
+          setLocation('');
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
         }
         return;
       }
@@ -56,14 +51,14 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         setIsLoading(true);
         
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000); // Reduced to 3 seconds
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedValue)}, Australia&countrycodes=au&limit=5`,
           {
             headers: {
               'Accept': 'application/json',
-              'User-Agent': 'Lovable Florist Marketplace'
+              'User-Agent': 'Lovable Florist Marketplace (https://lovable.com.au)'
             },
             signal: controller.signal
           }
@@ -84,14 +79,8 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         })));
 
       } catch (error) {
-        if (error instanceof Error) {
-          if (error.name === 'AbortError') {
-            console.log("Request timed out, but allowing user to continue typing");
-          } else {
-            console.error("Error fetching suggestions:", error);
-            toast.error("Error fetching location suggestions. Please try again.");
-          }
-        }
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
       } finally {
         setIsLoading(false);
       }
