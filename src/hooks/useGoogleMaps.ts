@@ -36,13 +36,12 @@ export const useGoogleMaps = (
           script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
           script.async = true;
           script.defer = true;
+          script.onload = () => {
+            window.googleMapsLoaded = true;
+            window.dispatchEvent(new Event('google-maps-loaded'));
+          };
           
-          // Create a promise to wait for script load
-          await new Promise((resolve, reject) => {
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-          });
+          document.head.appendChild(script);
         }
       } catch (error) {
         console.error('Error loading Google Maps:', error);
