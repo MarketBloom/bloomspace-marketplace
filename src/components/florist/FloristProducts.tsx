@@ -42,6 +42,7 @@ export const FloristProducts = ({
   };
 
   const filteredProducts = products.filter(product => {
+    // Only apply filters if they are defined
     if (filters.budget && filters.budget.length > 0) {
       const maxBudget = filters.budget[0];
       if ((product.displayPrice || product.price) > maxBudget) {
