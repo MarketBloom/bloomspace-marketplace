@@ -107,13 +107,13 @@ export const LocationSearch = ({
           placeholder={placeholder}
           value={inputValue}
           onChange={handleInputChange}
-          className={`w-full pl-8 h-[42px] bg-white/90 border border-black text-xs ${isLoading ? 'opacity-70' : ''} ${className}`}
+          className={`w-full pl-8 h-[42px] bg-white border border-black text-xs ${isLoading ? 'opacity-70' : ''} ${className}`}
         />
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
       
       {suggestions.length > 0 && (
-        <div className="absolute z-[100] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
+        <div className="absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
