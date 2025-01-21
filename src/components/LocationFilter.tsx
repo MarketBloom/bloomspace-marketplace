@@ -77,7 +77,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         const apiKey = secretData[0].secret;
         console.log('Successfully retrieved HERE API key');
         
-        // Use the autocomplete endpoint with optimized parameters
+        // Use the autocomplete endpoint with optimized parameters based on HERE documentation
         const query = encodeURIComponent(debouncedValue);
         const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete` + 
           `?q=${query}` +
@@ -86,6 +86,8 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           `&lang=en-AU` +
           `&resultTypes=address,place` +
           `&types=city,place,district,locality` +
+          `&politicalView=AUS` + // Add political view for Australia
+          `&show=streetDetails` + // Include street details in response
           `&apiKey=${apiKey}`;
         
         console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
