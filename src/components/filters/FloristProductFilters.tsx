@@ -22,7 +22,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
 
   const handleApplyFilters = () => {
     // Debug logs
-    console.log("Current filter state:", {
+    console.log("Applying filters:", {
       budget,
       selectedCategories,
       selectedOccasions
