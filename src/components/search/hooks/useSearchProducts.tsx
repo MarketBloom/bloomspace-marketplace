@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format, isToday, parseISO } from "date-fns";
+import { filterFloristsByDrivingDistance } from "@/utils/distance";
 
 interface UseSearchProductsProps {
   fulfillmentType: "pickup" | "delivery";
@@ -28,6 +29,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         .select(`
           *,
           florist_profiles!inner (
+            id,
             store_name,
             address,
             delivery_cutoff,

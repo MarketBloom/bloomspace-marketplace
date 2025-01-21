@@ -22,7 +22,7 @@ const DeliverySettings = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as FloristProfile;
+      return data as unknown as FloristProfile;
     },
     enabled: !!user,
   });
@@ -43,7 +43,7 @@ const DeliverySettings = () => {
           delivery_cutoff_times: formData.cutoffTimes,
           same_day_enabled: true,
           operating_hours: formData.operatingHours,
-          store_name: floristProfile.store_name, // Add required fields
+          store_name: floristProfile.store_name,
           address: floristProfile.address
         })
         .eq("id", user.id);

@@ -22,7 +22,7 @@ const StoreManagement = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as FloristProfile;
+      return data as unknown as FloristProfile;
     },
     enabled: !!user,
   });

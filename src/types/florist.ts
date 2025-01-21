@@ -1,9 +1,11 @@
+import { Json } from './database';
+
 export interface FloristProfile {
   id: string;
   store_name: string;
   address: string;
   about_text: string | null;
-  operating_hours: Record<string, { open: string; close: string }> | null;
+  operating_hours: Record<string, { open: string; close: string }>;
   delivery_cutoff: string | null;
   is_premium: boolean | null;
   premium_since: string | null;
@@ -34,6 +36,7 @@ export interface FloristProfile {
   } | null;
   coordinates: string | null;
   geocoded_address: Record<string, any> | null;
+  delivery_distance_km: number | null;
 }
 
 export interface FloristProfilesTable {
@@ -43,7 +46,7 @@ export interface FloristProfilesTable {
     store_name: string;
     address: string;
     about_text?: string | null;
-    operating_hours?: Record<string, { open: string; close: string }> | null;
+    operating_hours?: Record<string, { open: string; close: string }>;
     delivery_cutoff?: string | null;
     is_premium?: boolean | null;
     premium_since?: string | null;
@@ -72,6 +75,7 @@ export interface FloristProfilesTable {
       midday: boolean;
       afternoon: boolean;
     } | null;
+    delivery_distance_km?: number | null;
   };
   Update: Partial<FloristProfilesTable['Insert']>;
 }
