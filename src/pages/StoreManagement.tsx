@@ -27,14 +27,14 @@ const StoreManagement = () => {
     enabled: !!user,
   });
 
-  const handleStoreSettingsSubmit = async (formData: FloristProfile) => {
+  const handleStoreSettingsSubmit = async () => {
     if (!floristProfile || !user) return;
     
     setLoading(true);
     try {
       const { error } = await supabase
         .from("florist_profiles")
-        .update(formData)
+        .update(floristProfile)
         .eq("id", user.id);
 
       if (error) throw error;
