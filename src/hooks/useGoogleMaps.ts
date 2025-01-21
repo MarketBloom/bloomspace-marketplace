@@ -17,7 +17,6 @@ export const useGoogleMaps = (initialLocation: string) => {
   const [suggestions, setSuggestions] = useState<GoogleMapsResult[]>([]);
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const { toast } = useToast();
-  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
 
   // Initialize Google Maps Autocomplete service
   useEffect(() => {
@@ -48,18 +47,13 @@ export const useGoogleMaps = (initialLocation: string) => {
 
         const apiKey = secretData[0].secret;
         
+        // Only load the script if it hasn't been loaded yet
         if (!document.querySelector('#google-maps-script')) {
           const script = document.createElement('script');
           script.id = 'google-maps-script';
           script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
           script.async = true;
           document.head.appendChild(script);
-
-          script.onload = () => {
-            initializeAutocomplete();
-          };
-        } else {
-          initializeAutocomplete();
         }
       } catch (error) {
         console.error('Error loading Google Maps:', error);
@@ -72,37 +66,7 @@ export const useGoogleMaps = (initialLocation: string) => {
     };
 
     loadGoogleMapsScript();
-
-    return () => {
-      // Cleanup
-      if (autocomplete) {
-        google.maps.event.clearInstanceListeners(autocomplete);
-      }
-    };
   }, [toast]);
-
-  const initializeAutocomplete = () => {
-    const input = document.createElement('input');
-    const autocompleteInstance = new google.maps.places.Autocomplete(input, {
-      componentRestrictions: { country: 'au' },
-      types: ['geocode'],
-      fields: ['address_components', 'geometry', 'formatted_address']
-    });
-
-    setAutocomplete(autocompleteInstance);
-
-    google.maps.event.addListener(autocompleteInstance, 'place_changed', () => {
-      const place = autocompleteInstance.getPlace();
-      if (place.geometry?.location) {
-        setCoordinates([
-          place.geometry.location.lat(),
-          place.geometry.location.lng()
-        ]);
-        setInputValue(place.formatted_address || '');
-        setSuggestions([]);
-      }
-    });
-  };
 
   const getPlacePredictions = useCallback(async (input: string) => {
     if (!input) {

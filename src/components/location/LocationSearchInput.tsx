@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 
 interface LocationSearchInputProps {
@@ -17,6 +17,7 @@ export const LocationSearchInput = ({
   onSearch
 }: LocationSearchInputProps) => {
   const debouncedValue = useDebounce(inputValue, 300);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (debouncedValue) {
@@ -27,6 +28,7 @@ export const LocationSearchInput = ({
   return (
     <div className="relative">
       <Input
+        ref={inputRef}
         type="text"
         placeholder="Enter suburb or postcode..."
         value={inputValue}
