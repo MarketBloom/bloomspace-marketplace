@@ -27,8 +27,8 @@ export const FilterBar = ({
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [location, setLocation] = useState<string>(initialLocation);
-  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(['all']);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['all']);
+  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(["All"]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["All"]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
   const [isApplying, setIsApplying] = useState(false);
 
@@ -61,9 +61,9 @@ export const FilterBar = ({
           updates.date = date.toISOString();
         }
         
-        // Always include categories and occasions, defaulting to all if none selected
-        updates.categories = selectedCategories.length > 0 ? selectedCategories.join(',') : 'all';
-        updates.occasions = selectedOccasions.length > 0 ? selectedOccasions.join(',') : 'all';
+        // Always include categories and occasions
+        updates.categories = selectedCategories.includes("All") ? "all" : selectedCategories.join(',');
+        updates.occasions = selectedOccasions.includes("All") ? "all" : selectedOccasions.join(',');
         
         onFilterChange(updates);
         
