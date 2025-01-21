@@ -21,24 +21,43 @@ export const LocationSearchInput = ({
   useEffect(() => {
     if (!inputRef.current) return;
 
-    // Initialize the autocomplete object
-    autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-      componentRestrictions: { country: "au" },
-      fields: ["address_components", "geometry", "formatted_address"],
-    });
+    // Function to initialize autocomplete
+    const initializeAutocomplete = () => {
+      if (!window.google || !inputRef.current) return;
 
-    // Add the place_changed event listener
-    const listener = autocompleteRef.current.addListener("place_changed", () => {
-      const place = autocompleteRef.current?.getPlace();
-      if (place && place.geometry) {
-        onPlaceSelected(place);
-      }
-    });
+      // Initialize the autocomplete object
+      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+        componentRestrictions: { country: "au" },
+        fields: ["address_components", "geometry", "formatted_address"],
+      });
 
-    // Cleanup
+      // Add the place_changed event listener
+      autocompleteRef.current.addListener("place_changed", () => {
+        const place = autocompleteRef.current?.getPlace();
+        if (place) {
+          onPlaceSelected(place);
+        }
+      });
+    };
+
+    // If Google Maps is already loaded, initialize immediately
+    if (window.google && window.google.maps) {
+      initializeAutocomplete();
+    } else {
+      // Otherwise wait for the script to load
+      const handleGoogleMapsLoaded = () => {
+        initializeAutocomplete();
+      };
+      window.addEventListener('google-maps-loaded', handleGoogleMapsLoaded);
+      return () => {
+        window.removeEventListener('google-maps-loaded', handleGoogleMapsLoaded);
+      };
+    }
+
+    // Cleanup function
     return () => {
-      if (listener) {
-        google.maps.event.removeListener(listener);
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
   }, [onPlaceSelected]);
