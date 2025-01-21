@@ -27,18 +27,14 @@ const StoreManagement = () => {
     enabled: !!user,
   });
 
-  const handleStoreSettingsSubmit = async (formData: Record<string, string>) => {
+  const handleStoreSettingsSubmit = async (formData: FloristProfile) => {
     if (!floristProfile || !user) return;
     
     setLoading(true);
     try {
       const { error } = await supabase
         .from("florist_profiles")
-        .update({
-          ...formData,
-          store_name: formData.store_name || floristProfile.store_name,
-          address: formData.address || floristProfile.address
-        })
+        .update(formData)
         .eq("id", user.id);
 
       if (error) throw error;
@@ -66,8 +62,8 @@ const StoreManagement = () => {
           <Card>
             <CardContent className="p-6">
               <StoreSettingsForm
-                formData={floristProfile}
-                setFormData={handleStoreSettingsSubmit}
+                initialData={floristProfile}
+                onUpdate={handleStoreSettingsSubmit}
                 loading={loading}
               />
             </CardContent>
