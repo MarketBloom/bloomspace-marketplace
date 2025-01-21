@@ -33,13 +33,9 @@ export const useGoogleMaps = (
         // Check if script is already loaded
         if (!document.querySelector('script[src*="maps.googleapis.com/maps/api"]')) {
           const script = document.createElement('script');
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initGoogleMaps`;
           script.async = true;
           script.defer = true;
-          script.onload = () => {
-            window.googleMapsLoaded = true;
-            window.dispatchEvent(new Event('google-maps-loaded'));
-          };
           
           document.head.appendChild(script);
         }
