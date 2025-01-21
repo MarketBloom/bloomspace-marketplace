@@ -25,7 +25,7 @@ export const useLocationSearch = (
     
     const address = item.address;
     const title = item.title || "";
-    const city = address.city || address.county || "";
+    const city = address.city || address.county || address.district || "";
     const state = address.state || address.stateCode || "";
     const postalCode = address.postalCode || "";
 
