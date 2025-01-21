@@ -1,17 +1,29 @@
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
+import { useEffect } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface LocationSearchInputProps {
   inputValue: string;
   isLoading: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch: (value: string) => void;
 }
 
 export const LocationSearchInput = ({ 
   inputValue, 
   isLoading, 
-  onChange 
+  onChange,
+  onSearch
 }: LocationSearchInputProps) => {
+  const debouncedValue = useDebounce(inputValue, 300);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      onSearch(debouncedValue);
+    }
+  }, [debouncedValue, onSearch]);
+
   return (
     <div className="relative">
       <Input

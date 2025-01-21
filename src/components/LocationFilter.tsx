@@ -1,6 +1,6 @@
 import { LocationSearchInput } from "./location/LocationSearchInput";
 import { LocationSuggestions } from "./location/LocationSuggestions";
-import { useLocationSearch } from "./location/useLocationSearch";
+import { useGoogleMaps } from "@/hooks/useGoogleMaps";
 
 interface LocationFilterProps {
   location: string;
@@ -18,20 +18,23 @@ export const LocationFilter = ({
     setInputValue,
     isLoading,
     suggestions,
-    setSuggestions
-  } = useLocationSearch(location, setLocation, onCoordsChange);
+    getPlacePredictions,
+    handleLocationSelect
+  } = useGoogleMaps(location);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+    if (!e.target.value) {
+      setLocation('');
+      if (onCoordsChange) {
+        onCoordsChange(null);
+      }
+    }
   };
 
-  const handleSuggestionSelect = (suggestion: { display_name: string, lat: number, lon: number }) => {
-    setInputValue(suggestion.display_name);
-    setLocation(suggestion.display_name);
-    if (onCoordsChange) {
-      onCoordsChange([suggestion.lat, suggestion.lon]);
-    }
-    setSuggestions([]);
+  const handleSuggestionSelect = async (placeId: string, description: string) => {
+    await handleLocationSelect(placeId, description);
+    setLocation(description);
   };
 
   return (
@@ -40,6 +43,7 @@ export const LocationFilter = ({
         inputValue={inputValue}
         isLoading={isLoading}
         onChange={handleInputChange}
+        onSearch={getPlacePredictions}
       />
       <LocationSuggestions
         suggestions={suggestions}

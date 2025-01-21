@@ -1,12 +1,15 @@
-interface LocationSuggestion {
-  display_name: string;
-  lat: number;
-  lon: number;
+interface GoogleMapsResult {
+  description: string;
+  place_id: string;
+  structured_formatting: {
+    main_text: string;
+    secondary_text: string;
+  };
 }
 
 interface LocationSuggestionsProps {
-  suggestions: LocationSuggestion[];
-  onSelect: (suggestion: LocationSuggestion) => void;
+  suggestions: GoogleMapsResult[];
+  onSelect: (placeId: string, description: string) => void;
 }
 
 export const LocationSuggestions = ({ 
@@ -17,13 +20,14 @@ export const LocationSuggestions = ({
 
   return (
     <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
-      {suggestions.map((suggestion, index) => (
+      {suggestions.map((suggestion) => (
         <button
-          key={index}
+          key={suggestion.place_id}
           className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-          onClick={() => onSelect(suggestion)}
+          onClick={() => onSelect(suggestion.place_id, suggestion.description)}
         >
-          {suggestion.display_name}
+          <div className="font-medium">{suggestion.structured_formatting.main_text}</div>
+          <div className="text-gray-600 text-xs">{suggestion.structured_formatting.secondary_text}</div>
         </button>
       ))}
     </div>

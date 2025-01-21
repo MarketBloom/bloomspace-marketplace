@@ -125,6 +125,7 @@ export type Database = {
           delivery_cutoff: string | null
           delivery_cutoff_times: Json | null
           delivery_days: string[] | null
+          delivery_distance_km: number | null
           delivery_end_time: string | null
           delivery_fee: number | null
           delivery_radius: number | null
@@ -158,6 +159,7 @@ export type Database = {
           delivery_cutoff?: string | null
           delivery_cutoff_times?: Json | null
           delivery_days?: string[] | null
+          delivery_distance_km?: number | null
           delivery_end_time?: string | null
           delivery_fee?: number | null
           delivery_radius?: number | null
@@ -191,6 +193,7 @@ export type Database = {
           delivery_cutoff?: string | null
           delivery_cutoff_times?: Json | null
           delivery_days?: string[] | null
+          delivery_distance_km?: number | null
           delivery_end_time?: string | null
           delivery_fee?: number | null
           delivery_radius?: number | null
