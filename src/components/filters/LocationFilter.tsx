@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -49,13 +49,14 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         setIsLoading(true);
         
         // Get HERE API key from Supabase
-        const { data: { secret: apiKey }, error: secretError } = await supabase
+        const { data, error: secretError } = await supabase
           .rpc('get_secret', { name: 'HERE_API_KEY' });
 
         if (secretError) throw new Error('Failed to get API key');
+        if (!data || !data[0]?.secret) throw new Error('API key not found');
 
         const response = await fetch(
-          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${apiKey}`
+          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${data[0].secret}`
         );
 
         if (!response.ok) {
