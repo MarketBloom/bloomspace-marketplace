@@ -9,7 +9,6 @@ import { useSearchParams } from "react-router-dom";
 import { useSearchProducts } from "@/components/search/hooks/useSearchProducts";
 import { useSearchFlorists } from "@/components/search/hooks/useSearchFlorists";
 import { useScreenSize } from "../hooks/use-screen-size";
-import { useGoogleMaps } from "@/components/search/hooks/useGoogleMaps";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,17 +17,14 @@ const Search = () => {
   const [userCoordinates, setUserCoordinates] = useState<[number, number] | null>(null);
   const screenSize = useScreenSize();
 
-  const { isLoading: isLocationLoading } = useGoogleMaps({ 
-    searchParams, 
-    onCoordsChange: (coords) => {
-      if (JSON.stringify(coords) !== JSON.stringify(userCoordinates)) {
-        setUserCoordinates(coords);
-        if (coords) {
-          console.debug('User coordinates updated:', coords);
-        }
-      }
+  // Extract coordinates from URL if present
+  useEffect(() => {
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    if (lat && lng) {
+      setUserCoordinates([parseFloat(lat), parseFloat(lng)]);
     }
-  });
+  }, [searchParams]);
 
   const { data: products, isLoading: isLoadingProducts } = useSearchProducts({
     fulfillmentType,
@@ -40,13 +36,6 @@ const Search = () => {
     searchParams,
     userCoordinates
   });
-
-  useEffect(() => {
-    const fulfillment = searchParams.get('fulfillment');
-    if (fulfillment === 'pickup' || fulfillment === 'delivery') {
-      setFulfillmentType(fulfillment);
-    }
-  }, [searchParams]);
 
   const updateSearchParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);

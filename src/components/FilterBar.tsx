@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Search, ShoppingBag, Truck } from "lucide-react";
-import { useState, useEffect } from "react";
-import { LocationFilter } from "./filters/LocationFilter";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LocationFilter } from "./LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
-import { CategoryFilter } from "./filters/CategoryFilter";
-import { OccasionFilter } from "./filters/OccasionFilter";
+import { FulfillmentToggle } from "./filters/FulfillmentToggle";
+import { Button } from "./ui/button";
+import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 
 interface FilterBarProps {
@@ -18,151 +18,120 @@ interface FilterBarProps {
 
 export const FilterBar = ({ 
   initialFulfillmentType = "delivery",
-  initialDate = undefined,
+  initialDate,
   initialBudget = [500],
   initialLocation = "",
   onFilterChange
 }: FilterBarProps) => {
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
+  const [budget, setBudget] = useState<number[]>(initialBudget);
   const [location, setLocation] = useState<string>(initialLocation);
-  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(["All"]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(["All"]);
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
-  const [isApplying, setIsApplying] = useState(false);
-
-  // Track if user has modified filters
-  const [hasModifiedLocation, setHasModifiedLocation] = useState(false);
-  const [hasModifiedDate, setHasModifiedDate] = useState(false);
-  const [hasModifiedBudget, setHasModifiedBudget] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleApplyFilters = () => {
-    if (isApplying) return;
+    if (isSearching) return;
     
-    setIsApplying(true);
+    setIsSearching(true);
     
     try {
-      if (onFilterChange) {
-        const updates: Record<string, string> = {
-          fulfillment: fulfillmentType,
-        };
+      // Only proceed with search if we have both location and coordinates when location is entered
+      if (location && !coordinates) {
+        toast({
+          title: "Location Error",
+          description: "Please enter a valid suburb or postcode",
+          variant: "destructive"
+        });
+        return;
+      }
 
-        // Only include modified filters
-        if (hasModifiedBudget || initialBudget[0] !== 500) {
-          updates.budget = budget[0].toString();
-        }
+      const updates: Record<string, string> = {};
+      
+      // Only include location params if we have both location text and coordinates
+      if (location && coordinates) {
+        updates.location = location;
+        updates.lat = coordinates[0].toString();
+        updates.lng = coordinates[1].toString();
+      }
+      
+      // If date is today, also include the current time to filter by cutoff
+      if (date) {
+        const now = new Date();
+        const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
         
-        if (hasModifiedLocation || initialLocation) {
-          updates.location = location;
-        }
-
-        if (hasModifiedDate && date) {
+        if (isToday) {
+          // Include current time for same-day filtering
+          updates.date = now.toISOString();
+        } else {
+          // For future dates, just include the date
           updates.date = date.toISOString();
         }
-        
-        // Always include categories and occasions
-        updates.categories = selectedCategories.includes("All") ? "all" : selectedCategories.join(',');
-        updates.occasions = selectedOccasions.includes("All") ? "all" : selectedOccasions.join(',');
-        
+      }
+      
+      updates.budget = budget[0].toString();
+      updates.fulfillment = fulfillmentType;
+
+      if (onFilterChange) {
         onFilterChange(updates);
-        
-        toast({
-          title: "Filters Applied",
-          description: "Your search results have been updated"
+      } else {
+        // If no onFilterChange provided, navigate to search page
+        const searchParams = new URLSearchParams(updates);
+        navigate({
+          pathname: "/search",
+          search: searchParams.toString()
         });
       }
-    } catch (error) {
-      console.error("Error applying filters:", error);
+
       toast({
-        title: "Error",
-        description: "Failed to apply filters. Please try again.",
+        title: "Filters Applied",
+        description: "Your search results have been updated"
+      });
+    } catch (error) {
+      console.error("Filter error:", error);
+      toast({
+        title: "Filter Error",
+        description: "Something went wrong. Please try again.",
         variant: "destructive"
       });
     } finally {
-      setIsApplying(false);
+      setIsSearching(false);
     }
   };
 
-  const handleLocationChange = (newLocation: string) => {
-    setLocation(newLocation);
-    setHasModifiedLocation(true);
-  };
-
-  const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
-    setHasModifiedDate(true);
-  };
-
-  const handleBudgetChange = (newBudget: number[]) => {
-    setBudget(newBudget);
-    setHasModifiedBudget(true);
-  };
-
   return (
-    <div className="space-y-3">
-      <div className="space-y-1.5">
-        <label className="text-foreground text-xs font-medium">Fulfillment Method</label>
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant={fulfillmentType === "delivery" ? "default" : "outline"}
-            onClick={() => setFulfillmentType("delivery")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
-              fulfillmentType === "delivery" 
-                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-                : ''
-            }`}
-          >
-            <Truck className="w-3.5 h-3.5 mr-2" />
-            Delivery
-          </Button>
-          <Button
-            variant={fulfillmentType === "pickup" ? "default" : "outline"}
-            onClick={() => setFulfillmentType("pickup")}
-            className={`flex items-center justify-center h-[42px] text-xs border border-black rounded-lg ${
-              fulfillmentType === "pickup" 
-                ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-                : ''
-            }`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 mr-2" />
-            Pickup
-          </Button>
-        </div>
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <LocationFilter 
+          location={location}
+          setLocation={setLocation}
+          onCoordsChange={setCoordinates}
+        />
+        
+        <DateFilter 
+          date={date} 
+          setDate={setDate} 
+        />
+        
+        <BudgetFilter 
+          budget={budget} 
+          setBudget={setBudget} 
+        />
+        
+        <FulfillmentToggle
+          fulfillmentType={fulfillmentType}
+          setFulfillmentType={setFulfillmentType}
+        />
       </div>
       
-      <LocationFilter 
-        location={location}
-        setLocation={handleLocationChange}
-      />
-      
-      <DateFilter 
-        date={date}
-        setDate={handleDateChange}
-      />
-      
-      <BudgetFilter 
-        budget={budget}
-        setBudget={handleBudgetChange}
-      />
-      
-      <CategoryFilter 
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-      />
-      
-      <OccasionFilter 
-        selectedOccasions={selectedOccasions}
-        setSelectedOccasions={setSelectedOccasions}
-      />
-
-      <Button
+      <Button 
         onClick={handleApplyFilters}
-        disabled={isApplying}
+        disabled={isSearching || !!(location && !coordinates)}
         className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
       >
-        <Search className="w-4 h-4 mr-2" />
-        {isApplying ? "Applying..." : "Apply Filters"}
+        Apply Filters
       </Button>
     </div>
   );
