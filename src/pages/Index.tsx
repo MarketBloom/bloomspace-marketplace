@@ -1,143 +1,95 @@
-import { useState } from "react";
+import { Categories } from "@/components/Categories";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
+import { Header } from "@/components/Header";
+import { Hero } from "@/components/Hero";
+import { HowItWorks } from "@/components/HowItWorks";
+import { Testimonials } from "@/components/Testimonials";
+import { TrustSection } from "@/components/TrustSection";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { FeaturedFlorists } from "@/components/FeaturedFlorists";
-import { FeaturedProducts } from "@/components/FeaturedProducts";
-import { useGoogleMaps } from "@/hooks/use-google-maps";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileIndex from "./MobileIndex";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/components/hooks/use-screen-size";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
-  const [location, setLocation] = useState("");
-  const { isLoaded: mapsLoaded, geocode } = useGoogleMaps();
-
-  const { data: florists, isLoading: isLoadingFlorists } = useQuery({
-    queryKey: ['florists', coordinates],
+  const isMobile = useIsMobile();
+  const screenSize = useScreenSize();
+  
+  const { data: products, isLoading, error } = useQuery({
+    queryKey: ['featured-products'],
     queryFn: async () => {
-      if (!coordinates) return [];
-      
-      console.log("Filtering florists by delivery radius...");
-      
-      const { data: florists, error } = await supabase
-        .from('florist_profiles')
-        .select('*')
-        .eq('store_status', 'published');
+      try {
+        console.log('Fetching featured products...');
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            *,
+            florist_profiles (
+              store_name
+            )
+          `)
+          .eq('in_stock', true)
+          .eq('is_hidden', false)
+          .limit(6);
 
-      if (error) throw error;
-
-      // Filter florists by delivery radius
-      return florists.filter(florist => {
-        if (!florist.coordinates || !coordinates) return false;
-        
-        try {
-          // Ensure coordinates are properly parsed
-          const floristCoords = typeof florist.coordinates === 'string' 
-            ? JSON.parse(florist.coordinates) 
-            : florist.coordinates;
-
-          // Calculate distance using PostGIS function
-          const distance = window.calculate_distance(
-            coordinates[0],
-            coordinates[1],
-            floristCoords[0],
-            floristCoords[1]
-          );
-
-          console.log(`Distance to ${florist.store_name}: ${distance}km`);
-          console.log(`Delivery radius for ${florist.store_name}: ${florist.delivery_radius}km`);
-          
-          return distance <= (florist.delivery_radius || 5);
-        } catch (err) {
-          console.error(`Error calculating distance for ${florist.store_name}:`, err);
-          return false;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
         }
-      });
-    },
-    enabled: !!coordinates
-  });
 
-  const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['featured_products'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          florist_profiles (
-            store_name,
-            address,
-            delivery_cutoff,
-            delivery_start_time,
-            delivery_end_time,
-            operating_hours,
-            coordinates,
-            delivery_radius
-          ),
-          product_sizes (
-            id,
-            name,
-            price_adjustment,
-            images
-          )
-        `)
-        .eq('in_stock', true)
-        .eq('is_hidden', false)
-        .limit(6);
+        if (!data) {
+          throw new Error('No data returned from Supabase');
+        }
 
-      if (error) throw error;
-      return data;
-    }
-  });
-
-  const handleSearch = async () => {
-    if (!location) {
-      toast({
-        title: "Location Required",
-        description: "Please enter a location to search",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const coords = await geocode(location);
-      if (coords) {
-        setCoordinates(coords);
-        navigate(`/search?location=${encodeURIComponent(location)}`);
+        console.log('Products fetched:', data);
+        return data;
+      } catch (err) {
+        console.error('Query error:', err);
+        throw err;
       }
-    } catch (error) {
-      console.error('Geocoding error:', error);
-      toast({
-        title: "Location Error",
-        description: "Could not find the specified location. Please try again.",
-        variant: "destructive",
-      });
+    },
+    retry: 2,
+    retryDelay: 1000,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    meta: {
+      onError: (error: Error) => {
+        console.error('Query error:', error);
+        toast.error("Failed to load featured products. Please try again later.");
+      }
     }
-  };
+  });
+
+  if (isMobile) {
+    return <MobileIndex />;
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <Hero 
-        location={location}
-        setLocation={setLocation}
-        onSearch={handleSearch}
-        isLoading={!mapsLoaded}
-      />
-      <FeaturedFlorists 
-        florists={florists || []} 
-        isLoading={isLoadingFlorists} 
-      />
-      <FeaturedProducts 
-        products={products || []} 
-        isLoading={isLoadingProducts}
-        navigate={navigate}
-      />
+    <div className="relative min-h-screen bg-background">
+      <div className="absolute inset-0 pointer-events-none z-[1]">
+        <PixelTrail
+          pixelSize={screenSize.lessThan('md') ? 48 : 80}
+          fadeDuration={200}
+          delay={0}
+          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
+        />
+      </div>
+      <div className="relative z-[2]">
+        <Header />
+        <Hero />
+        <HowItWorks />
+        <Categories navigate={navigate} />
+        <FeaturedProducts 
+          products={products || []} 
+          isLoading={isLoading} 
+          navigate={navigate}
+        />
+        <TrustSection navigate={navigate} />
+        <Testimonials />
+      </div>
     </div>
   );
 };
