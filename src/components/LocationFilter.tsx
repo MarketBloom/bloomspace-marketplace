@@ -19,16 +19,28 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const { toast } = useToast();
 
   const formatDisplayName = (address: any): string => {
-    const suburb = address.district || address.city || address.county;
-    const state = address.state || address.stateCode;
-    const postcode = address.postalCode;
+    // Extract relevant address components
+    const street = address.address?.street || '';
+    const houseNumber = address.address?.houseNumber || '';
+    const suburb = address.address?.district || address.address?.city || address.address?.county || '';
+    const state = address.address?.state || address.address?.stateCode || '';
+    const postcode = address.address?.postalCode || '';
 
-    if (suburb && state && postcode) {
-      return `${suburb}, ${state} ${postcode}`;
-    } else if (suburb && state) {
-      return `${suburb}, ${state}`;
+    // Build display string
+    let display = '';
+    if (street && houseNumber) {
+      display += `${street} ${houseNumber}, `;
     }
-    return address.label || "";
+    if (suburb) {
+      display += `${suburb}, `;
+    }
+    if (state && postcode) {
+      display += `${state} ${postcode}`;
+    } else if (state) {
+      display += state;
+    }
+
+    return display.trim() || address.title || '';
   };
 
   useEffect(() => {
@@ -71,8 +83,11 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
 
         const apiKey = secretData[0].secret;
+        // Format query to match HERE API requirements
         const query = encodeURIComponent(`${debouncedValue}, Australia`);
-        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${query}&limit=5&apiKey=${apiKey}`;
+        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${query}&limit=4&apiKey=${apiKey}`;
+        
+        console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
         
         const response = await fetch(apiUrl);
 
@@ -81,6 +96,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
         
         const searchData = await response.json();
+        console.log('HERE API response:', searchData);
         
         if (!searchData.items || !Array.isArray(searchData.items)) {
           console.error('Unexpected API response format:', searchData);
@@ -88,7 +104,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
 
         const formattedResults = searchData.items.map((item: any) => ({
-          display_name: formatDisplayName(item.address),
+          display_name: formatDisplayName(item),
           lat: item.position.lat,
           lon: item.position.lng
         }));
