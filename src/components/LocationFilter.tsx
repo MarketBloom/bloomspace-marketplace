@@ -19,12 +19,9 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const { toast } = useToast();
 
   const formatDisplayName = (address: any): string => {
-    const components = address.address;
-    if (!components) return address.label || "";
-    
-    const suburb = components.district || components.city || components.county;
-    const state = components.state || components.stateCode;
-    const postcode = components.postalCode;
+    const suburb = address.district || address.city || address.county;
+    const state = address.state || address.stateCode;
+    const postcode = address.postalCode;
 
     if (suburb && state && postcode) {
       return `${suburb}, ${state} ${postcode}`;
@@ -73,7 +70,9 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           return;
         }
 
-        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`;
+        const apiKey = secretData[0].secret;
+        const query = encodeURIComponent(`${debouncedValue}, Australia`);
+        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${query}&limit=5&apiKey=${apiKey}`;
         
         const response = await fetch(apiUrl);
 
@@ -89,7 +88,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
 
         const formattedResults = searchData.items.map((item: any) => ({
-          display_name: formatDisplayName(item),
+          display_name: formatDisplayName(item.address),
           lat: item.position.lat,
           lon: item.position.lng
         }));
@@ -154,4 +153,4 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       )}
     </div>
   );
-}
+};
