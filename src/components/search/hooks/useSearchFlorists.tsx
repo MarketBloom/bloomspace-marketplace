@@ -51,6 +51,7 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
 
           try {
             const floristCoords = JSON.parse(String(florist.coordinates));
+            // Use the global calculate_distance function defined in utils/distance.ts
             const distance = window.calculate_distance(
               userCoordinates[0],
               userCoordinates[1],
