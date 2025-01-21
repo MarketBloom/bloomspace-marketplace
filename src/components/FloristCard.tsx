@@ -6,51 +6,26 @@ import { useNavigate } from "react-router-dom";
 import { FloristBanner } from "./florist-card/FloristBanner";
 import { FloristInfo } from "./florist-card/FloristInfo";
 import { SocialLinks } from "./florist-card/SocialLinks";
+import { FloristProfile } from "./FeaturedFlorists";
 
-interface FloristCardProps {
-  id: string;
-  storeName: string;
-  address: string;
-  aboutText?: string | null;
-  bannerUrl?: string | null;
-  logoUrl?: string | null;
-  deliveryFee?: number | null;
-  deliveryRadius?: number | null;
-  minimumOrderAmount?: number | null;
-  operatingHours?: Record<string, { open: string; close: string }> | null;
-  socialLinks?: {
-    website?: string;
-    instagram?: string;
-    facebook?: string;
-  } | null;
+export interface FloristCardProps {
+  florist: FloristProfile;
 }
 
-export const FloristCard = ({
-  id,
-  storeName,
-  address,
-  aboutText,
-  bannerUrl,
-  logoUrl,
-  deliveryFee,
-  deliveryRadius,
-  minimumOrderAmount,
-  operatingHours,
-  socialLinks,
-}: FloristCardProps) => {
+export const FloristCard = ({ florist }: FloristCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: favorite, isLoading: checkingFavorite } = useQuery({
-    queryKey: ["favorite", user?.id, id],
+    queryKey: ["favorite", user?.id, florist.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("favorite_florists")
         .select("id")
         .eq("customer_id", user?.id)
-        .eq("florist_id", id)
+        .eq("florist_id", florist.id)
         .maybeSingle();
 
       if (error) throw error;
@@ -65,16 +40,16 @@ export const FloristCard = ({
         .from("favorite_florists")
         .insert({
           customer_id: user?.id,
-          florist_id: id,
+          florist_id: florist.id,
         });
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, id] });
+      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, florist.id] });
       queryClient.invalidateQueries({ queryKey: ["favorites", user?.id] });
       toast({
         title: "Added to favorites",
-        description: `${storeName} has been added to your favorites`,
+        description: `${florist.store_name} has been added to your favorites`,
       });
     },
     onError: () => {
@@ -92,15 +67,15 @@ export const FloristCard = ({
         .from("favorite_florists")
         .delete()
         .eq("customer_id", user?.id)
-        .eq("florist_id", id);
+        .eq("florist_id", florist.id);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, id] });
+      queryClient.invalidateQueries({ queryKey: ["favorite", user?.id, florist.id] });
       queryClient.invalidateQueries({ queryKey: ["favorites", user?.id] });
       toast({
         title: "Removed from favorites",
-        description: `${storeName} has been removed from your favorites`,
+        description: `${florist.store_name} has been removed from your favorites`,
       });
     },
     onError: () => {
@@ -134,7 +109,7 @@ export const FloristCard = ({
     if (target.closest('a') || target.closest('button')) {
       return;
     }
-    navigate(`/florist/${id}`);
+    navigate(`/florist/${florist.id}`);
   };
 
   return (
@@ -143,23 +118,23 @@ export const FloristCard = ({
       onClick={handleCardClick}
     >
       <FloristBanner
-        bannerUrl={bannerUrl}
-        logoUrl={logoUrl}
-        storeName={storeName}
+        bannerUrl={florist.banner_url}
+        logoUrl={florist.logo_url}
+        storeName={florist.store_name}
         isFavorite={!!favorite}
         isCheckingFavorite={checkingFavorite}
         onToggleFavorite={handleToggleFavorite}
       />
       <FloristInfo
-        storeName={storeName}
-        address={address}
-        aboutText={aboutText}
-        operatingHours={operatingHours}
-        deliveryFee={deliveryFee}
-        deliveryRadius={deliveryRadius}
-        minimumOrderAmount={minimumOrderAmount}
+        storeName={florist.store_name}
+        address={florist.address}
+        aboutText={florist.about_text}
+        operatingHours={florist.operating_hours}
+        deliveryFee={florist.delivery_fee}
+        deliveryRadius={florist.delivery_radius}
+        minimumOrderAmount={florist.minimum_order_amount}
       />
-      <SocialLinks links={socialLinks} />
+      <SocialLinks links={florist.social_links} />
     </div>
   );
 };

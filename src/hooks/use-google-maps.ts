@@ -2,7 +2,19 @@ import { useState, useEffect } from 'react';
 
 declare global {
   interface Window {
-    google: any;
+    google: {
+      maps: {
+        Geocoder: new () => {
+          geocode: (
+            request: { address: string },
+            callback: (
+              results: { geometry: { location: { lat: () => number; lng: () => number } } }[] | null,
+              status: string
+            ) => void
+          ) => void;
+        };
+      };
+    };
     initMap: () => void;
   }
 }
@@ -24,13 +36,16 @@ export const useGoogleMaps = () => {
 
     try {
       const geocoder = new window.google.maps.Geocoder();
-      const { results } = await geocoder.geocode({ address });
-      
-      if (results && results[0]) {
-        const location = results[0].geometry.location;
-        return [location.lat(), location.lng()];
-      }
-      return null;
+      return new Promise((resolve) => {
+        geocoder.geocode({ address }, (results, status) => {
+          if (status === 'OK' && results && results[0]) {
+            const location = results[0].geometry.location;
+            resolve([location.lat(), location.lng()]);
+          } else {
+            resolve(null);
+          }
+        });
+      });
     } catch (error) {
       console.error('Geocoding error:', error);
       return null;
