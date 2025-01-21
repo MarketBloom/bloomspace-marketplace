@@ -6,6 +6,7 @@ import { DateFilter } from "./filters/DateFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
 import { CategoryFilter } from "./filters/CategoryFilter";
 import { OccasionFilter } from "./filters/OccasionFilter";
+import { useToast } from "@/hooks/use-toast";
 
 interface FilterBarProps {
   initialFulfillmentType?: "pickup" | "delivery";
@@ -22,6 +23,7 @@ export const FilterBar = ({
   initialLocation = "",
   onFilterChange
 }: FilterBarProps) => {
+  const { toast } = useToast();
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [location, setLocation] = useState<string>(initialLocation);
@@ -30,38 +32,48 @@ export const FilterBar = ({
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
   const [hasInteractedWithOccasions, setHasInteractedWithOccasions] = useState(false);
   const [hasInteractedWithCategories, setHasInteractedWithCategories] = useState(false);
+  const [isApplying, setIsApplying] = useState(false);
 
-  useEffect(() => {
-    if (onFilterChange) {
-      const updates: Record<string, string> = {
-        fulfillment: fulfillmentType,
-        budget: budget[0].toString()
-      };
-      
-      if (location) updates.location = location;
-      if (date) updates.date = date.toISOString();
-      
-      // Only include occasions and categories if they've been interacted with
-      if (hasInteractedWithOccasions && selectedOccasions.length > 0) {
-        updates.occasions = selectedOccasions.join(',');
+  const handleApplyFilters = () => {
+    if (isApplying) return;
+    
+    setIsApplying(true);
+    
+    try {
+      if (onFilterChange) {
+        const updates: Record<string, string> = {
+          fulfillment: fulfillmentType,
+          budget: budget[0].toString()
+        };
+        
+        if (location) updates.location = location;
+        if (date) updates.date = date.toISOString();
+        
+        if (hasInteractedWithOccasions && selectedOccasions.length > 0) {
+          updates.occasions = selectedOccasions.join(',');
+        }
+        if (hasInteractedWithCategories && selectedCategories.length > 0) {
+          updates.categories = selectedCategories.join(',');
+        }
+        
+        onFilterChange(updates);
+        
+        toast({
+          title: "Filters Applied",
+          description: "Your search results have been updated"
+        });
       }
-      if (hasInteractedWithCategories && selectedCategories.length > 0) {
-        updates.categories = selectedCategories.join(',');
-      }
-      
-      onFilterChange(updates);
+    } catch (error) {
+      console.error("Error applying filters:", error);
+      toast({
+        title: "Error",
+        description: "Failed to apply filters. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsApplying(false);
     }
-  }, [
-    fulfillmentType, 
-    location, 
-    date, 
-    budget, 
-    selectedOccasions,
-    selectedCategories,
-    hasInteractedWithOccasions,
-    hasInteractedWithCategories,
-    onFilterChange
-  ]);
+  };
 
   const handleOccasionsChange = (occasions: string[]) => {
     setHasInteractedWithOccasions(true);
@@ -129,6 +141,15 @@ export const FilterBar = ({
         selectedOccasions={selectedOccasions}
         setSelectedOccasions={handleOccasionsChange}
       />
+
+      <Button
+        onClick={handleApplyFilters}
+        disabled={isApplying}
+        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
+      >
+        <Search className="w-4 h-4 mr-2" />
+        {isApplying ? "Applying..." : "Apply Filters"}
+      </Button>
     </div>
   );
 };
