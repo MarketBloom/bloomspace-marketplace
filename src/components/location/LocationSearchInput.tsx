@@ -25,10 +25,11 @@ export const LocationSearchInput = ({
     const initializeAutocomplete = () => {
       if (!window.google || !inputRef.current) return;
 
-      // Initialize the autocomplete object
+      // Initialize the autocomplete object with Australian addresses only
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
         componentRestrictions: { country: "au" },
         fields: ["address_components", "geometry", "formatted_address"],
+        types: ["geocode"]
       });
 
       // Add the place_changed event listener
