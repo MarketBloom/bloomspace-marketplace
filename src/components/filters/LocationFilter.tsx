@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-import { toast } from "sonner";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface LocationFilterProps {
   location: string;
@@ -13,52 +13,44 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const debouncedValue = useDebounce(inputValue, 300);
 
   const formatDisplayName = (fullName: string): string => {
-    // Split the full address into parts
     const parts = fullName.split(', ');
-    let suburb = '';
-    let state = '';
-    let postcode = '';
+    let result = '';
     
-    // Iterate through parts to find suburb, state, and postcode
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (part.match(/^\d{4}$/)) {
-        postcode = part;
-      } else if (part.match(/^[A-Z]{2,3}$/)) {
-        state = part;
-      } else if (!suburb && !part.includes("Australia")) {
-        suburb = part;
-      }
+    // Find the first part that's not "Australia" - usually the suburb
+    const suburb = parts.find(part => !part.includes('Australia'));
+    if (!suburb) return fullName;
+
+    // Find state (2-3 capital letters)
+    const state = parts.find(part => /^[A-Z]{2,3}$/.test(part));
+    
+    // Find postcode (4 digits)
+    const postcode = parts.find(part => /^\d{4}$/.test(part));
+
+    if (state && postcode) {
+      result = `${suburb}, ${state} ${postcode}`;
+    } else {
+      result = suburb;
     }
 
-    // Return formatted address if we have all components
-    if (suburb && state && postcode) {
-      return `${suburb}, ${state} ${postcode}`;
-    }
-    return suburb; // Fallback to just suburb if we can't parse properly
+    return result;
   };
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    if (!value) {
-      setLocation('');
-      setSuggestions([]);
-      if (onCoordsChange) {
-        onCoordsChange(null);
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!debouncedValue || debouncedValue.length < 2) {
+        setSuggestions([]);
+        if (!debouncedValue) {
+          setLocation('');
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
+        }
+        return;
       }
-      return;
-    }
 
-    timeoutRef.current = setTimeout(async () => {
       try {
         setIsLoading(true);
         
@@ -66,7 +58,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}, Australia&countrycodes=au&limit=5`,
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedValue)}, Australia&countrycodes=au&limit=5`,
           {
             headers: {
               'Accept': 'application/json',
@@ -96,7 +88,14 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       } finally {
         setIsLoading(false);
       }
-    }, 300);
+    };
+
+    fetchSuggestions();
+  }, [debouncedValue, setLocation, onCoordsChange]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
   };
 
   const handleSuggestionClick = (suggestion: {display_name: string, lat: number, lon: number}) => {
