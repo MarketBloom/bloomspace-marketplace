@@ -4,7 +4,6 @@ import { CategoryFilter } from "./CategoryFilter";
 import { OccasionFilter } from "./OccasionFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 
 interface FloristProductFiltersProps {
   onFilterChange: (filters: {
@@ -37,27 +36,27 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
 
   if (isMobile) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 relative z-[60]">
         <div className="manual-filters-section">
           <Tabs defaultValue="budget" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-white/90">
+            <TabsList className="grid w-full grid-cols-3 bg-white">
               <TabsTrigger value="budget">Budget</TabsTrigger>
               <TabsTrigger value="categories">Categories</TabsTrigger>
               <TabsTrigger value="occasions">Occasions</TabsTrigger>
             </TabsList>
-            <TabsContent value="budget" className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-black/10 mt-2">
+            <TabsContent value="budget" className="bg-white rounded-lg p-4 border border-black/10 mt-2">
               <BudgetFilter 
                 budget={budget}
                 setBudget={setBudget}
               />
             </TabsContent>
-            <TabsContent value="categories" className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-black/10 mt-2">
+            <TabsContent value="categories" className="bg-white rounded-lg p-4 border border-black/10 mt-2">
               <CategoryFilter 
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
               />
             </TabsContent>
-            <TabsContent value="occasions" className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-black/10 mt-2">
+            <TabsContent value="occasions" className="bg-white rounded-lg p-4 border border-black/10 mt-2">
               <OccasionFilter 
                 selectedOccasions={selectedOccasions}
                 setSelectedOccasions={setSelectedOccasions}
@@ -67,7 +66,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
           <button 
             id="applyFiltersButton"
             onClick={handleApplyFilters}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4"
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4 relative z-[70]"
           >
             Apply Filters
           </button>
@@ -77,7 +76,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
   }
 
   return (
-    <div className="space-y-6 bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-black/10">
+    <div className="space-y-6 bg-white rounded-lg p-4 border border-black/10 relative z-[60]">
       <div className="manual-filters-section">
         <BudgetFilter 
           budget={budget}
@@ -97,7 +96,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
         <button 
           id="applyFiltersButton"
           onClick={handleApplyFilters}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4"
+          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4 relative z-[70]"
         >
           Apply Filters
         </button>
