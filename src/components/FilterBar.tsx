@@ -30,9 +30,12 @@ export const FilterBar = ({
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
-  const [hasInteractedWithOccasions, setHasInteractedWithOccasions] = useState(false);
-  const [hasInteractedWithCategories, setHasInteractedWithCategories] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+
+  // Track if user has modified filters
+  const [hasModifiedLocation, setHasModifiedLocation] = useState(false);
+  const [hasModifiedDate, setHasModifiedDate] = useState(false);
+  const [hasModifiedBudget, setHasModifiedBudget] = useState(false);
 
   const handleApplyFilters = () => {
     if (isApplying) return;
@@ -43,18 +46,24 @@ export const FilterBar = ({
       if (onFilterChange) {
         const updates: Record<string, string> = {
           fulfillment: fulfillmentType,
-          budget: budget[0].toString()
         };
-        
-        if (location) updates.location = location;
-        if (date) updates.date = date.toISOString();
-        
-        if (hasInteractedWithOccasions && selectedOccasions.length > 0) {
-          updates.occasions = selectedOccasions.join(',');
+
+        // Only include modified filters
+        if (hasModifiedBudget || initialBudget[0] !== 500) {
+          updates.budget = budget[0].toString();
         }
-        if (hasInteractedWithCategories && selectedCategories.length > 0) {
-          updates.categories = selectedCategories.join(',');
+        
+        if (hasModifiedLocation || initialLocation) {
+          updates.location = location;
         }
+
+        if (hasModifiedDate && date) {
+          updates.date = date.toISOString();
+        }
+        
+        // Always include categories and occasions, defaulting to all if none selected
+        updates.categories = selectedCategories.length > 0 ? selectedCategories.join(',') : 'all';
+        updates.occasions = selectedOccasions.length > 0 ? selectedOccasions.join(',') : 'all';
         
         onFilterChange(updates);
         
@@ -75,14 +84,19 @@ export const FilterBar = ({
     }
   };
 
-  const handleOccasionsChange = (occasions: string[]) => {
-    setHasInteractedWithOccasions(true);
-    setSelectedOccasions(occasions);
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+    setHasModifiedLocation(true);
   };
 
-  const handleCategoriesChange = (categories: string[]) => {
-    setHasInteractedWithCategories(true);
-    setSelectedCategories(categories);
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    setHasModifiedDate(true);
+  };
+
+  const handleBudgetChange = (newBudget: number[]) => {
+    setBudget(newBudget);
+    setHasModifiedBudget(true);
   };
 
   return (
@@ -119,27 +133,27 @@ export const FilterBar = ({
       
       <LocationFilter 
         location={location}
-        setLocation={setLocation}
+        setLocation={handleLocationChange}
       />
       
       <DateFilter 
         date={date}
-        setDate={setDate}
+        setDate={handleDateChange}
       />
       
       <BudgetFilter 
         budget={budget}
-        setBudget={setBudget}
+        setBudget={handleBudgetChange}
       />
       
       <CategoryFilter 
         selectedCategories={selectedCategories}
-        setSelectedCategories={handleCategoriesChange}
+        setSelectedCategories={setSelectedCategories}
       />
       
       <OccasionFilter 
         selectedOccasions={selectedOccasions}
-        setSelectedOccasions={handleOccasionsChange}
+        setSelectedOccasions={setSelectedOccasions}
       />
 
       <Button
