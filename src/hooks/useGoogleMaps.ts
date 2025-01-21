@@ -17,6 +17,7 @@ export const useGoogleMaps = (initialLocation: string) => {
   const [suggestions, setSuggestions] = useState<GoogleMapsResult[]>([]);
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const { toast } = useToast();
+  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
 
   // Initialize Google Maps Autocomplete service
   useEffect(() => {
@@ -53,6 +54,12 @@ export const useGoogleMaps = (initialLocation: string) => {
           script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
           script.async = true;
           document.head.appendChild(script);
+
+          script.onload = () => {
+            initializeAutocomplete();
+          };
+        } else {
+          initializeAutocomplete();
         }
       } catch (error) {
         console.error('Error loading Google Maps:', error);
@@ -65,17 +72,47 @@ export const useGoogleMaps = (initialLocation: string) => {
     };
 
     loadGoogleMapsScript();
+
+    return () => {
+      // Cleanup
+      if (autocomplete) {
+        google.maps.event.clearInstanceListeners(autocomplete);
+      }
+    };
   }, [toast]);
 
+  const initializeAutocomplete = () => {
+    const input = document.createElement('input');
+    const autocompleteInstance = new google.maps.places.Autocomplete(input, {
+      componentRestrictions: { country: 'au' },
+      types: ['geocode'],
+      fields: ['address_components', 'geometry', 'formatted_address']
+    });
+
+    setAutocomplete(autocompleteInstance);
+
+    google.maps.event.addListener(autocompleteInstance, 'place_changed', () => {
+      const place = autocompleteInstance.getPlace();
+      if (place.geometry?.location) {
+        setCoordinates([
+          place.geometry.location.lat(),
+          place.geometry.location.lng()
+        ]);
+        setInputValue(place.formatted_address || '');
+        setSuggestions([]);
+      }
+    });
+  };
+
   const getPlacePredictions = useCallback(async (input: string) => {
-    if (!input || !window.google) {
+    if (!input) {
       setSuggestions([]);
       return;
     }
 
     try {
       setIsLoading(true);
-      const service = new window.google.maps.places.AutocompleteService();
+      const service = new google.maps.places.AutocompleteService();
       const request = {
         input,
         componentRestrictions: { country: 'au' },
@@ -97,44 +134,29 @@ export const useGoogleMaps = (initialLocation: string) => {
     }
   }, [toast]);
 
-  const getPlaceDetails = useCallback(async (placeId: string) => {
-    if (!window.google) {
-      toast({
-        title: "Error",
-        description: "Location service not available.",
-        variant: "destructive"
-      });
-      return null;
-    }
-
-    return new Promise((resolve, reject) => {
-      const service = new window.google.maps.places.PlacesService(
-        document.createElement('div')
-      );
-
-      service.getDetails(
-        { placeId, fields: ['geometry', 'formatted_address'] },
-        (result, status) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && result?.geometry?.location) {
-            resolve({
-              lat: result.geometry.location.lat(),
-              lng: result.geometry.location.lng(),
-              address: result.formatted_address
-            });
-          } else {
-            reject(new Error('Could not get place details'));
-          }
-        }
-      );
-    });
-  }, [toast]);
-
   const handleLocationSelect = async (placeId: string, description: string) => {
     try {
       setIsLoading(true);
-      const details: any = await getPlaceDetails(placeId);
-      if (details) {
-        setCoordinates([details.lat, details.lng]);
+      const geocoder = new google.maps.Geocoder();
+      
+      const result = await new Promise<google.maps.GeocoderResult | null>((resolve, reject) => {
+        geocoder.geocode(
+          { placeId: placeId },
+          (results, status) => {
+            if (status === 'OK' && results && results[0]) {
+              resolve(results[0]);
+            } else {
+              reject(new Error('Geocoding failed'));
+            }
+          }
+        );
+      });
+
+      if (result && result.geometry.location) {
+        setCoordinates([
+          result.geometry.location.lat(),
+          result.geometry.location.lng()
+        ]);
         setInputValue(description);
         setSuggestions([]);
       }
