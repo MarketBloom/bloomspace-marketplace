@@ -126,4 +126,4 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       )}
     </div>
   );
-};
+}
