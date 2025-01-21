@@ -50,7 +50,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       try {
         setIsLoading(true);
         
-        console.log('Fetching HERE API key from Supabase...');
+        console.log('Starting API key fetch from Supabase...');
         const { data: secretData, error: secretError } = await supabase
           .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
@@ -75,9 +75,8 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         }
 
         const apiKey = secretData[0].secret;
-        console.log('Successfully retrieved HERE API key');
+        console.log('API key retrieved successfully, length:', apiKey.length);
         
-        // Use the autocomplete endpoint with optimized parameters based on HERE documentation
         const query = encodeURIComponent(debouncedValue);
         const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete` + 
           `?q=${query}` +
@@ -86,21 +85,23 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           `&lang=en-AU` +
           `&resultTypes=address,place` +
           `&types=city,place,district,locality` +
-          `&politicalView=AUS` + // Add political view for Australia
-          `&show=streetDetails` + // Include street details in response
+          `&politicalView=AUS` +
+          `&show=streetDetails` +
           `&apiKey=${apiKey}`;
         
-        console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
+        console.log('Making HERE API request to:', apiUrl.replace(apiKey, '[REDACTED]'));
         
         const response = await fetch(apiUrl);
         console.log('HERE API response status:', response.status);
-
+        
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          console.error('HERE API error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
         }
         
         const searchData = await response.json();
-        console.log('HERE API response data:', searchData);
+        console.log('HERE API raw response:', searchData);
         
         if (!searchData.items || !Array.isArray(searchData.items)) {
           console.error('Unexpected API response format:', searchData);
