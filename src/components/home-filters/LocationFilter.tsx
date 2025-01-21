@@ -50,7 +50,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         
         // Get HERE API key from Supabase
         const { data: secretData, error: secretError } = await supabase
-          .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
+          .rpc('get_secret', { name: 'HERE_API_KEY' });
 
         if (secretError) throw new Error('Failed to get API key');
         if (!secretData || !secretData[0]?.secret) throw new Error('API key not found');
