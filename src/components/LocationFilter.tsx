@@ -77,9 +77,16 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         const apiKey = secretData[0].secret;
         console.log('Successfully retrieved HERE API key');
         
-        // Use the autocomplete endpoint with Australia country filter
+        // Use the autocomplete endpoint with optimized parameters
         const query = encodeURIComponent(debouncedValue);
-        const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${query}&in=countryCode:AUS&limit=4&apiKey=${apiKey}`;
+        const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete` + 
+          `?q=${query}` +
+          `&in=countryCode:AUS` +
+          `&limit=4` +
+          `&lang=en-AU` +
+          `&resultTypes=address,place` +
+          `&types=city,place,district,locality` +
+          `&apiKey=${apiKey}`;
         
         console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
         
