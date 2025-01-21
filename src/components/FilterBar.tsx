@@ -27,8 +27,8 @@ export const FilterBar = ({
   const [budget, setBudget] = useState<number[]>(initialBudget);
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [location, setLocation] = useState<string>(initialLocation);
-  const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(['all']);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['all']);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
   const [isApplying, setIsApplying] = useState(false);
 
