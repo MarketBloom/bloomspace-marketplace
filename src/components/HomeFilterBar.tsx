@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationFilter } from "./home-filters/LocationFilter";
+import { LocationFilter } from "./LocationFilter";
 import { DateFilter } from "./home-filters/DateFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { Button } from "./ui/button";
