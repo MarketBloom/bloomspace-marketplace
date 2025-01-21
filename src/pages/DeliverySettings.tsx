@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
 import { DeliverySettingsForm } from "@/components/become-florist/DeliverySettingsForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -43,6 +43,8 @@ const DeliverySettings = () => {
           delivery_cutoff_times: formData.cutoffTimes,
           same_day_enabled: true,
           operating_hours: formData.operatingHours,
+          store_name: floristProfile.store_name, // Add required fields
+          address: floristProfile.address
         })
         .eq("id", user.id);
 

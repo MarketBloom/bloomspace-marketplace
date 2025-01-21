@@ -25,7 +25,9 @@ export const StoreVisibility = ({ storeId, initialStatus, onStatusChange }: Stor
           .update({ 
             store_status: newStatus,
           })
-          .eq('id', storeId);
+          .eq('id', storeId)
+          .select('store_name, address')
+          .single();
 
         if (error) throw error;
 
