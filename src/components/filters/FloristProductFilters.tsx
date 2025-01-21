@@ -3,7 +3,9 @@ import { BudgetFilter } from "./BudgetFilter";
 import { CategoryFilter } from "./CategoryFilter";
 import { OccasionFilter } from "./OccasionFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 
 interface FloristProductFiltersProps {
   onFilterChange: (filters: {
@@ -18,6 +20,7 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   const handleApplyFilters = () => {
     // Debug logs
@@ -31,6 +34,11 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
       budget,
       categories: selectedCategories.length > 0 ? selectedCategories : undefined,
       occasions: selectedOccasions.length > 0 ? selectedOccasions : undefined
+    });
+
+    toast({
+      title: "Filters applied",
+      description: "Your search results have been updated.",
     });
   };
 
@@ -63,13 +71,12 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
               />
             </TabsContent>
           </Tabs>
-          <button 
-            id="applyFiltersButton"
+          <Button 
             onClick={handleApplyFilters}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4 relative z-[70]"
+            className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black font-bold py-3 px-4 rounded mt-4 relative z-[70]"
           >
             Apply Filters
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -93,13 +100,12 @@ export const FloristProductFilters = ({ onFilterChange }: FloristProductFiltersP
           setSelectedOccasions={setSelectedOccasions}
         />
 
-        <button 
-          id="applyFiltersButton"
+        <Button 
           onClick={handleApplyFilters}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded mt-4 relative z-[70]"
+          className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black font-bold py-3 px-4 rounded mt-4 relative z-[70]"
         >
           Apply Filters
-        </button>
+        </Button>
       </div>
     </div>
   );

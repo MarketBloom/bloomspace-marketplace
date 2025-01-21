@@ -24,7 +24,6 @@ const Search = () => {
     onCoordsChange: (coords) => {
       if (JSON.stringify(coords) !== JSON.stringify(userCoordinates)) {
         setUserCoordinates(coords);
-        // Only log coordinates when they actually change
         if (coords) {
           console.debug('User coordinates updated:', coords);
         }
