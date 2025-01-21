@@ -19,9 +19,9 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const { toast } = useToast();
 
   const formatDisplayName = (address: any): string => {
-    const components = address.address;
-    if (!components) return address.label || "";
+    if (!address || !address.address) return address.title || "";
     
+    const components = address.address;
     const suburb = components.district || components.city || components.county;
     const state = components.state || components.stateCode;
     const postcode = components.postalCode;
@@ -31,7 +31,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
     } else if (suburb && state) {
       return `${suburb}, ${state}`;
     }
-    return address.label || "";
+    return address.title || "";
   };
 
   useEffect(() => {
@@ -77,9 +77,9 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         const apiKey = secretData[0].secret;
         console.log('Successfully retrieved HERE API key');
         
-        // Format query to match HERE API requirements
-        const query = encodeURIComponent(`${debouncedValue}, Australia`);
-        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode?q=${query}&limit=4&apiKey=${apiKey}`;
+        // Use the autocomplete endpoint with Australia country filter
+        const query = encodeURIComponent(debouncedValue);
+        const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${query}&in=countryCode:AUS&limit=4&apiKey=${apiKey}`;
         
         console.log('Making HERE API request:', apiUrl.replace(apiKey, 'REDACTED'));
         
@@ -98,11 +98,13 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
           return;
         }
 
-        const formattedResults = searchData.items.map((item: any) => ({
-          display_name: formatDisplayName(item),
-          lat: item.position.lat,
-          lon: item.position.lng
-        }));
+        const formattedResults = searchData.items
+          .filter((item: any) => item.position) // Ensure item has coordinates
+          .map((item: any) => ({
+            display_name: formatDisplayName(item),
+            lat: item.position.lat,
+            lon: item.position.lng
+          }));
 
         console.log('Formatted results:', formattedResults);
         setSuggestions(formattedResults);
