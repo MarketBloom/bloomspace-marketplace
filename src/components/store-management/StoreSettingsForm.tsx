@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { AddressAutocomplete } from "@/components/address/AddressAutocomplete";
 
 interface StoreSettingsFormProps {
   initialData: any;
@@ -15,9 +16,6 @@ interface StoreSettingsFormProps {
 
 export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: StoreSettingsFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isManualAddress, setIsManualAddress] = useState(false);
-  const addressInputRef = useRef<HTMLInputElement | null>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   
   const [formData, setFormData] = useState({
     store_name: initialData?.store_name || "",
@@ -26,69 +24,8 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
     delivery_fee: initialData?.delivery_fee || 0,
     delivery_radius: initialData?.delivery_radius || 5,
     minimum_order_amount: initialData?.minimum_order_amount || 0,
+    coordinates: initialData?.coordinates || null,
   });
-
-  useEffect(() => {
-    if (isManualAddress || !addressInputRef.current || !window.google) return;
-
-    try {
-      // Clear any existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-
-      // Initialize new autocomplete instance
-      autocompleteRef.current = new google.maps.places.Autocomplete(addressInputRef.current, {
-        componentRestrictions: { country: "au" },
-        fields: ["formatted_address", "geometry", "name"],
-      });
-
-      // Add place_changed listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current) return;
-
-        try {
-          const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
-            setFormData(prev => ({ 
-              ...prev, 
-              address: place.formatted_address 
-            }));
-          }
-        } catch (error) {
-          console.error("Error handling place selection:", error);
-          toast.error("Error selecting address. Please try again.");
-        }
-      });
-    } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
-      toast.error("Error initializing address search. Please try again.");
-    }
-
-    return () => {
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-    };
-  }, [isManualAddress]);
-
-  const geocodeAddress = async (address: string) => {
-    const geocoder = new google.maps.Geocoder();
-    
-    return new Promise((resolve, reject) => {
-      geocoder.geocode({ address }, (results, status) => {
-        if (status === 'OK' && results && results[0]) {
-          const { lat, lng } = results[0].geometry.location;
-          resolve({
-            coordinates: `POINT(${lng()} ${lat()})`,
-            geocoded_address: results[0]
-          });
-        } else {
-          reject(new Error('Geocoding failed'));
-        }
-      });
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,16 +33,10 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
 
     const promise = new Promise(async (resolve, reject) => {
       try {
-        // Geocode the address
-        const geocodeResult = await geocodeAddress(formData.address);
-        const { coordinates, geocoded_address } = geocodeResult as any;
-
         const { error } = await supabase
           .from("florist_profiles")
           .update({
             ...formData,
-            coordinates,
-            geocoded_address
           })
           .eq("id", initialData.id);
 
@@ -127,6 +58,14 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
     });
   };
 
+  const handleAddressChange = (address: string, coordinates?: { lat: number; lng: number }) => {
+    setFormData(prev => ({
+      ...prev,
+      address,
+      coordinates: coordinates ? `POINT(${coordinates.lng} ${coordinates.lat})` : null,
+    }));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
@@ -140,24 +79,11 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
       </div>
 
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="address">Address</Label>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsManualAddress(!isManualAddress)}
-          >
-            {isManualAddress ? "Use Autocomplete" : "Enter Manually"}
-          </Button>
-        </div>
-        <Input
-          id="address"
-          ref={addressInputRef}
+        <Label htmlFor="address">Address</Label>
+        <AddressAutocomplete
           value={formData.address}
-          onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-          required
-          placeholder={isManualAddress ? "Enter address manually" : "Start typing to search for an address"}
+          onChange={handleAddressChange}
+          placeholder="Search for your store address..."
         />
       </div>
 
