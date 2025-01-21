@@ -20,20 +20,22 @@ export const useLocationSearch = (
   const debouncedValue = useDebounce(inputValue, 300);
   const { toast } = useToast();
 
-  const formatDisplayName = (address: any): string => {
-    if (!address || !address.address) return address.title || "";
+  const formatDisplayName = (item: any): string => {
+    if (!item || !item.address) return item.title || "";
     
-    const components = address.address;
-    const suburb = components.district || components.city || components.county;
-    const state = components.state || components.stateCode;
-    const postcode = components.postalCode;
+    const address = item.address;
+    const title = item.title || "";
+    const city = address.city || address.county || "";
+    const state = address.state || address.stateCode || "";
+    const postalCode = address.postalCode || "";
 
-    if (suburb && state && postcode) {
-      return `${suburb}, ${state} ${postcode}`;
-    } else if (suburb && state) {
-      return `${suburb}, ${state}`;
+    // Format: "Suburb, State Postcode" or "Suburb, State"
+    if (city && state && postalCode) {
+      return `${city}, ${state} ${postalCode}`;
+    } else if (city && state) {
+      return `${city}, ${state}`;
     }
-    return address.title || "";
+    return title;
   };
 
   useEffect(() => {
