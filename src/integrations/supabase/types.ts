@@ -708,6 +708,14 @@ export type Database = {
       }
     }
     Functions: {
+      get_secret: {
+        Args: {
+          name: string
+        }
+        Returns: {
+          secret: string
+        }[]
+      }
       _postgis_deprecate: {
         Args: {
           oldname: string
@@ -1534,14 +1542,6 @@ export type Database = {
           "": number
         }
         Returns: string
-      }
-      get_secret: {
-        Args: {
-          secret_name: string
-        }
-        Returns: {
-          secret: string
-        }[]
       }
       get_spatial_ref_sys: {
         Args: {
@@ -2776,7 +2776,7 @@ export type Database = {
       }
       st_geomfromkml: {
         Args: {
-          "": string
+          "":string
         }
         Returns: unknown
       }
