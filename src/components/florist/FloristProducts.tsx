@@ -42,7 +42,6 @@ export const FloristProducts = ({
   };
 
   const filteredProducts = products.filter(product => {
-    // Filter by budget
     if (filters.budget && filters.budget.length > 0) {
       const maxBudget = filters.budget[0];
       if ((product.displayPrice || product.price) > maxBudget) {
@@ -50,14 +49,12 @@ export const FloristProducts = ({
       }
     }
 
-    // Filter by category
     if (filters.categories && filters.categories.length > 0) {
       if (!product.category || !filters.categories.includes(product.category)) {
         return false;
       }
     }
 
-    // Filter by occasion
     if (filters.occasions && filters.occasions.length > 0) {
       if (!product.occasion || !product.occasion.some(occ => filters.occasions?.includes(occ))) {
         return false;
