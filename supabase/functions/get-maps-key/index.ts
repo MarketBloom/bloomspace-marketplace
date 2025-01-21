@@ -29,6 +29,7 @@ serve(async (req) => {
       },
     )
   } catch (error) {
+    console.error('Error in get-maps-key function:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
