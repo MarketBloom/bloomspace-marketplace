@@ -16,21 +16,29 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   const formatDisplayName = (fullName: string): string => {
+    // Split the full address into parts
     const parts = fullName.split(', ');
-    let suburb = parts[0];
+    let suburb = '';
     let state = '';
     let postcode = '';
     
-    // Find state and postcode
-    for (const part of parts) {
-      if (part.match(/^[A-Z]{2,3}$/)) {
-        state = part;
-      } else if (part.match(/^\d{4}$/)) {
+    // Iterate through parts to find suburb, state, and postcode
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (part.match(/^\d{4}$/)) {
         postcode = part;
+      } else if (part.match(/^[A-Z]{2,3}$/)) {
+        state = part;
+      } else if (!suburb && !part.includes("Australia")) {
+        suburb = part;
       }
     }
 
-    return state && postcode ? `${suburb}, ${state} ${postcode}` : suburb;
+    // Return formatted address if we have all components
+    if (suburb && state && postcode) {
+      return `${suburb}, ${state} ${postcode}`;
+    }
+    return suburb; // Fallback to just suburb if we can't parse properly
   };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +63,7 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         setIsLoading(true);
         
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}, Australia&countrycodes=au&limit=5`,
