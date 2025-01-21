@@ -49,23 +49,23 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         setIsLoading(true);
         
         // Get HERE API key from Supabase
-        const { data, error: secretError } = await supabase
-          .rpc('get_secret', { name: 'HERE_API_KEY' });
+        const { data: secretData, error: secretError } = await supabase
+          .rpc('get_secret', { secret_name: 'HERE_API_KEY' });
 
         if (secretError) throw new Error('Failed to get API key');
-        if (!data || !data[0]?.secret) throw new Error('API key not found');
+        if (!secretData || !secretData[0]?.secret) throw new Error('API key not found');
 
         const response = await fetch(
-          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${data[0].secret}`
+          `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(debouncedValue)}, Australia&limit=5&apiKey=${secretData[0].secret}`
         );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const data = await response.json();
+        const searchData = await response.json();
         
-        const formattedResults = data.items.map((item: any) => ({
+        const formattedResults = searchData.items.map((item: any) => ({
           display_name: formatDisplayName(item),
           lat: item.position.lat,
           lon: item.position.lng
