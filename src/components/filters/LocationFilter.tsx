@@ -66,7 +66,6 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       if (!place || !place.formatted_address || !place.geometry?.location || !isMounted.current) return;
       
       try {
-        console.log('Geocoding result:', place);
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         
