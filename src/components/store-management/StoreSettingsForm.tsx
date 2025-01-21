@@ -10,9 +10,10 @@ import { Loader2 } from "lucide-react";
 interface StoreSettingsFormProps {
   initialData: any;
   onUpdate: () => void;
+  loading?: boolean;
 }
 
-export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormProps) => {
+export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: StoreSettingsFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isManualAddress, setIsManualAddress] = useState(false);
   const addressInputRef = useRef<HTMLInputElement | null>(null);
@@ -220,8 +221,8 @@ export const StoreSettingsForm = ({ initialData, onUpdate }: StoreSettingsFormPr
         </div>
       </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? (
+      <Button type="submit" disabled={isLoading || loading} className="w-full">
+        {isLoading || loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Saving...
