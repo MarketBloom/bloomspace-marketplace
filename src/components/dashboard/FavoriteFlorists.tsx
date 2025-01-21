@@ -30,15 +30,19 @@ export const FavoriteFlorists = ({ favorites, isLoading }: FavoriteFloristsProps
       {favorites?.map((favorite) => (
         <FloristCard
           key={favorite.florist_id}
-          id={favorite.florist_profiles.id}
-          storeName={favorite.florist_profiles.store_name}
-          address={favorite.florist_profiles.address}
-          aboutText={favorite.florist_profiles.about_text}
-          bannerUrl={favorite.florist_profiles.banner_url}
-          logoUrl={favorite.florist_profiles.logo_url}
-          deliveryFee={favorite.florist_profiles.delivery_fee}
-          deliveryRadius={favorite.florist_profiles.delivery_radius}
-          minimumOrderAmount={favorite.florist_profiles.minimum_order_amount}
+          florist={{
+            id: favorite.florist_profiles.id,
+            store_name: favorite.florist_profiles.store_name,
+            address: favorite.florist_profiles.address,
+            about_text: favorite.florist_profiles.about_text,
+            banner_url: favorite.florist_profiles.banner_url,
+            logo_url: favorite.florist_profiles.logo_url,
+            delivery_fee: favorite.florist_profiles.delivery_fee,
+            delivery_radius: favorite.florist_profiles.delivery_radius,
+            minimum_order_amount: favorite.florist_profiles.minimum_order_amount,
+            operating_hours: favorite.florist_profiles.operating_hours,
+            social_links: favorite.florist_profiles.social_links
+          }}
         />
       ))}
     </div>
