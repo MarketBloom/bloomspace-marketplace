@@ -43,6 +43,7 @@ export const LocationSearch = ({
 
       try {
         setIsLoading(true);
+        console.log('Fetching suggestions for:', debouncedValue);
         
         const { data, error } = await supabase
           .from('australian_suburbs')
@@ -60,6 +61,7 @@ export const LocationSearch = ({
           return;
         }
 
+        console.log('Suggestions received:', data);
         setSuggestions(data || []);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -78,6 +80,7 @@ export const LocationSearch = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+    console.log('Input value changed to:', e.target.value);
   };
 
   const handleSuggestionClick = (suggestion: {
