@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 interface LocationFilterProps {
   location: string;
@@ -10,145 +9,66 @@ interface LocationFilterProps {
   onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-// Global script loading state
-let googleMapsLoaded = false;
-let loadingPromise: Promise<void> | null = null;
-
-const loadGoogleMapsScript = async () => {
-  if (googleMapsLoaded) return;
-  
-  if (loadingPromise) {
-    return loadingPromise;
-  }
-
-  loadingPromise = new Promise(async (resolve, reject) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('get-maps-key');
-      
-      if (error || !data?.apiKey) {
-        throw new Error(error?.message || 'Failed to fetch API key');
-      }
-
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-
-      script.onload = () => {
-        googleMapsLoaded = true;
-        resolve();
-      };
-
-      script.onerror = (error) => {
-        reject(error);
-      };
-
-      document.head.appendChild(script);
-    } catch (error) {
-      reject(error);
-    }
-  });
-
-  return loadingPromise;
-};
-
 export const LocationFilter = ({ location, setLocation, onCoordsChange }: LocationFilterProps) => {
   const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const isMounted = useRef(true);
+  const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const initAutocomplete = () => {
-    if (!inputRef.current || !window.google?.maps?.places) return;
-
-    try {
-      // Clear any existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-
-      // Initialize new autocomplete instance with EPSG:4326 (WGS84) coordinates
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "au" },
-        types: ["(cities)"],
-        fields: ["formatted_address", "geometry", "name"],
-      });
-
-      // Add place_changed listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current || !isMounted.current) return;
-
-        try {
-          const place = autocompleteRef.current.getPlace();
-          if (place && place.formatted_address && place.geometry?.location) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            
-            setLocation(place.formatted_address);
-            setInputValue(place.formatted_address);
-            
-            if (onCoordsChange) {
-              // Use WGS84 coordinates directly
-              onCoordsChange([lat, lng]);
-            }
-          } else {
-            if (onCoordsChange) {
-              onCoordsChange(null);
-            }
-          }
-        } catch (error) {
-          console.error("Error handling place selection:", error);
-          toast.error("Error selecting location. Please try again.");
-          if (onCoordsChange) {
-            onCoordsChange(null);
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
-      toast.error("Error initializing location search. Please try again.");
-    }
-  };
-
-  useEffect(() => {
-    const setupAutocomplete = async () => {
-      try {
-        setIsLoading(true);
-        await loadGoogleMapsScript();
-        
-        if (isMounted.current) {
-          initAutocomplete();
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error loading Google Maps:", error);
-        if (isMounted.current) {
-          toast.error("Error loading location search. Please try again.");
-          setIsLoading(false);
-        }
-      }
-    };
-
-    setupAutocomplete();
-
-    return () => {
-      isMounted.current = false;
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-    };
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle manual input changes with debounce
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // If input is empty, clear everything
     if (!value) {
-      setLocation("");
+      setLocation('');
+      setSuggestions([]);
       if (onCoordsChange) {
         onCoordsChange(null);
       }
+      return;
     }
+
+    // Set new timeout for fetching suggestions
+    timeoutRef.current = setTimeout(async () => {
+      try {
+        setIsLoading(true);
+        
+        // Fetch suggestions from Nominatim
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=au&limit=5`
+        );
+        
+        const data = await response.json();
+        
+        setSuggestions(data.map((item: any) => ({
+          display_name: item.display_name,
+          lat: parseFloat(item.lat),
+          lon: parseFloat(item.lon)
+        })));
+
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        toast.error("Error fetching location suggestions. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }, 300); // 300ms debounce
+  };
+
+  const handleSuggestionClick = (suggestion: {display_name: string, lat: number, lon: number}) => {
+    setInputValue(suggestion.display_name);
+    setLocation(suggestion.display_name);
+    if (onCoordsChange) {
+      onCoordsChange([suggestion.lat, suggestion.lon]);
+    }
+    setSuggestions([]); // Clear suggestions after selection
   };
 
   return (
@@ -156,15 +76,29 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       <div className="relative">
         <Input
           type="text"
-          placeholder="Enter location..."
+          placeholder="Enter suburb or postcode..."
           value={inputValue}
           onChange={handleInputChange}
           className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          ref={inputRef}
           disabled={isLoading}
         />
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
       </div>
+      
+      {/* Suggestions dropdown */}
+      {suggestions.length > 0 && (
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+          {suggestions.map((suggestion, index) => (
+            <button
+              key={index}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion.display_name}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
