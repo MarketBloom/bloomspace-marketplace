@@ -15,16 +15,29 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const [suggestions, setSuggestions] = useState<Array<{display_name: string, lat: number, lon: number}>>([]);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  // Format the display name to be more concise
+  // Format the display name to be more concise like Google format
   const formatDisplayName = (fullName: string): string => {
     const parts = fullName.split(', ');
-    // Take first 3 parts max (usually suburb, city, state)
-    const relevantParts = parts.slice(0, 3);
-    // Always add country as last part if it's Australia
-    if (parts[parts.length - 1] === 'Australia') {
-      relevantParts.push('Australia');
+    let suburb = parts[0];
+    let state = '';
+    let postcode = '';
+    
+    // Find state and postcode
+    for (const part of parts) {
+      if (part.match(/^[A-Z]{2,3}$/)) {
+        state = part;
+      } else if (part.match(/^\d{4}$/)) {
+        postcode = part;
+      }
     }
-    return relevantParts.join(', ');
+
+    // Return in format "Suburb, STATE POSTCODE"
+    if (state && postcode) {
+      return `${suburb}, ${state} ${postcode}`;
+    } else if (state) {
+      return `${suburb}, ${state}`;
+    }
+    return suburb;
   };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
