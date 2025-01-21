@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { filterFloristsByDrivingDistance } from "@/utils/distance";
 
 interface UseSearchFloristsProps {
   searchParams: URLSearchParams;
@@ -21,37 +22,37 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
         const { data: florists, error } = await query;
         if (error) throw error;
 
-        return florists.filter(florist => {
+        // Filter florists based on coordinates availability
+        const floristsWithCoords = florists.filter(florist => {
           if (!florist.coordinates) return false;
-
           try {
-            let coordinates;
             // Handle both string and array formats
-            coordinates = typeof florist.coordinates === 'string' 
+            const coordinates = typeof florist.coordinates === 'string' 
               ? JSON.parse(florist.coordinates) 
               : florist.coordinates;
-
-            const distance = window.calculate_distance(
-              userCoordinates[0],
-              userCoordinates[1],
-              coordinates[0],
-              coordinates[1]
-            );
-
-            console.log('Distance calculation for florist:', {
-              florist: florist.store_name,
-              distance,
-              deliveryRadius: florist.delivery_radius,
-              coordinates,
-              userCoordinates
-            });
-
-            return distance <= (florist.delivery_radius || 5);
+            return coordinates && coordinates.length === 2;
           } catch (e) {
-            console.error('Error calculating distance for florist:', florist.store_name, e);
+            console.error('Error parsing coordinates for florist:', florist.store_name, e);
             return false;
           }
         });
+
+        // Prepare data for distance calculation
+        const floristsForDistance = floristsWithCoords.map(florist => ({
+          coordinates: typeof florist.coordinates === 'string' 
+            ? JSON.parse(florist.coordinates) 
+            : florist.coordinates,
+          delivery_distance_km: florist.delivery_distance_km || 5
+        }));
+
+        // Calculate which florists are within driving distance
+        const withinDistance = await filterFloristsByDrivingDistance(
+          userCoordinates,
+          floristsForDistance
+        );
+
+        // Return only florists within driving distance
+        return floristsWithCoords.filter((_, index) => withinDistance[index]);
       }
 
       const { data: florists, error } = await query;

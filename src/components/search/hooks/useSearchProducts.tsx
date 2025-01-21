@@ -35,7 +35,7 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
             delivery_end_time,
             operating_hours,
             coordinates,
-            delivery_radius,
+            delivery_distance_km,
             delivery_days
           ),
           product_sizes (
@@ -48,13 +48,11 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
         .eq('in_stock', true)
         .eq('is_hidden', false);
 
-      // Apply budget filter if specified
       if (maxBudget) {
         query = query.lte('price', maxBudget);
       }
 
       const { data: productsData, error } = await query;
-
       if (error) throw error;
 
       const now = new Date();
@@ -62,42 +60,51 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
       const searchDate = dateStr ? parseISO(dateStr) : null;
       const dayOfWeek = searchDate ? format(searchDate, 'EEEE').toLowerCase() : null;
 
-      // Filter products based on location and delivery radius
+      // Filter products based on location and driving distance
       let filteredProducts = productsData;
       
       if (location && userCoordinates) {
-        filteredProducts = productsData.filter(product => {
-          const florist = product.florist_profiles;
-          if (!florist.coordinates) return false;
+        // Prepare florists data for distance calculation
+        const floristsMap = new Map();
+        const floristsForDistance = productsData
+          .map(product => {
+            const florist = product.florist_profiles;
+            if (!florist.coordinates) return null;
+            
+            try {
+              const coordinates = typeof florist.coordinates === 'string' 
+                ? JSON.parse(florist.coordinates) 
+                : florist.coordinates;
+              
+              if (!floristsMap.has(florist.id)) {
+                floristsMap.set(florist.id, {
+                  coordinates,
+                  delivery_distance_km: florist.delivery_distance_km || 5
+                });
+              }
+              return floristsMap.get(florist.id);
+            } catch (e) {
+              console.error('Error parsing coordinates for florist:', florist.store_name, e);
+              return null;
+            }
+          })
+          .filter(Boolean);
 
-          try {
-            let coordinates;
-            // Handle both string and array formats
-            coordinates = typeof florist.coordinates === 'string' 
-              ? JSON.parse(florist.coordinates) 
-              : florist.coordinates;
+        // Calculate which florists are within driving distance
+        const withinDistance = await filterFloristsByDrivingDistance(
+          userCoordinates,
+          Array.from(floristsMap.values())
+        );
 
-            const distance = window.calculate_distance(
-              userCoordinates[0],
-              userCoordinates[1],
-              coordinates[0],
-              coordinates[1]
-            );
+        // Create a set of florist IDs within distance
+        const floristIdsWithinDistance = new Set(
+          Array.from(floristsMap.keys()).filter((_, index) => withinDistance[index])
+        );
 
-            console.log('Distance calculation:', {
-              florist: florist.store_name,
-              distance,
-              deliveryRadius: florist.delivery_radius,
-              coordinates,
-              userCoordinates
-            });
-
-            return distance <= (florist.delivery_radius || 5);
-          } catch (e) {
-            console.error('Error calculating distance for florist:', florist.store_name, e);
-            return false;
-          }
-        });
+        // Filter products based on florist distance
+        filteredProducts = productsData.filter(product => 
+          floristIdsWithinDistance.has(product.florist_profiles.id)
+        );
       }
 
       // Create product variants and apply other filters
