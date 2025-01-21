@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { FeaturedFlorists } from "@/components/FeaturedFlorists";
-import { FeaturedProducts } from "@/components/FeaturedProducts";
+import { FeaturedFlorists } from "@/components/FeaturedFlorists.tsx";
+import { FeaturedProducts } from "@/components/FeaturedProducts.tsx";
 import { useGoogleMaps } from "@/hooks/use-google-maps";
 import { useToast } from "@/hooks/use-toast";
 
@@ -62,7 +62,7 @@ const Index = () => {
     enabled: !!coordinates
   });
 
-  const { data: products } = useQuery({
+  const { data: products, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['featured_products'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -123,9 +123,18 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <Hero location={location} setLocation={setLocation} onSearch={handleSearch} />
+      <Hero 
+        location={location} 
+        setLocation={setLocation} 
+        onSearch={handleSearch}
+        isLoading={false}
+      />
       <FeaturedFlorists florists={florists || []} isLoading={isLoadingFlorists} />
-      <FeaturedProducts products={products || []} />
+      <FeaturedProducts 
+        products={products || []} 
+        isLoading={isLoadingProducts}
+        navigate={navigate}
+      />
     </div>
   );
 };
