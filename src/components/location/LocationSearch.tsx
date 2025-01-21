@@ -1,9 +1,6 @@
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-import { useDebounce } from "@/hooks/use-debounce";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useLocationSearch } from "@/hooks/useLocationSearch";
 
 interface LocationSearchProps {
   onLocationSelect?: (location: { 
@@ -22,67 +19,16 @@ export const LocationSearch = ({
   placeholder = "Enter suburb or postcode...",
   className = ""
 }: LocationSearchProps) => {
-  const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<Array<{
-    suburb: string;
-    state: string;
-    postcode: string;
-    latitude: number;
-    longitude: number;
-  }>>([]);
-  const debouncedValue = useDebounce(inputValue, 300);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!debouncedValue || debouncedValue.length < 2) {
-        setSuggestions([]);
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        console.log('Fetching suggestions for:', debouncedValue);
-        
-        const { data, error } = await supabase
-          .from('australian_suburbs')
-          .select('*')
-          .ilike('suburb', `%${debouncedValue}%`)
-          .limit(5);
-
-        if (error) {
-          console.error('Error fetching suggestions:', error);
-          toast({
-            title: "Error",
-            description: "Failed to fetch location suggestions. Please try again.",
-            variant: "destructive"
-          });
-          setSuggestions([]);
-          return;
-        }
-
-        console.log('Suggestions received:', data);
-        setSuggestions(data || []);
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch location suggestions. Please try again.",
-          variant: "destructive"
-        });
-        setSuggestions([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [debouncedValue, toast]);
+  const {
+    inputValue,
+    setInputValue,
+    isLoading,
+    suggestions,
+    setSuggestions
+  } = useLocationSearch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    console.log('Input value changed to:', e.target.value);
   };
 
   const handleSuggestionClick = (suggestion: {
