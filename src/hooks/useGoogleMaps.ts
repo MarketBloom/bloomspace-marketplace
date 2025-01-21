@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -15,100 +15,66 @@ export const useGoogleMaps = (initialLocation: string) => {
   const [inputValue, setInputValue] = useState(initialLocation);
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<GoogleMapsResult[]>([]);
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const { toast } = useToast();
-
-  // Initialize Google Maps service
-  useEffect(() => {
-    let isSubscribed = true;
-
-    const loadGoogleMapsScript = async () => {
-      try {
-        const { data: secretData, error: secretError } = await supabase
-          .rpc('get_secret', { secret_name: 'GOOGLE_MAPS_API_KEY' });
-
-        if (secretError) {
-          console.error('Error fetching Google Maps API key:', secretError);
-          toast({
-            title: "Error",
-            description: "Unable to load location search. Please try again later.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        if (!secretData?.[0]?.secret) {
-          console.error('Google Maps API key not found');
-          toast({
-            title: "Configuration Error",
-            description: "Location search is not properly configured.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        const apiKey = secretData[0].secret;
-        
-        if (!document.querySelector('#google-maps-script')) {
-          const script = document.createElement('script');
-          script.id = 'google-maps-script';
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-          script.async = true;
-          document.head.appendChild(script);
-        }
-      } catch (error) {
-        console.error('Error loading Google Maps:', error);
-        if (isSubscribed) {
-          toast({
-            title: "Error",
-            description: "Failed to initialize location search.",
-            variant: "destructive"
-          });
-        }
-      }
-    };
-
-    loadGoogleMapsScript();
-    return () => {
-      isSubscribed = false;
-    };
-  }, [toast]);
-
-  const getPlacePredictions = useCallback(async (input: string) => {
-    if (!input || !window.google) {
-      setSuggestions([]);
-      return;
-    }
-
+  
+  // Initialize Google Maps script
+  const initializeGoogleMaps = useCallback(async () => {
     try {
-      setIsLoading(true);
-      const service = new google.maps.places.AutocompleteService();
-      const request = {
-        input,
-        componentRestrictions: { country: 'au' },
-        types: ['geocode']
-      };
+      const { data: secretData, error: secretError } = await supabase
+        .rpc('get_secret', { secret_name: 'GOOGLE_MAPS_API_KEY' });
 
-      const response = await service.getPlacePredictions(request);
-      setSuggestions(response.predictions as GoogleMapsResult[]);
+      if (secretError) {
+        console.error('Error fetching Google Maps API key:', secretError);
+        toast({
+          title: "Error",
+          description: "Unable to load location search. Please try again later.",
+          variant: "destructive"
+        });
+        return null;
+      }
+
+      if (!secretData?.[0]?.secret) {
+        console.error('Google Maps API key not found');
+        toast({
+          title: "Configuration Error",
+          description: "Location search is not properly configured.",
+          variant: "destructive"
+        });
+        return null;
+      }
+
+      return secretData[0].secret;
     } catch (error) {
-      console.error('Error fetching predictions:', error);
+      console.error('Error initializing Google Maps:', error);
       toast({
         title: "Error",
-        description: "Could not fetch location suggestions.",
+        description: "Failed to initialize location search.",
         variant: "destructive"
       });
-      setSuggestions([]);
-    } finally {
-      setIsLoading(false);
+      return null;
     }
   }, [toast]);
 
-  const handleLocationSelect = async (placeId: string, description: string) => {
+  const handleLocationSelect = useCallback(async (placeId: string) => {
     try {
       setIsLoading(true);
+      const apiKey = await initializeGoogleMaps();
+      if (!apiKey) return;
+
+      // Load Google Maps script if not already loaded
+      if (!window.google) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.async = true;
+        document.head.appendChild(script);
+        
+        // Wait for script to load
+        await new Promise((resolve) => {
+          script.onload = resolve;
+        });
+      }
+
       const geocoder = new google.maps.Geocoder();
-      
       const result = await new Promise<google.maps.GeocoderResult | null>((resolve, reject) => {
         geocoder.geocode(
           { placeId: placeId },
@@ -123,12 +89,11 @@ export const useGoogleMaps = (initialLocation: string) => {
       });
 
       if (result && result.geometry.location) {
-        setCoordinates([
-          result.geometry.location.lat(),
-          result.geometry.location.lng()
-        ]);
-        setInputValue(description);
-        setSuggestions([]);
+        return {
+          lat: result.geometry.location.lat(),
+          lng: result.geometry.location.lng(),
+          formattedAddress: result.formatted_address
+        };
       }
     } catch (error) {
       console.error('Error getting place details:', error);
@@ -140,14 +105,68 @@ export const useGoogleMaps = (initialLocation: string) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [initializeGoogleMaps, toast]);
+
+  const getPlacePredictions = useCallback(async (input: string) => {
+    if (!input) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const apiKey = await initializeGoogleMaps();
+      if (!apiKey) return;
+
+      // Load Google Maps script if not already loaded
+      if (!window.google) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.async = true;
+        document.head.appendChild(script);
+        
+        // Wait for script to load
+        await new Promise((resolve) => {
+          script.onload = resolve;
+        });
+      }
+
+      const service = new google.maps.places.AutocompleteService();
+      const request = {
+        input,
+        componentRestrictions: { country: 'au' },
+        types: ['geocode']
+      };
+
+      const predictions = await new Promise<google.maps.places.AutocompletePrediction[]>((resolve, reject) => {
+        service.getPlacePredictions(request, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+            resolve(results);
+          } else {
+            reject(new Error('Place predictions failed'));
+          }
+        });
+      });
+
+      setSuggestions(predictions as GoogleMapsResult[]);
+    } catch (error) {
+      console.error('Error fetching predictions:', error);
+      toast({
+        title: "Error",
+        description: "Could not fetch location suggestions.",
+        variant: "destructive"
+      });
+      setSuggestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [initializeGoogleMaps, toast]);
 
   return {
     inputValue,
     setInputValue,
     isLoading,
     suggestions,
-    coordinates,
     getPlacePredictions,
     handleLocationSelect
   };

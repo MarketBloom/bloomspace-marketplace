@@ -10,9 +10,9 @@ interface LocationSearchInputProps {
   onSearch: (value: string) => void;
 }
 
-export const LocationSearchInput = ({ 
-  inputValue, 
-  isLoading, 
+export const LocationSearchInput = ({
+  inputValue,
+  isLoading,
   onChange,
   onSearch
 }: LocationSearchInputProps) => {

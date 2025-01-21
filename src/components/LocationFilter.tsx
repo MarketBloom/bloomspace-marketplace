@@ -33,8 +33,13 @@ export const LocationFilter = ({
   };
 
   const handleSuggestionSelect = async (placeId: string, description: string) => {
-    await handleLocationSelect(placeId, description);
-    setLocation(description);
+    const result = await handleLocationSelect(placeId);
+    if (result) {
+      setLocation(description);
+      if (onCoordsChange) {
+        onCoordsChange([result.lat, result.lng]);
+      }
+    }
   };
 
   return (
