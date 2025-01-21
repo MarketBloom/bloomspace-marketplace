@@ -12,6 +12,12 @@ export interface FloristProfile {
   delivery_radius: number;
   delivery_fee: number;
   minimum_order_amount: number;
+  operating_hours?: Record<string, { open: string; close: string }>;
+  social_links?: {
+    website?: string;
+    instagram?: string;
+    facebook?: string;
+  };
 }
 
 interface FeaturedFloristsProps {
@@ -44,7 +50,7 @@ export const FeaturedFlorists: FC<FeaturedFloristsProps> = ({ florists, isLoadin
         {florists.map((florist) => (
           <FloristCard 
             key={florist.id} 
-            florist={florist as any} // Temporary type assertion until FloristCard props are properly typed
+            florist={florist}
           />
         ))}
       </div>
