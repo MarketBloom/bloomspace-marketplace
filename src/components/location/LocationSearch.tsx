@@ -70,6 +70,7 @@ export const LocationSearch = ({
           description: "Failed to fetch location suggestions. Please try again.",
           variant: "destructive"
         });
+        setSuggestions([]);
       } finally {
         setIsLoading(false);
       }
