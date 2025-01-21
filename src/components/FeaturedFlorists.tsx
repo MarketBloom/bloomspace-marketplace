@@ -1,7 +1,18 @@
 import { FC } from 'react';
 import { FloristCard } from './FloristCard';
 import { Skeleton } from './ui/skeleton';
-import { FloristProfile } from '@/types/florist';
+
+export interface FloristProfile {
+  id: string;
+  store_name: string;
+  address: string;
+  about_text?: string;
+  logo_url?: string;
+  banner_url?: string;
+  delivery_radius: number;
+  delivery_fee: number;
+  minimum_order_amount: number;
+}
 
 interface FeaturedFloristsProps {
   florists: FloristProfile[];
@@ -33,7 +44,7 @@ export const FeaturedFlorists: FC<FeaturedFloristsProps> = ({ florists, isLoadin
         {florists.map((florist) => (
           <FloristCard 
             key={florist.id} 
-            florist={florist}
+            florist={florist as any} // Temporary type assertion until FloristCard props are properly typed
           />
         ))}
       </div>

@@ -6,25 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { FloristBanner } from "./florist-card/FloristBanner";
 import { FloristInfo } from "./florist-card/FloristInfo";
 import { SocialLinks } from "./florist-card/SocialLinks";
+import { FloristProfile } from "./FeaturedFlorists";
 
 export interface FloristCardProps {
-  florist: {
-    id: string;
-    store_name: string;
-    address: string;
-    about_text?: string;
-    logo_url?: string;
-    banner_url?: string;
-    delivery_radius: number;
-    delivery_fee: number;
-    minimum_order_amount: number;
-    operating_hours?: Record<string, { open: string; close: string }>;
-    social_links?: {
-      website?: string;
-      instagram?: string;
-      facebook?: string;
-    };
-  };
+  florist: FloristProfile;
 }
 
 export const FloristCard = ({ florist }: FloristCardProps) => {

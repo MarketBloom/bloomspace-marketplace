@@ -23,19 +23,17 @@ export const FloristGrid = ({ florists }: FloristGridProps) => {
           className={`product-card-animate ${florists.length >= 7 ? 'opacity-0' : ''}`}
         >
           <FloristCard 
-            florist={{
-              id: florist.id,
-              store_name: florist.store_name,
-              address: florist.address,
-              about_text: florist.about_text,
-              logo_url: florist.logo_url,
-              banner_url: florist.banner_url,
-              operating_hours: florist.operating_hours,
-              delivery_fee: florist.delivery_fee,
-              delivery_radius: florist.delivery_radius,
-              minimum_order_amount: florist.minimum_order_amount,
-              social_links: florist.social_links
-            }}
+            id={florist.id}
+            storeName={florist.store_name}
+            address={florist.address}
+            aboutText={florist.about_text}
+            logoUrl={florist.logo_url}
+            bannerUrl={florist.banner_url}
+            operatingHours={florist.operating_hours}
+            deliveryFee={florist.delivery_fee}
+            deliveryRadius={florist.delivery_radius}
+            minimumOrderAmount={florist.minimum_order_amount}
+            socialLinks={florist.social_links}
           />
         </div>
       ))}
