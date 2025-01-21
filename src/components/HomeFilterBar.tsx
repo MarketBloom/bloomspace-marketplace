@@ -8,45 +8,78 @@ import { RainbowButton } from "./ui/rainbow-button";
 import { ShoppingBag, Truck } from "lucide-react";
 import { ShineBorder } from "./ui/shine-border";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [budget, setBudget] = useState<number[]>([500]);
   const [location, setLocation] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = (fulfillmentType: "pickup" | "delivery") => {
-    const searchParams = new URLSearchParams();
+  const handleSearch = async (fulfillmentType: "pickup" | "delivery") => {
+    if (isSearching) return;
     
-    // Only include location params if we have both location text and coordinates
-    if (location && coordinates) {
-      searchParams.append("location", location);
-      searchParams.append("lat", coordinates[0].toString());
-      searchParams.append("lng", coordinates[1].toString());
-    }
+    setIsSearching(true);
     
-    // If date is today, also include the current time to filter by cutoff
-    if (date) {
-      const now = new Date();
-      const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
-      
-      if (isToday) {
-        // Include current time for same-day filtering
-        searchParams.append("date", now.toISOString());
-      } else {
-        // For future dates, just include the date
-        searchParams.append("date", date.toISOString());
+    try {
+      // Only proceed with search if we have both location and coordinates when location is entered
+      if (location && !coordinates) {
+        toast({
+          title: "Location Error",
+          description: "Please select a valid location from the dropdown",
+          variant: "destructive"
+        });
+        return;
       }
-    }
-    
-    searchParams.append("budget", budget[0].toString());
-    searchParams.append("fulfillment", fulfillmentType);
 
-    navigate({
-      pathname: "/search",
-      search: searchParams.toString()
-    });
+      const searchParams = new URLSearchParams();
+      
+      // Only include location params if we have both location text and coordinates
+      if (location && coordinates) {
+        searchParams.append("location", location);
+        searchParams.append("lat", coordinates[0].toString());
+        searchParams.append("lng", coordinates[1].toString());
+      }
+      
+      // If date is today, also include the current time to filter by cutoff
+      if (date) {
+        const now = new Date();
+        const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
+        
+        if (isToday) {
+          // Include current time for same-day filtering
+          searchParams.append("date", now.toISOString());
+        } else {
+          // For future dates, just include the date
+          searchParams.append("date", date.toISOString());
+        }
+      }
+      
+      searchParams.append("budget", budget[0].toString());
+      searchParams.append("fulfillment", fulfillmentType);
+
+      toast({
+        title: "Searching...",
+        description: "Finding the perfect flowers for you"
+      });
+
+      navigate({
+        pathname: "/search",
+        search: searchParams.toString()
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+      toast({
+        title: "Search Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
@@ -80,7 +113,7 @@ export const HomeFilterBar = () => {
         <RainbowButton 
           onClick={() => handleSearch("delivery")}
           className="w-full text-xs md:text-sm h-[42px] px-2 md:px-8"
-          disabled={!!(location && !coordinates)} // Disable if location entered but no coordinates
+          disabled={isSearching || !!(location && !coordinates)}
         >
           <Truck className="w-4 h-4 mr-1 md:mr-2" />
           Search Delivery
@@ -88,7 +121,7 @@ export const HomeFilterBar = () => {
         <Button 
           className="bg-white hover:bg-white/90 text-black text-xs md:text-sm h-[42px] px-4 w-full rounded-lg border border-black"
           onClick={() => handleSearch("pickup")}
-          disabled={!!(location && !coordinates)} // Disable if location entered but no coordinates
+          disabled={isSearching || !!(location && !coordinates)}
         >
           <ShoppingBag className="w-4 h-4 mr-2" />
           Search Pickup
