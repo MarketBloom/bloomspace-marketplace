@@ -100,7 +100,7 @@ export const LocationSearch = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div className="relative">
         <Input
           type="text"
