@@ -66,59 +66,55 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
 
-    try {
-      // Clear any existing autocomplete
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
+    // Clear any existing autocomplete
+    if (autocompleteRef.current) {
+      google.maps.event.clearInstanceListeners(autocompleteRef.current);
+    }
 
-      // Initialize new autocomplete instance
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "au" },
-        types: ["(cities)"],
-        fields: ["formatted_address", "geometry", "name"],
-      });
+    // Initialize new autocomplete instance
+    autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+      componentRestrictions: { country: "au" },
+      types: ["(cities)"],
+      fields: ["formatted_address", "geometry", "name"],
+    });
 
-      // Add place_changed listener
-      autocompleteRef.current.addListener("place_changed", () => {
-        if (!autocompleteRef.current || !isMounted.current) return;
+    // Add place_changed listener
+    autocompleteRef.current.addListener("place_changed", () => {
+      if (!autocompleteRef.current || !isMounted.current) return;
 
-        try {
-          const place = autocompleteRef.current.getPlace();
-          console.log('Place selected:', place); // Debug log
+      try {
+        const place = autocompleteRef.current.getPlace();
+        console.log('Place selected:', place); // Debug log
+        
+        if (place && place.formatted_address && place.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
           
-          if (place && place.formatted_address && place.geometry?.location) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            
-            setLocation(place.formatted_address);
-            setInputValue(place.formatted_address);
-            
-            if (onCoordsChange) {
-              console.log('Updating coordinates:', [lat, lng]); // Debug log
-              onCoordsChange([lat, lng]);
-            }
-          } else {
-            // If no geometry, clear coordinates
-            if (onCoordsChange) {
-              console.log('Clearing coordinates - no geometry'); // Debug log
-              onCoordsChange(null);
-            }
-          }
-        } catch (error) {
-          console.error("Error handling place selection:", error);
-          toast.error("Error selecting location. Please try again.");
+          setLocation(place.formatted_address);
+          setInputValue(place.formatted_address);
+          
           if (onCoordsChange) {
+            console.log('Updating coordinates:', [lat, lng]); // Debug log
+            onCoordsChange([lat, lng]);
+          }
+        } else {
+          // If no geometry, clear coordinates
+          if (onCoordsChange) {
+            console.log('Clearing coordinates - no geometry'); // Debug log
             onCoordsChange(null);
           }
         }
-      });
-    } catch (error) {
-      console.error("Error initializing Places Autocomplete:", error);
-      toast.error("Error initializing location search. Please try again.");
-    }
+      } catch (error) {
+        console.error("Error handling place selection:", error);
+        toast.error("Error selecting location. Please try again.");
+        if (onCoordsChange) {
+          onCoordsChange(null);
+        }
+      }
+    });
   };
 
+  // Only run once on mount to load Google Maps
   useEffect(() => {
     const setupAutocomplete = async () => {
       try {
@@ -148,18 +144,20 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
     };
   }, []); // Empty dependency array - only run once on mount
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    
-    // Only clear location and coordinates if input is empty
-    if (!value) {
-      console.log('Clearing location and coordinates'); // Debug log
-      setLocation("");
+  // Effect to handle debounced input changes
+  useEffect(() => {
+    if (debouncedInput === '') {
+      console.log('Clearing location and coordinates due to empty input');
+      setLocation('');
       if (onCoordsChange) {
         onCoordsChange(null);
       }
     }
+  }, [debouncedInput, setLocation, onCoordsChange]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
   };
 
   return (
