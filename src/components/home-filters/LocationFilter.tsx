@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface LocationFilterProps {
   location: string;
@@ -58,6 +59,9 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isMounted = useRef(true);
+  
+  // Debounce the input value to reduce API calls
+  const debouncedInput = useDebounce(inputValue, 500);
 
   const initAutocomplete = () => {
     if (!inputRef.current || !window.google?.maps?.places) return;
@@ -81,6 +85,8 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
 
         try {
           const place = autocompleteRef.current.getPlace();
+          console.log('Place selected:', place); // Debug log
+          
           if (place && place.formatted_address && place.geometry?.location) {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
@@ -89,11 +95,13 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
             setInputValue(place.formatted_address);
             
             if (onCoordsChange) {
+              console.log('Updating coordinates:', [lat, lng]); // Debug log
               onCoordsChange([lat, lng]);
             }
           } else {
             // If no geometry, clear coordinates
             if (onCoordsChange) {
+              console.log('Clearing coordinates - no geometry'); // Debug log
               onCoordsChange(null);
             }
           }
@@ -138,12 +146,15 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, []);
+  }, []); // Empty dependency array - only run once on mount
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    
+    // Only clear location and coordinates if input is empty
     if (!value) {
+      console.log('Clearing location and coordinates'); // Debug log
       setLocation("");
       if (onCoordsChange) {
         onCoordsChange(null);
