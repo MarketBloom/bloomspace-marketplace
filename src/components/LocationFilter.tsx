@@ -1,5 +1,4 @@
 import { LocationSearchInput } from "./location/LocationSearchInput";
-import { LocationSuggestions } from "./location/LocationSuggestions";
 import { useGoogleMaps } from "@/hooks/useGoogleMaps";
 
 interface LocationFilterProps {
@@ -17,10 +16,13 @@ export const LocationFilter = ({
     inputValue,
     setInputValue,
     isLoading,
-    suggestions,
-    getPlacePredictions,
-    handleLocationSelect
-  } = useGoogleMaps(location);
+    handlePlaceSelected
+  } = useGoogleMaps(location, (formattedAddress, coords) => {
+    setLocation(formattedAddress);
+    if (onCoordsChange) {
+      onCoordsChange(coords);
+    }
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -32,27 +34,13 @@ export const LocationFilter = ({
     }
   };
 
-  const handleSuggestionSelect = async (placeId: string, description: string) => {
-    const result = await handleLocationSelect(placeId);
-    if (result) {
-      setLocation(description);
-      if (onCoordsChange) {
-        onCoordsChange([result.lat, result.lng]);
-      }
-    }
-  };
-
   return (
     <div className="relative">
       <LocationSearchInput
         inputValue={inputValue}
         isLoading={isLoading}
         onChange={handleInputChange}
-        onSearch={getPlacePredictions}
-      />
-      <LocationSuggestions
-        suggestions={suggestions}
-        onSelect={handleSuggestionSelect}
+        onPlaceSelected={handlePlaceSelected}
       />
     </div>
   );

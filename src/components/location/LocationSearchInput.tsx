@@ -1,32 +1,52 @@
+import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
-import { useEffect } from "react";
-import { useDebounce } from "@/hooks/use-debounce";
 
 interface LocationSearchInputProps {
   inputValue: string;
   isLoading: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearch: (value: string) => void;
+  onPlaceSelected: (place: google.maps.places.PlaceResult) => void;
 }
 
 export const LocationSearchInput = ({
   inputValue,
   isLoading,
   onChange,
-  onSearch
+  onPlaceSelected
 }: LocationSearchInputProps) => {
-  const debouncedValue = useDebounce(inputValue, 300);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   useEffect(() => {
-    if (debouncedValue) {
-      onSearch(debouncedValue);
-    }
-  }, [debouncedValue, onSearch]);
+    if (!inputRef.current) return;
+
+    // Initialize the autocomplete object
+    autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+      componentRestrictions: { country: "au" },
+      fields: ["address_components", "geometry", "formatted_address"],
+    });
+
+    // Add the place_changed event listener
+    const listener = autocompleteRef.current.addListener("place_changed", () => {
+      const place = autocompleteRef.current?.getPlace();
+      if (place && place.geometry) {
+        onPlaceSelected(place);
+      }
+    });
+
+    // Cleanup
+    return () => {
+      if (listener) {
+        google.maps.event.removeListener(listener);
+      }
+    };
+  }, [onPlaceSelected]);
 
   return (
     <div className="relative">
       <Input
+        ref={inputRef}
         type="text"
         placeholder="Enter suburb or postcode..."
         value={inputValue}
