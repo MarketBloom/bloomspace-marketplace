@@ -24,18 +24,17 @@ export const useLocationSearch = (
     if (!item || !item.address) return item.title || "";
     
     const address = item.address;
-    const title = item.title || "";
-    const city = address.city || address.county || address.district || "";
+    const city = address.city || address.district || address.county || "";
     const state = address.state || address.stateCode || "";
     const postalCode = address.postalCode || "";
 
-    // Format: "Suburb, State Postcode" or "Suburb, State"
+    // Format: "City, State Postcode" or "City, State"
     if (city && state && postalCode) {
       return `${city}, ${state} ${postalCode}`;
     } else if (city && state) {
       return `${city}, ${state}`;
     }
-    return title;
+    return item.title || "";
   };
 
   useEffect(() => {
@@ -81,16 +80,13 @@ export const useLocationSearch = (
         const apiKey = secretData[0].secret;
         console.log('API key retrieved successfully, length:', apiKey.length);
         
+        // Using the Geocoding API endpoint as per documentation
         const query = encodeURIComponent(debouncedValue);
-        const apiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete` + 
+        const apiUrl = `https://geocode.search.hereapi.com/v1/geocode` + 
           `?q=${query}` +
-          `&in=countryCode:AUS` +
-          `&limit=4` +
+          `&in=countryCode:AUS` + // Restrict to Australia
+          `&limit=5` +
           `&lang=en-AU` +
-          `&resultTypes=address,place` +
-          `&types=city,place,district,locality` +
-          `&politicalView=AUS` +
-          `&show=streetDetails` +
           `&apiKey=${apiKey}`;
         
         console.log('Making HERE API request to:', apiUrl.replace(apiKey, '[REDACTED]'));
