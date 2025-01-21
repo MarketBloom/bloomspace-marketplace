@@ -11,13 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileIndex from "./MobileIndex";
-import { PixelTrail } from "@/components/ui/pixel-trail";
-import { useScreenSize } from "@/components/hooks/use-screen-size";
 
 const Index = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const screenSize = useScreenSize();
   
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['featured-products'],
@@ -69,14 +66,6 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-background">
-      <div className="absolute inset-0 pointer-events-none z-[1]">
-        <PixelTrail
-          pixelSize={screenSize.lessThan('md') ? 48 : 80}
-          fadeDuration={200}
-          delay={0}
-          pixelClassName="rounded-full bg-[#FFD700] opacity-70"
-        />
-      </div>
       <div className="relative z-[2]">
         <Header />
         <Hero />
