@@ -29,7 +29,7 @@ export const HomeFilterBar = () => {
       if (location && !coordinates) {
         toast({
           title: "Location Error",
-          description: "Please select a valid location from the dropdown",
+          description: "Please enter a valid suburb or postcode",
           variant: "destructive"
         });
         return;

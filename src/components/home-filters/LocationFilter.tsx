@@ -10,110 +10,15 @@ interface LocationFilterProps {
   onCoordsChange?: (coords: [number, number] | null) => void;
 }
 
-// Global script loading state
-let googleMapsLoaded = false;
-let loadingPromise: Promise<void> | null = null;
-
-const loadGoogleMapsScript = async () => {
-  if (googleMapsLoaded) return;
-  if (loadingPromise) return loadingPromise;
-
-  loadingPromise = new Promise(async (resolve, reject) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('get-maps-key');
-      if (error || !data?.apiKey) {
-        throw new Error(error?.message || 'Failed to fetch API key');
-      }
-
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        googleMapsLoaded = true;
-        resolve();
-      };
-      script.onerror = reject;
-      document.head.appendChild(script);
-    } catch (error) {
-      reject(error);
-    }
-  });
-
-  return loadingPromise;
-};
-
 export const LocationFilter = ({ location, setLocation, onCoordsChange }: LocationFilterProps) => {
+  const [inputValue, setInputValue] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const [localInputValue, setLocalInputValue] = useState(location);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  // Initialize Google Maps only once on mount
-  useEffect(() => {
-    let mounted = true;
-
-    const init = async () => {
-      try {
-        setIsLoading(true);
-        await loadGoogleMapsScript();
-        
-        if (!mounted || !inputRef.current || !window.google?.maps?.places) return;
-
-        // Clear any existing autocomplete
-        if (autocompleteRef.current) {
-          google.maps.event.clearInstanceListeners(autocompleteRef.current);
-        }
-
-        const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
-          componentRestrictions: { country: "au" },
-          types: ["(cities)"],
-          fields: ["formatted_address", "geometry", "name"]
-        });
-
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          console.log('Place selected:', place);
-
-          if (place?.formatted_address && place.geometry?.location) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            
-            setLocation(place.formatted_address);
-            setLocalInputValue(place.formatted_address);
-            
-            if (onCoordsChange) {
-              onCoordsChange([lat, lng]);
-            }
-          }
-        });
-
-        autocompleteRef.current = autocomplete;
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error initializing Places:", error);
-        if (mounted) {
-          setIsLoading(false);
-          toast.error("Error loading location search");
-        }
-      }
-    };
-
-    init();
-
-    return () => {
-      mounted = false;
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-    };
-  }, []); // Only run once on mount
-
   // Handle manual input changes with debounce
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setLocalInputValue(value);
+    setInputValue(value);
 
     // Clear existing timeout
     if (timeoutRef.current) {
@@ -129,9 +34,38 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       return;
     }
 
-    // Set new timeout for non-empty values
-    timeoutRef.current = setTimeout(() => {
-      setLocation(value);
+    // Set new timeout for geocoding
+    timeoutRef.current = setTimeout(async () => {
+      try {
+        setIsLoading(true);
+        
+        // Basic geocoding using OpenStreetMap Nominatim
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&countrycodes=au`
+        );
+        
+        const data = await response.json();
+        
+        if (data && data[0]) {
+          setLocation(data[0].display_name);
+          if (onCoordsChange) {
+            onCoordsChange([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+          }
+        } else {
+          if (onCoordsChange) {
+            onCoordsChange(null);
+          }
+          toast.error("Location not found. Please try a different search.");
+        }
+      } catch (error) {
+        console.error("Error geocoding location:", error);
+        toast.error("Error finding location. Please try again.");
+        if (onCoordsChange) {
+          onCoordsChange(null);
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }, 500);
   };
 
@@ -140,11 +74,10 @@ export const LocationFilter = ({ location, setLocation, onCoordsChange }: Locati
       <div className="relative">
         <Input
           type="text"
-          placeholder="Enter location..."
-          value={localInputValue}
+          placeholder="Enter suburb or postcode..."
+          value={inputValue}
           onChange={handleInputChange}
           className="w-full pl-8 h-[42px] bg-white/90 border border-black text-xs"
-          ref={inputRef}
           disabled={isLoading}
         />
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
