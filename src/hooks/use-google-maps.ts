@@ -1,32 +1,35 @@
 import { useState, useEffect } from 'react';
 
-export function useGoogleMaps() {
+declare global {
+  interface Window {
+    google: any;
+    initMap: () => void;
+  }
+}
+
+export const useGoogleMaps = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if Google Maps is already loaded
-    if (window.google && window.google.maps) {
+    if (window.google) {
       setIsLoaded(true);
       return;
     }
-    setIsLoaded(true);
+
+    window.initMap = () => setIsLoaded(true);
   }, []);
 
   const geocode = async (address: string): Promise<[number, number] | null> => {
-    if (!window.google || !window.google.maps) {
-      console.error('Google Maps not loaded');
-      return null;
-    }
+    if (!window.google) return null;
 
     try {
       const geocoder = new window.google.maps.Geocoder();
-      const response = await geocoder.geocode({ address: address });
+      const { results } = await geocoder.geocode({ address });
       
-      if (response && response.results && response.results[0]) {
-        const { lat, lng } = response.results[0].geometry.location;
-        return [lat(), lng()];
+      if (results && results[0]) {
+        const location = results[0].geometry.location;
+        return [location.lat(), location.lng()];
       }
-      
       return null;
     } catch (error) {
       console.error('Geocoding error:', error);
@@ -35,4 +38,4 @@ export function useGoogleMaps() {
   };
 
   return { isLoaded, geocode };
-}
+};

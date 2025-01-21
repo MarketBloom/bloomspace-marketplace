@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { FloristCard } from './FloristCard';
 import { Skeleton } from './ui/skeleton';
 
-interface FloristProfile {
+export interface FloristProfile {
   id: string;
   store_name: string;
   address: string;
@@ -42,7 +42,10 @@ export const FeaturedFlorists: FC<FeaturedFloristsProps> = ({ florists, isLoadin
       <h2 className="text-2xl font-bold mb-6">Featured Florists</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {florists.map((florist) => (
-          <FloristCard key={florist.id} florist={florist} />
+          <FloristCard 
+            key={florist.id} 
+            florist={florist as any} // Temporary type assertion until FloristCard props are properly typed
+          />
         ))}
       </div>
     </div>

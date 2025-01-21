@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +14,6 @@ const Index = () => {
   const { toast } = useToast();
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [location, setLocation] = useState("");
-
   const { isLoaded: mapsLoaded, geocode } = useGoogleMaps();
 
   const { data: florists, isLoading: isLoadingFlorists } = useQuery({
@@ -100,7 +99,7 @@ const Index = () => {
       toast({
         title: "Location Required",
         description: "Please enter a location to search",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -108,6 +107,7 @@ const Index = () => {
     try {
       const coords = await geocode(location);
       if (coords) {
+        setCoordinates(coords);
         navigate(`/search?location=${encodeURIComponent(location)}`);
       }
     } catch (error) {
@@ -115,7 +115,7 @@ const Index = () => {
       toast({
         title: "Location Error",
         description: "Could not find the specified location. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -124,12 +124,15 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <Hero 
-        location={location} 
-        setLocation={setLocation} 
+        location={location}
+        setLocation={setLocation}
         onSearch={handleSearch}
-        isLoading={false}
+        isLoading={!mapsLoaded}
       />
-      <FeaturedFlorists florists={florists || []} isLoading={isLoadingFlorists} />
+      <FeaturedFlorists 
+        florists={florists || []} 
+        isLoading={isLoadingFlorists} 
+      />
       <FeaturedProducts 
         products={products || []} 
         isLoading={isLoadingProducts}
