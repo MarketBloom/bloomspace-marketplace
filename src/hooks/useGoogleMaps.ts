@@ -18,8 +18,10 @@ export const useGoogleMaps = (initialLocation: string) => {
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const { toast } = useToast();
 
-  // Initialize Google Maps Autocomplete service
+  // Initialize Google Maps service
   useEffect(() => {
+    let isSubscribed = true;
+
     const loadGoogleMapsScript = async () => {
       try {
         const { data: secretData, error: secretError } = await supabase
@@ -47,7 +49,6 @@ export const useGoogleMaps = (initialLocation: string) => {
 
         const apiKey = secretData[0].secret;
         
-        // Only load the script if it hasn't been loaded yet
         if (!document.querySelector('#google-maps-script')) {
           const script = document.createElement('script');
           script.id = 'google-maps-script';
@@ -57,19 +58,24 @@ export const useGoogleMaps = (initialLocation: string) => {
         }
       } catch (error) {
         console.error('Error loading Google Maps:', error);
-        toast({
-          title: "Error",
-          description: "Failed to initialize location search.",
-          variant: "destructive"
-        });
+        if (isSubscribed) {
+          toast({
+            title: "Error",
+            description: "Failed to initialize location search.",
+            variant: "destructive"
+          });
+        }
       }
     };
 
     loadGoogleMapsScript();
+    return () => {
+      isSubscribed = false;
+    };
   }, [toast]);
 
   const getPlacePredictions = useCallback(async (input: string) => {
-    if (!input) {
+    if (!input || !window.google) {
       setSuggestions([]);
       return;
     }
