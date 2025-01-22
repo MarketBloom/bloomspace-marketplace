@@ -29,7 +29,10 @@ const StoreSettings = () => {
 
   const [formData, setFormData] = useState({
     store_name: floristProfile?.store_name || "",
-    address: floristProfile?.address || "",
+    street_address: floristProfile?.street_address || "",
+    suburb: floristProfile?.suburb || "",
+    state: floristProfile?.state || "",
+    postcode: floristProfile?.postcode || "",
     about_text: floristProfile?.about_text || "",
     delivery_fee: floristProfile?.delivery_fee || 0,
     delivery_radius: floristProfile?.delivery_radius || 5,
@@ -78,10 +81,37 @@ const StoreSettings = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Address</label>
+              <label className="text-sm font-medium">Street Address</label>
               <Input
-                value={formData.address}
-                onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                value={formData.street_address}
+                onChange={(e) => setFormData(prev => ({ ...prev, street_address: e.target.value }))}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Suburb</label>
+              <Input
+                value={formData.suburb}
+                onChange={(e) => setFormData(prev => ({ ...prev, suburb: e.target.value }))}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">State</label>
+              <Input
+                value={formData.state}
+                onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Postcode</label>
+              <Input
+                value={formData.postcode}
+                onChange={(e) => setFormData(prev => ({ ...prev, postcode: e.target.value }))}
                 required
               />
             </div>

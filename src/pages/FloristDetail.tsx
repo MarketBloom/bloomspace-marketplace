@@ -1,226 +1,41 @@
-import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Header } from "@/components/Header";
-import { Loader2, MapPin, Clock } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { FloristProductFilters } from "@/components/filters/FloristProductFilters";
-import { FloristProducts } from "@/components/florist/FloristProducts";
-import { useState } from "react";
-
-// Helper function to format operating hours
-const formatOperatingHours = (hours: any): string => {
-  if (!hours || typeof hours !== 'object') {
-    console.log("Operating hours data:", hours);
-    return "Hours not specified";
-  }
-
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-  const shortToday = new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-  
-  console.log("Checking hours for:", today, shortToday);
-  console.log("Available operating hours:", hours);
-
-  // Check all possible formats
-  const possibleFormats = [
-    today,                    // lowercase long (monday)
-    shortToday,              // lowercase short (mon)
-    today.toUpperCase(),     // uppercase long (MONDAY)
-    shortToday.toUpperCase(),// uppercase short (MON)
-    today.charAt(0).toUpperCase() + today.slice(1), // Capitalized long (Monday)
-    shortToday.charAt(0).toUpperCase() + shortToday.slice(1), // Capitalized short (Mon)
-  ];
-
-  for (const format of possibleFormats) {
-    const dayHours = hours[format];
-    if (dayHours?.open && dayHours?.close) {
-      return `${dayHours.open} - ${dayHours.close}`;
-    }
-  }
-
-  return "Closed today";
-};
+import { FloristProfile } from "@/types/florist";
 
 const FloristDetail = () => {
-  const { id } = useParams();
-  const [filters, setFilters] = useState({
-    budget: [500] as number[],
-    categories: [] as string[],
-    occasions: [] as string[]
-  });
-
-  const { data: florist, isLoading: isLoadingFlorist } = useQuery({
-    queryKey: ['florist', id],
+  const { user } = useAuth();
+  const { data: floristProfile, isLoading, error } = useQuery({
+    queryKey: ["floristProfile", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('florist_profiles')
-        .select('*')
-        .eq('id', id)
+        .from("florist_profiles")
+        .select("*")
+        .eq("id", user?.id)
         .single();
 
       if (error) throw error;
-      return data;
+      return data as FloristProfile;
     },
+    enabled: !!user,
   });
 
-  const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['florist-products', id],
-    queryFn: async () => {
-      const { data: productsData, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          product_sizes (
-            id,
-            name,
-            price_adjustment,
-            images
-          )
-        `)
-        .eq('florist_id', id)
-        .eq('in_stock', true)
-        .eq('is_hidden', false);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading florist details</div>;
 
-      if (error) throw error;
-
-      const productsWithVariants = productsData?.flatMap(product => {
-        if (!product.product_sizes || product.product_sizes.length === 0) {
-          return [{
-            ...product,
-            displaySize: null,
-            displayPrice: product.price,
-            sizeId: null
-          }];
-        }
-
-        return product.product_sizes.map(size => ({
-          ...product,
-          displaySize: size.name,
-          displayPrice: product.price + (size.price_adjustment || 0),
-          sizeId: size.id,
-          images: size.images?.length ? size.images : product.images
-        }));
-      });
-
-      return productsWithVariants || [];
-    },
-  });
-
-  if (isLoadingFlorist || isLoadingProducts) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!florist) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold">Florist not found</h1>
-        </div>
-      </div>
-    );
-  }
-
-  const handleFilterChange = (newFilters: {
-    budget?: number[];
-    categories?: string[];
-    occasions?: string[];
-  }) => {
-    setFilters(prev => ({
-      budget: newFilters.budget || prev.budget,
-      categories: newFilters.categories || prev.categories,
-      occasions: newFilters.occasions || prev.occasions
-    }));
-  };
+  const fullAddress = `${floristProfile.street_address}, ${floristProfile.suburb}, ${floristProfile.state} ${floristProfile.postcode}`;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      {/* Hero Section with Banner */}
-      <div className="w-full h-64 relative bg-muted">
-        {florist.banner_url ? (
-          <img 
-            src={florist.banner_url} 
-            alt={`${florist.store_name} banner`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-r from-primary/10 to-secondary/10" />
+    <div className="space-y-2">
+      <h2 className="font-semibold">Florist</h2>
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <p className="font-medium">{floristProfile.store_name}</p>
+        <p className="text-sm text-gray-600">{fullAddress}</p>
+        {floristProfile.about_text && (
+          <p className="text-sm text-gray-600 mt-2">{floristProfile.about_text}</p>
         )}
       </div>
-
-      <main className="container mx-auto px-4 -mt-20 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          {/* Store Info Card */}
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Logo */}
-              <div className="flex-shrink-0">
-                <div className="w-24 h-24 rounded-lg overflow-hidden border bg-white">
-                  {florist.logo_url ? (
-                    <img 
-                      src={florist.logo_url} 
-                      alt={`${florist.store_name} logo`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <span className="text-2xl font-bold text-muted-foreground">
-                        {florist.store_name[0]}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Store Details */}
-              <div className="flex-grow">
-                <h1 className="text-3xl font-bold mb-2">{florist.store_name}</h1>
-                <div className="space-y-2">
-                  <div className="flex items-center text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    <span>{florist.address}</span>
-                  </div>
-                  <div className="flex items-center text-muted-foreground">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>Open: {formatOperatingHours(florist.operating_hours)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {florist.about_text && (
-              <>
-                <Separator className="my-6" />
-                <p className="text-muted-foreground">{florist.about_text}</p>
-              </>
-            )}
-          </div>
-
-          {/* Products Section with Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="md:col-span-1">
-              <FloristProductFilters onFilterChange={handleFilterChange} />
-            </div>
-            <div className="md:col-span-3">
-              <FloristProducts 
-                products={products || []}
-                floristName={florist.store_name}
-                floristId={florist.id}
-                filters={filters}
-              />
-            </div>
-          </div>
-        </div>
-      </main>
     </div>
   );
 };

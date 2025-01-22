@@ -1,105 +1,77 @@
-import { useEffect, useState } from "react";
-import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
+import { StoreSettingsForm } from "@/components/store-management/StoreSettingsForm";
+import { Card, CardContent } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useState } from "react";
+import type { FloristProfile } from "@/types/florist";
 
-interface Florist {
-  id: string;
-  store_name: string;
-  address: string;
-  store_status: string;
-  created_at: string;
-  setup_progress: number;
-}
+const StoreManagement = () => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-const FloristManagement = () => {
-  const [florists, setFlorists] = useState<Florist[]>([]);
-
-  useEffect(() => {
-    const fetchFlorists = async () => {
-      const { data } = await supabase
+  const { data: floristProfile, refetch } = useQuery({
+    queryKey: ["floristProfile", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from("florist_profiles")
         .select("*")
-        .order("created_at", { ascending: false });
+        .eq("id", user?.id)
+        .maybeSingle();
 
-      if (data) {
-        setFlorists(data);
-      }
-    };
+      if (error) throw error;
+      return data as unknown as FloristProfile;
+    },
+    enabled: !!user,
+  });
 
-    fetchFlorists();
-  }, []);
+  const handleStoreSettingsSubmit = async (formData: FloristProfile) => {
+    if (!floristProfile || !user) return;
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from("florist_profiles")
+        .update(formData)
+        .eq("id", user.id);
 
-  const getStatusBadge = (status: string) => {
-    const variants: { [key: string]: string } = {
-      private: "bg-yellow-100 text-yellow-800",
-      published: "bg-green-100 text-green-800",
-    };
-
-    return (
-      <Badge className={variants[status] || "bg-gray-100"}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
+      if (error) throw error;
+      toast.success("Store settings updated successfully");
+      refetch();
+    } catch (error) {
+      console.error("Error updating store settings:", error);
+      toast.error("Failed to update store settings");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <AdminLayout currentPage="Florists">
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Florist Management</h1>
-        </div>
+  if (!user || !floristProfile) return null;
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Store Name</TableHead>
-              <TableHead>Address</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Setup Progress</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {florists.map((florist) => (
-              <TableRow key={florist.id}>
-                <TableCell>{florist.store_name}</TableCell>
-                <TableCell>{florist.address}</TableCell>
-                <TableCell>
-                  {getStatusBadge(florist.store_status)}
-                </TableCell>
-                <TableCell>{florist.setup_progress}%</TableCell>
-                <TableCell>
-                  {new Date(florist.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      // TODO: Implement florist details view
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+  return (
+    <DashboardLayout>
+      <div className="p-6">
+        <div className="max-w-[1200px] mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Store Management</h1>
+          <p className="text-muted-foreground mb-8">
+            Configure your store settings and information
+          </p>
+
+          <Card>
+            <CardContent className="p-6">
+              <StoreSettingsForm
+                initialData={floristProfile}
+                onUpdate={handleStoreSettingsSubmit}
+                loading={loading}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </AdminLayout>
+    </DashboardLayout>
   );
 };
 
-export default FloristManagement;
+export default StoreManagement;

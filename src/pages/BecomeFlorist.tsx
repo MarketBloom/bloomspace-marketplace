@@ -18,8 +18,10 @@ const BecomeFlorist = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     storeName: "",
-    phone: "",
-    address: "",
+    street_address: "",
+    suburb: "",
+    state: "",
+    postcode: "",
     aboutText: "",
     deliveryRadius: "5",
     deliveryFee: "0",
@@ -75,7 +77,10 @@ const BecomeFlorist = () => {
         .insert({
           id: user.id,
           store_name: formData.storeName,
-          address: formData.address,
+          street_address: formData.street_address,
+          suburb: formData.suburb,
+          state: formData.state,
+          postcode: formData.postcode,
           about_text: formData.aboutText,
           operating_hours: formData.operatingHours,
           delivery_radius: parseFloat(formData.deliveryRadius),
@@ -94,37 +99,6 @@ const BecomeFlorist = () => {
       navigate("/florist-dashboard");
     } catch (error) {
       console.error("Error creating florist profile:", error);
-      toast.error("Failed to create florist profile");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSkip = async () => {
-    if (!user) {
-      toast.error("Please log in first");
-      navigate("/login");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { error: floristError } = await supabase
-        .from("florist_profiles")
-        .insert({
-          id: user.id,
-          store_name: "My Store",
-          address: "",
-          store_status: "private",
-          setup_progress: 0
-        });
-
-      if (floristError) throw floristError;
-
-      toast.success("Welcome! You can set up your store later.");
-      navigate("/florist-dashboard");
-    } catch (error) {
-      console.error("Error creating basic florist profile:", error);
       toast.error("Failed to create florist profile");
     } finally {
       setLoading(false);

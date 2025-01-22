@@ -28,15 +28,19 @@ serve(async (req) => {
       throw new Error('Missing origin or destination coordinates')
     }
 
+    console.log('Fetching distance with params:', { origin, destination });
+
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?` +
       `origins=${origin[0]},${origin[1]}&destinations=${destination[0]},${destination[1]}` +
       `&mode=driving&units=metric&key=${apiKey}`
 
-    console.log('Fetching distance from Google Maps API...')
     const response = await fetch(url)
     const data = await response.json()
 
-    if (data.status !== 'OK' || !data.rows[0]?.elements[0]?.distance?.value) {
+    console.log('Google Maps API response:', data);
+
+    if (data.status !== 'OK' || !data.rows?.[0]?.elements?.[0]?.distance?.value) {
+      console.error('Invalid Google Maps API response:', data);
       throw new Error('Invalid response from Google Maps API')
     }
 

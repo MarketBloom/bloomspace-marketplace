@@ -53,7 +53,10 @@ export const useAuth = () => {
           .insert({
             id: authData.user.id,
             store_name: "",
-            address: "",
+            street_address: "",
+            suburb: "",
+            state: "",
+            postcode: "",
             store_status: "private",
             setup_progress: 0
           });
