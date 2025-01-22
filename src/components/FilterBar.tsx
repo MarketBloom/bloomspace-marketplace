@@ -38,7 +38,6 @@ export const FilterBar = ({
     setIsSearching(true);
     
     try {
-      // Only proceed with search if we have both location and coordinates when location is entered
       if (location && !coordinates) {
         toast({
           title: "Location Error",
@@ -50,23 +49,19 @@ export const FilterBar = ({
 
       const updates: Record<string, string> = {};
       
-      // Only include location params if we have both location text and coordinates
       if (location && coordinates) {
         updates.location = location;
         updates.lat = coordinates[0].toString();
         updates.lng = coordinates[1].toString();
       }
       
-      // If date is today, also include the current time to filter by cutoff
       if (date) {
         const now = new Date();
         const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
         
         if (isToday) {
-          // Include current time for same-day filtering
           updates.date = now.toISOString();
         } else {
-          // For future dates, just include the date
           updates.date = date.toISOString();
         }
       }
@@ -77,7 +72,6 @@ export const FilterBar = ({
       if (onFilterChange) {
         onFilterChange(updates);
       } else {
-        // If no onFilterChange provided, navigate to search page
         const searchParams = new URLSearchParams(updates);
         navigate({
           pathname: "/search",
@@ -102,13 +96,15 @@ export const FilterBar = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="bg-[#eed2d8]/70 rounded-2xl border border-black/10 shadow-sm p-6 space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <LocationFilter 
-          location={location}
-          setLocation={setLocation}
-          onCoordsChange={setCoordinates}
-        />
+        <div className="col-span-1 md:col-span-4">
+          <LocationFilter 
+            location={location}
+            setLocation={setLocation}
+            onCoordsChange={setCoordinates}
+          />
+        </div>
         
         <DateFilter 
           date={date} 
@@ -120,18 +116,20 @@ export const FilterBar = ({
           setBudget={setBudget} 
         />
         
-        <FulfillmentToggle
-          fulfillmentType={fulfillmentType}
-          setFulfillmentType={setFulfillmentType}
-        />
+        <div className="col-span-1 md:col-span-2">
+          <FulfillmentToggle
+            fulfillmentType={fulfillmentType}
+            setFulfillmentType={setFulfillmentType}
+          />
+        </div>
       </div>
       
       <Button 
         onClick={handleApplyFilters}
         disabled={isSearching || !!(location && !coordinates)}
-        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black"
+        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black h-[42px]"
       >
-        Apply Filters
+        Search Flowers
       </Button>
     </div>
   );
