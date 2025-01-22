@@ -35,6 +35,7 @@ export const FloristManagement = () => {
         }) as { morning: boolean; midday: boolean; afternoon: boolean },
         coordinates: String(data.coordinates || ''),
         geocoded_address: (data.geocoded_address || {}) as Record<string, any>,
+        social_links: (data.social_links || {}) as Record<string, string>,
       };
       
       setFloristProfile(profile);
