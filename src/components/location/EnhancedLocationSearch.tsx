@@ -18,9 +18,6 @@ interface EnhancedLocationSearchProps {
   className?: string;
 }
 
-// Define state order preference
-const stateOrder = ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'];
-
 export const EnhancedLocationSearch = ({ 
   onLocationSelect, 
   placeholder = "Enter suburb or postcode...", 
@@ -36,23 +33,14 @@ export const EnhancedLocationSearch = ({
   const debouncedValue = useDebounce(inputValue, 300);
   const { toast } = useToast();
 
-  // Sort and group results by state
-  const groupedResults = results
-    .sort((a, b) => {
-      // First sort by state order
-      const stateOrderDiff = stateOrder.indexOf(a.state) - stateOrder.indexOf(b.state);
-      if (stateOrderDiff !== 0) return stateOrderDiff;
-      
-      // Then sort by suburb name within each state
-      return a.suburb.localeCompare(b.suburb);
-    })
-    .reduce((acc, location) => {
-      if (!acc[location.state]) {
-        acc[location.state] = [];
-      }
-      acc[location.state].push(location);
-      return acc;
-    }, {} as Record<string, LocationOption[]>);
+  // Group results by state
+  const groupedResults = results.reduce((acc, location) => {
+    if (!acc[location.state]) {
+      acc[location.state] = [];
+    }
+    acc[location.state].push(location);
+    return acc;
+  }, {} as Record<string, LocationOption[]>);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -69,7 +57,6 @@ export const EnhancedLocationSearch = ({
           .from('australian_suburbs')
           .select('*')
           .ilike('suburb', `%${debouncedValue}%`)
-          .order('state', { ascending: true })
           .order('suburb', { ascending: true })
           .limit(20);
 
@@ -181,31 +168,26 @@ export const EnhancedLocationSearch = ({
               {debouncedValue.trim() ? 'No results found. Please try another suburb.' : 'Start typing to search suburbs...'}
             </div>
           ) : (
-            // Render grouped results by state
-            Object.entries(groupedResults)
-              .sort(([stateA], [stateB]) => {
-                return stateOrder.indexOf(stateA) - stateOrder.indexOf(stateB);
-              })
-              .map(([state, locations]) => (
-                <div key={state} className="py-1">
-                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
-                    {state}
-                  </div>
-                  {locations.map((location, index) => (
-                    <button
-                      key={`${location.suburb}-${location.postcode}`}
-                      role="option"
-                      id={`location-option-${index}`}
-                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100
-                        ${index === activeIndex ? 'bg-gray-100' : ''}`}
-                      onClick={() => handleSelect(location)}
-                      aria-selected={index === activeIndex}
-                    >
-                      {`${location.suburb}, ${location.state} ${location.postcode}`}
-                    </button>
-                  ))}
+            Object.entries(groupedResults).map(([state, locations]) => (
+              <div key={state} className="py-1">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
+                  {state}
                 </div>
-              ))
+                {locations.map((location, index) => (
+                  <button
+                    key={`${location.suburb}-${location.postcode}`}
+                    role="option"
+                    id={`location-option-${index}`}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100
+                      ${index === activeIndex ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleSelect(location)}
+                    aria-selected={index === activeIndex}
+                  >
+                    {`${location.suburb}, ${location.state} ${location.postcode}`}
+                  </button>
+                ))}
+              </div>
+            ))
           )}
         </div>
       )}
