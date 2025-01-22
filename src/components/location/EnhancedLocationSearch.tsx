@@ -56,7 +56,7 @@ export const EnhancedLocationSearch = ({
         const { data, error } = await supabase
           .from('australian_suburbs')
           .select('*')
-          .ilike('suburb', `%${debouncedValue}%`)
+          .ilike('suburb', `${debouncedValue}%`)
           .order('suburb', { ascending: true })
           .limit(20);
 
