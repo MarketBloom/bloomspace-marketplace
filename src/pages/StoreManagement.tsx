@@ -2,44 +2,28 @@ import { useAuth } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
 import { StoreSettingsForm } from "@/components/store-management/StoreSettingsForm";
 import { Card, CardContent } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
-import type { FloristProfile } from "@/types/florist";
+import { useFloristProfile } from "@/hooks/useFloristProfile";
 
 const StoreManagement = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-
-  const { data: floristProfile, refetch } = useQuery({
-    queryKey: ["floristProfile", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("florist_profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .maybeSingle();
-
-      if (error) throw error;
-      return data as FloristProfile;
-    },
-    enabled: !!user,
-  });
+  
+  const {
+    floristProfile,
+    isLoading: isLoadingProfile,
+    error,
+    updateProfile,
+  } = useFloristProfile(user?.id);
 
   const handleStoreSettingsSubmit = async () => {
     if (!floristProfile || !user) return;
     
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("florist_profiles")
-        .update(floristProfile)
-        .eq("id", user.id);
-
-      if (error) throw error;
+      await updateProfile.mutateAsync(floristProfile);
       toast.success("Store settings updated successfully");
-      refetch();
     } catch (error) {
       console.error("Error updating store settings:", error);
       toast.error("Failed to update store settings");
@@ -49,6 +33,10 @@ const StoreManagement = () => {
   };
 
   if (!user || !floristProfile) return null;
+  if (error) {
+    toast.error("Failed to load store settings");
+    return null;
+  }
 
   return (
     <DashboardLayout>
@@ -64,7 +52,7 @@ const StoreManagement = () => {
               <StoreSettingsForm
                 initialData={floristProfile}
                 onSubmit={handleStoreSettingsSubmit}
-                loading={loading}
+                loading={loading || isLoadingProfile}
               />
             </CardContent>
           </Card>
