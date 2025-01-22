@@ -20,7 +20,7 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
   
   const [formData, setFormData] = useState({
     store_name: initialData?.store_name || "",
-    address: initialData?.address || "",
+    street_address: initialData?.street_address || "",
     about_text: initialData?.about_text || "",
     delivery_fee: initialData?.delivery_fee || 0,
     delivery_radius: initialData?.delivery_radius || 5,
@@ -62,7 +62,7 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
   const handleAddressChange = (address: string, coordinates?: { lat: number; lng: number }) => {
     setFormData(prev => ({
       ...prev,
-      address,
+      street_address: address,
       coordinates: coordinates ? `POINT(${coordinates.lng} ${coordinates.lat})` : null,
     }));
   };
@@ -80,9 +80,9 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="street_address">Address</Label>
         <AddressAutocomplete
-          value={formData.address}
+          value={formData.street_address}
           onChange={handleAddressChange}
           placeholder="Search for your store address..."
         />
