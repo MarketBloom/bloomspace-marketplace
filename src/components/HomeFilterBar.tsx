@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateFilter } from "./home-filters/DateFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
@@ -8,8 +8,7 @@ import { ShoppingBag, Truck } from "lucide-react";
 import { ShineBorder } from "./ui/shine-border";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import { useDebounce } from "@/hooks/use-debounce";
-import { supabase } from "@/integrations/supabase/client";
+import { LocationFilter } from "./filters/LocationFilter";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
@@ -19,106 +18,6 @@ export const HomeFilterBar = () => {
   const [location, setLocation] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [suggestions, setSuggestions] = useState<Array<{
-    suburb: string;
-    state: string;
-    postcode: string;
-    latitude: number;
-    longitude: number;
-  }>>([]);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
-
-  // Fetch suburb suggestions when search term changes
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!debouncedSearchTerm || debouncedSearchTerm.length < 2) {
-        setSuggestions([]);
-        return;
-      }
-
-      setIsLoadingSuggestions(true);
-      try {
-        let query = supabase
-          .from('australian_suburbs')
-          .select('*')
-          .order('state', { ascending: true, nullsFirst: false });
-
-        // Check if search term is numeric (postcode search)
-        if (/^\d+$/.test(debouncedSearchTerm)) {
-          query = query.ilike('postcode', `${debouncedSearchTerm}%`);
-        } else {
-          query = query.ilike('suburb', `${debouncedSearchTerm}%`);
-        }
-
-        const { data, error } = await query.limit(10);
-
-        if (error) throw error;
-
-        // Sort data by state priority and distance from CBD
-        const sortedData = data?.sort((a, b) => {
-          // Define state priority order
-          const statePriority: { [key: string]: number } = {
-            'NSW': 1,
-            'VIC': 2,
-            'QLD': 3,
-            'ACT': 4,
-            'WA': 5,
-            'SA': 6,
-            'TAS': 7,
-            'NT': 8
-          };
-
-          // First, compare by state priority
-          const stateDiff = (statePriority[a.state] || 999) - (statePriority[b.state] || 999);
-          if (stateDiff !== 0) return stateDiff;
-
-          // If same state, calculate and compare distance from CBD
-          const distanceA = calculateDistance(a.latitude, a.longitude, a.state);
-          const distanceB = calculateDistance(b.latitude, b.longitude, b.state);
-          return distanceA - distanceB;
-        });
-
-        setSuggestions(sortedData || []);
-      } catch (error) {
-        console.error('Error fetching suburbs:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch suburb suggestions",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoadingSuggestions(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [debouncedSearchTerm, toast]);
-
-  // Helper function to calculate distance from CBD
-  const calculateDistance = (lat: number, lon: number, state: string): number => {
-    const cbdCoordinates: { [key: string]: [number, number] } = {
-      'NSW': [-33.8688, 151.2093],
-      'VIC': [-37.8136, 144.9631],
-      'QLD': [-27.4705, 153.0260],
-      'ACT': [-35.2809, 149.1300],
-      'WA': [-31.9505, 115.8605],
-      'SA': [-34.9285, 138.6007],
-      'TAS': [-42.8821, 147.3272],
-      'NT': [-12.4634, 130.8456]
-    };
-
-    const cbd = cbdCoordinates[state];
-    if (!cbd) return 999999;
-
-    // Calculate Euclidean distance (simplified for performance)
-    return Math.sqrt(
-      Math.pow(lat - cbd[0], 2) + 
-      Math.pow(lon - cbd[1], 2)
-    );
-  };
 
   const handleSearch = async (fulfillmentType: "pickup" | "delivery") => {
     if (isSearching) return;
@@ -192,47 +91,13 @@ export const HomeFilterBar = () => {
       className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5 mt-0 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2 relative">
+        <div className="space-y-2">
           <label className="text-foreground text-xs font-medium">Location</label>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Enter suburb or postcode..."
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            role="combobox"
-            aria-expanded={suggestions.length > 0}
-            aria-controls="suburb-listbox"
-            aria-activedescendant=""
+          <LocationFilter
+            location={location}
+            setLocation={setLocation}
+            onCoordsChange={setCoordinates}
           />
-          {suggestions.length > 0 && (
-            <ul
-              id="suburb-listbox"
-              role="listbox"
-              className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
-            >
-              {suggestions.map((suggestion, index) => (
-                <li
-                  key={`${suggestion.suburb}-${suggestion.postcode}`}
-                  role="option"
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                  onClick={() => {
-                    setLocation(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
-                    setCoordinates([suggestion.latitude, suggestion.longitude]);
-                    setSearchTerm(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion.suburb}, {suggestion.state} {suggestion.postcode}
-                </li>
-              ))}
-            </ul>
-          )}
-          {isLoadingSuggestions && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
-            </div>
-          )}
         </div>
         <DateFilter 
           date={date} 
