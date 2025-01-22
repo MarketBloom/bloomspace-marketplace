@@ -42,13 +42,19 @@ export const HomeFilterBar = () => {
 
       setIsLoadingSuggestions(true);
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from('australian_suburbs')
           .select('*')
-          .ilike('suburb', `${debouncedSearchTerm}%`)
-          .order('state', { ascending: true, nullsFirst: false })
-          .order('suburb')
-          .limit(10);
+          .order('state', { ascending: true, nullsFirst: false });
+
+        // Check if search term is numeric (postcode search)
+        if (/^\d+$/.test(debouncedSearchTerm)) {
+          query = query.ilike('postcode', `${debouncedSearchTerm}%`);
+        } else {
+          query = query.ilike('suburb', `${debouncedSearchTerm}%`);
+        }
+
+        const { data, error } = await query.limit(10);
 
         if (error) throw error;
 
@@ -193,7 +199,7 @@ export const HomeFilterBar = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Enter suburb..."
+            placeholder="Enter suburb or postcode..."
             className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
             role="combobox"
             aria-expanded={suggestions.length > 0}
