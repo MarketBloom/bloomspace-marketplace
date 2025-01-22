@@ -32,25 +32,48 @@ export const HomeFilterBar = () => {
   
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
+  // Default state order
+  const stateOrder = ['NSW', 'VIC', 'QLD', 'ACT', 'WA', 'SA', 'TAS', 'NT'];
+
   // Fetch suburb suggestions when search term changes
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!debouncedSearchTerm || debouncedSearchTerm.length < 2) {
-        setSuggestions([]);
-        return;
-      }
-
       setIsLoadingSuggestions(true);
       try {
-        const { data, error } = await supabase
-          .from('australian_suburbs')
-          .select('*')
-          .ilike('suburb', `${debouncedSearchTerm}%`)
-          .order('suburb')
-          .limit(10);
+        if (!debouncedSearchTerm || debouncedSearchTerm.length < 2) {
+          // Show default suggestions grouped by state
+          const { data, error } = await supabase
+            .from('australian_suburbs')
+            .select('*')
+            .in('state', stateOrder)
+            .order('state', { ascending: false }) // This ensures our state order
+            .order('suburb')
+            .limit(40);
 
-        if (error) throw error;
-        setSuggestions(data || []);
+          if (error) throw error;
+          
+          // Sort data according to stateOrder
+          const sortedData = data?.sort((a, b) => {
+            const stateAIndex = stateOrder.indexOf(a.state);
+            const stateBIndex = stateOrder.indexOf(b.state);
+            if (stateAIndex !== stateBIndex) {
+              return stateAIndex - stateBIndex;
+            }
+            return a.suburb.localeCompare(b.suburb);
+          }) || [];
+
+          setSuggestions(sortedData);
+        } else {
+          const { data, error } = await supabase
+            .from('australian_suburbs')
+            .select('*')
+            .ilike('suburb', `${debouncedSearchTerm}%`)
+            .order('suburb')
+            .limit(10);
+
+          if (error) throw error;
+          setSuggestions(data || []);
+        }
       } catch (error) {
         console.error('Error fetching suburbs:', error);
         toast({
