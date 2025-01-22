@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suburb } from "@/data/types";
-import { sydneySuburbs } from "@/data/sydney-suburbs";
-import { melbourneSuburbs } from "@/data/melbourne-suburbs";
-import { brisbaneSuburbs } from "@/data/brisbane-suburbs";
+import { SYDNEY_SUBURBS } from "@/data/sydney-suburbs";
+import { MELBOURNE_SUBURBS } from "@/data/melbourne-suburbs";
+import { BRISBANE_SUBURBS } from "@/data/brisbane-suburbs";
 import { Check, MapPin } from "lucide-react";
 
 interface EnhancedLocationSearchProps {
@@ -17,11 +17,13 @@ interface EnhancedLocationSearchProps {
     longitude: number;
   }) => void;
   placeholder?: string;
+  className?: string;
 }
 
 export const EnhancedLocationSearch = ({
   onLocationSelect,
   placeholder = "Enter suburb or postcode",
+  className
 }: EnhancedLocationSearchProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Suburb[]>([]);
@@ -31,7 +33,7 @@ export const EnhancedLocationSearch = ({
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const allSuburbs = useMemo(() => {
-    return [...sydneySuburbs, ...melbourneSuburbs, ...brisbaneSuburbs];
+    return [...SYDNEY_SUBURBS, ...MELBOURNE_SUBURBS, ...BRISBANE_SUBURBS];
   }, []);
 
   const handleSearch = (term: string) => {
@@ -117,7 +119,7 @@ export const EnhancedLocationSearch = ({
   };
 
   return (
-    <div className="relative w-full">
+    <div className={`relative w-full ${className || ''}`}>
       <div className="relative">
         <Input
           ref={inputRef}
