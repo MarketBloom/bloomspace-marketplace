@@ -1,4 +1,4 @@
-import { LocationSearch } from "./location/LocationSearch";
+import { EnhancedLocationSearch } from '../location/EnhancedLocationSearch';
 
 interface LocationFilterProps {
   location: string;
@@ -24,7 +24,7 @@ export const LocationFilter = ({
 
   return (
     <div className="w-full">
-      <LocationSearch
+      <EnhancedLocationSearch
         onLocationSelect={handleLocationSelect}
         placeholder="Enter suburb or postcode"
       />
