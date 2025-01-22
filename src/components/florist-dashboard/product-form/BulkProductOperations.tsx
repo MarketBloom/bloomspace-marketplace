@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { BulkEditProducts } from "./BulkEditProducts";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
-interface BulkProductOperationsProps {
-  onSuccess: () => void;
+export interface BulkProductOperationsProps {
+  floristId: string;
+  onProductsUploaded: (options?: RefetchOptions) => Promise<QueryObserverResult<any[], Error>>;
 }
 
-export const BulkProductOperations = ({ onSuccess }: BulkProductOperationsProps) => {
+export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
   const [showBulkEdit, setShowBulkEdit] = useState(false);
 
   return (
@@ -23,7 +25,7 @@ export const BulkProductOperations = ({ onSuccess }: BulkProductOperationsProps)
           </DialogHeader>
           <BulkEditProducts 
             onClose={() => setShowBulkEdit(false)}
-            onSuccess={onSuccess}
+            onSuccess={onProductsUploaded}
           />
         </DialogContent>
       </Dialog>

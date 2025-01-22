@@ -3,13 +3,16 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
-interface BulkEditProductsProps {
-  onClose: () => void;
-  onSuccess: () => void;
+export interface BulkEditProductsProps {
+  products: any[];
+  onProductsUpdated: (options?: RefetchOptions) => Promise<QueryObserverResult<any[], Error>>;
+  onClose?: () => void;
+  onSuccess?: () => void;
 }
 
-export const BulkEditProducts = ({ onClose, onSuccess }: BulkEditProductsProps) => {
+export const BulkEditProducts = ({ products, onProductsUpdated, onClose, onSuccess }: BulkEditProductsProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
@@ -27,8 +30,8 @@ export const BulkEditProducts = ({ onClose, onSuccess }: BulkEditProductsProps) 
     try {
       // Process file upload logic here
       toast.success("Products updated successfully");
-      onSuccess();
-      onClose();
+      onSuccess?.();
+      onClose?.();
     } catch (error) {
       console.error("Error updating products:", error);
       toast.error("Failed to update products");
