@@ -1,84 +1,73 @@
+import { Hero } from "@/components/Hero";
 import { Categories } from "@/components/Categories";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
-import { Testimonials } from "@/components/Testimonials";
 import { TrustSection } from "@/components/TrustSection";
+import { Testimonials } from "@/components/Testimonials";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useIsMobile } from "@/hooks/use-mobile";
-import MobileIndex from "./MobileIndex";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  
-  const { data: products, isLoading, error } = useQuery({
-    queryKey: ['featured-products'],
+  const { toast } = useToast();
+
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['featuredProducts'],
     queryFn: async () => {
-      try {
-        console.log('Fetching featured products...');
-        const { data, error } = await supabase
-          .from('products')
-          .select(`
-            *,
-            florist_profiles (
-              store_name
-            )
-          `)
-          .eq('in_stock', true)
-          .eq('is_hidden', false)
-          .limit(6);
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          florist_profiles!inner(store_name)
+        `)
+        .eq('is_hidden', false)
+        .limit(6);
 
-        if (error) {
-          console.error('Supabase error:', error);
-          throw error;
-        }
-
-        if (!data) {
-          throw new Error('No data returned from Supabase');
-        }
-
-        console.log('Products fetched:', data);
-        return data;
-      } catch (err) {
-        console.error('Query error:', err);
-        throw err;
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load featured products",
+          variant: "destructive",
+        });
+        throw error;
       }
-    },
-    retry: 2,
-    retryDelay: 1000,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    meta: {
-      onError: (error: Error) => {
-        console.error('Query error:', error);
-        toast.error("Failed to load featured products. Please try again later.");
-      }
+
+      return data;
     }
   });
 
-  if (isMobile) {
-    return <MobileIndex />;
-  }
-
   return (
-    <div className="relative min-h-screen bg-background">
-      <div className="relative z-[2]">
-        <Header />
+    <div className="min-h-screen bg-background">
+      <ErrorBoundary>
         <Hero />
-        <HowItWorks />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
         <Categories navigate={navigate} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
         <FeaturedProducts 
           products={products || []} 
           isLoading={isLoading} 
-          navigate={navigate}
+          navigate={navigate} 
         />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <HowItWorks />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
         <TrustSection navigate={navigate} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
         <Testimonials />
-      </div>
+      </ErrorBoundary>
     </div>
   );
 };
