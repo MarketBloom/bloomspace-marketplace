@@ -52,13 +52,20 @@ export const EnhancedLocationSearch = ({
 
       setIsLoading(true);
       try {
+        console.log('Fetching suburbs for:', debouncedValue);
         const { data, error } = await supabase
           .from('australian_suburbs')
           .select('*')
           .ilike('suburb', `%${debouncedValue}%`)
-          .order('suburb', { ascending: true });
+          .order('suburb', { ascending: true })
+          .limit(20);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching locations:', error);
+          throw error;
+        }
+
+        console.log('Suburbs found:', data);
         setResults(data || []);
       } catch (error) {
         console.error('Error fetching locations:', error);
