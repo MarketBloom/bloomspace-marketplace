@@ -31,6 +31,36 @@ export const HomeFilterBar = () => {
   
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
+  // Parse search term into components
+  const parseSearchTerm = (term: string) => {
+    const parts = term.trim().split(/[\s,]+/);
+    let suburb = "", state = "", postcode = "";
+    
+    parts.forEach(part => {
+      if (part.match(/^\d{4}$/)) {
+        postcode = part;
+      } else if (part.length === 2 || part.length === 3) {
+        state = part.toUpperCase();
+      } else {
+        suburb = suburb ? `${suburb} ${part}` : part;
+      }
+    });
+    
+    return { suburb: suburb.trim(), state, postcode };
+  };
+
+  // State priority order
+  const statePriority: { [key: string]: number } = {
+    'NSW': 1,
+    'VIC': 2,
+    'QLD': 3,
+    'ACT': 4,
+    'WA': 5,
+    'SA': 6,
+    'TAS': 7,
+    'NT': 8
+  };
+
   // Fetch suburb suggestions when search term changes
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -41,41 +71,52 @@ export const HomeFilterBar = () => {
 
       setIsLoadingSuggestions(true);
       try {
+        const { suburb, state, postcode } = parseSearchTerm(debouncedSearchTerm);
+        
         let query = supabase
           .from('australian_suburbs')
-          .select('*')
-          .order('state', { ascending: true, nullsFirst: false });
+          .select('*');
 
-        // Check if search term is numeric (postcode search)
-        if (/^\d+$/.test(debouncedSearchTerm)) {
-          query = query.ilike('postcode', `${debouncedSearchTerm}%`);
-        } else {
-          query = query.ilike('suburb', `${debouncedSearchTerm}%`);
+        // Build query based on parsed components
+        if (suburb) {
+          query = query.ilike('suburb', `${suburb}%`);
+        }
+        if (state) {
+          query = query.ilike('state', state);
+        }
+        if (postcode) {
+          query = query.eq('postcode', postcode);
         }
 
         const { data, error } = await query.limit(10);
 
         if (error) throw error;
 
-        // Sort data by state priority and distance from CBD
+        // Sort data with multiple criteria
         const sortedData = data?.sort((a, b) => {
-          // Define state priority order
-          const statePriority: { [key: string]: number } = {
-            'NSW': 1,
-            'VIC': 2,
-            'QLD': 3,
-            'ACT': 4,
-            'WA': 5,
-            'SA': 6,
-            'TAS': 7,
-            'NT': 8
-          };
+          // Exact postcode match gets highest priority
+          if (postcode) {
+            const aPostcodeMatch = a.postcode === postcode;
+            const bPostcodeMatch = b.postcode === postcode;
+            if (aPostcodeMatch !== bPostcodeMatch) {
+              return aPostcodeMatch ? -1 : 1;
+            }
+          }
 
-          // First, compare by state priority
+          // State priority
           const stateDiff = (statePriority[a.state] || 999) - (statePriority[b.state] || 999);
           if (stateDiff !== 0) return stateDiff;
 
-          // If same state, calculate and compare distance from CBD
+          // Exact suburb match gets next priority
+          if (suburb) {
+            const aSuburbMatch = a.suburb.toLowerCase() === suburb.toLowerCase();
+            const bSuburbMatch = b.suburb.toLowerCase() === suburb.toLowerCase();
+            if (aSuburbMatch !== bSuburbMatch) {
+              return aSuburbMatch ? -1 : 1;
+            }
+          }
+
+          // Finally, sort by distance from CBD
           const distanceA = calculateDistance(a.latitude, a.longitude, a.state);
           const distanceB = calculateDistance(b.latitude, b.longitude, b.state);
           return distanceA - distanceB;
