@@ -19,12 +19,14 @@ serve(async (req) => {
   try {
     const apiKey = Deno.env.get('GOOGLE_MAPS_API_KEY')
     if (!apiKey) {
+      console.error('Missing Google Maps API key')
       throw new Error('Missing Google Maps API key')
     }
 
     const { origin, destination }: DistanceRequest = await req.json()
     
     if (!origin || !destination) {
+      console.error('Missing required parameters:', { origin, destination })
       throw new Error('Missing origin or destination coordinates')
     }
 
