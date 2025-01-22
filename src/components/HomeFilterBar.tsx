@@ -46,7 +46,7 @@ export const HomeFilterBar = () => {
           .from('australian_suburbs')
           .select('*')
           .ilike('suburb', `${debouncedSearchTerm}%`)
-          .order('state', { ascending: true, nullsLast: true })
+          .order('state', { ascending: true, nullsFirst: false })
           .order('suburb')
           .limit(10);
 
