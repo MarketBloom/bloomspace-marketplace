@@ -59,6 +59,10 @@ export const useSearchFlorists = ({ searchParams, userCoordinates }: UseSearchFl
       if (error) throw error;
       
       return florists;
-    }
+    },
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache persists for 30 minutes
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
