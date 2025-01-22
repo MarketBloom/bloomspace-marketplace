@@ -8,7 +8,7 @@ import { ShoppingBag, Truck } from "lucide-react";
 import { ShineBorder } from "./ui/shine-border";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import { LocationFilter } from "./filters/LocationFilter";
+import { LocationFilter } from "./LocationFilter";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
