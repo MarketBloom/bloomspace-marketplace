@@ -9,6 +9,8 @@ import { ShoppingBag, Truck } from "lucide-react";
 import { ShineBorder } from "./ui/shine-border";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { useDebounce } from "@/hooks/use-debounce";
+import { supabase } from "@/integrations/supabase/client";
 
 export const HomeFilterBar = () => {
   const navigate = useNavigate();
@@ -18,6 +20,51 @@ export const HomeFilterBar = () => {
   const [location, setLocation] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState<Array<{
+    suburb: string;
+    state: string;
+    postcode: string;
+    latitude: number;
+    longitude: number;
+  }>>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Fetch suburb suggestions when search term changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!debouncedSearchTerm || debouncedSearchTerm.length < 2) {
+        setSuggestions([]);
+        return;
+      }
+
+      setIsLoadingSuggestions(true);
+      try {
+        const { data, error } = await supabase
+          .from('australian_suburbs')
+          .select('*')
+          .ilike('suburb', `${debouncedSearchTerm}%`)
+          .order('suburb')
+          .limit(10);
+
+        if (error) throw error;
+        setSuggestions(data || []);
+      } catch (error) {
+        console.error('Error fetching suburbs:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch suburb suggestions",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoadingSuggestions(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedSearchTerm, toast]);
 
   const handleSearch = async (fulfillmentType: "pickup" | "delivery") => {
     if (isSearching) return;
@@ -91,14 +138,47 @@ export const HomeFilterBar = () => {
       className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5 mt-0 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2">
+        <div className="space-y-2 relative">
           <label className="text-foreground text-xs font-medium">Location</label>
-          <LocationSearch 
-            onLocationSelect={(loc) => {
-              setLocation(`${loc.suburb}, ${loc.state} ${loc.postcode}`);
-              setCoordinates([loc.latitude, loc.longitude]);
-            }}
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Enter suburb..."
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            role="combobox"
+            aria-expanded={suggestions.length > 0}
+            aria-controls="suburb-listbox"
+            aria-activedescendant=""
           />
+          {suggestions.length > 0 && (
+            <ul
+              id="suburb-listbox"
+              role="listbox"
+              className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
+            >
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={`${suggestion.suburb}-${suggestion.postcode}`}
+                  role="option"
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                  onClick={() => {
+                    setLocation(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
+                    setCoordinates([suggestion.latitude, suggestion.longitude]);
+                    setSearchTerm(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
+                    setSuggestions([]);
+                  }}
+                >
+                  {suggestion.suburb}, {suggestion.state} {suggestion.postcode}
+                </li>
+              ))}
+            </ul>
+          )}
+          {isLoadingSuggestions && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+            </div>
+          )}
         </div>
         <DateFilter 
           date={date} 
