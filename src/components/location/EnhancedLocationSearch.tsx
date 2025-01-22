@@ -1,174 +1,194 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Suburb } from "@/data/types";
-import { SYDNEY_SUBURBS } from "@/data/sydney-suburbs";
-import { MELBOURNE_SUBURBS } from "@/data/melbourne-suburbs";
-import { BRISBANE_SUBURBS } from "@/data/brisbane-suburbs";
-import { Check, MapPin } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
+import { supabase } from '@/integrations/supabase/client';
+import { ChevronDown, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+interface LocationOption {
+  suburb: string;
+  state: string;
+  postcode: string;
+  latitude: number;
+  longitude: number;
+}
 
 interface EnhancedLocationSearchProps {
-  onLocationSelect: (location: {
-    suburb: string;
-    state: string;
-    postcode: string;
-    latitude: number;
-    longitude: number;
-  }) => void;
+  onLocationSelect: (location: LocationOption) => void;
   placeholder?: string;
   className?: string;
 }
 
-export const EnhancedLocationSearch = ({
-  onLocationSelect,
-  placeholder = "Enter suburb or postcode",
-  className
+export const EnhancedLocationSearch = ({ 
+  onLocationSelect, 
+  placeholder = "Enter suburb or postcode...", 
+  className = "" 
 }: EnhancedLocationSearchProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState<Suburb[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [showResults, setShowResults] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<LocationOption[]>([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const debouncedValue = useDebounce(inputValue, 300);
+  const { toast } = useToast();
 
-  const allSuburbs = useMemo(() => {
-    return [...SYDNEY_SUBURBS, ...MELBOURNE_SUBURBS, ...BRISBANE_SUBURBS];
-  }, []);
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    if (term.length < 2) {
-      setResults([]);
-      return;
+  // Group results by state
+  const groupedResults = results.reduce((acc, location) => {
+    if (!acc[location.state]) {
+      acc[location.state] = [];
     }
+    acc[location.state].push(location);
+    return acc;
+  }, {} as Record<string, LocationOption[]>);
 
-    const searchResults = allSuburbs.filter((suburb) => {
-      const searchLower = term.toLowerCase();
-      return (
-        suburb.suburb.toLowerCase().includes(searchLower) ||
-        suburb.postcode.includes(searchLower)
-      );
-    });
-
-    setResults(searchResults.slice(0, 100));
-    setShowResults(true);
-  };
-
-  const handleSelect = (suburb: Suburb) => {
-    onLocationSelect(suburb);
-    setSearchTerm(`${suburb.suburb}, ${suburb.state} ${suburb.postcode}`);
-    setShowResults(false);
-    setSelectedIndex(-1);
-    inputRef.current?.blur();
-  };
-
-  const groupedResults = useMemo(() => {
-    const grouped: Record<string, Suburb[]> = {};
-    results.forEach((suburb) => {
-      if (!grouped[suburb.state]) {
-        grouped[suburb.state] = [];
+  useEffect(() => {
+    const fetchLocations = async () => {
+      if (!debouncedValue.trim()) {
+        setResults([]);
+        setIsLoading(false);
+        return;
       }
-      grouped[suburb.state].push(suburb);
-    });
-    return grouped;
-  }, [results]);
+
+      setIsLoading(true);
+      try {
+        console.log('Fetching suburbs for:', debouncedValue);
+        const { data, error } = await supabase
+          .from('australian_suburbs')
+          .select('*')
+          .ilike('suburb', `%${debouncedValue}%`)
+          .order('suburb', { ascending: true })
+          .limit(20);
+
+        if (error) {
+          console.error('Error fetching locations:', error);
+          throw error;
+        }
+
+        console.log('Suburbs found:', data);
+        setResults(data || []);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch locations. Please try again.",
+          variant: "destructive"
+        });
+        setResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLocations();
+  }, [debouncedValue, toast]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex(prev => Math.min(prev + 1, results.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex(prev => Math.max(prev - 1, -1));
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
+      e.preventDefault();
+      const selectedLocation = results[activeIndex];
+      if (selectedLocation) {
+        handleSelect(selectedLocation);
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  const handleSelect = (location: LocationOption) => {
+    setInputValue(`${location.suburb}, ${location.state} ${location.postcode}`);
+    onLocationSelect(location);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        resultsRef.current &&
-        !resultsRef.current.contains(event.target as Node) &&
-        event.target !== inputRef.current
-      ) {
-        setShowResults(false);
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showResults) return;
-
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        setSelectedIndex((prev) =>
-          prev < results.length - 1 ? prev + 1 : prev
-        );
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
-        break;
-      case "Enter":
-        e.preventDefault();
-        if (selectedIndex >= 0 && selectedIndex < results.length) {
-          handleSelect(results[selectedIndex]);
-        }
-        break;
-      case "Escape":
-        setShowResults(false);
-        setSelectedIndex(-1);
-        break;
-    }
-  };
-
   return (
-    <div className={`relative w-full ${className || ''}`}>
+    <div className="relative w-full" ref={dropdownRef}>
       <div className="relative">
-        <Input
+        <input
           ref={inputRef}
           type="text"
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-          onFocus={() => setShowResults(true)}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full"
+          className={`w-full pl-4 pr-10 h-[42px] bg-white/90 border border-black text-sm rounded-lg ${className}`}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-controls="location-listbox"
+          aria-activedescendant={activeIndex >= 0 ? `location-option-${activeIndex}` : undefined}
         />
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 -translate-y-1/2"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close location dropdown" : "Open location dropdown"}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+          ) : (
+            <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          )}
+        </button>
       </div>
 
-      {showResults && results.length > 0 && (
+      {isOpen && (
         <div
-          ref={resultsRef}
-          className="absolute z-50 w-full mt-1 bg-white rounded-lg border shadow-lg"
+          id="location-listbox"
+          role="listbox"
+          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto"
         >
-          <ScrollArea className="h-[280px] rounded-md">
-            {Object.entries(groupedResults).map(([state, suburbs]) => (
-              <div key={state} className="py-2">
-                <div className="px-2 py-1 text-sm font-semibold text-muted-foreground bg-muted">
+          {isLoading ? (
+            <div className="p-4 text-center text-gray-500">
+              <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+              <p className="mt-2 text-sm">Searching suburbs...</p>
+            </div>
+          ) : results.length === 0 ? (
+            <div className="p-4 text-center text-gray-500">
+              {debouncedValue.trim() ? 'No results found. Please try another suburb.' : 'Start typing to search suburbs...'}
+            </div>
+          ) : (
+            Object.entries(groupedResults).map(([state, locations]) => (
+              <div key={state} className="py-1">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
                   {state}
                 </div>
-                {suburbs.map((suburb, index) => {
-                  const isSelected =
-                    selectedIndex === results.findIndex((r) => r === suburb);
-                  return (
-                    <Button
-                      key={`${suburb.suburb}-${suburb.postcode}`}
-                      variant="ghost"
-                      className={`w-full justify-start gap-2 rounded-none ${
-                        isSelected ? "bg-accent" : ""
-                      }`}
-                      onClick={() => handleSelect(suburb)}
-                    >
-                      <MapPin className="w-4 h-4" />
-                      <span>
-                        {suburb.suburb}, {suburb.postcode}
-                      </span>
-                      {isSelected && (
-                        <Check className="w-4 h-4 ml-auto text-primary" />
-                      )}
-                    </Button>
-                  );
-                })}
+                {locations.map((location, index) => (
+                  <button
+                    key={`${location.suburb}-${location.postcode}`}
+                    role="option"
+                    id={`location-option-${index}`}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100
+                      ${index === activeIndex ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleSelect(location)}
+                    aria-selected={index === activeIndex}
+                  >
+                    {`${location.suburb}, ${location.state} ${location.postcode}`}
+                  </button>
+                ))}
               </div>
-            ))}
-          </ScrollArea>
+            ))
+          )}
         </div>
       )}
     </div>
