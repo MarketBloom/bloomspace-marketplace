@@ -85,3 +85,15 @@ export interface FloristProfilesTable {
   };
   Update: Partial<FloristProfilesTable['Insert']>;
 }
+
+export interface StoreDetailsFormProps {
+  formData: {
+    storeName: string;
+    street_address: string;
+    suburb: string;
+    state: string;
+    postcode: string;
+  };
+  setFormData: (data: any) => void;
+  onNext: () => void;
+}

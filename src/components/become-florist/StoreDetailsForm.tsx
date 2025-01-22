@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 interface StoreDetailsFormProps {
   formData: {
     storeName: string;
-    phone: string;
-    address: string;
+    street_address: string;
+    suburb: string;
+    state: string;
+    postcode: string;
   };
   setFormData: (data: any) => void;
   onNext: () => void;
@@ -25,21 +27,38 @@ export const StoreDetailsForm = ({ formData, setFormData, onNext }: StoreDetails
         />
       </div>
       <div>
-        <Label htmlFor="phone">Phone Number</Label>
+        <Label htmlFor="street_address">Street Address</Label>
         <Input
-          id="phone"
-          type="tel"
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          id="street_address"
+          value={formData.street_address}
+          onChange={(e) => setFormData({ ...formData, street_address: e.target.value })}
           required
         />
       </div>
       <div>
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="suburb">Suburb</Label>
         <Input
-          id="address"
-          value={formData.address}
-          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+          id="suburb"
+          value={formData.suburb}
+          onChange={(e) => setFormData({ ...formData, suburb: e.target.value })}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="state">State</Label>
+        <Input
+          id="state"
+          value={formData.state}
+          onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="postcode">Postcode</Label>
+        <Input
+          id="postcode"
+          value={formData.postcode}
+          onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
           required
         />
       </div>
