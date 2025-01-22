@@ -31,7 +31,10 @@ export const useSearchProducts = ({ fulfillmentType, searchParams, userCoordinat
           florist_profiles!inner (
             id,
             store_name,
-            address,
+            street_address,
+            suburb,
+            state,
+            postcode,
             delivery_cutoff,
             delivery_start_time,
             delivery_end_time,

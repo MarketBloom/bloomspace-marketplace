@@ -3,7 +3,10 @@ import { Json } from './database';
 export interface FloristProfile {
   id: string;
   store_name: string;
-  address: string;
+  street_address: string;
+  suburb: string | null;
+  state: string | null;
+  postcode: string | null;
   about_text: string | null;
   operating_hours: Record<string, { open: string; close: string }>;
   delivery_cutoff: string | null;
@@ -44,7 +47,10 @@ export interface FloristProfilesTable {
   Insert: {
     id: string;
     store_name: string;
-    address: string;
+    street_address: string;
+    suburb?: string | null;
+    state?: string | null;
+    postcode?: string | null;
     about_text?: string | null;
     operating_hours?: Record<string, { open: string; close: string }>;
     delivery_cutoff?: string | null;
