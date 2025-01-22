@@ -6,9 +6,9 @@ export interface Suburb {
   longitude: number;
 }
 
-// This is a sample dataset - you'll want to replace this with complete data
+// Major metropolitan suburbs dataset
 export const AUSTRALIAN_SUBURBS: Suburb[] = [
-  // New South Wales
+  // Sydney Metro
   {
     suburb: "Sydney",
     state: "NSW",
@@ -37,7 +37,35 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -33.8150,
     longitude: 151.0011
   },
-  // Victoria
+  {
+    suburb: "Chatswood",
+    state: "NSW",
+    postcode: "2067",
+    latitude: -33.7969,
+    longitude: 151.1808
+  },
+  {
+    suburb: "Manly",
+    state: "NSW",
+    postcode: "2095",
+    latitude: -33.7969,
+    longitude: 151.2878
+  },
+  {
+    suburb: "Double Bay",
+    state: "NSW",
+    postcode: "2028",
+    latitude: -33.8775,
+    longitude: 151.2402
+  },
+  {
+    suburb: "Newtown",
+    state: "NSW",
+    postcode: "2042",
+    latitude: -33.8960,
+    longitude: 151.1786
+  },
+  // Melbourne Metro
   {
     suburb: "Melbourne",
     state: "VIC",
@@ -66,7 +94,28 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -37.8232,
     longitude: 144.9987
   },
-  // Queensland
+  {
+    suburb: "Carlton",
+    state: "VIC",
+    postcode: "3053",
+    latitude: -37.7946,
+    longitude: 144.9677
+  },
+  {
+    suburb: "Brighton",
+    state: "VIC",
+    postcode: "3186",
+    latitude: -37.9075,
+    longitude: 144.9927
+  },
+  {
+    suburb: "Toorak",
+    state: "VIC",
+    postcode: "3142",
+    latitude: -37.8404,
+    longitude: 145.0199
+  },
+  // Brisbane Metro
   {
     suburb: "Brisbane",
     state: "QLD",
@@ -95,22 +144,28 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -27.4570,
     longitude: 153.0344
   },
-  // South Australia
   {
-    suburb: "Adelaide",
-    state: "SA",
-    postcode: "5000",
-    latitude: -34.9285,
-    longitude: 138.6007
+    suburb: "New Farm",
+    state: "QLD",
+    postcode: "4005",
+    latitude: -27.4676,
+    longitude: 153.0528
   },
   {
-    suburb: "Glenelg",
-    state: "SA",
-    postcode: "5045",
-    latitude: -34.9820,
-    longitude: 138.5160
+    suburb: "Paddington",
+    state: "QLD",
+    postcode: "4064",
+    latitude: -27.4610,
+    longitude: 152.9989
   },
-  // Western Australia
+  {
+    suburb: "Broadbeach",
+    state: "QLD",
+    postcode: "4218",
+    latitude: -28.0297,
+    longitude: 153.4343
+  },
+  // Perth Metro
   {
     suburb: "Perth",
     state: "WA",
@@ -125,7 +180,64 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -32.0569,
     longitude: 115.7439
   },
-  // Tasmania
+  {
+    suburb: "Subiaco",
+    state: "WA",
+    postcode: "6008",
+    latitude: -31.9494,
+    longitude: 115.8273
+  },
+  {
+    suburb: "Cottesloe",
+    state: "WA",
+    postcode: "6011",
+    latitude: -31.9925,
+    longitude: 115.7547
+  },
+  {
+    suburb: "South Perth",
+    state: "WA",
+    postcode: "6151",
+    latitude: -31.9841,
+    longitude: 115.8593
+  },
+  // Adelaide Metro
+  {
+    suburb: "Adelaide",
+    state: "SA",
+    postcode: "5000",
+    latitude: -34.9285,
+    longitude: 138.6007
+  },
+  {
+    suburb: "Glenelg",
+    state: "SA",
+    postcode: "5045",
+    latitude: -34.9820,
+    longitude: 138.5160
+  },
+  {
+    suburb: "North Adelaide",
+    state: "SA",
+    postcode: "5006",
+    latitude: -34.9099,
+    longitude: 138.5917
+  },
+  {
+    suburb: "Unley",
+    state: "SA",
+    postcode: "5061",
+    latitude: -34.9500,
+    longitude: 138.6000
+  },
+  {
+    suburb: "Norwood",
+    state: "SA",
+    postcode: "5067",
+    latitude: -34.9214,
+    longitude: 138.6300
+  },
+  // Hobart Metro
   {
     suburb: "Hobart",
     state: "TAS",
@@ -140,7 +252,21 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -42.9037,
     longitude: 147.3293
   },
-  // Northern Territory
+  {
+    suburb: "Battery Point",
+    state: "TAS",
+    postcode: "7004",
+    latitude: -42.8871,
+    longitude: 147.3318
+  },
+  {
+    suburb: "North Hobart",
+    state: "TAS",
+    postcode: "7000",
+    latitude: -42.8775,
+    longitude: 147.3186
+  },
+  // Darwin Metro
   {
     suburb: "Darwin",
     state: "NT",
@@ -154,5 +280,19 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     postcode: "0830",
     latitude: -12.4800,
     longitude: 130.9833
+  },
+  {
+    suburb: "Fannie Bay",
+    state: "NT",
+    postcode: "0820",
+    latitude: -12.4228,
+    longitude: 130.8371
+  },
+  {
+    suburb: "Nightcliff",
+    state: "NT",
+    postcode: "0810",
+    latitude: -12.3787,
+    longitude: 130.8451
   }
 ];
