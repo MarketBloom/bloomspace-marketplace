@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationSearch } from "./location/LocationSearch";
 import { DateFilter } from "./home-filters/DateFilter";
 import { BudgetFilter } from "./home-filters/BudgetFilter";
 import { Button } from "./ui/button";
