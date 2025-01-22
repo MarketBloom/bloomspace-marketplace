@@ -1,87 +1,67 @@
 import { supabase } from "@/integrations/supabase/client";
 
-interface DistanceMatrixResponse {
-  rows: {
-    elements: {
-      status: string;
-      distance: {
-        value: number;  // meters
-      };
-      duration: {
-        value: number;  // seconds
-      };
-    }[];
-  }[];
+async function getGoogleMapsApiKey() {
+  try {
+    const { data, error } = await supabase.functions.invoke('get-maps-key');
+    if (error) {
+      console.error('Error fetching Google Maps API key:', error);
+      throw error;
+    }
+    return data.key;
+  } catch (error) {
+    console.error('Error fetching Google Maps API key:', error);
+    throw new Error('Failed to get Google Maps API key');
+  }
 }
 
 export async function calculateDrivingDistance(
   origin: [number, number],
-  destinations: Array<[number, number]>
-): Promise<number[]> {
+  destination: [number, number]
+): Promise<number> {
   try {
-    // Get API key from Supabase
-    const { data: secretData, error: secretError } = await supabase
-      .rpc('get_secret', { secret_name: 'GOOGLE_MAPS_API_KEY' });
-
-    if (secretError || !secretData?.[0]?.secret) {
-      console.error('Error fetching Google Maps API key:', secretError);
-      throw new Error('Failed to get Google Maps API key');
-    }
-
-    const apiKey = secretData[0].secret;
+    const apiKey = await getGoogleMapsApiKey();
     
-    // Format coordinates for the API
-    const originStr = `${origin[0]},${origin[1]}`;
-    const destinationsStr = destinations
-      .map(([lat, lng]) => `${lat},${lng}`)
-      .join('|');
-
-    // Call Distance Matrix API
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?` +
-      `origins=${originStr}&destinations=${destinationsStr}` +
-      `&mode=driving&units=metric&key=${apiKey}`,
-      { method: 'GET' }
+      `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin[0]},${origin[1]}&destinations=${destination[0]},${destination[1]}&key=${apiKey}`
     );
 
     if (!response.ok) {
-      throw new Error('Distance Matrix API request failed');
+      throw new Error('Failed to fetch distance from Google Maps API');
     }
 
-    const data: DistanceMatrixResponse = await response.json();
+    const data = await response.json();
     
-    // Extract distances in kilometers
-    return data.rows[0].elements.map(element => 
-      element.status === 'OK' ? element.distance.value / 1000 : Infinity
-    );
+    if (data.status !== 'OK' || !data.rows[0]?.elements[0]?.distance?.value) {
+      throw new Error('Invalid response from Google Maps API');
+    }
+
+    // Convert meters to kilometers
+    return data.rows[0].elements[0].distance.value / 1000;
   } catch (error) {
-    console.error('Error calculating driving distances:', error);
-    return destinations.map(() => Infinity);
+    console.error('Error calculating driving distance:', error);
+    throw error;
   }
 }
 
-// Batch process florists for distance calculation
 export async function filterFloristsByDrivingDistance(
   userLocation: [number, number],
-  florists: Array<{ coordinates: [number, number], delivery_distance_km: number }>,
-  batchSize = 25
+  florists: Array<{ coordinates: [number, number], delivery_distance_km: number }>
 ): Promise<boolean[]> {
-  const results: boolean[] = [];
-  
-  // Process florists in batches
-  for (let i = 0; i < florists.length; i += batchSize) {
-    const batch = florists.slice(i, i + batchSize);
-    const destinations = batch.map(f => f.coordinates);
-    
-    const distances = await calculateDrivingDistance(userLocation, destinations);
-    
-    // Compare each distance with florist's delivery radius
-    const batchResults = distances.map((distance, index) => 
-      distance <= batch[index].delivery_distance_km
+  try {
+    const results = await Promise.all(
+      florists.map(async (florist) => {
+        try {
+          const distance = await calculateDrivingDistance(userLocation, florist.coordinates);
+          return distance <= florist.delivery_distance_km;
+        } catch (error) {
+          console.error('Error calculating distance for florist:', error);
+          return false;
+        }
+      })
     );
-    
-    results.push(...batchResults);
+    return results;
+  } catch (error) {
+    console.error('Error calculating driving distances:', error);
+    throw error;
   }
-  
-  return results;
 }
