@@ -1,9 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { AddProductForm } from "./AddProductForm";
 import { ProductList } from "./ProductList";
 import { BulkProductOperations } from "./product-form/BulkProductOperations";
 import { BulkEditProducts } from "./product-form/BulkEditProducts";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Accordion,
   AccordionContent,
@@ -60,7 +59,8 @@ export const ProductManagement = ({ floristId }: ProductManagementProps) => {
             <div className="pt-4">
               <BulkProductOperations 
                 floristId={floristId} 
-                onProductsUploaded={refetch} 
+                onProductsUploaded={refetch}
+                products={products || []}
               />
             </div>
           </AccordionContent>
