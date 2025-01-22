@@ -46,11 +46,37 @@ export const HomeFilterBar = () => {
           .from('australian_suburbs')
           .select('*')
           .ilike('suburb', `${debouncedSearchTerm}%`)
+          .order('state', { ascending: true, nullsLast: true })
           .order('suburb')
           .limit(10);
 
         if (error) throw error;
-        setSuggestions(data || []);
+
+        // Sort data by state priority and distance from CBD
+        const sortedData = data?.sort((a, b) => {
+          // Define state priority order
+          const statePriority: { [key: string]: number } = {
+            'NSW': 1,
+            'VIC': 2,
+            'QLD': 3,
+            'ACT': 4,
+            'WA': 5,
+            'SA': 6,
+            'TAS': 7,
+            'NT': 8
+          };
+
+          // First, compare by state priority
+          const stateDiff = (statePriority[a.state] || 999) - (statePriority[b.state] || 999);
+          if (stateDiff !== 0) return stateDiff;
+
+          // If same state, calculate and compare distance from CBD
+          const distanceA = calculateDistance(a.latitude, a.longitude, a.state);
+          const distanceB = calculateDistance(b.latitude, b.longitude, b.state);
+          return distanceA - distanceB;
+        });
+
+        setSuggestions(sortedData || []);
       } catch (error) {
         console.error('Error fetching suburbs:', error);
         toast({
@@ -65,6 +91,29 @@ export const HomeFilterBar = () => {
 
     fetchSuggestions();
   }, [debouncedSearchTerm, toast]);
+
+  // Helper function to calculate distance from CBD
+  const calculateDistance = (lat: number, lon: number, state: string): number => {
+    const cbdCoordinates: { [key: string]: [number, number] } = {
+      'NSW': [-33.8688, 151.2093],
+      'VIC': [-37.8136, 144.9631],
+      'QLD': [-27.4705, 153.0260],
+      'ACT': [-35.2809, 149.1300],
+      'WA': [-31.9505, 115.8605],
+      'SA': [-34.9285, 138.6007],
+      'TAS': [-42.8821, 147.3272],
+      'NT': [-12.4634, 130.8456]
+    };
+
+    const cbd = cbdCoordinates[state];
+    if (!cbd) return 999999;
+
+    // Calculate Euclidean distance (simplified for performance)
+    return Math.sqrt(
+      Math.pow(lat - cbd[0], 2) + 
+      Math.pow(lon - cbd[1], 2)
+    );
+  };
 
   const handleSearch = async (fulfillmentType: "pickup" | "delivery") => {
     if (isSearching) return;

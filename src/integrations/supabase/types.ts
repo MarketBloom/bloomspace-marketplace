@@ -1074,6 +1074,14 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_distance_from_cbd: {
+        Args: {
+          suburb_lat: number
+          suburb_lon: number
+          state: string
+        }
+        Returns: number
+      }
       disablelongtransactions: {
         Args: Record<PropertyKey, never>
         Returns: string
