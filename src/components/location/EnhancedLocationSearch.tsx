@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { ChevronDown, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { AUSTRALIAN_SUBURBS, Suburb } from '@/data/australian-suburbs';
+import { AUSTRALIAN_SUBURBS } from '@/data/australian-suburbs';
+import { Suburb } from '@/data/types';
 
 interface EnhancedLocationSearchProps {
   onLocationSelect: (location: {
@@ -32,7 +33,7 @@ export const EnhancedLocationSearch = ({
   const { toast } = useToast();
 
   // Group results by state
-  const groupedResults = results.reduce((acc, location) => {
+  const groupedResults: Record<string, Suburb[]> = results.reduce((acc, location) => {
     if (!acc[location.state]) {
       acc[location.state] = [];
     }
