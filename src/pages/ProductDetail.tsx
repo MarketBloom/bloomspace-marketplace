@@ -16,7 +16,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const selectedSizeId = searchParams.get('size');
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
 
   // Fetch product details including florist profile
   const { data: product, isLoading: isLoadingProduct } = useQuery({
@@ -62,16 +62,16 @@ const ProductDetail = () => {
     if (product) {
       const selectedSize = product.product_sizes?.find(size => size.id === selectedSizeId);
       const cartItem = {
-        productId: product.id,
+        id: product.id,
         title: product.title,
         price: selectedSize ? product.price + selectedSize.price_adjustment : product.price,
-        sizeId: selectedSize?.id,
-        sizeName: selectedSize?.name,
         image: selectedSize?.images?.[0] || product.images?.[0],
         floristId: product.florist_id,
-        floristName: product.florist_profiles.store_name
+        floristName: product.florist_profiles.store_name,
+        sizeId: selectedSize?.id,
+        sizeName: selectedSize?.name
       };
-      addToCart(cartItem);
+      addItem(cartItem);
     }
   };
 
