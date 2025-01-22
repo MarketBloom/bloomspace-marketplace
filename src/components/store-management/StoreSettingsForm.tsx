@@ -1,23 +1,20 @@
-import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { AddressAutocomplete } from "@/components/address/AddressAutocomplete";
-import { FloristProfile } from "@/types/florist";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import type { FloristProfile } from "@/types/florist";
 
 interface StoreSettingsFormProps {
-  initialData: FloristProfile;
-  onUpdate: () => Promise<void>;
-  loading?: boolean;
+  initialData?: Partial<FloristProfile>;
+  onSubmit?: () => void;
 }
 
-export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: StoreSettingsFormProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  
+export const StoreSettingsForm = ({ initialData, onSubmit }: StoreSettingsFormProps) => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     store_name: initialData?.store_name || "",
     street_address: initialData?.street_address || "",
@@ -28,35 +25,19 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
     coordinates: initialData?.coordinates || null,
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    let parsedValue = value;
+    
+    // Handle numeric fields
+    if (name === 'delivery_fee' || name === 'delivery_radius' || name === 'minimum_order_amount') {
+      parsedValue = parseFloat(value) || 0;
+    }
 
-    const promise = new Promise(async (resolve, reject) => {
-      try {
-        const { error } = await supabase
-          .from("florist_profiles")
-          .update({
-            ...formData,
-          })
-          .eq("id", initialData.id);
-
-        if (error) throw error;
-        await onUpdate();
-        resolve(true);
-      } catch (error) {
-        console.error("Error updating store settings:", error);
-        reject(error);
-      } finally {
-        setIsLoading(false);
-      }
-    });
-
-    toast.promise(promise, {
-      loading: 'Saving store settings...',
-      success: 'Store settings updated successfully',
-      error: 'Failed to update store settings',
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: parsedValue
+    }));
   };
 
   const handleAddressChange = (address: string, coordinates?: { lat: number; lng: number }) => {
@@ -67,15 +48,45 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
     }));
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const { error } = await supabase
+        .from('florist_profiles')
+        .update(formData)
+        .eq('id', initialData?.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Store settings updated successfully",
+      });
+
+      if (onSubmit) {
+        onSubmit();
+      }
+    } catch (error) {
+      console.error('Error updating store settings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update store settings",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="store_name">Store Name</Label>
         <Input
           id="store_name"
+          name="store_name"
           value={formData.store_name}
-          onChange={(e) => setFormData(prev => ({ ...prev, store_name: e.target.value }))}
-          required
+          onChange={handleInputChange}
+          placeholder="Enter your store name"
         />
       </div>
 
@@ -89,74 +100,60 @@ export const StoreSettingsForm = ({ initialData, onUpdate, loading = false }: St
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="about_text">About Your Store</Label>
+        <Label htmlFor="about_text">About</Label>
         <Textarea
           id="about_text"
+          name="about_text"
           value={formData.about_text}
-          onChange={(e) => setFormData(prev => ({ ...prev, about_text: e.target.value }))}
-          className="min-h-[100px]"
+          onChange={handleInputChange}
+          placeholder="Tell customers about your store..."
+          rows={4}
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="delivery_fee">Delivery Fee</Label>
-          <div className="relative">
-            <Input
-              id="delivery_fee"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.delivery_fee}
-              onChange={(e) => setFormData(prev => ({ ...prev, delivery_fee: parseFloat(e.target.value) }))}
-              className="pl-6"
-            />
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-          </div>
+          <Label htmlFor="delivery_fee">Delivery Fee ($)</Label>
+          <Input
+            id="delivery_fee"
+            name="delivery_fee"
+            type="number"
+            min="0"
+            step="0.01"
+            value={formData.delivery_fee}
+            onChange={handleInputChange}
+          />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="delivery_radius">Delivery Radius</Label>
-          <div className="relative">
-            <Input
-              id="delivery_radius"
-              type="number"
-              min="0"
-              step="0.1"
-              value={formData.delivery_radius}
-              onChange={(e) => setFormData(prev => ({ ...prev, delivery_radius: parseFloat(e.target.value) }))}
-              className="pr-8"
-            />
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">km</span>
-          </div>
+          <Label htmlFor="delivery_radius">Delivery Radius (km)</Label>
+          <Input
+            id="delivery_radius"
+            name="delivery_radius"
+            type="number"
+            min="0"
+            step="0.1"
+            value={formData.delivery_radius}
+            onChange={handleInputChange}
+          />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="minimum_order_amount">Minimum Order</Label>
-          <div className="relative">
-            <Input
-              id="minimum_order_amount"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.minimum_order_amount}
-              onChange={(e) => setFormData(prev => ({ ...prev, minimum_order_amount: parseFloat(e.target.value) }))}
-              className="pl-6"
-            />
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-          </div>
+          <Label htmlFor="minimum_order_amount">Minimum Order ($)</Label>
+          <Input
+            id="minimum_order_amount"
+            name="minimum_order_amount"
+            type="number"
+            min="0"
+            step="0.01"
+            value={formData.minimum_order_amount}
+            onChange={handleInputChange}
+          />
         </div>
       </div>
 
-      <Button type="submit" disabled={isLoading || loading} className="w-full">
-        {isLoading || loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Saving...
-          </>
-        ) : (
-          'Save Changes'
-        )}
+      <Button type="submit" className="w-full">
+        Save Changes
       </Button>
     </form>
   );

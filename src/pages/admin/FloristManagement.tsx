@@ -1,70 +1,50 @@
-import { useAuth } from "@/hooks/useAuth";
-import { DashboardLayout } from "@/components/florist-dashboard/DashboardLayout";
+import { useEffect, useState } from "react";
 import { StoreSettingsForm } from "@/components/store-management/StoreSettingsForm";
-import { Card, CardContent } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useState } from "react";
 import type { FloristProfile } from "@/types/florist";
 
-const FloristManagement = () => {
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
+export const FloristManagement = () => {
+  const [floristProfile, setFloristProfile] = useState<FloristProfile | null>(null);
+  const { toast } = useToast();
 
-  const { data: floristProfile, refetch } = useQuery({
-    queryKey: ["floristProfile", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("florist_profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .maybeSingle();
+  useEffect(() => {
+    fetchFloristProfile();
+  }, []);
+
+  const fetchFloristProfile = async () => {
+    try {
+      const { data: profile, error } = await supabase
+        .from('florist_profiles')
+        .select('*')
+        .single();
 
       if (error) throw error;
-      return data as FloristProfile;
-    },
-    enabled: !!user,
-  });
-
-  const handleStoreSettingsSubmit = async () => {
-    if (!user) return;
-    
-    setLoading(true);
-    try {
-      await refetch();
-      toast.success("Store settings updated successfully");
+      setFloristProfile(profile);
     } catch (error) {
-      console.error("Error updating store settings:", error);
-      toast.error("Failed to update store settings");
-    } finally {
-      setLoading(false);
+      console.error('Error fetching florist profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load florist profile",
+        variant: "destructive",
+      });
     }
   };
 
-  if (!user || !floristProfile) return null;
+  const handleProfileUpdate = () => {
+    fetchFloristProfile();
+  };
 
   return (
-    <DashboardLayout>
-      <div className="p-6">
-        <div className="max-w-[1200px] mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Store Management</h1>
-          <p className="text-muted-foreground mb-8">
-            Configure your store settings and information
-          </p>
-
-          <Card>
-            <CardContent className="p-6">
-              <StoreSettingsForm
-                initialData={floristProfile}
-                onUpdate={handleStoreSettingsSubmit}
-                loading={loading}
-              />
-            </CardContent>
-          </Card>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-semibold mb-6">Store Management</h1>
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        <StoreSettingsForm 
+          initialData={floristProfile || undefined}
+          onSubmit={handleProfileUpdate}
+        />
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 
