@@ -27,19 +27,13 @@ const FloristManagement = () => {
     enabled: !!user,
   });
 
-  const handleStoreSettingsSubmit = async (updatedProfile: FloristProfile) => {
+  const handleStoreSettingsSubmit = async () => {
     if (!user) return;
     
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("florist_profiles")
-        .update(updatedProfile)
-        .eq("id", user.id);
-
-      if (error) throw error;
+      await refetch();
       toast.success("Store settings updated successfully");
-      refetch();
     } catch (error) {
       console.error("Error updating store settings:", error);
       toast.error("Failed to update store settings");
