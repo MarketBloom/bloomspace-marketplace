@@ -3,8 +3,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductListItem } from "./product-list/ProductListItem";
 import { Product } from "../../types/product";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { ProductSearchInput } from "./product-list/ProductSearchInput";
+import { ProductEmptyState } from "./product-list/ProductEmptyState";
 
 interface ProductListProps {
   products: Product[];
@@ -90,15 +90,10 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
 
   return (
     <div className="space-y-6">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-      </div>
+      <ProductSearchInput 
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
       
       <div className="space-y-4">
         {filteredProducts.map((product) => (
@@ -113,13 +108,7 @@ export const ProductList = ({ products, onProductDeleted }: ProductListProps) =>
         ))}
         
         {filteredProducts.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground">
-            {searchQuery ? (
-              <p>No products found matching your search.</p>
-            ) : (
-              <p>No products added yet.</p>
-            )}
-          </div>
+          <ProductEmptyState searchQuery={searchQuery} />
         )}
       </div>
     </div>
