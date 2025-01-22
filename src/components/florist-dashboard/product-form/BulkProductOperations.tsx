@@ -7,9 +7,10 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 export interface BulkProductOperationsProps {
   floristId: string;
   onProductsUploaded: (options?: RefetchOptions) => Promise<QueryObserverResult<any[], Error>>;
+  products: any[];
 }
 
-export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkProductOperationsProps) => {
+export const BulkProductOperations = ({ floristId, onProductsUploaded, products }: BulkProductOperationsProps) => {
   const [showBulkEdit, setShowBulkEdit] = useState(false);
 
   return (
@@ -26,6 +27,8 @@ export const BulkProductOperations = ({ floristId, onProductsUploaded }: BulkPro
           <BulkEditProducts 
             onClose={() => setShowBulkEdit(false)}
             onSuccess={onProductsUploaded}
+            products={products}
+            onProductsUpdated={onProductsUploaded}
           />
         </DialogContent>
       </Dialog>
