@@ -25,12 +25,16 @@ export const FloristManagement = () => {
       // Convert operating_hours from Json to proper type and ensure proper types
       const profile: FloristProfile = {
         ...data,
-        operating_hours: data.operating_hours as Record<string, { open: string; close: string }>,
-        delivery_slot_duration: data.delivery_slot_duration as string,
-        delivery_cutoff_times: data.delivery_cutoff_times || {},
-        delivery_time_frames: data.delivery_time_frames || { morning: false, midday: false, afternoon: false },
-        coordinates: data.coordinates || null,
-        geocoded_address: data.geocoded_address || null,
+        operating_hours: (data.operating_hours || {}) as Record<string, { open: string; close: string }>,
+        delivery_slot_duration: String(data.delivery_slot_duration || ''),
+        delivery_cutoff_times: (data.delivery_cutoff_times || {}) as Record<string, string>,
+        delivery_time_frames: (data.delivery_time_frames || { 
+          morning: false, 
+          midday: false, 
+          afternoon: false 
+        }) as { morning: boolean; midday: boolean; afternoon: boolean },
+        coordinates: String(data.coordinates || ''),
+        geocoded_address: (data.geocoded_address || {}) as Record<string, any>,
       };
       
       setFloristProfile(profile);
