@@ -5,10 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface DistanceRequest {
-  origin: [number, number];
-  destination: [number, number];
-}
+console.log("Loading get-driving-distance function...")
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -17,58 +14,53 @@ serve(async (req) => {
   }
 
   try {
-    const apiKey = Deno.env.get('GOOGLE_MAPS_API_KEY')
-    if (!apiKey) {
-      console.error('Missing Google Maps API key')
-      throw new Error('Missing Google Maps API key')
-    }
-
-    const { origin, destination }: DistanceRequest = await req.json()
+    const { origin, destination } = await req.json()
     
     if (!origin || !destination) {
-      console.error('Missing required parameters:', { origin, destination })
-      throw new Error('Missing origin or destination coordinates')
+      console.error("Missing required parameters:", { origin, destination })
+      return new Response(
+        JSON.stringify({ error: "Missing origin or destination coordinates" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+      )
     }
 
-    console.log('Fetching distance with params:', { origin, destination });
+    const apiKey = Deno.env.get('GOOGLE_MAPS_API_KEY')
+    if (!apiKey) {
+      console.error("Google Maps API key not configured")
+      return new Response(
+        JSON.stringify({ error: "Google Maps API key not configured" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
+      )
+    }
 
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?` +
-      `origins=${origin[0]},${origin[1]}&destinations=${destination[0]},${destination[1]}` +
-      `&mode=driving&units=metric&key=${apiKey}`
-
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin[0]},${origin[1]}&destinations=${destination[0]},${destination[1]}&key=${apiKey}`
+    
+    console.log("Calling Google Maps API...")
     const response = await fetch(url)
     const data = await response.json()
 
-    console.log('Google Maps API response:', data);
+    console.log("Google Maps API response:", data)
 
-    if (data.status !== 'OK' || !data.rows?.[0]?.elements?.[0]?.distance?.value) {
-      console.error('Invalid Google Maps API response:', data);
-      throw new Error(`Google Maps API error: ${data.status} - ${data.error_message || 'Unknown error'}`)
+    if (!data.rows?.[0]?.elements?.[0]?.distance?.value) {
+      console.error("Invalid response from Google Maps API:", data)
+      return new Response(
+        JSON.stringify({ error: "Invalid response from Google Maps API", details: data }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+      )
     }
 
-    // Convert meters to kilometers
-    const distanceKm = data.rows[0].elements[0].distance.value / 1000
-
+    const distance = data.rows[0].elements[0].distance.value / 1000 // Convert to km
+    
     return new Response(
-      JSON.stringify({ distance: distanceKm }),
-      { 
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
-      },
+      JSON.stringify({ distance }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
+
   } catch (error) {
-    console.error('Error:', error.message)
+    console.error("Error in get-driving-distance:", error)
     return new Response(
       JSON.stringify({ error: error.message }),
-      { 
-        status: 400,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
-      },
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     )
   }
 })
