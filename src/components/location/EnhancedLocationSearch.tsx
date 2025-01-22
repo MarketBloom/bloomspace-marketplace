@@ -1,19 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { supabase } from '@/integrations/supabase/client';
 import { ChevronDown, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-interface LocationOption {
-  suburb: string;
-  state: string;
-  postcode: string;
-  latitude: number;
-  longitude: number;
-}
+import { AUSTRALIAN_SUBURBS, Suburb } from '@/data/australian-suburbs';
 
 interface EnhancedLocationSearchProps {
-  onLocationSelect: (location: LocationOption) => void;
+  onLocationSelect: (location: {
+    suburb: string;
+    state: string;
+    postcode: string;
+    latitude: number;
+    longitude: number;
+  }) => void;
   placeholder?: string;
   className?: string;
 }
@@ -26,7 +24,7 @@ export const EnhancedLocationSearch = ({
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<LocationOption[]>([]);
+  const [results, setResults] = useState<Suburb[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,10 +38,10 @@ export const EnhancedLocationSearch = ({
     }
     acc[location.state].push(location);
     return acc;
-  }, {} as Record<string, LocationOption[]>);
+  }, {} as Record<string, Suburb[]>);
 
   useEffect(() => {
-    const fetchLocations = async () => {
+    const searchLocations = () => {
       if (!debouncedValue.trim()) {
         setResults([]);
         setIsLoading(false);
@@ -52,26 +50,20 @@ export const EnhancedLocationSearch = ({
 
       setIsLoading(true);
       try {
-        console.log('Fetching suburbs for:', debouncedValue);
-        const { data, error } = await supabase
-          .from('australian_suburbs')
-          .select('*')
-          .ilike('suburb', `${debouncedValue}%`)
-          .order('suburb', { ascending: true })
-          .limit(20);
+        console.log('Searching suburbs for:', debouncedValue);
+        
+        // Filter suburbs that start with the search term (case-insensitive)
+        const filteredResults = AUSTRALIAN_SUBURBS.filter(suburb => 
+          suburb.suburb.toLowerCase().startsWith(debouncedValue.toLowerCase())
+        ).slice(0, 20); // Limit to 20 results for performance
 
-        if (error) {
-          console.error('Error fetching locations:', error);
-          throw error;
-        }
-
-        console.log('Suburbs found:', data);
-        setResults(data || []);
+        console.log('Suburbs found:', filteredResults);
+        setResults(filteredResults);
       } catch (error) {
-        console.error('Error fetching locations:', error);
+        console.error('Error searching locations:', error);
         toast({
           title: "Error",
-          description: "Failed to fetch locations. Please try again.",
+          description: "Failed to search locations. Please try again.",
           variant: "destructive"
         });
         setResults([]);
@@ -80,7 +72,7 @@ export const EnhancedLocationSearch = ({
       }
     };
 
-    fetchLocations();
+    searchLocations();
   }, [debouncedValue, toast]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -101,7 +93,7 @@ export const EnhancedLocationSearch = ({
     }
   };
 
-  const handleSelect = (location: LocationOption) => {
+  const handleSelect = (location: Suburb) => {
     setInputValue(`${location.suburb}, ${location.state} ${location.postcode}`);
     onLocationSelect(location);
     setIsOpen(false);
