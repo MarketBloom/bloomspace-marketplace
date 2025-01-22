@@ -7,6 +7,7 @@ interface OrderStatusActionsProps {
 }
 
 export const OrderStatusActions = ({ status, onStatusChange }: OrderStatusActionsProps) => {
+  // Early return if status is final (cancelled or delivered)
   if (status === "cancelled" || status === "delivered") {
     return null;
   }
@@ -61,14 +62,13 @@ export const OrderStatusActions = ({ status, onStatusChange }: OrderStatusAction
           Resume Delivery
         </Button>
       )}
-      {status !== "cancelled" && status !== "delivered" && (
-        <Button 
-          variant="destructive"
-          onClick={() => onStatusChange("cancelled")}
-        >
-          Cancel Order
-        </Button>
-      )}
+      {/* Show cancel button for all non-final statuses */}
+      <Button 
+        variant="destructive"
+        onClick={() => onStatusChange("cancelled")}
+      >
+        Cancel Order
+      </Button>
     </div>
   );
 };
