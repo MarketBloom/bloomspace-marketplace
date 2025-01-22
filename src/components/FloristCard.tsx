@@ -10,7 +10,10 @@ import { SocialLinks } from "./florist-card/SocialLinks";
 interface FloristCardProps {
   id: string;
   storeName: string;
-  address: string;
+  streetAddress?: string;
+  suburb?: string;
+  state?: string;
+  postcode?: string;
   aboutText?: string | null;
   bannerUrl?: string | null;
   logoUrl?: string | null;
@@ -28,7 +31,10 @@ interface FloristCardProps {
 export const FloristCard = ({
   id,
   storeName,
-  address,
+  streetAddress,
+  suburb,
+  state,
+  postcode,
   aboutText,
   bannerUrl,
   logoUrl,
@@ -137,6 +143,14 @@ export const FloristCard = ({
     navigate(`/florist/${id}`);
   };
 
+  // Format full address from components
+  const formattedAddress = [
+    streetAddress,
+    suburb,
+    state,
+    postcode
+  ].filter(Boolean).join(', ');
+
   return (
     <div 
       className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
@@ -152,7 +166,7 @@ export const FloristCard = ({
       />
       <FloristInfo
         storeName={storeName}
-        address={address}
+        address={formattedAddress}
         aboutText={aboutText}
         operatingHours={operatingHours}
         deliveryFee={deliveryFee}

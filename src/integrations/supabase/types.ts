@@ -147,7 +147,6 @@ export type Database = {
       florist_profiles: {
         Row: {
           about_text: string | null
-          address: string
           banner_url: string | null
           commission_rate: number | null
           coordinates: unknown | null
@@ -169,19 +168,22 @@ export type Database = {
           minimum_order_amount: number | null
           operating_hours: Json | null
           pickup_only_days: string[] | null
+          postcode: string | null
           premium_since: string | null
           same_day_enabled: boolean | null
           setup_completed_at: string | null
           setup_progress: number | null
           social_links: Json | null
+          state: string | null
           store_name: string
           store_status: string | null
+          street_address: string
+          suburb: string | null
           updated_at: string
           verified: boolean | null
         }
         Insert: {
           about_text?: string | null
-          address: string
           banner_url?: string | null
           commission_rate?: number | null
           coordinates?: unknown | null
@@ -203,19 +205,22 @@ export type Database = {
           minimum_order_amount?: number | null
           operating_hours?: Json | null
           pickup_only_days?: string[] | null
+          postcode?: string | null
           premium_since?: string | null
           same_day_enabled?: boolean | null
           setup_completed_at?: string | null
           setup_progress?: number | null
           social_links?: Json | null
+          state?: string | null
           store_name: string
           store_status?: string | null
+          street_address: string
+          suburb?: string | null
           updated_at?: string
           verified?: boolean | null
         }
         Update: {
           about_text?: string | null
-          address?: string
           banner_url?: string | null
           commission_rate?: number | null
           coordinates?: unknown | null
@@ -237,13 +242,17 @@ export type Database = {
           minimum_order_amount?: number | null
           operating_hours?: Json | null
           pickup_only_days?: string[] | null
+          postcode?: string | null
           premium_since?: string | null
           same_day_enabled?: boolean | null
           setup_completed_at?: string | null
           setup_progress?: number | null
           social_links?: Json | null
+          state?: string | null
           store_name?: string
           store_status?: string | null
+          street_address?: string
+          suburb?: string | null
           updated_at?: string
           verified?: boolean | null
         }

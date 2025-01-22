@@ -25,7 +25,10 @@ export const FloristGrid = ({ florists }: FloristGridProps) => {
           <FloristCard 
             id={florist.id}
             storeName={florist.store_name}
-            address={florist.address}
+            streetAddress={florist.street_address}
+            suburb={florist.suburb}
+            state={florist.state}
+            postcode={florist.postcode}
             aboutText={florist.about_text}
             logoUrl={florist.logo_url}
             bannerUrl={florist.banner_url}
