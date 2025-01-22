@@ -48,7 +48,10 @@ const FloristManagement = () => {
     }
   };
 
-  if (!user || !floristProfile) return null;dLayout>
+  if (!user || !floristProfile) return null;
+
+  return (
+    <DashboardLayout>
       <div className="p-6">
         <div className="max-w-[1200px] mx-auto">
           <h1 className="text-3xl font-bold mb-2">Store Management</h1>
