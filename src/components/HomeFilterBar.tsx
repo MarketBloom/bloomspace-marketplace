@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocationSearch } from "./location/LocationSearch";
 import { DateFilter } from "./home-filters/DateFilter";
