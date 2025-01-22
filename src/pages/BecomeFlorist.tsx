@@ -66,16 +66,8 @@ const BecomeFlorist = () => {
     setLoading(true);
     try {
       const { error: profileError } = await supabase
-        .from("profiles")
-        .update({ role: "florist" })
-        .eq("id", user.id);
-
-      if (profileError) throw profileError;
-
-      const { error: floristError } = await supabase
         .from("florist_profiles")
-        .insert({
-          id: user.id,
+        .update({
           store_name: formData.storeName,
           street_address: formData.street_address,
           suburb: formData.suburb,
@@ -91,9 +83,10 @@ const BecomeFlorist = () => {
           delivery_days: formData.deliveryDays,
           pickup_only_days: formData.pickupOnlyDays,
           delivery_cutoff_times: formData.cutoffTimes
-        });
+        })
+        .eq("id", user.id);
 
-      if (floristError) throw floristError;
+      if (profileError) throw profileError;
 
       toast.success("Your florist profile has been created!");
       navigate("/florist-dashboard");
@@ -166,14 +159,6 @@ const BecomeFlorist = () => {
             </h1>
             <div className="flex justify-between items-center mb-6">
               <StepIndicator currentStep={step} totalSteps={4} />
-              <Button
-                variant="ghost"
-                onClick={handleSkip}
-                disabled={loading}
-                className="text-muted-foreground hover:text-primary"
-              >
-                Skip for now
-              </Button>
             </div>
             <form onSubmit={(e) => e.preventDefault()}>
               {renderStep()}
