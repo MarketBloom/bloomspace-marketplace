@@ -22,10 +22,15 @@ export const FloristManagement = () => {
 
       if (error) throw error;
       
-      // Convert operating_hours from Json to proper type
-      const profile = {
+      // Convert operating_hours from Json to proper type and ensure proper types
+      const profile: FloristProfile = {
         ...data,
-        operating_hours: data.operating_hours as Record<string, { open: string; close: string }>
+        operating_hours: data.operating_hours as Record<string, { open: string; close: string }>,
+        delivery_slot_duration: data.delivery_slot_duration as string,
+        delivery_cutoff_times: data.delivery_cutoff_times || {},
+        delivery_time_frames: data.delivery_time_frames || { morning: false, midday: false, afternoon: false },
+        coordinates: data.coordinates || null,
+        geocoded_address: data.geocoded_address || null,
       };
       
       setFloristProfile(profile);

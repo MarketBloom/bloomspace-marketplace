@@ -22,7 +22,7 @@ const StoreManagement = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as unknown as FloristProfile;
+      return data as FloristProfile;
     },
     enabled: !!user,
   });
@@ -63,7 +63,7 @@ const StoreManagement = () => {
             <CardContent className="p-6">
               <StoreSettingsForm
                 initialData={floristProfile}
-                onUpdate={handleStoreSettingsSubmit}
+                onSubmit={handleStoreSettingsSubmit}
                 loading={loading}
               />
             </CardContent>
