@@ -3,6 +3,7 @@ import { AddProductForm } from "./AddProductForm";
 import { ProductList } from "./ProductList";
 import { BulkProductOperations } from "./product-form/BulkProductOperations";
 import { BulkEditProducts } from "./product-form/BulkEditProducts";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Accordion,
   AccordionContent,

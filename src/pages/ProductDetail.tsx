@@ -23,8 +23,9 @@ const FloristDetail = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading florist details</div>;
+  if (!floristProfile) return <div>No florist profile found</div>;
 
-  const fullAddress = `${floristProfile.street_address}, ${floristProfile.suburb}, ${floristProfile.state} ${floristProfile.postcode}`;
+  const fullAddress = `${floristProfile.street_address}, ${floristProfile.suburb || ''}, ${floristProfile.state || ''} ${floristProfile.postcode || ''}`;
 
   return (
     <div className="space-y-2">
