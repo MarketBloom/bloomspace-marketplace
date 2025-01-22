@@ -4,6 +4,8 @@ import { LocationFilter } from "./LocationFilter";
 import { DateFilter } from "./filters/DateFilter";
 import { BudgetFilter } from "./filters/BudgetFilter";
 import { FulfillmentToggle } from "./filters/FulfillmentToggle";
+import { CategoryFilter } from "./filters/CategoryFilter";
+import { OccasionFilter } from "./filters/OccasionFilter";
 import { Button } from "./ui/button";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +15,8 @@ interface FilterBarProps {
   initialDate?: Date;
   initialBudget?: number[];
   initialLocation?: string;
+  initialCategories?: string[];
+  initialOccasions?: string[];
   onFilterChange?: (updates: Record<string, string>) => void;
 }
 
@@ -21,6 +25,8 @@ export const FilterBar = ({
   initialDate,
   initialBudget = [500],
   initialLocation = "",
+  initialCategories = [],
+  initialOccasions = [],
   onFilterChange
 }: FilterBarProps) => {
   const navigate = useNavigate();
@@ -30,6 +36,8 @@ export const FilterBar = ({
   const [location, setLocation] = useState<string>(initialLocation);
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<"pickup" | "delivery">(initialFulfillmentType);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
+  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(initialOccasions);
   const [isSearching, setIsSearching] = useState(false);
 
   const handleApplyFilters = () => {
@@ -38,7 +46,6 @@ export const FilterBar = ({
     setIsSearching(true);
     
     try {
-      // Only proceed with search if we have both location and coordinates when location is entered
       if (location && !coordinates) {
         toast({
           title: "Location Error",
@@ -50,23 +57,19 @@ export const FilterBar = ({
 
       const updates: Record<string, string> = {};
       
-      // Only include location params if we have both location text and coordinates
       if (location && coordinates) {
         updates.location = location;
         updates.lat = coordinates[0].toString();
         updates.lng = coordinates[1].toString();
       }
       
-      // If date is today, also include the current time to filter by cutoff
       if (date) {
         const now = new Date();
         const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
         
         if (isToday) {
-          // Include current time for same-day filtering
           updates.date = now.toISOString();
         } else {
-          // For future dates, just include the date
           updates.date = date.toISOString();
         }
       }
@@ -74,10 +77,17 @@ export const FilterBar = ({
       updates.budget = budget[0].toString();
       updates.fulfillment = fulfillmentType;
 
+      if (selectedCategories.length > 0) {
+        updates.categories = selectedCategories.join(',');
+      }
+
+      if (selectedOccasions.length > 0) {
+        updates.occasions = selectedOccasions.join(',');
+      }
+
       if (onFilterChange) {
         onFilterChange(updates);
       } else {
-        // If no onFilterChange provided, navigate to search page
         const searchParams = new URLSearchParams(updates);
         navigate({
           pathname: "/search",
@@ -114,7 +124,7 @@ export const FilterBar = ({
         </div>
         
         {/* Filter Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <DateFilter 
             date={date} 
             setDate={setDate} 
@@ -128,6 +138,16 @@ export const FilterBar = ({
           <FulfillmentToggle
             fulfillmentType={fulfillmentType}
             setFulfillmentType={setFulfillmentType}
+          />
+
+          <CategoryFilter
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+          />
+
+          <OccasionFilter
+            selectedOccasions={selectedOccasions}
+            setSelectedOccasions={setSelectedOccasions}
           />
         </div>
       </div>
