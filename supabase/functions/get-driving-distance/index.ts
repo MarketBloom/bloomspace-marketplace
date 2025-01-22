@@ -35,8 +35,16 @@ serve(async (req) => {
       )
     }
 
-    console.log("Making request to Google Maps API...")
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin[0]},${origin[1]}&destinations=${destination[0]},${destination[1]}&key=${apiKey}`
+    // Format coordinates properly for Google Maps API
+    const originStr = `${origin.lat},${origin.lng}`
+    const destinationStr = `${destination.lat},${destination.lng}`
+
+    console.log("Making request to Google Maps API with coordinates:", {
+      origin: originStr,
+      destination: destinationStr
+    })
+
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${originStr}&destinations=${destinationStr}&key=${apiKey}`
     
     console.log("Request URL (without API key):", url.replace(apiKey, 'API_KEY'))
     const response = await fetch(url)
