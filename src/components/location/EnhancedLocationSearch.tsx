@@ -67,6 +67,7 @@ export const EnhancedLocationSearch = ({
           description: "Failed to fetch locations. Please try again.",
           variant: "destructive"
         });
+        setResults([]);
       } finally {
         setIsLoading(false);
       }
