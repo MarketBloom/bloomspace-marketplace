@@ -102,9 +102,10 @@ export const FilterBar = ({
   };
 
   return (
-    <div className="bg-[#eed2d8]/70 rounded-2xl border border-black/10 shadow-sm p-6 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="col-span-1 md:col-span-4">
+    <div className="bg-[#eed2d8]/70 backdrop-blur-sm rounded-2xl border border-black/10 shadow-sm p-6">
+      <div className="space-y-4">
+        {/* Location Filter - Full Width */}
+        <div className="w-full">
           <LocationFilter 
             location={location}
             setLocation={setLocation}
@@ -112,17 +113,18 @@ export const FilterBar = ({
           />
         </div>
         
-        <DateFilter 
-          date={date} 
-          setDate={setDate} 
-        />
-        
-        <BudgetFilter 
-          budget={budget} 
-          setBudget={setBudget} 
-        />
-        
-        <div className="col-span-1 md:col-span-2">
+        {/* Filter Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <DateFilter 
+            date={date} 
+            setDate={setDate} 
+          />
+          
+          <BudgetFilter 
+            budget={budget} 
+            setBudget={setBudget} 
+          />
+          
           <FulfillmentToggle
             fulfillmentType={fulfillmentType}
             setFulfillmentType={setFulfillmentType}
@@ -130,13 +132,15 @@ export const FilterBar = ({
         </div>
       </div>
       
-      <Button 
-        onClick={handleApplyFilters}
-        disabled={isSearching || !!(location && !coordinates)}
-        className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black h-[42px]"
-      >
-        Search Flowers
-      </Button>
+      <div className="mt-4">
+        <Button 
+          onClick={handleApplyFilters}
+          disabled={isSearching || !!(location && !coordinates)}
+          className="w-full bg-[#C5E1A5] hover:bg-[#C5E1A5]/90 text-black h-[42px]"
+        >
+          Search Flowers
+        </Button>
+      </div>
     </div>
   );
 };
