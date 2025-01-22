@@ -11,32 +11,26 @@ import type { FloristProfile } from "@/types/florist";
 interface StoreSettingsFormProps {
   initialData?: Partial<FloristProfile>;
   onSubmit?: () => void;
+  loading?: boolean;
 }
 
-export const StoreSettingsForm = ({ initialData, onSubmit }: StoreSettingsFormProps) => {
+export const StoreSettingsForm = ({ initialData, onSubmit, loading }: StoreSettingsFormProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     store_name: initialData?.store_name || "",
     street_address: initialData?.street_address || "",
     about_text: initialData?.about_text || "",
-    delivery_fee: initialData?.delivery_fee || 0,
-    delivery_radius: initialData?.delivery_radius || 5,
-    minimum_order_amount: initialData?.minimum_order_amount || 0,
+    delivery_fee: initialData?.delivery_fee?.toString() || "0",
+    delivery_radius: initialData?.delivery_radius?.toString() || "5",
+    minimum_order_amount: initialData?.minimum_order_amount?.toString() || "0",
     coordinates: initialData?.coordinates || null,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    let parsedValue = value;
-    
-    // Handle numeric fields
-    if (name === 'delivery_fee' || name === 'delivery_radius' || name === 'minimum_order_amount') {
-      parsedValue = parseFloat(value) || 0;
-    }
-
     setFormData(prev => ({
       ...prev,
-      [name]: parsedValue
+      [name]: value
     }));
   };
 
@@ -54,7 +48,12 @@ export const StoreSettingsForm = ({ initialData, onSubmit }: StoreSettingsFormPr
     try {
       const { error } = await supabase
         .from('florist_profiles')
-        .update(formData)
+        .update({
+          ...formData,
+          delivery_fee: parseFloat(formData.delivery_fee),
+          delivery_radius: parseFloat(formData.delivery_radius),
+          minimum_order_amount: parseFloat(formData.minimum_order_amount),
+        })
         .eq('id', initialData?.id);
 
       if (error) throw error;
@@ -152,8 +151,8 @@ export const StoreSettingsForm = ({ initialData, onSubmit }: StoreSettingsFormPr
         </div>
       </div>
 
-      <Button type="submit" className="w-full">
-        Save Changes
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Saving..." : "Save Changes"}
       </Button>
     </form>
   );

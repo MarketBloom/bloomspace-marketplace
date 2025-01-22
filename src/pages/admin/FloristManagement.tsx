@@ -6,6 +6,7 @@ import type { FloristProfile } from "@/types/florist";
 
 export const FloristManagement = () => {
   const [floristProfile, setFloristProfile] = useState<FloristProfile | null>(null);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -14,12 +15,19 @@ export const FloristManagement = () => {
 
   const fetchFloristProfile = async () => {
     try {
-      const { data: profile, error } = await supabase
+      const { data, error } = await supabase
         .from('florist_profiles')
         .select('*')
         .single();
 
       if (error) throw error;
+      
+      // Convert operating_hours from Json to proper type
+      const profile = {
+        ...data,
+        operating_hours: data.operating_hours as Record<string, { open: string; close: string }>
+      };
+      
       setFloristProfile(profile);
     } catch (error) {
       console.error('Error fetching florist profile:', error);
@@ -31,8 +39,13 @@ export const FloristManagement = () => {
     }
   };
 
-  const handleProfileUpdate = () => {
-    fetchFloristProfile();
+  const handleProfileUpdate = async () => {
+    setLoading(true);
+    try {
+      await fetchFloristProfile();
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,6 +55,7 @@ export const FloristManagement = () => {
         <StoreSettingsForm 
           initialData={floristProfile || undefined}
           onSubmit={handleProfileUpdate}
+          loading={loading}
         />
       </div>
     </div>
