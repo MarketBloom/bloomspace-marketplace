@@ -65,6 +65,78 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -33.8960,
     longitude: 151.1786
   },
+  // Additional Sydney Metro
+  {
+    suburb: "Mosman",
+    state: "NSW",
+    postcode: "2088",
+    latitude: -33.8296,
+    longitude: 151.2467
+  },
+  {
+    suburb: "Paddington",
+    state: "NSW", 
+    postcode: "2021",
+    latitude: -33.8858,
+    longitude: 151.2261
+  },
+  {
+    suburb: "Balmain",
+    state: "NSW",
+    postcode: "2041", 
+    latitude: -33.8567,
+    longitude: 151.1821
+  },
+  {
+    suburb: "Coogee",
+    state: "NSW",
+    postcode: "2034",
+    latitude: -33.9198,
+    longitude: 151.2591
+  },
+  {
+    suburb: "Randwick",
+    state: "NSW", 
+    postcode: "2031",
+    latitude: -33.9132,
+    longitude: 151.2423
+  },
+  {
+    suburb: "Neutral Bay",
+    state: "NSW",
+    postcode: "2089",
+    latitude: -33.8351,
+    longitude: 151.2175
+  },
+  {
+    suburb: "Cremorne",
+    state: "NSW",
+    postcode: "2090",
+    latitude: -33.8258,
+    longitude: 151.2244
+  },
+  {
+    suburb: "Lane Cove",
+    state: "NSW",
+    postcode: "2066",
+    latitude: -33.8142,
+    longitude: 151.1674
+  },
+  {
+    suburb: "Woollahra",
+    state: "NSW",
+    postcode: "2025",
+    latitude: -33.8867,
+    longitude: 151.2412
+  },
+  {
+    suburb: "Rose Bay",
+    state: "NSW",
+    postcode: "2029",
+    latitude: -33.8714,
+    longitude: 151.2673
+  },
+
   // Melbourne Metro
   {
     suburb: "Melbourne",
@@ -115,6 +187,64 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -37.8404,
     longitude: 145.0199
   },
+  // Additional Melbourne Metro
+  {
+    suburb: "Fitzroy",
+    state: "VIC",
+    postcode: "3065",
+    latitude: -37.7983,
+    longitude: 144.9783
+  },
+  {
+    suburb: "Prahran",
+    state: "VIC",
+    postcode: "3181",
+    latitude: -37.8485,
+    longitude: 144.9931
+  },
+  {
+    suburb: "Brunswick",
+    state: "VIC",
+    postcode: "3056",
+    latitude: -37.7667,
+    longitude: 144.9667
+  },
+  {
+    suburb: "Hawthorn",
+    state: "VIC",
+    postcode: "3122",
+    latitude: -37.8225,
+    longitude: 145.0345
+  },
+  {
+    suburb: "Malvern",
+    state: "VIC",
+    postcode: "3144",
+    latitude: -37.8583,
+    longitude: 145.0306
+  },
+  {
+    suburb: "Camberwell",
+    state: "VIC",
+    postcode: "3124",
+    latitude: -37.8314,
+    longitude: 145.0769
+  },
+  {
+    suburb: "Albert Park",
+    state: "VIC",
+    postcode: "3206",
+    latitude: -37.8417,
+    longitude: 144.9567
+  },
+  {
+    suburb: "Elwood",
+    state: "VIC",
+    postcode: "3184",
+    latitude: -37.8833,
+    longitude: 144.9833
+  },
+
   // Brisbane Metro
   {
     suburb: "Brisbane",
@@ -165,6 +295,50 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -28.0297,
     longitude: 153.4343
   },
+  // Additional Brisbane Metro
+  {
+    suburb: "Hamilton",
+    state: "QLD",
+    postcode: "4007",
+    latitude: -27.4333,
+    longitude: 153.0667
+  },
+  {
+    suburb: "Bulimba",
+    state: "QLD",
+    postcode: "4171",
+    latitude: -27.4517,
+    longitude: 153.0564
+  },
+  {
+    suburb: "Ascot",
+    state: "QLD",
+    postcode: "4007",
+    latitude: -27.4333,
+    longitude: 153.0583
+  },
+  {
+    suburb: "West End",
+    state: "QLD",
+    postcode: "4101",
+    latitude: -27.4833,
+    longitude: 153.0167
+  },
+  {
+    suburb: "Teneriffe",
+    state: "QLD",
+    postcode: "4005",
+    latitude: -27.4667,
+    longitude: 153.0500
+  },
+  {
+    suburb: "Kangaroo Point",
+    state: "QLD",
+    postcode: "4169",
+    latitude: -27.4667,
+    longitude: 153.0333
+  },
+
   // Perth Metro
   {
     suburb: "Perth",
@@ -201,6 +375,43 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -31.9841,
     longitude: 115.8593
   },
+  // Additional Perth Metro
+  {
+    suburb: "Claremont",
+    state: "WA",
+    postcode: "6010",
+    latitude: -31.9833,
+    longitude: 115.7833
+  },
+  {
+    suburb: "Nedlands",
+    state: "WA",
+    postcode: "6009",
+    latitude: -31.9833,
+    longitude: 115.8000
+  },
+  {
+    suburb: "Applecross",
+    state: "WA",
+    postcode: "6153",
+    latitude: -32.0167,
+    longitude: 115.8333
+  },
+  {
+    suburb: "Mount Lawley",
+    state: "WA",
+    postcode: "6050",
+    latitude: -31.9333,
+    longitude: 115.8833
+  },
+  {
+    suburb: "Leederville",
+    state: "WA",
+    postcode: "6007",
+    latitude: -31.9333,
+    longitude: 115.8417
+  },
+
   // Adelaide Metro
   {
     suburb: "Adelaide",
@@ -237,6 +448,43 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -34.9214,
     longitude: 138.6300
   },
+  // Additional Adelaide Metro
+  {
+    suburb: "Prospect",
+    state: "SA",
+    postcode: "5082",
+    latitude: -34.8833,
+    longitude: 138.6000
+  },
+  {
+    suburb: "Burnside",
+    state: "SA",
+    postcode: "5066",
+    latitude: -34.9333,
+    longitude: 138.6500
+  },
+  {
+    suburb: "Walkerville",
+    state: "SA",
+    postcode: "5081",
+    latitude: -34.8833,
+    longitude: 138.6167
+  },
+  {
+    suburb: "Hyde Park",
+    state: "SA",
+    postcode: "5061",
+    latitude: -34.9500,
+    longitude: 138.6000
+  },
+  {
+    suburb: "Goodwood",
+    state: "SA",
+    postcode: "5034",
+    latitude: -34.9500,
+    longitude: 138.5833
+  },
+
   // Hobart Metro
   {
     suburb: "Hobart",
@@ -266,6 +514,29 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     latitude: -42.8775,
     longitude: 147.3186
   },
+  // Additional Hobart Metro
+  {
+    suburb: "Mount Stuart",
+    state: "TAS",
+    postcode: "7000",
+    latitude: -42.8667,
+    longitude: 147.3000
+  },
+  {
+    suburb: "South Hobart",
+    state: "TAS",
+    postcode: "7004",
+    latitude: -42.8917,
+    longitude: 147.3083
+  },
+  {
+    suburb: "West Hobart",
+    state: "TAS",
+    postcode: "7000",
+    latitude: -42.8833,
+    longitude: 147.3167
+  },
+
   // Darwin Metro
   {
     suburb: "Darwin",
@@ -294,5 +565,27 @@ export const AUSTRALIAN_SUBURBS: Suburb[] = [
     postcode: "0810",
     latitude: -12.3787,
     longitude: 130.8451
+  },
+  // Additional Darwin Metro
+  {
+    suburb: "Larrakeyah",
+    state: "NT",
+    postcode: "0820",
+    latitude: -12.4500,
+    longitude: 130.8333
+  },
+  {
+    suburb: "Stuart Park",
+    state: "NT",
+    postcode: "0820",
+    latitude: -12.4667,
+    longitude: 130.8500
+  },
+  {
+    suburb: "Parap",
+    state: "NT",
+    postcode: "0820",
+    latitude: -12.4333,
+    longitude: 130.8417
   }
 ];
