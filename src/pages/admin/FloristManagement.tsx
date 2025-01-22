@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import type { FloristProfile } from "@/types/florist";
 
-const StoreManagement = () => {
+const FloristManagement = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ const StoreManagement = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as unknown as FloristProfile;
+      return data as FloristProfile;
     },
     enabled: !!user,
   });
@@ -48,10 +48,7 @@ const StoreManagement = () => {
     }
   };
 
-  if (!user || !floristProfile) return null;
-
-  return (
-    <DashboardLayout>
+  if (!user || !floristProfile) return null;dLayout>
       <div className="p-6">
         <div className="max-w-[1200px] mx-auto">
           <h1 className="text-3xl font-bold mb-2">Store Management</h1>
@@ -74,4 +71,4 @@ const StoreManagement = () => {
   );
 };
 
-export default StoreManagement;
+export default FloristManagement;

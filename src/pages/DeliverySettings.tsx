@@ -44,7 +44,10 @@ const DeliverySettings = () => {
           same_day_enabled: true,
           operating_hours: formData.operatingHours,
           store_name: floristProfile.store_name,
-          address: floristProfile.address
+          street_address: floristProfile.street_address,
+          suburb: floristProfile.suburb,
+          state: floristProfile.state,
+          postcode: floristProfile.postcode
         })
         .eq("id", user.id);
 

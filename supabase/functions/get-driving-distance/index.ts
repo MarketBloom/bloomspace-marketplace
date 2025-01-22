@@ -41,7 +41,7 @@ serve(async (req) => {
 
     if (data.status !== 'OK' || !data.rows?.[0]?.elements?.[0]?.distance?.value) {
       console.error('Invalid Google Maps API response:', data);
-      throw new Error('Invalid response from Google Maps API')
+      throw new Error(`Google Maps API error: ${data.status} - ${data.error_message || 'Unknown error'}`)
     }
 
     // Convert meters to kilometers
