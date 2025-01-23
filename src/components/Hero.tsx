@@ -7,7 +7,7 @@ export const Hero = () => {
     <>
       <MobileHero />
       <section className="relative h-[calc(50vh-80px)] min-h-[520px] hidden md:flex items-center justify-center bg-[#FFFFFF]">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 z-0">
           <img 
             src="/lovable-uploads/772494bc-3f97-4373-a19b-a65990d45123.png"
             alt="Beautiful pink and coral carnations arranged with dramatic shadows"
