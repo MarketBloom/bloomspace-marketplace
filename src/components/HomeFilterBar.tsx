@@ -225,84 +225,100 @@ export const HomeFilterBar = () => {
   };
 
   return (
-    <ShineBorder 
-      borderRadius={8}
-      borderWidth={1}
-      duration={14}
-      color={["#D73459", "#eed2d8"]}
-      className="w-full bg-[#eed2d8]/80 backdrop-blur-sm px-3 py-4 md:p-5 mt-0 md:mt-0"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2 relative">
-          <label className="text-foreground text-xs font-medium">Location</label>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Enter suburb or postcode..."
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            role="combobox"
-            aria-expanded={suggestions.length > 0}
-            aria-controls="suburb-listbox"
-            aria-activedescendant=""
-          />
-          {suggestions.length > 0 && (
-            <ul
-              id="suburb-listbox"
-              role="listbox"
-              className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
-            >
-              {suggestions.map((suggestion, index) => (
-                <li
-                  key={`${suggestion.suburb}-${suggestion.postcode}`}
-                  role="option"
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                  onClick={() => {
-                    setLocation(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
-                    setCoordinates([suggestion.latitude, suggestion.longitude]);
-                    setSearchTerm(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
-                    setSuggestions([]);
-                  }}
-                >
-                  {suggestion.suburb}, {suggestion.state} {suggestion.postcode}
-                </li>
-              ))}
-            </ul>
-          )}
-          {isLoadingSuggestions && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
-            </div>
-          )}
-        </div>
-        <DateFilter 
-          date={date} 
-          setDate={setDate} 
-        />
-        <BudgetFilter 
-          budget={budget} 
-          setBudget={setBudget} 
-        />
-      </div>
+    <div className="relative">
+      <div 
+        className="absolute inset-0 bg-[#eed2d8]/60 backdrop-blur-[8px] rounded-lg"
+        style={{
+          boxShadow: `
+            0 4px 6px rgba(0, 0, 0, 0.05),
+            0 10px 15px rgba(0, 0, 0, 0.03),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1)
+          `,
+        }}
+      />
       
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <RainbowButton 
-          onClick={() => handleSearch("delivery")}
-          className="w-full text-sm h-[42px]"
-          disabled={isSearching || !!(location && !coordinates)}
-        >
-          <Truck className="w-4 h-4 mr-2" />
-          Search Delivery
-        </RainbowButton>
-        <Button 
-          className="bg-white hover:bg-white/90 text-black text-sm h-[42px] w-full rounded-lg border border-black"
-          onClick={() => handleSearch("pickup")}
-          disabled={isSearching || !!(location && !coordinates)}
-        >
-          <ShoppingBag className="w-4 h-4 mr-2" />
-          Search Pickup
-        </Button>
-      </div>
-    </ShineBorder>
+      <ShineBorder 
+        borderRadius={8}
+        borderWidth={1}
+        duration={14}
+        color={["#D73459", "#eed2d8"]}
+        className="relative z-10 w-full px-3 py-4 md:p-5 mt-0 md:mt-0"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2 relative">
+            <label className="text-foreground text-xs font-medium">Location</label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Enter suburb or postcode..."
+              className="w-full px-3 py-2 rounded-lg bg-white/90 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#D73459] focus:border-transparent transition-all duration-200"
+              role="combobox"
+              aria-expanded={suggestions.length > 0}
+              aria-controls="suburb-listbox"
+              aria-activedescendant=""
+            />
+            {suggestions.length > 0 && (
+              <ul
+                id="suburb-listbox"
+                role="listbox"
+                className="absolute z-50 w-full mt-1 bg-white/90 backdrop-blur-sm border border-black/10 rounded-md shadow-lg max-h-60 overflow-auto"
+              >
+                {suggestions.map((suggestion, index) => (
+                  <li
+                    key={`${suggestion.suburb}-${suggestion.postcode}`}
+                    role="option"
+                    className="px-4 py-2 hover:bg-black/5 cursor-pointer text-sm transition-colors duration-150"
+                    onClick={() => {
+                      setLocation(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
+                      setCoordinates([suggestion.latitude, suggestion.longitude]);
+                      setSearchTerm(`${suggestion.suburb}, ${suggestion.state} ${suggestion.postcode}`);
+                      setSuggestions([]);
+                    }}
+                  >
+                    {suggestion.suburb}, {suggestion.state} {suggestion.postcode}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {isLoadingSuggestions && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#D73459]"></div>
+              </div>
+            )}
+          </div>
+          
+          <DateFilter 
+            date={date} 
+            setDate={setDate} 
+          />
+          
+          <BudgetFilter 
+            budget={budget} 
+            setBudget={setBudget} 
+          />
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <RainbowButton 
+            onClick={() => handleSearch("delivery")}
+            className="w-full text-sm h-[42px]"
+            disabled={isSearching || !!(location && !coordinates)}
+          >
+            <Truck className="w-4 h-4 mr-2" />
+            Search Delivery
+          </RainbowButton>
+          
+          <Button 
+            className="bg-white hover:bg-white/90 text-black text-sm h-[42px] w-full rounded-lg border border-black/10 transition-all duration-200"
+            onClick={() => handleSearch("pickup")}
+            disabled={isSearching || !!(location && !coordinates)}
+          >
+            <ShoppingBag className="w-4 h-4 mr-2" />
+            Search Pickup
+          </Button>
+        </div>
+      </ShineBorder>
+    </div>
   );
 };
