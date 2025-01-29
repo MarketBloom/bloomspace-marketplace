@@ -39,6 +39,41 @@ export type Database = {
         }
         Relationships: []
       }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: number
+          product_id: string | null
+          quantity: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          product_id?: string | null
+          quantity?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          product_id?: string | null
+          quantity?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorite_florists: {
         Row: {
           created_at: string
@@ -429,13 +464,6 @@ export type Database = {
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "order_items_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
         ]
       }
       orders: {
@@ -535,68 +563,43 @@ export type Database = {
           product_id?: string | null
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "product_sizes_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       products: {
         Row: {
-          category: string | null
+          active: boolean | null
           created_at: string
           description: string | null
           florist_id: string | null
           id: string
           images: string[] | null
-          in_stock: boolean | null
-          is_hidden: boolean | null
-          occasion: string[] | null
           price: number
           title: string
           updated_at: string
         }
         Insert: {
-          category?: string | null
+          active?: boolean | null
           created_at?: string
           description?: string | null
           florist_id?: string | null
           id?: string
           images?: string[] | null
-          in_stock?: boolean | null
-          is_hidden?: boolean | null
-          occasion?: string[] | null
           price: number
           title: string
           updated_at?: string
         }
         Update: {
-          category?: string | null
+          active?: boolean | null
           created_at?: string
           description?: string | null
           florist_id?: string | null
           id?: string
           images?: string[] | null
-          in_stock?: boolean | null
-          is_hidden?: boolean | null
-          occasion?: string[] | null
           price?: number
           title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "products_florist_id_fkey"
-            columns: ["florist_id"]
-            isOneToOne: false
-            referencedRelation: "florist_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
