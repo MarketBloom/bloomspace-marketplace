@@ -29,7 +29,7 @@ export default {
         background: "#FFFFFF",
         foreground: "#1D1D1F",
         primary: {
-          DEFAULT: "#D73459",
+          DEFAULT: "#0071E3",
           foreground: "#FFFFFF",
         },
         secondary: {
@@ -57,8 +57,10 @@ export default {
           foreground: "#1D1D1F",
         },
       },
-      backdropBlur: {
-        xs: '2px',
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {
