@@ -28,9 +28,11 @@ export const Hero = () => {
         
         <div className="container relative z-10 px-8 flex flex-col items-center md:pt-20">
           <div className="max-w-3xl mx-auto text-center mb-8 mt-5">
+            <h1 className="text-[#E8E3DD] text-4xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight leading-none whitespace-nowrap">
+              Your City's Best Local Florists
+            </h1>
             <GooeyText
               texts={[
-                "Your City's Best Florists",
                 "All in One Place"
               ]}
               className="h-[72px]"
